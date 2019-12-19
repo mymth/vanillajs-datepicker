@@ -1,0 +1,1280 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"i",
+				"input"
+			],
+			[
+				"Datep",
+				"Datepicker〔variable〕"
+			],
+			[
+				"con",
+				"container"
+			],
+			[
+				"w",
+				"weekStart"
+			],
+			[
+				"u",
+				"updated"
+			],
+			[
+				"getD",
+				"getDatesInColumn"
+			],
+			[
+				"dat",
+				"dates"
+			],
+			[
+				"qu",
+				"querySelectorAll"
+			],
+			[
+				"A",
+				"Array"
+			],
+			[
+				"disp",
+				"display"
+			],
+			[
+				"for",
+				"format"
+			],
+			[
+				"set",
+				"setOptions"
+			],
+			[
+				"hi",
+				"highlight"
+			],
+			[
+				"l",
+				"link"
+			],
+			[
+				"to",
+				"todayBtn"
+			],
+			[
+				"que",
+				"querySelectorAll"
+			],
+			[
+				"se",
+				"setOptions"
+			],
+			[
+				"text",
+				"textContent"
+			],
+			[
+				"ti",
+				"title"
+			],
+			[
+				"be",
+				"before"
+			],
+			[
+				"tex",
+				"textContent"
+			],
+			[
+				"fo",
+				"focused"
+			],
+			[
+				"class",
+				"classList"
+			],
+			[
+				"view",
+				"viewSwitch"
+			],
+			[
+				"des",
+				"describe〔variable〕"
+			],
+			[
+				"de",
+				"destroy"
+			],
+			[
+				"nextB",
+				"nextBtn〔variable〕"
+			],
+			[
+				"h",
+				"html"
+			],
+			[
+				"da",
+				"daysOfWeekHighlighted"
+			],
+			[
+				"selec",
+				"selector〔variable〕"
+			],
+			[
+				"in",
+				"index"
+			],
+			[
+				"ne",
+				"newStartView"
+			],
+			[
+				"focu",
+				"focused"
+			],
+			[
+				"cl",
+				"classList"
+			],
+			[
+				"ke",
+				"key"
+			],
+			[
+				"clear",
+				"clearBtn"
+			],
+			[
+				"cle",
+				"clearBtn"
+			],
+			[
+				"exp",
+				"expect〔function〕"
+			],
+			[
+				"sta",
+				"startOfWeek"
+			],
+			[
+				"create",
+				"createWeeks"
+			],
+			[
+				"str",
+				"startOfWeek"
+			],
+			[
+				"sec",
+				"secondWeek"
+			],
+			[
+				"ca",
+				"calendarWeeks"
+			],
+			[
+				"quer",
+				"querySelector"
+			],
+			[
+				"c",
+				"click"
+			],
+			[
+				"Date",
+				"Datepicker"
+			],
+			[
+				"ev",
+				"eventObj"
+			],
+			[
+				"si",
+				"sinon"
+			],
+			[
+				"chang",
+				"changeDate"
+			],
+			[
+				"spy",
+				"spyChangeDate"
+			],
+			[
+				"chage",
+				"changeDate"
+			],
+			[
+				"tr",
+				"turning"
+			],
+			[
+				"key",
+				"keydown"
+			],
+			[
+				"vie",
+				"viewSwitch"
+			],
+			[
+				"te",
+				"textContent"
+			],
+			[
+				"p",
+				"picker"
+			],
+			[
+				"re",
+				"replaceInput"
+			],
+			[
+				"replaceI",
+				"replaceInput"
+			],
+			[
+				"newI",
+				"newInput"
+			],
+			[
+				"do",
+				"document"
+			],
+			[
+				"a",
+				"active"
+			],
+			[
+				"date",
+				"datepicker"
+			],
+			[
+				"sw",
+				"switch"
+			],
+			[
+				"E",
+				"Escape"
+			],
+			[
+				"Arrow",
+				"ArrowUp"
+			],
+			[
+				"perfor",
+				"performArrowLeftOrRightKey"
+			],
+			[
+				"per",
+				"perform〔variable〕"
+			],
+			[
+				"ex",
+				"exitEditMode"
+			],
+			[
+				"edi",
+				"editMode"
+			],
+			[
+				"en",
+				"enterEditMode"
+			],
+			[
+				"ac",
+				"active"
+			],
+			[
+				"on",
+				"onMousedownInput"
+			],
+			[
+				"m",
+				"maxMonth"
+			],
+			[
+				"max",
+				"maxYear"
+			],
+			[
+				"lo",
+				"localDate"
+			],
+			[
+				"minDate",
+				"minDateObj〔variable〕"
+			],
+			[
+				"ma",
+				"maxYear"
+			],
+			[
+				"di",
+				"direction"
+			],
+			[
+				"inp",
+				"inputField"
+			],
+			[
+				"fun",
+				"fun\tFunction"
+			],
+			[
+				"sh",
+				"shiftKey"
+			],
+			[
+				"co",
+				"control"
+			],
+			[
+				"fu",
+				"functions"
+			],
+			[
+				"dec",
+				"decades"
+			],
+			[
+				"vi",
+				"viewSwitch"
+			],
+			[
+				"ta",
+				"targetCell"
+			],
+			[
+				"F",
+				"February"
+			],
+			[
+				"e",
+				"expect"
+			],
+			[
+				"pre",
+				"previous"
+			],
+			[
+				"chag",
+				"changes"
+			],
+			[
+				"thi",
+				"thisYear"
+			],
+			[
+				"v",
+				"view"
+			],
+			[
+				"chn",
+				"changes"
+			],
+			[
+				"ce",
+				"cells"
+			],
+			[
+				"out",
+				"outsider"
+			],
+			[
+				"ou",
+				"outsider"
+			],
+			[
+				"foc",
+				"focused"
+			],
+			[
+				"op",
+				"option"
+			],
+			[
+				"q",
+				"querySelector"
+			],
+			[
+				"descr",
+				"describe〔variable〕"
+			],
+			[
+				"day",
+				"daysOfWeek"
+			],
+			[
+				"pa",
+				"parseHTML"
+			],
+			[
+				"Da",
+				"Datepicker"
+			],
+			[
+				"cla",
+				"classList"
+			],
+			[
+				"rem",
+				"removeChild"
+			],
+			[
+				"desc",
+				"describe〔variable〕"
+			],
+			[
+				"startOfY",
+				"startOfYearPeriod〔variable〕"
+			],
+			[
+				"yea",
+				"years〔variable〕"
+			],
+			[
+				"inc",
+				"increase"
+			],
+			[
+				"add",
+				"addMonths"
+			],
+			[
+				"pu",
+				"pushUnique"
+			],
+			[
+				"days",
+				"daysOfWeekDisabled"
+			],
+			[
+				"dates",
+				"datesDisabled"
+			],
+			[
+				"min",
+				"minDate"
+			],
+			[
+				"ng",
+				"ngDays"
+			],
+			[
+				"fi",
+				"findAvailableDate"
+			],
+			[
+				"cu",
+				"currentDate"
+			],
+			[
+				"is",
+				"isNaN"
+			],
+			[
+				"base",
+				"baseDate"
+			],
+			[
+				"unde",
+				"undefined〔keyword〕"
+			],
+			[
+				"get",
+				"getTime"
+			],
+			[
+				"mu",
+				"multidate"
+			],
+			[
+				"endO",
+				"endOfCurrent〔variable〕"
+			],
+			[
+				"minVi",
+				"minViewMode"
+			],
+			[
+				"computeV",
+				"computeViewMode"
+			],
+			[
+				"ori",
+				"origVal"
+			],
+			[
+				"loca",
+				"locale"
+			],
+			[
+				"startD",
+				"startDate〔variable〕"
+			]
+		]
+	},
+	"buffers":
+	[
+	],
+	"build_system": "",
+	"build_system_choices":
+	[
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 375.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"dis",
+				"Package Control: Discover Packages"
+			],
+			[
+				"ma",
+				"Markdown Preview: Preview in Browser"
+			],
+			[
+				"lis",
+				"Package Control: List Packages"
+			],
+			[
+				"pa",
+				"Package Control: Upgrade Package"
+			],
+			[
+				"hex",
+				"HexViewer: Toggle Hex View"
+			],
+			[
+				"in",
+				"Package Control: Install Package"
+			],
+			[
+				"rem",
+				"Package Control: Remove Package"
+			],
+			[
+				"op",
+				"Open URL"
+			],
+			[
+				"list",
+				"Package Control: List Packages"
+			],
+			[
+				"togg",
+				"SublimeLinter: Toggle Highlights"
+			],
+			[
+				"to",
+				"SublimeLinter: Toggle Linter"
+			],
+			[
+				"ins",
+				"Package Control: Install Package"
+			],
+			[
+				"mar",
+				"Markdown Preview: Preview in Browser"
+			],
+			[
+				"LiveReload: Enable/disable plugins",
+				"LiveReload: Enable/disable plug-ins"
+			],
+			[
+				"jso",
+				"Pretty JSON: Format (Pretty Print) JSON"
+			],
+			[
+				"m",
+				"Markdown Preview: Preview in Browser"
+			],
+			[
+				"mark",
+				"Markdown Preview: Preview in Browser"
+			],
+			[
+				"json",
+				"Pretty JSON: Minify (compress) JSON"
+			],
+			[
+				"toggle",
+				"SublimeLinter: Toggle Highlights"
+			],
+			[
+				"linter",
+				"SublimeLinter: Toggle Highlights"
+			],
+			[
+				"lin",
+				"SublimeLinter: Toggle Highlights"
+			],
+			[
+				"linte",
+				"SublimeLinter: Toggle Highlights"
+			],
+			[
+				"lint",
+				"SublimeLinter: Lint This View"
+			],
+			[
+				"js",
+				"Pretty JSON: Validate"
+			],
+			[
+				"tog",
+				"Toggle Block Comment"
+			],
+			[
+				"com",
+				"Toggle Block Comment"
+			],
+			[
+				"dash",
+				"DashDoc: invoke Dash with selected word (flip syntax sensitivity)"
+			],
+			[
+				"li",
+				"SublimeLinter: Disable Linter"
+			],
+			[
+				"re",
+				"Package Control: Remove Package"
+			],
+			[
+				"PHP Code Sniffer: ",
+				"PHP Code Sniffer: Turn Execute On Save On"
+			],
+			[
+				"l",
+				"Package Control: List Packages"
+			],
+			[
+				"pac",
+				"Package Control: Remove Package"
+			],
+			[
+				"ena",
+				"Package Control: Enable Package"
+			],
+			[
+				"pack",
+				"Package Control: Remove Package"
+			],
+			[
+				"inst",
+				"Package Control: Install Package"
+			],
+			[
+				"java",
+				"Set Syntax: JavaScript"
+			],
+			[
+				"ba",
+				"Babel Transform"
+			],
+			[
+				"syn",
+				"Set Syntax: PHP"
+			],
+			[
+				"ja",
+				"Set Syntax: JavaScript"
+			],
+			[
+				"php",
+				"PHP Code Sniffer: Sniff this file"
+			],
+			[
+				"d",
+				"Package Control: Discover Packages"
+			],
+			[
+				"brow",
+				"Markdown Preview: Preview in Browser"
+			],
+			[
+				"insta",
+				"Package Control: Install Package"
+			],
+			[
+				"disc",
+				"Package Control: Discover Packages"
+			],
+			[
+				"intall",
+				"Package Control: Install Package"
+			],
+			[
+				"disco",
+				"Package Control: Discover Packages"
+			],
+			[
+				"ruby",
+				"Set Syntax: Ruby"
+			],
+			[
+				"ru",
+				"Set Syntax: Ruby"
+			],
+			[
+				"generi",
+				"Set Syntax: Generic Config"
+			],
+			[
+				"conf",
+				"Set Syntax: Generic Config"
+			],
+			[
+				"r",
+				"Set Syntax: Ruby"
+			],
+			[
+				"loca",
+				"Local History: Browse"
+			],
+			[
+				"paci",
+				"Package Control: Install Package"
+			],
+			[
+				"p",
+				"Package Control: Install Package"
+			],
+			[
+				"wr",
+				"HTML: Wrap Selection With Tag"
+			],
+			[
+				"pach",
+				"Package Control: Add Channel"
+			],
+			[
+				"packe",
+				"Preferences: Browse Packages"
+			],
+			[
+				"enc",
+				"HTML: Encode Special Characters"
+			],
+			[
+				"wrap",
+				"HTML: Wrap Selection With Tag"
+			],
+			[
+				"wra",
+				"HTML: Wrap Selection With Tag"
+			],
+			[
+				"install",
+				"Package Control: Install Package"
+			],
+			[
+				"en",
+				"HTML: Encode Special Characters"
+			],
+			[
+				"co",
+				"Toggle Comment"
+			]
+		],
+		"width": 650.0
+	},
+	"console":
+	{
+		"height": 142.0,
+		"history":
+		[
+			"/usr/local/bin/subl /Users/Shared/Library/SublimeText/sublime-phpmd-ruleset.xml",
+			"subl /Users/Shared/Library/SublimeText/sublime-phpmd-ruleset.xml"
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/Volumes/dev/bulma-datepicker/demo/index.html",
+		"/Volumes/dev/bulma-datepicker/test/test.html",
+		"/Volumes/dev/bulma-datepicker/test/options/date-restrictions.js",
+		"/Volumes/dev/bulma-datepicker.sublime-project",
+		"/Volumes/dev/bulma-datepicker/test/options/options.js",
+		"/Volumes/dev/bulma-datepicker/test/options/container.js",
+		"/Volumes/dev/bulma-datepicker/test/embed-mode.js",
+		"/Volumes/dev/bulma-datepicker/js/picker/Picker.js",
+		"/Volumes/dev/bulma-datepicker/js/views/View.js",
+		"/Volumes/dev/bulma-datepicker/js/views/DaysView.js",
+		"/Volumes/dev/bulma-datepicker/js/views/MonthsView.js",
+		"/Volumes/dev/bulma-datepicker/js/views/YearsView.js",
+		"/Volumes/dev/bulma-datepicker/test/options-container.js",
+		"/Volumes/dev/bulma-datepicker/js/defaults/options.js",
+		"/Volumes/dev/bulma-datepicker/test/options-orientation.js",
+		"/Volumes/dev/bulma-datepicker/test/options-date-restrictions.js",
+		"/Volumes/dev/bulma-datepicker/test/options-multidate.js",
+		"/Volumes/dev/bulma-datepicker/test/options-language.js",
+		"/Volumes/dev/bulma-datepicker/test/options-before-show-hooks.js",
+		"/Volumes/dev/bulma-datepicker/refs/bulma-calendar/node_modules/acorn/dist/acorn.es.js",
+		"/Volumes/dev/bulma-datepicker/demo/live-demo.js",
+		"/Volumes/dev/bulma-datepicker/js/Datepicker.js",
+		"/Volumes/dev/bulma-datepicker/js/events/inputFieldListeners.js",
+		"/Volumes/dev/bulma-datepicker/js/events/pickerListeners.js",
+		"/Volumes/dev/bulma-datepicker/js/processOptions.js",
+		"/Volumes/dev/bulma-datepicker/refs/bootstrap-datepicker/tests/suites/options.js",
+		"/Volumes/dev/bulma-datepicker/test/events.js",
+		"/Volumes/dev/bulma-datepicker/js/lib/date.js",
+		"/Volumes/dev/bulma-datepicker/refs/bootstrap-datepicker/js/bootstrap-datepicker.js",
+		"/Volumes/dev/bulma-datepicker/test/addon-mode.js",
+		"/Users/cpr/Library/Application Support/Sublime Text 3/.sublime/Local History/Volumes/dev/bulma-datepicker/test/keyboard-operation-arrow-down-20190613152723.js",
+		"/Volumes/dev/bulma-datepicker/test/keyboard-operation-edit-mode.js",
+		"/Volumes/dev/bulma-datepicker/test/keyboard-operation.js",
+		"/Volumes/dev/bulma-datepicker/test/keyboard-operation-arrow-down.js",
+		"/Volumes/dev/bulma-datepicker/test/keyboard-operation-arrow-left.js",
+		"/Volumes/dev/bulma-datepicker/test/keyboard-operation-arrow-right.js",
+		"/Volumes/dev/bulma-datepicker/test/keyboard-operation-arrow-up.js",
+		"/Volumes/dev/bulma-datepicker/js/events/otherListeners.js",
+		"/Volumes/dev/bulma-datepicker/js/events/functions.js",
+		"/Volumes/dev/bulma-datepicker/test/Datepicker.js",
+		"/Volumes/dev/bulma-datepicker/test/with-addon-mode.js",
+		"/Volumes/dev/bulma-datepicker/test/Datepicker-methods.js",
+		"/Volumes/dev/bulma-datepicker/test/unit/Datepicker.js",
+		"/Volumes/dev/bulma-datepicker/test/mouse-operation.js",
+		"/Volumes/dev/bulma-datepicker/sass/datepicker.scss",
+		"/Volumes/dev/bulma-datepicker/test/Datepicker-picker.js",
+		"/Volumes/dev/bulma-datepicker/test/unit/_setup.js",
+		"/Volumes/dev/bulma-datepicker/test.bak/test.html",
+		"/Volumes/dev/bulma-datepicker/js/DateRangePicker.js",
+		"/Volumes/dev/bulma-datepicker/test/datepicker-class.js",
+		"/Volumes/dev/bulma-datepicker/test/unit/date.js",
+		"/Volumes/dev/bulma-datepicker/js/views/DaysView.bak.js",
+		"/Volumes/dev/bulma-datepicker/js/defaults/config.js",
+		"/Volumes/dev/bulma-datepicker/js/lib/date-format.js",
+		"/Volumes/dev/bulma-datepicker/.gitignore",
+		"/Volumes/dev/bulma-datepicker/.eslintignore",
+		"/Volumes/dev/bulma-datepicker/rollup-test-utils.config.js",
+		"/Volumes/dev/bulma-datepicker/test/unit/date-format.js",
+		"/Volumes/dev/bulma-datepicker/dist/datepicker.css",
+		"/Volumes/dev/bulma-datepicker/src.bak/sass/datepicker.new.scss",
+		"/Volumes/dev/bulma-datepicker/js/processOptions.new.js",
+		"/Volumes/dev/bulma-datepicker/js/lib/dom.js",
+		"/Volumes/dev/bulma-datepicker/dist/datepicker.js",
+		"/Volumes/dev/bulma-datepicker/demo/test.html",
+		"/Volumes/dev/bulma-datepicker/js/config.js",
+		"/Volumes/dev/bulma-datepicker/package.json",
+		"/Volumes/dev/bulma-datepicker/js/datepicker-fn.js",
+		"/Volumes/dev/bulma-datepicker/js/picker/pickerTemplate.js",
+		"/Volumes/dev/bulma-datepicker/src.bak/sass/datepicker.scss",
+		"/Volumes/dev/bulma-datepicker/sass/index.scss",
+		"/Volumes/dev/bulma-datepicker/rollup.config.js",
+		"/Volumes/dev/bulma-datepicker/demo.bak/index.html",
+		"/Volumes/dev/bulma-datepicker/js/lib/utils.js",
+		"/Volumes/dev/bulma-datepicker/test/unit/utils.js",
+		"/Volumes/dev/bulma-datepicker/test/unit/array.js",
+		"/Volumes/dev/bulma-datepicker/js/lib/array.js",
+		"/Volumes/dev/bulma-datepicker/js/events/general.js",
+		"/Volumes/dev/bulma-datepicker/notes/date-picker-ideas.mindnode",
+		"/Volumes/dev/bulma-datepicker/js/lib/event.js",
+		"/Volumes/dev/bulma-datepicker/js/views/YearView.js",
+		"/Volumes/dev/bulma-datepicker/src.bak/js/Datepicker.js",
+		"/Volumes/dev/bulma-datepicker/src.bak/js/views/pickerTemplate.js",
+		"/Volumes/dev/bulma-datepicker/test/unit/processOptions.js",
+		"/Volumes/dev/bulma-datepicker/.eslintrc.js",
+		"/Volumes/dev/bulma-datepicker/js.new/Datepicker.js",
+		"/Volumes/dev/bulma-datepicker/js.new/processOptions.js",
+		"/Volumes/dev/bulma-datepicker/test.new/unit/date-format.js",
+		"/Volumes/dev/bulma-datepicker/js.new/lib/date-format.js",
+		"/Volumes/dev/bulma-datepicker/src/js/lib/date-format.js",
+		"/Volumes/dev/bulma-datepicker/test/unit.bak/date-format.js",
+		"/Volumes/dev/bulma-datepicker/test/unit/event.js",
+		"/Volumes/dev/bulma-datepicker/test/unit/dom.js",
+		"/Volumes/dev/bulma-datepicker/node_modules/jsdom/lib/jsdom/living/generated/EventTarget.js",
+		"/Users/cpr/Desktop/google.com!colangelopr.com!1558483200!1558569599.xml",
+		"/Volumes/dev/bulma-datepicker/test/unit/_utils.js",
+		"/Volumes/dev/bulma-datepicker/src/js/processOptions.js",
+		"/Volumes/dev/bulma-datepicker/src/js/lib/date.js",
+		"/Volumes/dev/bulma-datepicker/src/js/Datepicker.js",
+		"/Volumes/dev/bulma-datepicker/src/js/lib/dom.js",
+		"/Volumes/dev/bulma-datepicker/js/locales/bulma-datepicker.ar.js",
+		"/Volumes/dev/bulma-datepicker/src/js/events.js",
+		"/Volumes/dev/bulma-datepicker/src/js/views/years.js",
+		"/Volumes/dev/bulma-datepicker/src/js/views/months.js",
+		"/Volumes/dev/bulma-datepicker/src/js/views/days.js",
+		"/Volumes/dev/bulma-datepicker/src/js/views/Picker.js",
+		"/Volumes/dev/bulma-datepicker/src/js/DateRangePicker.js",
+		"/Volumes/dev/bulma-datepicker/notes/changes-from-bootstrap-datepicker.md",
+		"/Volumes/dev/bulma-datepicker/src/js/views/years.bak.js",
+		"/Volumes/dev/bulma-datepicker/src/js/views/utils.js",
+		"/Volumes/dev/bulma-datepicker/src/js/views/performBeforeHook.js",
+		"/Volumes/dev/bulma-datepicker/src/js/views/months.bak.js",
+		"/Volumes/dev/bulma-datepicker/src/js/views/controls.js",
+		"/Volumes/dev/bulma-datepicker/demo/examine.html",
+		"/Volumes/dev/bulma-datepicker/src/js/defaults/options.js",
+		"/Volumes/dev/bulma-datepicker/src/js/locales/bulma-datepicker.ar.js",
+		"/Volumes/dev/bulma-datepicker/dist/locales/bulma-datepicker.ar.js",
+		"/Volumes/dev/bulma-datepicker/demo/live.js",
+		"/Users/cpr/Library/Application Support/Sublime Text 3/Packages/User/Package Control.sublime-settings",
+		"/Volumes/dev/bulma-datepicker/demo/live.html",
+		"/Volumes/dev/bulma-datepicker/src/js/views/pickerTemplate.js",
+		"/Volumes/dev/bulma-datepicker/test/options.js",
+		"/Volumes/dev/bulma-datepicker/src/js/lib/utils.js",
+		"/Volumes/dev/bulma-datepicker/test/formats.js",
+		"/Volumes/dev/bulma-datepicker/src/js/datepicker-fn.js",
+		"/Volumes/dev/bulma-datepicker/test/mouse_navigation/2012.js",
+		"/Volumes/dev/bulma-datepicker/test/methods.js",
+		"/Volumes/dev/bulma-datepicker/test/calendar-weeks.js",
+		"/Volumes/dev/bulma-datepicker/test/inline.js"
+	],
+	"find":
+	{
+		"height": 37.0
+	},
+	"find_in_files":
+	{
+		"height": 95.0,
+		"where_history":
+		[
+			"-node_modules/**,-dist/**,-refs/**"
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": true,
+		"find_history":
+		[
+			"cells",
+			"autoclose is",
+			"clear",
+			"clearBtn",
+			"showWeekDays",
+			"input\\.focus",
+			"find_highlighted",
+			"startView",
+			"minViewMode",
+			"classes",
+			"(\\S) {2,}",
+			"\\Wpicker\\.update",
+			"picker\\.update",
+			"disableTouchKeyboard",
+			"dayOfTheWeekOf",
+			"getWeak",
+			"changeDate",
+			"spyChangeDate",
+			"ArrowDown",
+			"shiftKey",
+			"ctrlKey",
+			"shiftKey",
+			"startView",
+			"doKey",
+			"perform(\\w+)Key",
+			"performArrowLeftOrRightKey",
+			"performArrowDown",
+			"hideOnClickOutside",
+			"minMonth",
+			"\\.(min|max)(\\W)",
+			"\\.(min|max)\\W",
+			"viewDate",
+			"view",
+			"(Arrow)Up",
+			"let",
+			"const",
+			"let",
+			"(Arrow)Left",
+			"34",
+			"ArrowLeft",
+			"const",
+			"enableOnReadonly",
+			"prevBtn",
+			"fucused",
+			"0",
+			"(\\S+)\\.click\\(\\)",
+			"hideOnClickOutside",
+			"'to be', \\[\\]",
+			"'to be', []",
+			"'to be', (true|false|null|undefined)",
+			"'to be', false",
+			"weekEnd",
+			"stubHide",
+			"Inline",
+			"inline",
+			"toTitleCase",
+			"isSameDate",
+			"isValidDate",
+			"startOfYearPeriod",
+			"calcBaseYear",
+			"isValidDate",
+			"isSameDate",
+			"adder",
+			"daysHighlighted",
+			"datesDisabled",
+			"daysDisabled",
+			"isValidDate",
+			"toFullYear",
+			"isValidDate",
+			"exitEditMode",
+			"_(editMode)",
+			"_editMode",
+			"reFormatTokens",
+			"pad2",
+			"changeMonth",
+			"changeDate",
+			"dateChanged",
+			"changeDate",
+			"startDate",
+			"endDate",
+			"multidateSeparator",
+			"multidate",
+			"multidateSeparator",
+			"endDate",
+			"startDate",
+			"endDate",
+			"increase",
+			"endDate",
+			"startDate",
+			"maxDatesLength",
+			"multidateSeparator",
+			"assumeNearbyYear",
+			"use2digitYr",
+			"setConditionalClass",
+			"parseInt",
+			"orig_language",
+			"orig_dates",
+			"todayHighlight",
+			"showDaysOfWeek",
+			"\\Wdate\\W",
+			"date\\W",
+			"(options)\\.(\\w+) !== undefined"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": true,
+		"replace_history":
+		[
+			"autoclose =",
+			"showDaysOfWeek",
+			"dp.show",
+			"$1 ",
+			"getWeek",
+			"key",
+			"doKeydown$1",
+			".$1Year$2",
+			".$1Date$2",
+			".$1Date",
+			"$1Down",
+			"$1Up",
+			"simulant.fire($1, 'mousedown')",
+			"'to equal', []",
+			"'to be $1'",
+			"embed",
+			"startOfYearPeriod",
+			"daysOfWeekHighlighted",
+			"$1",
+			"minDate",
+			"maxDate",
+			"dateDelimiter",
+			"maxNumOfDates",
+			"dateDelimiter",
+			"maxDate",
+			"minDate",
+			"maxDate",
+			"minDate",
+			"maxNumOfDates",
+			"dateDelimiter",
+			"hasProperty($1, '$2')"
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"sheets":
+			[
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 24.0
+	},
+	"input":
+	{
+		"height": 34.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.SublimeLinter":
+	{
+		"height": 0.0
+	},
+	"output.SublimeLinter Messages":
+	{
+		"height": 102.0
+	},
+	"output.exec":
+	{
+		"height": 102.0
+	},
+	"output.find_results":
+	{
+		"height": 102.0
+	},
+	"output.hex_viewer_inspector":
+	{
+		"height": 108.0
+	},
+	"output.markdown":
+	{
+		"height": 108.0
+	},
+	"output.mdpopups":
+	{
+		"height": 0.0
+	},
+	"output.tooltips":
+	{
+		"height": 102.0
+	},
+	"output.xdebug":
+	{
+		"height": 102.0
+	},
+	"pinned_build_system": "",
+	"project": "bulma-datepicker.sublime-project",
+	"replace":
+	{
+		"height": 66.0
+	},
+	"save_all_on_build": false,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"vendor/codeception/codeception/src/Codeception/Subscriber/ErrorHandler.php",
+				"app/vendor/codeception/codeception/src/Codeception/Subscriber/ErrorHandler.php"
+			],
+			[
+				"scripts/initial-setup.php",
+				"app/scripts/initial-setup.php"
+			],
+			[
+				"scripts/db-preparation.php",
+				"app/scripts/db-preparation.php"
+			],
+			[
+				"run-update.sh",
+				"app/run-update.sh"
+			],
+			[
+				"config/db-sample.php",
+				"app/config/db-sample.php"
+			],
+			[
+				"tests/unit/components/appModule/AppModuleManagerTest.php",
+				"app/tests/unit/components/appModule/AppModuleManagerTest.php"
+			],
+			[
+				"tests/_support/FunctionalTester.php",
+				"app/tests/_support/FunctionalTester.php"
+			],
+			[
+				"tests/_support/AcceptanceTester.php",
+				"app/tests/_support/AcceptanceTester.php"
+			],
+			[
+				"scripts/post-update.php",
+				"app/scripts/post-update.php"
+			],
+			[
+				"scripts/post-install.php",
+				"app/scripts/post-install.php"
+			],
+			[
+				"scripts/inc.php",
+				"app/scripts/inc.php"
+			],
+			[
+				"components/appModule/AppModuleManager.php",
+				"app/components/appModule/AppModuleManager.php"
+			],
+			[
+				"commands/ModuleController.php",
+				"app-new/commands/ModuleController.php"
+			],
+			[
+				"webdr",
+				"app/vendor/facebook/webdriver/lib/WebDriver.php"
+			]
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 500.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 380.0
+	},
+	"select_symbol":
+	{
+		"height": 375.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 778.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": true,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 237.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}

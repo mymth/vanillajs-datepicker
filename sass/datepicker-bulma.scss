@@ -1,0 +1,69 @@
+$dp-background-color: $white !default;
+$dp-border-color: $border !default;
+$dp-border-radius: $radius !default;
+$dp-border-radius-small: $radius-small !default;
+$dp-line-height-base: 1.5 !default;
+$dp-font-size-normal: $size-normal !default;
+$dp-font-size-small: $size-small !default;
+$dp-font-weight-semibold: $weight-semibold !default;
+$dp-font-weight-bold: $weight-bold !default;
+$dp-dropdown-offset: 4px !default;
+$dp-dropdown-shadow: 0 2px 3px rgba($black, 0.1), 0 0 0 1px rgba($black, 0.1) !default;
+$dp-dropdown-z: 20 !default;
+
+$dp-title-background-color: $background !default;
+
+$dp-cell-size-base: 2.25rem !default;
+$dp-cell-focus-background-color: darken($white-ter, 5%) !default;
+$dp-cell-prevnext-color: $grey !default;
+$dp-cell-disabled-color: $grey-lighter !default;
+$dp-cell-selected-background-color: $link !default;
+$dp-cell-selected-color: $link-invert !default;
+$dp-cell-selected-font-weight: $weight-semibold !default;
+$dp-cell-today-background-color: $primary !default;
+$dp-cell-today-color: $primary-invert !default;
+$dp-cell-highlighted-background-color: $white-ter !default;
+$dp-range-start-end-background-color: $grey-light !default;
+$dp-range-start-end-color: $dp-cell-selected-color !default;
+$dp-range-background-color: $grey-lighter !default;
+$dp-range-today-background-color: $dp-cell-today-background-color !default;
+$dp-week-color: $grey-light !default;
+
+$dp-footer-background-color: $background !default;
+
+$dp-input-in-edit-border-color: darken($link, 5%) !default;
+$dp-input-in-edit-focus-box-shadow-size: 0 0 0.25em 0.25em !default;
+
+@import 'mixins';
+
+@mixin dp-button {
+  .button {
+    .datepicker-header & {
+      @include dp-header-button-common;
+
+      &:hover {
+        background-color: darken($white, 2.5%);
+      }
+
+      &:focus {
+        &:not(:active) {
+          box-shadow: 0 0 0 0.125em rgba($white, 0.25);
+        }
+      }
+
+      &:active {
+        background-color: darken($white, 5%);
+      }
+
+      &[disabled] {
+        box-shadow: none;
+      }
+    }
+
+    .datepicker-footer & {
+      @include dp-footer-button-common;
+    }
+  }
+}
+
+@import 'datepicker';

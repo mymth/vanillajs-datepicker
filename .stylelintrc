@@ -1,0 +1,12 @@
+{
+  "extends": [
+    "stylelint-config-sass-guidelines",
+    "stylelint-config-concentric-order"
+  ],
+  "rules": {
+    "max-nesting-depth": 5,
+    "selector-no-qualifying-type": [true, {"ignore": ["attribute", "class"]}],
+    "order/properties-alphabetical-order": null
+  },
+  "ignoreFiles": ["dist/**", "node_modules", "refs/**"]
+}

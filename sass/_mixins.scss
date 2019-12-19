@@ -1,0 +1,12 @@
+
+@mixin dp-header-button-common {
+  border-color: transparent;
+  font-weight: bold;
+}
+
+@mixin dp-footer-button-common {
+  margin: calc(0.375rem - 1px) 0.375rem;
+  border-radius: $dp-border-radius-small;
+  width: 100%;
+  font-size: $dp-font-size-small;
+}

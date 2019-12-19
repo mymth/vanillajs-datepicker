@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Mocha Tests</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../node_modules/mocha/mocha.css" />
+    <style type="text/css">
+      html * {
+        box-sizing: border-box;
+      }
+    </style>
+    <link rel="stylesheet" href="../dist/css/datepicker.css" />
+  </head>
+  <body>
+    <div id="mocha"></div>
+
+    <div id="test-container"></div>
+
+    <script src="../node_modules/mocha/mocha.js"></script>
+    <script src="../node_modules/unexpected/unexpected.js"></script>
+    <script src="../node_modules/sinon/pkg/sinon.js"></script>
+    <script src="../node_modules/simulant/dist/simulant.umd.js"></script>
+
+    <script class="mocha-init">
+      mocha.setup('bdd');
+      mocha.checkLeaks();
+
+      window.testContainer = document.getElementById('test-container');
+    </script>
+    <script src="./_utils/date.js"></script>
+    <script src="./_utils/dom.js"></script>
+    <script class="setup">
+      /* eslint-disable no-undef, no-unused-vars */
+      var expect = weknowhow.expect;
+      var dateValue = dateUtils.dateValue;
+      var parseHTML = domUtils.parseHTML;
+      var isVisible = domUtils.isVisible;
+      var lastItemOf = arr => arr[arr.length - 1];
+
+      var createDP = (el, options) => {
+        const dp = new Datepicker(el, options);
+        return {dp, picker: document.querySelector('.datepicker')};
+      };
+      var createDRP = (el, options) => {
+        const drp = new DateRangePicker(el, options);
+        const [picker0, picker1] = document.querySelectorAll('.datepicker');
+        return {drp, picker0, picker1};
+      };
+      var getParts = (picker, selectors) => selectors.map(sel => picker.querySelector(sel));
+      var getViewSwitch = picker => picker.querySelector('.view-switch');
+      var getCells = picker => Array.from(picker.querySelectorAll('.datepicker-cell'));
+      var filterCells = (cells, criteria) => {
+        const fn = typeof criteria === 'string' ? el => el.matches(criteria) : criteria;
+        return cells.filter(fn);
+      };
+    </script>
+    <script src="../dist/js/datepicker-full.js"></script>
+    <script src="../dist/js/locales/fr.js"></script>
+    <script src="../dist/js/locales/zh-CN.js"></script>
+    <script src="./Datepicker/Datepicker-object.js"></script>
+    <script src="./Datepicker/api-methods.js"></script>
+    <script src="./mouse-operation.js"></script>
+    <script src="./keyboard-operation/keyboard-operation.js"></script>
+    <script src="./keyboard-operation/arrow-left.js"></script>
+    <script src="./keyboard-operation/arrow-right.js"></script>
+    <script src="./keyboard-operation/arrow-up.js"></script>
+    <script src="./keyboard-operation/arrow-down.js"></script>
+    <script src="./keyboard-operation/edit-mode.js"></script>
+    <script src="./events.js"></script>
+    <script src="./options/options.js"></script>
+    <script src="./options/date-restrictions.js"></script>
+    <script src="./options/buttons.js"></script>
+    <script src="./options/format.js"></script>
+    <script src="./options/multidate.js"></script>
+    <script src="./options/orientation.js"></script>
+    <script src="./options/before-show.js"></script>
+    <script src="./inline-mode.js"></script>
+    <script src="./DateRangePicker.js"></script>
+    <script class="mocha-exec">
+      mocha.run();
+    </script>
+  </body>
+</html>
