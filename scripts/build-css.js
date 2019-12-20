@@ -29,6 +29,9 @@ Promise.all(files.map((entry) => {
       .then((result) => {
         fs.writeFileSync(`${distDir}/${entry.out}`, result);
         resolve();
+      })
+      .catch((err) => {
+        console.error(err);
       });
   });
 }));

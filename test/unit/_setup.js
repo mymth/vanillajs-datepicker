@@ -22,6 +22,7 @@ const exposeToGlobal = [
   'document',
   'CustomEvent',
   'DocumentFragment',
+  'Event',
   'EventTarget',
   'NodeList',
 ];
