@@ -31,8 +31,7 @@
 
 .datepicker-picker span {
     display: block;
-    -webkit-box-flex: 1;
-            flex: 1;
+    flex: 1;
     border: 0;
     border-radius: 4px;
     cursor: default;
@@ -54,7 +53,6 @@
 }
 
 .datepicker-controls, .datepicker-view, .datepicker-view .days-of-week, .datepicker-grid {
-    display: -webkit-box;
     display: flex;
 }
 
@@ -88,13 +86,10 @@
 }
 
 .datepicker-controls .button {
-    display: -webkit-inline-box;
     display: inline-flex;
     position: relative;
-    -webkit-box-align: center;
-            align-items: center;
-    -webkit-box-pack: center;
-            justify-content: center;
+    align-items: center;
+    justify-content: center;
     margin: 0;
     border: 1px solid #dbdbdb;
     border-radius: 4px;
@@ -167,8 +162,7 @@
 }
 
 .datepicker-controls .view-switch {
-    -webkit-box-flex: 1;
-            flex: auto;
+    flex: auto;
 }
 
 .datepicker-controls .prev-btn,

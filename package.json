@@ -38,8 +38,8 @@
   },
   "homepage": "https://github.com/mymth/vanillajs-datepicker#readme",
   "devDependencies": {
-    "autoprefixer": "^9.7.3",
-    "babel-eslint": "^10.0.3",
+    "autoprefixer": "^9.7.4",
+    "babel-eslint": "^10.1.0",
     "bootstrap": "^4.4.1",
     "bulma": "^0.8.0",
     "bulma-tooltip": "^2.0.2",
@@ -48,15 +48,15 @@
     "esm": "^3.2.25",
     "jsdom": "^15.2.1",
     "mocha": "^6.2.2",
-    "postcss": "^7.0.25",
+    "postcss": "^7.0.27",
     "postcss-node-sass": "^2.1.8",
     "postcss-scss": "^2.0.0",
-    "rollup": "^1.27.13",
+    "rollup": "^1.32.1",
     "rollup-plugin-node-resolve": "^4.2.4",
     "simulant": "^0.2.2",
     "sinon": "^7.5.0",
     "uglify-es": "^3.3.9",
-    "unexpected": "^11.11.0"
+    "unexpected": "^11.13.0"
   },
   "dependencies": {}
 }
