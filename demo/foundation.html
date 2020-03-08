@@ -150,7 +150,7 @@
           <div class="cell">
             <hr>
             <h4 class="subtitle">Options</h4>
-            <form id="options">
+            <form id="options" data-abide>
 
               <div class="field" data-tooltip title="Only effective in range picker">
                 <input type="checkbox" id="allowOneSidedRange" name="allowOneSidedRange" value="true">
@@ -218,7 +218,8 @@
               <div class="field" data-tooltip title="enter in JSON format">
                 <label>
                   datesDisabled
-                  <textarea name="datesDisabled" placeholder="[]"></textarea>
+                  <textarea name="datesDisabled" placeholder="[]" data-validator="json"></textarea>
+                  <span class="form-error">Invalid JSON string</span>
                 </label>
               </div>
 
@@ -520,7 +521,18 @@ beforeShowDecade(date) {
   }
 },
       };
+      Foundation.Abide.defaults.validators['json'] = ($el) => {
+        const value = $el.get(0).value;
+        try {
+          value.length > 0 && JSON.parse(value);
+        } catch (err) {
+          return false;
+        }
+        return true;
+      };
+      window.addError = window.removeErrors = () => {};
 
+      $(document).foundation();
       initialize();
 
       document.getElementById('types').querySelectorAll('input').forEach((el) => {
@@ -536,7 +548,18 @@ beforeShowDecade(date) {
         el.addEventListener('change', onChangeInputOption);
       });
       optsForm.querySelectorAll('textarea').forEach((el) => {
-        el.addEventListener('change', onChangeTextareaOption);
+        let listener;
+        if (el.dataset.validator) {
+          el.addEventListener('change', (ev) => {
+            if (el.classList.contains(Foundation.Abide.defaults.inputErrorClass)) {
+              return;
+            }
+            onChangeTextareaOption(ev);
+          };
+        } else {
+          listener = onChangeTextareaOption;
+        }
+        el.addEventListener('change', listener);
       });
       optsForm.querySelectorAll('input[type=checkbox]').forEach((el) => {
         el.addEventListener('click', onClickCheckboxOptions);
@@ -552,9 +575,6 @@ beforeShowDecade(date) {
         });
       };
       setInterval(initTooltips, 1000);
-      // initTooltips();
-
-      $(document).foundation();
     </script>
   </body>
 </html>

@@ -110,16 +110,16 @@
             <form id="types">
               <div class="form-group">
                 <div class="form-check form-check-inline">
-                  <input class="form-check-input" type="radio" name="type" value="input" checked>
-                  <label class="form-check-label">Input</label>
+                  <input type="radio" class="form-check-input" id="type-input" name="type" value="input" checked>
+                  <label for="type-input" class="form-check-label">Input</label>
                 </div>
                 <div class="form-check form-check-inline">
-                  <input class="form-check-input" type="radio" name="type" value="inline">
-                  <label class="form-check-label">Inline</label>
+                  <input type="radio" class="form-check-input" id="type-inline" name="type" value="inline">
+                  <label for="type-inline" class="form-check-label">Inline</label>
                 </div>
                 <div class="form-check form-check-inline">
-                  <input class="form-check-input" type="radio" name="type" value="range">
-                  <label class="form-check-label">Range</label>
+                  <input type="radio" class="form-check-input" id="type-range" name="type" value="range">
+                  <label for="type-range" class="form-check-label">Range</label>
                 </div>
               </div>
             </form>
@@ -130,17 +130,17 @@
             <form id="options">
 
               <div class="form-group form-check" data-toggle="tooltip" title="Only effective in range picker">
-                <input class="form-check-input" name="allowOneSidedRange" type="checkbox" value="true">
+                <input type="checkbox" class="form-check-input" id="allowOneSidedRange" name="allowOneSidedRange" value="true">
                 <label for="allowOneSidedRange" class="form-check-label">allowOneSidedRange</label>
               </div>
 
               <div class="form-group form-check">
-                <input class="form-check-input" name="autohide" type="checkbox" value="true">
+                <input type="checkbox" class="form-check-input" id="autohide" name="autohide" value="true">
                 <label for="autohide" class="form-check-label">autohide</label>
               </div>
 
               <div class="form-group form-check">
-                <input class="form-check-input" name="beforeShowDay" type="checkbox" value="true">
+                <input type="checkbox" class="form-check-input" id="beforeShowDay" name="beforeShowDay" value="true">
                 <label for="beforeShowDay" class="form-check-label">beforeShowDay</label>
                 <div class="code-wrap">
                   <pre id="code-beforeShowDay"></pre>
@@ -149,7 +149,7 @@
               </div>
 
               <div class="form-group form-check">
-                <input class="form-check-input" name="beforeShowMonth" type="checkbox" value="true">
+                <input type="checkbox" class="form-check-input" id="beforeShowMonth" name="beforeShowMonth" value="true">
                 <label for="beforeShowMonth" class="form-check-label">beforeShowMonth</label>
                 <div class="code-wrap">
                   <pre id="code-beforeShowMonth"></pre>
@@ -158,7 +158,7 @@
               </div>
 
               <div class="form-group form-check">
-                <input class="form-check-input" name="beforeShowYear" type="checkbox" value="true">
+                <input type="checkbox" class="form-check-input" id="beforeShowYear" name="beforeShowYear" value="true">
                 <label for="beforeShowYear" class="form-check-label">beforeShowYear</label>
                 <div class="code-wrap">
                   <pre id="code-beforeShowYear"></pre>
@@ -167,7 +167,7 @@
               </div>
 
               <div class="form-group form-check">
-                <input class="form-check-input" name="beforeShowDecade" type="checkbox" value="true">
+                <input type="checkbox" class="form-check-input" id="beforeShowDecade" name="beforeShowDecade" value="true">
                 <label for="beforeShowDecade" class="form-check-label">beforeShowDecade</label>
                 <div class="code-wrap">
                   <pre id="code-beforeShowDecade"></pre>
@@ -176,55 +176,58 @@
               </div>
 
               <div class="form-group form-check">
-                <input class="form-check-input" name="calendarWeeks" type="checkbox" value="true">
+                <input type="checkbox" class="form-check-input" id="calendarWeeks" name="calendarWeeks" value="true">
                 <label for="calendarWeeks" class="form-check-label">calendarWeeks</label>
               </div>
 
               <div class="form-group form-check">
-                <input class="form-check-input" name="clearBtn" type="checkbox" value="true">
+                <input type="checkbox" class="form-check-input" id="clearBtn" name="clearBtn" value="true">
                 <label for="clearBtn" class="form-check-label">clearBtn</label>
               </div>
 
               <div class="form-group">
-                <label for="dateDelimiter" class="label">dateDelimiter</label>
+                <label class="label">dateDelimiter</label>
                 <input type="text" class="form-control" name="dateDelimiter" placeholder=",">
               </div>
 
               <div class="form-group" data-toggle="tooltip" title="enter in JSON format">
-                <label for="datesDisabled" class="label">datesDisabled</label>
+                <label class="label">datesDisabled</label>
                 <textarea class="form-control" name="datesDisabled" placeholder="[]"></textarea>
+                <div class="invalid-feedback">
+                  Invalid JSON string
+                </div>
               </div>
 
               <div class="form-group">
                 <label for="daysOfWeekDisabled" class="label">daysOfWeekDisabled</label>
                 <div>
                   <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="checkbox" name="daysOfWeekDisabled" value="0">
-                    <label class="form-check-label">0</label>&nbsp;
+                    <input type="checkbox" class="form-check-input" id="daysOfWeekDisabled-0" name="daysOfWeekDisabled" value="0">
+                    <label for="daysOfWeekDisabled-0" class="form-check-label">0</label>&nbsp;
                   </div>
                   <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="checkbox" name="daysOfWeekDisabled" value="1">
-                    <label class="form-check-label">1</label>&nbsp;
+                    <input type="checkbox" class="form-check-input" id="daysOfWeekDisabled-1" name="daysOfWeekDisabled" value="1">
+                    <label for="daysOfWeekDisabled-1" class="form-check-label">1</label>&nbsp;
                   </div>
                   <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="checkbox" name="daysOfWeekDisabled" value="2">
-                    <label class="form-check-label">2</label>&nbsp;
+                    <input type="checkbox" class="form-check-input" id="daysOfWeekDisabled-2" name="daysOfWeekDisabled" value="2">
+                    <label for="daysOfWeekDisabled-2" class="form-check-label">2</label>&nbsp;
                   </div>
                   <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="checkbox" name="daysOfWeekDisabled" value="3">
-                    <label class="form-check-label">3</label>&nbsp;
+                    <input type="checkbox" class="form-check-input" id="daysOfWeekDisabled-3" name="daysOfWeekDisabled" value="3">
+                    <label for="daysOfWeekDisabled-3" class="form-check-label">3</label>&nbsp;
                   </div>
                   <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="checkbox" name="daysOfWeekDisabled" value="4">
-                    <label class="form-check-label">4</label>&nbsp;
+                    <input type="checkbox" class="form-check-input" id="daysOfWeekDisabled-4" name="daysOfWeekDisabled" value="4">
+                    <label for="daysOfWeekDisabled-4" class="form-check-label">4</label>&nbsp;
                   </div>
                   <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="checkbox" name="daysOfWeekDisabled" value="5">
-                    <label class="form-check-label">5</label>&nbsp;
+                    <input type="checkbox" class="form-check-input" id="daysOfWeekDisabled-5" name="daysOfWeekDisabled" value="5">
+                    <label for="daysOfWeekDisabled-5" class="form-check-label">5</label>&nbsp;
                   </div>
                   <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="checkbox" name="daysOfWeekDisabled" value="6">
-                    <label class="form-check-label">6</label>&nbsp;
+                    <input type="checkbox" class="form-check-input" id="daysOfWeekDisabled-6" name="daysOfWeekDisabled" value="6">
+                    <label for="daysOfWeekDisabled-6" class="form-check-label">6</label>&nbsp;
                   </div>
                 </div>
               </div>
@@ -233,70 +236,70 @@
                 <label for="daysOfWeekHighlighted" class="label">daysOfWeekHighlighted</label>
                 <div>
                   <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="checkbox" name="daysOfWeekHighlighted" value="0">
-                    <label class="form-check-label">0</label>&nbsp;
+                    <input type="checkbox" class="form-check-input" id="daysOfWeekHighlighted-0" name="daysOfWeekHighlighted" value="0">
+                    <label for="daysOfWeekHighlighted-0" class="form-check-label">0</label>&nbsp;
                   </div>
                   <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="checkbox" name="daysOfWeekHighlighted" value="1">
-                    <label class="form-check-label">1</label>&nbsp;
+                    <input type="checkbox" class="form-check-input" id="daysOfWeekHighlighted-1" name="daysOfWeekHighlighted" value="1">
+                    <label for="daysOfWeekHighlighted-1" class="form-check-label">1</label>&nbsp;
                   </div>
                   <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="checkbox" name="daysOfWeekHighlighted" value="2">
-                    <label class="form-check-label">2</label>&nbsp;
+                    <input type="checkbox" class="form-check-input" id="daysOfWeekHighlighted-2" name="daysOfWeekHighlighted" value="2">
+                    <label for="daysOfWeekHighlighted-2" class="form-check-label">2</label>&nbsp;
                   </div>
                   <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="checkbox" name="daysOfWeekHighlighted" value="3">
-                    <label class="form-check-label">3</label>&nbsp;
+                    <input type="checkbox" class="form-check-input" id="daysOfWeekHighlighted-3" name="daysOfWeekHighlighted" value="3">
+                    <label for="daysOfWeekHighlighted-3" class="form-check-label">3</label>&nbsp;
                   </div>
                   <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="checkbox" name="daysOfWeekHighlighted" value="4">
-                    <label class="form-check-label">4</label>&nbsp;
+                    <input type="checkbox" class="form-check-input" id="daysOfWeekHighlighted-4" name="daysOfWeekHighlighted" value="4">
+                    <label for="daysOfWeekHighlighted-4" class="form-check-label">4</label>&nbsp;
                   </div>
                   <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="checkbox" name="daysOfWeekHighlighted" value="5">
-                    <label class="form-check-label">5</label>&nbsp;
+                    <input type="checkbox" class="form-check-input" id="daysOfWeekHighlighted-5" name="daysOfWeekHighlighted" value="5">
+                    <label for="daysOfWeekHighlighted-5" class="form-check-label">5</label>&nbsp;
                   </div>
                   <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="checkbox" name="daysOfWeekHighlighted" value="6">
-                    <label class="form-check-label">6</label>&nbsp;
+                    <input type="checkbox" class="form-check-input" id="daysOfWeekHighlighted-6" name="daysOfWeekHighlighted" value="6">
+                    <label for="daysOfWeekHighlighted-6" class="form-check-label">6</label>&nbsp;
                   </div>
                 </div>
               </div>
 
               <div class="form-group">
-                <label for="defaultViewDate" class="label">defaultViewDate</label>
+                <label class="label">defaultViewDate</label>
                 <input type="text" class="form-control" name="defaultViewDate" placeholder="today">
               </div>
 
               <div class="form-group form-check">
-                <input class="form-check-input" name="disableTouchKeyboard" type="checkbox" value="true">
+                <input type="checkbox" class="form-check-input" id="disableTouchKeyboard" name="disableTouchKeyboard" value="true">
                 <label for="disableTouchKeyboard" class="form-check-label">disableTouchKeyboard</label>
               </div>
 
               <div class="form-group">
-                <label for="format" class="label">format</label>
+                <label class="label">format</label>
                 <input type="text" class="form-control" name="format" placeholder="mm/dd/yyyy">
               </div>
 
               <div class="form-group">
-                <label for="language" class="label">language</label>
+                <label class="label">language</label>
                 <select class="form-control" name="language" >
                   <option value="en">en – English (US)</option>
                 </select>
               </div>
 
               <div class="form-group">
-                <label for="maxDate" class="label">maxDate</label>
+                <label class="label">maxDate</label>
                 <input type="text" class="form-control" name="maxDate" placeholder="null">
               </div>
 
               <div class="form-group" data-toggle="tooltip" title="Not effective in range picker">
-                <label for="maxNumberOfDates" class="label">maxNumberOfDates</label>
+                <label class="label">maxNumberOfDates</label>
                 <input type="text" class="form-control" name="maxNumberOfDates" placeholder="1">
               </div>
 
               <div class="form-group">
-                <label for="maxView" class="label">maxView</label>
+                <label class="label">maxView</label>
                 <select class="form-control" name="maxView">
                   <option value="0">0 – days</option>
                   <option value="1">1 – months</option>
@@ -306,17 +309,17 @@
               </div>
 
               <div class="form-group">
-                <label for="minDate" class="label">minDate</label>
+                <label class="label">minDate</label>
                 <input type="text" class="form-control" name="minDate" placeholder="null">
               </div>
 
               <div class="form-group">
-                <label for="nextArrow" class="label">nextArrow</label>
+                <label class="label">nextArrow</label>
                 <textarea class="form-control" name="nextArrow" placeholder="»"></textarea>
               </div>
 
               <div class="form-group">
-                <label for="orientation" class="label">orientation</label>
+                <label class="label">orientation</label>
                 <select class="form-control" name="orientation" >
                   <option value="auto">auto</option>
                   <option value="top auto">top auto</option>
@@ -331,22 +334,22 @@
               </div>
 
               <div class="form-group">
-                <label for="prevArrow" class="label">prevArrow</label>
+                <label class="label">prevArrow</label>
                 <textarea class="form-control" name="prevArrow" placeholder="«"></textarea>
               </div>
 
               <div class="form-group form-check">
-                <input class="form-check-input" name="showDaysOfWeek" type="checkbox" value="true" checked>
+                <input type="checkbox" class="form-check-input" id="showDaysOfWeek" name="showDaysOfWeek" value="true" checked>
                 <label for="showDaysOfWeek" class="form-check-label">showDaysOfWeek</label>
               </div>
 
               <div class="form-group form-check">
-                <input class="form-check-input" name="showOnFocus" type="checkbox" value="true" checked>
+                <input type="checkbox" class="form-check-input" id="showOnFocus" name="showOnFocus" value="true" checked>
                 <label for="showOnFocus" class="form-check-label">showOnFocus</label>
               </div>
 
               <div class="form-group">
-                <label for="startView" class="label">startView</label>
+                <label class="label">startView</label>
                 <select class="form-control" name="startView">
                   <option value="0">0 – days</option>
                   <option value="1">1 – months</option>
@@ -356,17 +359,17 @@
               </div>
 
               <div class="form-group">
-                <label for="title" class="label">title</label>
+                <label class="label">title</label>
                 <input type="text" class="form-control" name="title">
               </div>
 
               <div class="form-group form-check">
-                <input class="form-check-input" name="todayBtn" type="checkbox" value="true">
+                <input type="checkbox" class="form-check-input" id="todayBtn" name="todayBtn" value="true">
                 <label for="todayBtn" class="form-check-label">todayBtn</label>
               </div>
 
               <div class="form-group">
-                <label for="todayBtnMode" class="label">todayBtnMode</label>
+                <label class="label">todayBtnMode</label>
                 <select class="form-control" name="todayBtnMode">
                   <option value="0">0 – focus</option>
                   <option value="1">1 – select</option>
@@ -374,12 +377,12 @@
               </div>
 
               <div class="form-group form-check">
-                <input class="form-check-input" name="todayHighlight" type="checkbox" value="true">
+                <input type="checkbox" class="form-check-input" id="todayHighlight" name="todayHighlight" value="true">
                 <label for="todayHighlight" class="form-check-label">todayHighlight</label>
               </div>
 
               <div class="form-group">
-                <label for="weekStart" class="label">weekStart</label>
+                <label class="label">weekStart</label>
                 <input type="text" class="form-control" name="weekStart" placeholder="0">
               </div>
 
@@ -391,12 +394,12 @@
             <form id="direction">
               <div class="form-group">
                 <div class="form-check form-check-inline">
-                  <input class="form-check-input" type="radio" name="direction" value="ltr" checked>
-                  <label class="form-check-label">LTR</label>
+                  <input type="radio" class="form-check-input" id="direction-ltr" name="direction" value="ltr" checked>
+                  <label for="direction-ltr" class="form-check-label">LTR</label>
                 </div>
                 <div class="form-check form-check-inline">
-                  <input class="form-check-input" type="radio" name="direction" value="rtl">
-                  <label class="form-check-label">RTL</label>
+                  <input type="radio" class="form-check-input" id="direction-rtl" name="direction" value="rtl">
+                  <label for="direction-rtl" class="form-check-label">RTL</label>
                 </div>
               </div>
             </form>
@@ -476,6 +479,12 @@ beforeShowDecade(date) {
 },
       };
       window.buttonClass = 'btn';
+      window.addError = function addError(el) {
+        el.classList.add('is-invalid');
+      }
+      window.removeErrors = function removeErrors(el) {
+        el.classList.remove('is-invalid');
+      }
 
       initialize();
 

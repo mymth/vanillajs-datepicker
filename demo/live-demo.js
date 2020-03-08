@@ -183,7 +183,7 @@ const languages = {
 const range = document.createRange();
 const sandbox = document.getElementById('sandbox');
 const options = document.getElementById('options');
-
+const jsonFields = ['datesDisabled'];
 
 function parseHTML(html) {
   return range.createContextualFragment(html);
@@ -268,7 +268,7 @@ function updateOption(name, value) {
 
 function addError(el, message) {
   const field = el.parentElement.parentElement;
-  field.appendChild(parseHTML(`<p class="help is-danget">${message}</p>`));
+  field.appendChild(parseHTML(`<p class="help is-danger">${message}</p>`));
   el.classList.add('is-danger');
 }
 
@@ -301,22 +301,19 @@ function onChangeInputOption(ev) {
 }
 
 function onChangeTextareaOption(ev) {
-  if (ev.target.classList.contains('is-danger')) {
+  let {value, name} = ev.target;
+  if (jsonFields.includes(name)) {
     removeErrors(ev.target);
-  }
-
-  let value;
-  if (ev.target.value.length > 0) {
-    try {
-      value = JSON.parse(ev.target.value);
-    } catch (err) {
-      addError(ev.target, 'Invalid JSON string');
-      return;
+    if (value.length > 0) {
+      try {
+        value = JSON.parse(value);
+      } catch (err) {
+        addError(ev.target, 'Invalid JSON string');
+        return;
+      }
     }
-  } else {
-    value = '';
   }
-  updateOption(ev.target.name, value);
+  updateOption(name, value);
 }
 
 function onClickCheckboxOptions(ev) {
