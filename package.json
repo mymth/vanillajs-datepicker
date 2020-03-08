@@ -46,6 +46,7 @@
     "cssnano": "^4.1.10",
     "docsify-cli": "^4.4.0",
     "esm": "^3.2.25",
+    "foundation-sites": "^6.6.1",
     "jsdom": "^15.2.1",
     "mocha": "^6.2.2",
     "postcss": "^7.0.27",

@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html class="no-js">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Vanilla JS Datepicker Demo</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/foundation-sites@6.4.3/dist/css/foundation.min.css" integrity="sha256-GSio8qamaXapM8Fq9JYdGNTvk/dgs+cMLgPeevOYEx0= sha384-wAweiGTn38CY2DSwAaEffed6iMeflc0FMiuptanbN4J+ib+342gKGpvYRWubPd/+ sha512-QHEb6jOC8SaGTmYmGU19u2FhIfeG+t/hSacIWPpDzOp5yygnthL3JwnilM7LM1dOAbJv62R+/FICfsrKUqv4Gg==" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="../dist/css/datepicker-foundation.css">
+    <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+    <style type="text/css">
+      main .section {
+        padding: 3rem 1.5rem;
+      }
+      aside {
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        right: -300px;
+        width: 300px;
+        overflow: auto;
+        background-color: #fff;
+        box-shadow: inset 1px 1px rgba(0, 0, 0, 10%);
+        transition: right 0.3s;
+      }
+      .open aside {
+        right: 0;
+      }
+      aside hr {
+        margin-top: 0.5rem;
+      }
+      .code-wrap {
+        position: relative;
+        margin-top: calc(-1rem + 1px);
+        margin-bottom: 1rem;
+      }
+      .code-wrap pre {
+        background-color: whitesmoke;
+        padding: 1.25rem 1.5rem;
+      }
+      .code-wrap pre:not(.is-active) {
+        height: 0;
+        overflow: hidden;
+        opacity: 0.5;
+      }
+      .code-wrap .collapse-button {
+        position: absolute;
+        top: 0;
+        right: 0;
+        left: auto;
+        cursor: pointer;
+        padding: 0.125rem 0.25rem;
+        font-size: 0.75rem;
+      }
+      .check-group {
+        display: flex;
+        flex-wrap: wrap;
+      }
+      .field.has-tip {
+        display: block;
+        border-bottom: 0;
+      }
+
+      .toggle-btn {
+        position: fixed;
+        top: 0.75rem;
+        right: 0.75rem;
+        width: 1.5rem;
+        background-color: #fff;
+        line-height: 1.5rem;
+        border: 1px solid rgba(0, 0, 0, 10%);
+        border-radius: 2px;
+        box-shadow: 1px 1px rgba(0, 0, 0, 10%);
+        cursor: pointer;
+      }
+      .toggle-btn::before {
+        content: '\25c0';
+        padding-left: 0.25rem;
+      }
+      .open .toggle-btn::before {
+        content: '\25b6';
+      }
+
+      @media (min-width: 481px) {
+        main {
+          margin-right: 38.1966%;
+        }
+        aside {
+          right: 0;
+          width: 38.1966%;
+        }
+        .toggle-btn {
+          display: none;
+        }
+      }
+
+      .text-success {
+        color: #3adb76 !important;
+      }
+      .text-warning {
+        color: #ffae00 !important;
+      }
+      .text-alert {
+        color: #cc4b37 !important;
+      }
+      .background-success {
+        background-color: #3adb76 !important;
+      }
+      .background-warning {
+        background-color: #ffae00 !important;
+      }
+      .background-alert {
+        background-color: #cc4b37 !important;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <section class="section container-fluid">
+        <div class="row">
+          <div class="columns">
+            <p>Vanilla JS Datepicker</p>
+            <h1 class="title">Demo</h1>
+            <div id="sandbox"></div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="columns">
+            <p><small>Style: <a href="index.html">Bulma</a> | <a href="bs4.html">Bootstrap</a> | <em>Foundation</em> | <a href="plain-css.html">Plain CSS</a></small></p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <aside>
+      <section class="section">
+        <div class="grid-x grid-padding-x grid-padding-y">
+          <div class="cell">
+            <h4 class="subtitle">Type</h4>
+            <form id="types">
+              <div class="field">
+                <input type="radio" id="type-input" name="type" value="input" checked>
+                <label for="type-input">Input</label>
+                <input type="radio" id="type-inline" name="type" value="inline">
+                <label for="type-inline">Inline</label>
+                <input type="radio" id="type-range" name="type" value="range">
+                <label for="type-range">Range</label>
+              </div>
+            </form>
+          </div>
+          <div class="cell">
+            <hr>
+            <h4 class="subtitle">Options</h4>
+            <form id="options">
+
+              <div class="field" data-tooltip title="Only effective in range picker">
+                <input type="checkbox" id="allowOneSidedRange" name="allowOneSidedRange" value="true">
+                <label for="allowOneSidedRange">allowOneSidedRange</label>
+              </div>
+
+              <div class="field">
+                <input type="checkbox" id="autohide" name="autohide" value="true">
+                <label for="autohide">autohide</label>
+              </div>
+
+              <div class="field">
+                <input type="checkbox" id="beforeShowDay" name="beforeShowDay" value="true">
+                <label for="beforeShowDay">beforeShowDay</label>
+                <div class="code-wrap">
+                  <pre id="code-beforeShowDay"></pre>
+                  <div class="collapse-button" data-target="code-beforeShowDay">show/hide</div>
+                </div>
+              </div>
+
+              <div class="field">
+                <input type="checkbox" id="beforeShowMonth" name="beforeShowMonth" value="true">
+                <label for="beforeShowMonth">beforeShowMonth</label>
+                <div class="code-wrap">
+                  <pre id="code-beforeShowMonth"></pre>
+                  <div class="collapse-button" data-target="code-beforeShowMonth">show/hide</div>
+                </div>
+              </div>
+
+              <div class="field">
+                <input type="checkbox" id="beforeShowYear" name="beforeShowYear" value="true">
+                <label for="beforeShowYear">beforeShowYear</label>
+                <div class="code-wrap">
+                  <pre id="code-beforeShowYear"></pre>
+                  <div class="collapse-button" data-target="code-beforeShowYear">show/hide</div>
+                </div>
+              </div>
+
+              <div class="field">
+                <input type="checkbox" id="beforeShowDecade" name="beforeShowDecade" value="true">
+                <label for="beforeShowDecade">beforeShowDecade</label>
+                <div class="code-wrap">
+                  <pre id="code-beforeShowDecade"></pre>
+                  <div class="collapse-button" data-target="code-beforeShowDecade">show/hide</div>
+                </div>
+              </div>
+
+              <div class="field">
+                <input type="checkbox" id="calendarWeeks" name="calendarWeeks" value="true">
+                <label for="calendarWeeks">calendarWeeks</label>
+              </div>
+
+              <div class="field">
+                <input type="checkbox" id="clearBtn" name="clearBtn" value="true">
+                <label for="clearBtn">clearBtn</label>
+              </div>
+
+              <div class="field">
+                <label>
+                  dateDelimiter
+                  <input type="text" name="dateDelimiter" placeholder=",">
+                </label>
+              </div>
+
+              <div class="field" data-tooltip title="enter in JSON format">
+                <label>
+                  datesDisabled
+                  <textarea name="datesDisabled" placeholder="[]"></textarea>
+                </label>
+              </div>
+
+              <div class="field">
+                <label>daysOfWeekDisabled</label>
+                <div class="check-group">
+                  <div class="check-group-item">
+                    <input type="checkbox" id="daysOfWeekDisabled-0" name="daysOfWeekDisabled" value="0">
+                    <label for="daysOfWeekDisabled-0">0</label>&nbsp;
+                  </div>
+                  <div class="check-group-item">
+                    <input type="checkbox" id="daysOfWeekDisabled-1" name="daysOfWeekDisabled" value="1">
+                    <label for="daysOfWeekDisabled-1">1</label>&nbsp;
+                  </div>
+                  <div class="check-group-item">
+                    <input type="checkbox" id="daysOfWeekDisabled-2" name="daysOfWeekDisabled" value="2">
+                    <label for="daysOfWeekDisabled-2">2</label>&nbsp;
+                  </div>
+                  <div class="check-group-item">
+                    <input type="checkbox" id="daysOfWeekDisabled-3" name="daysOfWeekDisabled" value="3">
+                    <label for="daysOfWeekDisabled-3">3</label>&nbsp;
+                  </div>
+                  <div class="check-group-item">
+                    <input type="checkbox" id="daysOfWeekDisabled-4" name="daysOfWeekDisabled" value="4">
+                    <label for="daysOfWeekDisabled-4">4</label>&nbsp;
+                  </div>
+                  <div class="check-group-item">
+                    <input type="checkbox" id="daysOfWeekDisabled-5" name="daysOfWeekDisabled" value="5">
+                    <label for="daysOfWeekDisabled-5">5</label>&nbsp;
+                  </div>
+                  <div class="check-group-item">
+                    <input type="checkbox" id="daysOfWeekDisabled-6" name="daysOfWeekDisabled" value="6">
+                    <label for="daysOfWeekDisabled-6">6</label>&nbsp;
+                  </div>
+                </div>
+              </div>
+
+              <div class="field">
+                <label>daysOfWeekHighlighted</label>
+                <div class="check-group">
+                  <div class="check-group-item">
+                    <input type="checkbox" id="daysOfWeekHighlighted-0" name="daysOfWeekHighlighted" value="0">
+                    <label for="daysOfWeekHighlighted-0">0</label>&nbsp;
+                  </div>
+                  <div class="check-group-item">
+                    <input type="checkbox" id="daysOfWeekHighlighted-1" name="daysOfWeekHighlighted" value="1">
+                    <label for="daysOfWeekHighlighted-1">1</label>&nbsp;
+                  </div>
+                  <div class="check-group-item">
+                    <input type="checkbox" id="daysOfWeekHighlighted-2" name="daysOfWeekHighlighted" value="2">
+                    <label for="daysOfWeekHighlighted-2">2</label>&nbsp;
+                  </div>
+                  <div class="check-group-item">
+                    <input type="checkbox" id="daysOfWeekHighlighted-3" name="daysOfWeekHighlighted" value="3">
+                    <label for="daysOfWeekHighlighted-3">3</label>&nbsp;
+                  </div>
+                  <div class="check-group-item">
+                    <input type="checkbox" id="daysOfWeekHighlighted-4" name="daysOfWeekHighlighted" value="4">
+                    <label for="daysOfWeekHighlighted-4">4</label>&nbsp;
+                  </div>
+                  <div class="check-group-item">
+                    <input type="checkbox" id="daysOfWeekHighlighted-5" name="daysOfWeekHighlighted" value="5">
+                    <label for="daysOfWeekHighlighted-5">5</label>&nbsp;
+                  </div>
+                  <div class="check-group-item">
+                    <input type="checkbox" id="daysOfWeekHighlighted-6" name="daysOfWeekHighlighted" value="6">
+                    <label for="daysOfWeekHighlighted-6">6</label>&nbsp;
+                  </div>
+                </div>
+              </div>
+
+              <div class="field">
+                <label>
+                  defaultViewDate
+                  <input type="text" name="defaultViewDate" placeholder="today">
+                </label>
+              </div>
+
+              <div class="field">
+                <input type="checkbox" id="disableTouchKeyboard" name="disableTouchKeyboard" value="true">
+                <label for="disableTouchKeyboard">disableTouchKeyboard</label>
+              </div>
+
+              <div class="field">
+                <label>
+                  format
+                  <input type="text" name="format" placeholder="mm/dd/yyyy">
+                </label>
+              </div>
+
+              <div class="field">
+                <label>
+                  language
+                  <select name="language" >
+                    <option valUe="en">en – English (US)</option>
+                  </select>
+                </label>
+              </div>
+
+              <div class="field">
+                <label>
+                  maxDate
+                  <input type="text" name="maxDate" placeholder="null">
+                </label>
+              </div>
+
+              <div class="field" data-tooltip title="Not effective in range picker">
+                <label>
+                  maxnumberOfDates
+                  <input type="text" name="maxNumberOfDates" placeholder="1">
+                </label>
+              </div>
+
+              <div class="field">
+                <label>
+                  maxView
+                  <select name="maxView">
+                    <option value="0">0 – days</option>
+                    <option value="1">1 – months</option>
+                    <option value="2">2 – years</option>
+                    <option value="3" selected>3 – decades</option>
+                  </select>
+                </label>
+              </div>
+
+              <div class="field">
+                <label>
+                  minDate
+                  <input type="text" name="minDate" placeholder="null">
+                </label>
+              </div>
+
+              <div class="field">
+                <label>
+                  nextArrow
+                  <textarea name="nextArrow" placeholder="»"></textarea>
+                </label>
+              </div>
+
+              <div class="field">
+                <label>
+                  orientation
+                  <select name="orientation" >
+                    <option value="auto">auto</option>
+                    <option value="top auto">top auto</option>
+                    <option value="bottom auto">bottom auto</option>
+                    <option value="auto left">auto left</option>
+                    <option value="top left">top left</option>
+                    <option value="bottom left">bottom left</option>
+                    <option value="auto right">auto right</option>
+                    <option value="top right">top right</option>
+                    <option value="bottom right">bottom right</option>
+                  </select>
+                </label>
+              </div>
+
+              <div class="field">
+                <label>
+                  prevArrow
+                  <textarea name="prevArrow" placeholder="«"></textarea>
+                </label>
+              </div>
+
+              <div class="field">
+                <input type="checkbox" id="showDaysOfWeek" name="showDaysOfWeek" value="true" checked>
+                <label for="showDaysOfWeek">showDaysOfWeek</label>
+              </div>
+
+              <div class="field">
+                <input type="checkbox" id="showOnFocus" name="showOnFocus" value="true" checked>
+                <label for="showOnFocus">showOnFocus</label>
+              </div>
+
+              <div class="field">
+                <label>
+                  startView
+                  <select name="startView">
+                    <option value="0">0 – days</option>
+                    <option value="1">1 – months</option>
+                    <option value="2">2 – years</option>
+                    <option value="3">3 – decades</option>
+                  </select>
+                </label>
+              </div>
+
+              <div class="field">
+                <label>
+                  title
+                  <input type="text" name="title">
+                </label>
+              </div>
+
+              <div class="field">
+                <input type="checkbox" id="todayBtn" name="todayBtn" value="true">
+                <label for="todayBtn">todayBtn</label>
+              </div>
+
+              <div class="field">
+                <label>
+                  todayBtnMode
+                  <select name="todayBtnMode">
+                    <option value="0">0 – focus</option>
+                    <option value="1">1 – select</option>
+                  </select>
+                </label>
+              </div>
+
+              <div class="field">
+                <input type="checkbox" id="todayHighlight" name="todayHighlight" value="true">
+                <label for="todayHighlight">todayHighlight</label>
+              </div>
+
+              <div class="field">
+                <label>
+                  weekStart
+                  <input type="text" name="weekStart" placeholder="0">
+                </label>
+              </div>
+
+            </form>
+          </div>
+          <div class="cell">
+            <hr>
+            <h4 class="subtitle">Text direction</h4>
+            <form id="direction">
+              <div class="field">
+                <input type="radio" id="direction-ltr" name="direction" value="ltr" checked>
+                <label for="direction-ltr">LTR</label>
+                <input type="radio" id="direction-rtl" name="direction" value="rtl">
+                <label for="direction-rtl">RTL</label>
+              </div>
+            </form>
+          </div>
+        </div>
+      </section>
+    </aside>
+
+    <div class="toggle-btn"></div>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/what-input/5.2.6/what-input.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/foundation-sites@6.4.3/dist/js/foundation.min.js" integrity="sha256-mRYlCu5EG+ouD07WxLF8v4ZAZYCA6WrmdIXyn1Bv9Vk= sha384-KzKofw4qqetd3kvuQ5AdapWPqV1ZI+CnfyfEwZQgPk8poOLWaabfgJOfmW7uI+AV sha512-0gHfaMkY+Do568TgjJC2iMAV0dQlY4NqbeZ4pr9lVUTXQzKu8qceyd6wg/3Uql9qA2+3X5NHv3IMb05wb387rA==" crossorigin="anonymous"></script>
+    <script src="../dist/js/datepicker-full.js"></script>
+    <script src="./live-demo.js"></script>
+    <script>
+      /*global $ initialize onChangeType onChnageDirection onChangeInputOption onChangeInputOption onChangeTextareaOption onClickcheckboxOptions switchPicker */
+      window.templates = {
+        input: `<div class="field"><input type="text" class="date"></div>`,
+        inline: `<div class="date"></div>`,
+        range: `<div class="input-group date input-daterange">
+  <input type="text" name="range-start" class="input-group-field">
+  <span class="input-group-label" disabled>to</span>
+  <input type="text" name="range-end" class="input-group-field">
+</div>`,
+      };
+      window.beforeShowFns = {
+beforeShowDay(date) {
+  if (date.getMonth() == new Date().getMonth()) {
+    switch (date.getDate()) {
+      case 4:
+        return {
+          content: '<span data-tooltip title="Example tooltip">4</span>',
+          classes: 'background-warning'
+        };
+      case 8:
+        return false;
+      case 12:
+        return "text-success";
+    }
+  }
+},
+beforeShowMonth(date) {
+  switch (date.getMonth()) {
+    case 6:
+      if (date.getFullYear() === new Date().getFullYear()) {
+        return {content: '🎉'};
+      }
+      break;
+    case 8:
+      return false;
+  }
+},
+beforeShowYear(date) {
+  switch (date.getFullYear()) {
+    case 2017:
+      return false;
+    case 2020:
+      return {content: '<span data-tooltip data-placement="bottom" title="Tooltip text">2020</span>'};
+  }
+},
+beforeShowDecade(date) {
+  switch (date.getFullYear()) {
+    case 2000:
+      return false;
+    case 2100:
+      return {
+        content: '💯',
+        classes: 'background-success',
+      };
+  }
+},
+      };
+
+      initialize();
+
+      document.getElementById('types').querySelectorAll('input').forEach((el) => {
+        el.addEventListener('change', onChangeType);
+      });
+
+      document.getElementById('direction').querySelectorAll('input').forEach((el) => {
+        el.addEventListener('change', onChnageDirection);
+      });
+
+      const optsForm = document.getElementById('options');
+      optsForm.querySelectorAll('input[type=text], input[type=radio], select').forEach((el) => {
+        el.addEventListener('change', onChangeInputOption);
+      });
+      optsForm.querySelectorAll('textarea').forEach((el) => {
+        el.addEventListener('change', onChangeTextareaOption);
+      });
+      optsForm.querySelectorAll('input[type=checkbox]').forEach((el) => {
+        el.addEventListener('click', onClickCheckboxOptions);
+      });
+
+      switchPicker('input');
+
+      const initTooltips = () => {
+        document.querySelectorAll('[data-tooltip]').forEach((el) => {
+          if (!el.classList.contains('has-tip')) {
+            new Foundation.Tooltip($(el));
+          }
+        });
+      };
+      setInterval(initTooltips, 1000);
+      // initTooltips();
+
+      $(document).foundation();
+    </script>
+  </body>
+</html>

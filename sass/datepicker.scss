@@ -403,6 +403,12 @@ $dp-cell-shrinked-width: $dp-cell-size-base * 7 / 8;
     &.focused {
       background-color: darken($dp-range-background-color, 5%);
     }
+
+    @if $dp-range-today-background-color != $dp-cell-today-background-color {
+      &.today {
+        background-color: $dp-range-today-background-color;
+      }
+    }
   }
 
   .datepicker-view .days & {

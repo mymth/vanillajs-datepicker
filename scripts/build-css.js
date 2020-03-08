@@ -14,6 +14,7 @@ const files = [
   {in: 'datepicker.scss', out: 'datepicker.css'},
   {in: 'index-bulma.scss', out: 'datepicker-bulma.css'},
   {in: 'index-bs4.scss', out: 'datepicker-bs4.css'},
+  {in: 'index-foundation.scss', out: 'datepicker-foundation.css'},
 ];
 
 if (!fs.existsSync(distDir)) {

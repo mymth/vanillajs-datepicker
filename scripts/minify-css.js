@@ -4,7 +4,12 @@ const postcss = require('postcss');
 const cssnano = require('cssnano');
 
 const distDir = `${path.dirname(__dirname)}/dist/css`;
-const files = ['datepicker', 'datepicker-bulma', 'datepicker-bs4'];
+const files = [
+  'datepicker',
+  'datepicker-bulma',
+  'datepicker-bs4',
+  'datepicker-foundation',
+];
 
 Promise.all(files.map((basename) => {
   return new Promise((resolve) => {

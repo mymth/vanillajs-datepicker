@@ -350,7 +350,7 @@ function initialize() {
   });
 
   document.querySelectorAll('.code-wrap pre').forEach((el) => {
-    el.textContent = getBeforeShowFnSrc(el.id);
+    el.textContent = getBeforeShowFnSrc(el.id.replace('code-', ''));
   });
 
   // collapsibles
