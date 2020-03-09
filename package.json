@@ -2,7 +2,7 @@
   "name": "vanillajs-datepicker",
   "version": "1.0.0",
   "description": "A vanilla JavaScript remake of bootstrap-datepicker for Bulma and other CSS frameworks",
-  "main": "",
+  "module": "js/main.js",
   "scripts": {
     "build:js": "rollup -c",
     "build:locales": "node scripts/build-locales.js",
