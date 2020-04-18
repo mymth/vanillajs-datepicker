@@ -22,7 +22,7 @@ describe('lib/dom', function () {
 
   describe('parseHTML()', function () {
     it('parses an html fragment with Range.prototype.createContextualFragment()', function () {
-      const spyFragment = sinon.spy(JSDOM, 'fragment');
+      const spyFragment = sinon.spy(Range.prototype, 'createContextualFragment');
       const html = '<div>test</div>';
       const result = parseHTML(html);
 

@@ -12,12 +12,6 @@ global.JSDOM = JSDOM;
 global.window = window;
 global.testContainer = document.getElementById('test-container');
 
-// Range mock
-const Range = global.Range = function Range() {};
-Range.prototype.createContextualFragment = html => JSDOM.fragment(html);
-
-document.createRange = () => new Range();
-
 const exposeToGlobal = [
   'document',
   'CustomEvent',
@@ -25,6 +19,7 @@ const exposeToGlobal = [
   'Event',
   'EventTarget',
   'NodeList',
+  'Range',
 ];
 exposeToGlobal.forEach((prop) => {
   global[prop] = window[prop];

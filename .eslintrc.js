@@ -49,7 +49,7 @@ module.exports = {
       env: {
         node: true,
       },
-      parser: 'babel-eslint',
+      parser: '/usr/local/lib/node_modules/babel-eslint',
       globals: {
         JSDOM: 'readonly',
       },
