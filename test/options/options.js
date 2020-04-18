@@ -317,13 +317,67 @@ describe('options', function () {
       }
     });
 
-    it('unfocuses the input after showing the picker if the browser supports document.ontouchstart', function () {
+    it('unfocuses the input after showing the picker', function () {
       const dp = new Datepicker(input, {disableTouchKeyboard: true});
       input.focus();
 
       expect(document.activeElement, 'not to be', input);
 
       dp.destroy();
+    });
+
+    it('prevents the input from getting focus after an eleent in the picker is clicked', function () {
+      const {dp, picker} = createDP(input, {disableTouchKeyboard: true});
+      const [viewSwitch, prevBtn] = getParts(picker, ['.view-switch', '.prev-btn']);
+      dp.show();
+
+      prevBtn.focus();
+      simulant.fire(prevBtn, 'click');
+      expect(document.activeElement, 'not to be', input);
+
+      simulant.fire(getCells(picker)[15], 'click');
+      expect(document.activeElement, 'not to be', input);
+
+      viewSwitch.focus();
+      simulant.fire(viewSwitch, 'click');
+      expect(document.activeElement, 'not to be', input);
+
+      simulant.fire(getCells(picker)[6], 'click');
+      expect(document.activeElement, 'not to be', input);
+
+      dp.destroy();
+    });
+
+    it('is ignored if the browser does not support document.ontouchstart', function () {
+      if (ontouchstartSupported) {
+        return;
+      }
+      delete document.ontouchstart;
+
+      const {dp, picker} = createDP(input, {disableTouchKeyboard: true});
+      const [viewSwitch, prevBtn] = getParts(picker, ['.view-switch', '.prev-btn']);
+      input.focus();
+
+      expect(document.activeElement, 'to be', input);
+
+      prevBtn.focus();
+      simulant.fire(prevBtn, 'click');
+      expect(document.activeElement, 'to be', input);
+
+      prevBtn.focus();
+      simulant.fire(getCells(picker)[15], 'click');
+      expect(document.activeElement, 'to be', input);
+
+      viewSwitch.focus();
+      simulant.fire(viewSwitch, 'click');
+      expect(document.activeElement, 'to be', input);
+
+      viewSwitch.focus();
+      simulant.fire(getCells(picker)[6], 'click');
+      expect(document.activeElement, 'to be', input);
+
+      dp.destroy();
+      document.ontouchstart = null;
     });
 
     it('can be updated with setOptions()', function () {

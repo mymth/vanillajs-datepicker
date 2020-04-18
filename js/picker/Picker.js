@@ -189,7 +189,7 @@ export default class Picker {
       }
 
       this.place();
-      if ('ontouchstart' in document && datepicker.config.disableTouchKeyboard) {
+      if (datepicker.config.disableTouchKeyboard) {
         datepicker.inputField.blur();
       }
     }

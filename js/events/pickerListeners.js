@@ -70,7 +70,7 @@ export function onClickPicker(datepicker, ev) {
   // re-shown after auto-hide when showOnFocus: true
   // it's caused by bubbled event from cells/buttons, but the bubbling cannot
   // be disabled because it's needed to keep the focus on the input element
-  if (!datepicker.inline && datepicker.picker.active) {
+  if (!datepicker.inline && datepicker.picker.active && !datepicker.config.disableTouchKeyboard) {
     datepicker.inputField.focus();
   }
 }

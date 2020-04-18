@@ -215,6 +215,10 @@ export default function processOptions(options, datepicker) {
   }
 
   //*** misc ***//
+  if (inOpts.disableTouchKeyboard !== undefined) {
+    config.disableTouchKeyboard = 'ontouchstart' in document && !!inOpts.disableTouchKeyboard;
+    delete inOpts.disableTouchKeyboard;
+  }
   if (inOpts.orientation) {
     const orientation = inOpts.orientation.toLowerCase().split(/\s+/g);
     config.orientation = {

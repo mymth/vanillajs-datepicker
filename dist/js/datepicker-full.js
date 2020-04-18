@@ -707,6 +707,10 @@
     }
 
     //*** misc ***//
+    if (inOpts.disableTouchKeyboard !== undefined) {
+      config.disableTouchKeyboard = 'ontouchstart' in document && !!inOpts.disableTouchKeyboard;
+      delete inOpts.disableTouchKeyboard;
+    }
     if (inOpts.orientation) {
       const orientation = inOpts.orientation.toLowerCase().split(/\s+/g);
       config.orientation = {
@@ -1419,7 +1423,7 @@
     // re-shown after auto-hide when showOnFocus: true
     // it's caused by bubbled event from cells/buttons, but the bubbling cannot
     // be disabled because it's needed to keep the focus on the input element
-    if (!datepicker.inline && datepicker.picker.active) {
+    if (!datepicker.inline && datepicker.picker.active && !datepicker.config.disableTouchKeyboard) {
       datepicker.inputField.focus();
     }
   }
@@ -1596,7 +1600,7 @@
         }
 
         this.place();
-        if ('ontouchstart' in document && datepicker.config.disableTouchKeyboard) {
+        if (datepicker.config.disableTouchKeyboard) {
           datepicker.inputField.blur();
         }
       }
