@@ -170,7 +170,8 @@ datepicker.update( [ options ] )
 
 ### Events
 
-All Datepicker-event objects are `CustomEvent` instances that include the following extra data in the `details` property.
+All Datepicker-event objects are `CustomEvent` instances and dispached to the associated `<input>` element (for inline picker, the block element).  
+They include the following extra data in the `details` property.
 
 - `date`: {`Date`} - Selected date(s) (see [getDate()](api?id=datepickergetdate))
 - `viewDate`: {`Date`} - Focused date
