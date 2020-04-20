@@ -152,7 +152,7 @@ Whether to prevent on-screen keyboard on mobile devices from showing up when the
 
 > The format string must not include the [dateDelimiter](options?id=datedelimiter) string
 
-Alternatively, object that contains custom perser and formatter functions can be used.
+Alternatively, object that contains custom parser and formatter functions can be used.
 
 - **Parser**
   - Property \(function\) name: `toValue`
@@ -215,7 +215,7 @@ Maximum number of dates users can select. No limit is applied if `0` is set.
 - Type: Number
 - Default: `3`
 
-Muximum limit to the view that the date picker displayes. `0`:_days_ – `3`:_decades_.
+Maximum limit to the view that the date picker displayes. `0`:_days_ – `3`:_decades_.
 
 #### minDate
 - Type: `String`|`Date`|`Number`
