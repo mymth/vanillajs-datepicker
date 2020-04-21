@@ -194,7 +194,7 @@ Alternatively, object that contains custom perser and formatter functions can be
 
 The language code of the language used by the date picker.
 
-> For languages other than `en` to wirk, their locales must be loaded into your project/program.  
+> For languages other than `en` to work, their locales must be loaded into your project/program.  
 > See [i18n](i18n) for the details.
 
 #### maxDate
