@@ -215,7 +215,7 @@ Maximum number of dates users can select. No limit is applied if `0` is set.
 - Type: Number
 - Default: `3`
 
-Muximum limit to the view that the date picker displayes. `0`:_days_ – `3`:_decades_.
+Maximum limit to the view that the date picker displayes. `0`:_days_ – `3`:_decades_.
 
 #### minDate
 - Type: `String`|`Date`|`Number`
