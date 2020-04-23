@@ -152,7 +152,7 @@ Whether to prevent on-screen keyboard on mobile devices from showing up when the
 
 > The format string must not include the [dateDelimiter](options?id=datedelimiter) string
 
-Alternatively, object that contains custom perser and formatter functions can be used.
+Alternatively, object that contains custom parser and formatter functions can be used.
 
 - **Parser**
   - Property \(function\) name: `toValue`
