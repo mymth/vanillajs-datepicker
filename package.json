@@ -1,6 +1,6 @@
 {
   "name": "vanillajs-datepicker",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A vanilla JavaScript remake of bootstrap-datepicker for Bulma and other CSS frameworks",
   "module": "js/main.js",
   "scripts": {
@@ -52,7 +52,7 @@
     "postcss": "^7.0.27",
     "postcss-node-sass": "^2.1.8",
     "postcss-scss": "^2.0.0",
-    "rollup": "^2.6.1",
+    "rollup": "^2.7.2",
     "simulant": "^0.2.2",
     "sinon": "^9.0.2",
     "uglify-es": "^3.3.9",
