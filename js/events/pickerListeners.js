@@ -15,14 +15,17 @@ function goToSelectedMonthOrYear(datepicker, selection) {
 
 export function onClickTodayBtn(datepicker) {
   const picker = datepicker.picker;
+  const currentDate = today();
   if (datepicker.config.todayBtnMode === 1) {
-    datepicker.setDate(today(), {render: false});
     if (datepicker.config.autohide) {
-      datepicker.hide();
+      datepicker.setDate(currentDate);
       return;
     }
-  } else {
-    picker.changeFocus(today());
+    datepicker.setDate(currentDate, {render: false});
+    picker.update();
+  }
+  if (picker.viewDate !== currentDate) {
+    picker.changeFocus(currentDate);
   }
   picker.changeView(0).render();
 }

@@ -310,6 +310,73 @@ describe('options - buttons', function () {
         todayBtn.click();
 
         expect(isVisible(picker), 'to be false');
+
+        dp.setDate({clear: true});
+      });
+
+      it('always changes the view to current date\'s days view when todayBtnMode = 1', function () {
+        const nextBtn = picker.querySelector('.next-btn');
+        dp.setOptions({todayBtnMode: 1});
+
+        // after moving other month or view while the current date is selected already
+        // (issue #11)
+        todayBtn.click();
+        nextBtn.click();
+        todayBtn.click();
+        cells = getCells(picker);
+        expect(viewSwitch.textContent, 'to be', 'February 2020');
+        expect(cells[19].classList.contains('focused'), 'to be true');
+        expect(cells[19].classList.contains('selected'), 'to be true');
+        expect(dp.dates, 'to equal', [dateValue(2020, 1, 14)]);
+
+        viewSwitch.click();
+        nextBtn.click();
+        todayBtn.click();
+        cells = getCells(picker);
+        expect(viewSwitch.textContent, 'to be', 'February 2020');
+        expect(cells[19].classList.contains('focused'), 'to be true');
+        expect(cells[19].classList.contains('selected'), 'to be true');
+        expect(dp.dates, 'to equal', [dateValue(2020, 1, 14)]);
+
+        viewSwitch.click();
+        viewSwitch.click();
+        nextBtn.click();
+        nextBtn.click();
+        todayBtn.click();
+        cells = getCells(picker);
+        expect(viewSwitch.textContent, 'to be', 'February 2020');
+        expect(cells[19].classList.contains('focused'), 'to be true');
+        expect(cells[19].classList.contains('selected'), 'to be true');
+        expect(dp.dates, 'to equal', [dateValue(2020, 1, 14)]);
+
+        // when current date is deslected by toggling in multi-date mode
+        dp.setOptions({maxNumberOfDates: 3});
+        nextBtn.click();
+        getCells(picker)[20].click();
+        todayBtn.click();
+        cells = getCells(picker);
+        expect(viewSwitch.textContent, 'to be', 'February 2020');
+        expect(cells[19].classList.contains('focused'), 'to be true');
+        expect(cells[19].classList.contains('selected'), 'to be false');
+        expect(dp.dates, 'to equal', [dateValue(2020, 2, 21)]);
+
+        nextBtn.click();
+        todayBtn.click();
+        cells = getCells(picker);
+        expect(viewSwitch.textContent, 'to be', 'February 2020');
+        expect(cells[19].classList.contains('selected'), 'to be true');
+        expect(dp.dates, 'to equal', [dateValue(2020, 2, 21), dateValue(2020, 1, 14)]);
+
+        viewSwitch.click();
+        nextBtn.click();
+        todayBtn.click();
+        cells = getCells(picker);
+        expect(viewSwitch.textContent, 'to be', 'February 2020');
+        expect(cells[19].classList.contains('focused'), 'to be true');
+        expect(cells[19].classList.contains('selected'), 'to be false');
+        expect(dp.dates, 'to equal', [dateValue(2020, 2, 21)]);
+
+        dp.setDate({clear: true});
       });
     });
   });

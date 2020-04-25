@@ -333,8 +333,12 @@ export default class Datepicker {
     }
     if (newDates.toString() !== this.dates.toString()) {
       this.dates = newDates;
-      this.picker.update();
-      this.refresh(opts.render ? undefined : 'input');
+      if (opts.render) {
+        this.picker.update();
+        this.refresh();
+      } else {
+        this.refresh('input');
+      }
       triggerDatepickerEvent(this, 'changeDate');
     } else {
       this.refresh('input');
