@@ -87,6 +87,7 @@ const defaultOptions = {
   maxDate: null,
   maxNumberOfDates: 1,
   maxView: 3,
+  minView: 0,
   minDate: null,
   nextArrow: '»',
   orientation: 'auto',

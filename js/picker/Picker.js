@@ -292,7 +292,8 @@ export default class Picker {
   changeView(viewId) {
     const oldView = this.currentView;
     const newView =  this.views[viewId];
-    if (newView.id !== oldView.id) {
+    const minView = this.datepicker.config.minView;
+    if (newView.id !== oldView.id && newView.id >= minView) {
       this.currentView = newView;
       this._renderMethod = 'render';
       triggerDatepickerEvent(this.datepicker, 'changeView');

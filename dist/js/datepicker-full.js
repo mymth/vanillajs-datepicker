@@ -432,6 +432,7 @@
     maxDate: null,
     maxNumberOfDates: 1,
     maxView: 3,
+    minView: 0,
     minDate: null,
     nextArrow: '»',
     orientation: 'auto',
@@ -1402,19 +1403,34 @@
   // For the picker's main block to delegete the events from `datepicker-cell`s
   function onClickView(datepicker, ev) {
     const target = findElementInEventPath(ev, '.datepicker-cell');
+    const currentView = datepicker.picker.currentView;
+    const minView = datepicker.config.minView;
     if (!target || target.classList.contains('disabled')) {
       return;
     }
 
-    switch (datepicker.picker.currentView.id) {
+    switch (currentView.id) {
       case 0:
         datepicker.setDate(Number(target.dataset.date));
         break;
       case 1:
-        goToSelectedMonthOrYear(datepicker, Number(target.dataset.month));
+        const currentViewYear = currentView.year;
+        const {month} = target.dataset;
+        if (minView === currentView.id) {
+          const date = new Date().setFullYear(currentViewYear, month, 1);
+          datepicker.setDate(Number(date));
+        } else {
+          goToSelectedMonthOrYear(datepicker, Number(month));
+        }
         break;
       default:
-        goToSelectedMonthOrYear(datepicker, Number(target.dataset.year));
+        const {year} = target.dataset;
+        if (minView === currentView.id) {
+          const date = new Date().setFullYear(year, 0, 1);
+          datepicker.setDate(Number(date));
+        } else {
+          goToSelectedMonthOrYear(datepicker, Number(year));
+        }
     }
   }
 
@@ -1706,7 +1722,8 @@
     changeView(viewId) {
       const oldView = this.currentView;
       const newView =  this.views[viewId];
-      if (newView.id !== oldView.id) {
+      const minView = this.datepicker.config.minView;
+      if (newView.id !== oldView.id && newView.id >= minView) {
         this.currentView = newView;
         this._renderMethod = 'render';
         triggerDatepickerEvent(this.datepicker, 'changeView');
