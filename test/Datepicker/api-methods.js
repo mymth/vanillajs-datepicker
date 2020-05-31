@@ -41,6 +41,9 @@ describe('Datepicker - API methods', function () {
 
   describe('setDate()', function () {
     it('changes the selected date to given date', function () {
+      const spyChnageEvent = sinon.spy();
+      input.addEventListener('change', spyChnageEvent);
+
       const viewSwitdh = getViewSwitch(picker);
       const date = new Date(2019, 11, 23);
       dp.setDate(date);
@@ -64,6 +67,11 @@ describe('Datepicker - API methods', function () {
       expect(filterCells(cells, '.selected'), 'to equal', [cells[24]]);
       expect(filterCells(cells, '.focused'), 'to equal', [cells[24]]);
       expect(cells[24].textContent, 'to be', '22');
+
+      // change by api call should not be a trigger of change event
+      // (issue #24)
+      expect(spyChnageEvent.called, 'to be false');
+      input.removeEventListener('change', spyChnageEvent);
     });
 
     it('does nothing if no date or invalid date is given', function () {
@@ -86,6 +94,9 @@ describe('Datepicker - API methods', function () {
     });
 
     it('clears the selection if no dates + clear: true option are given', function () {
+      const spyChnageEvent = sinon.spy();
+      input.addEventListener('change', spyChnageEvent);
+
       const viewSwitdh = getViewSwitch(picker);
       const today = dateUtils.today();
 
@@ -100,6 +111,11 @@ describe('Datepicker - API methods', function () {
       expect(todayCell.textContent, 'to be', Datepicker.formatDate(today, 'd'));
       expect(filterCells(cells, '.selected'), 'to equal', []);
       expect(filterCells(cells, '.focused'), 'to equal', [todayCell]);
+
+      // change by api call should not be a trigger of change event
+      // (issue #24)
+      expect(spyChnageEvent.called, 'to be false');
+      input.removeEventListener('change', spyChnageEvent);
     });
 
     it('omits updating the picker UI if render option = false', function () {
@@ -166,6 +182,9 @@ describe('Datepicker - API methods', function () {
 
   describe('refresh()', function () {
     it('refreshes the input element and picker UI to refrect the internal data', function () {
+      const spyChnageEvent = sinon.spy();
+      input.addEventListener('change', spyChnageEvent);
+
       dp.dates = [dateValue(2020, 1, 14)];
       dp.picker.update();
       dp.refresh();
@@ -177,6 +196,11 @@ describe('Datepicker - API methods', function () {
       expect(filterCells(cells, '.selected'), 'to equal', [cells[19]]);
       expect(filterCells(cells, '.focused'), 'to equal', [cells[19]]);
       expect(cells[19].textContent, 'to be', '14');
+
+      // change by api call should not be a trigger of change event
+      // (issue #24)
+      expect(spyChnageEvent.called, 'to be false');
+      input.removeEventListener('change', spyChnageEvent);
     });
 
     it('refresh only picker UI if "picker" is passed', function () {

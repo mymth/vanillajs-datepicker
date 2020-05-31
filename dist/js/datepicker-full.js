@@ -2322,11 +2322,7 @@
         this.picker.render();
       }
       if (!this.inline && target !== 'picker') {
-        const newVal = stringifyDates(this.dates, this.config);
-        if (this.inputField.value !== newVal) {
-          this.inputField.value = newVal;
-          this.inputField.dispatchEvent(new Event('change'));
-        }
+        this.inputField.value = stringifyDates(this.dates, this.config);
       }
     }
 
