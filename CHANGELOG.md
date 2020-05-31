@@ -1,5 +1,9 @@
 # changelog
 
+## 1.0.3
+
+- Fix #24 — change event was fired inappropriately through setDate() API call 
+
 ## 1.0.2
 
 - Fix #11, #17, #19 — calendar wasn't redrawn properly in some conditions
