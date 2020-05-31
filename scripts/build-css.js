@@ -28,7 +28,7 @@ Promise.all(files.map((entry) => {
     postcss([nodeSass, autoprefixer])
       .process(file, {syntax, from, map: false})
       .then((result) => {
-        fs.writeFileSync(`${distDir}/${entry.out}`, result);
+        fs.writeFileSync(`${distDir}/${entry.out}`, result.css);
         resolve();
       })
       .catch((err) => {

@@ -20,7 +20,7 @@ Promise.all(files.map((basename) => {
     postcss([cssnano])
       .process(file, {from, map: false})
       .then((result) => {
-        fs.writeFileSync(`${fileNameBase}.min.css`, result);
+        fs.writeFileSync(`${fileNameBase}.min.css`, result.css);
         resolve();
       })
       .catch((err) => {
