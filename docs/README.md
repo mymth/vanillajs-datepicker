@@ -26,7 +26,7 @@ The package also includes pre-built js/css files for those who like to use it di
 Install the package using npm.
 
 ```bash
-npm install --save-dev vanillajs-datepicker 
+npm install --save vanillajs-datepicker 
 ```
 
 ##### Date picker
