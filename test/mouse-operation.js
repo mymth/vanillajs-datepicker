@@ -71,6 +71,23 @@ describe('mouse operation', function () {
     testContainer.removeChild(outsider);
   });
 
+  it('picker shows up if input field is clicked wheh picker is hidden', function () {
+    const {dp, picker} = createDP(input);
+    // when input field is not focued
+    simulant.fire(input, 'mousedown');
+    input.click();
+    expect(isVisible(picker), 'to be true');
+
+    dp.hide();
+
+    // when input has focus
+    simulant.fire(input, 'mousedown');
+    input.click();
+    expect(isVisible(picker), 'to be true');
+
+    dp.destroy();
+  });
+
   describe('view-switch', function () {
     it('changes the view to the next greater one', function () {
       input.value = '04/22/2020';

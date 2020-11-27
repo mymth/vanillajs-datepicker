@@ -437,6 +437,7 @@
     orientation: 'auto',
     prevArrow: '«',
     showDaysOfWeek: true,
+    showOnClick: true,
     showOnFocus: true,
     startView: 0,
     title: '',
@@ -1428,15 +1429,8 @@
     }
   }
 
-  function onClickPicker(datepicker, ev) {
-    ev.preventDefault();
-    ev.stopPropagation();
-
-    // check if the picker is active in order to prevent the picker from being
-    // re-shown after auto-hide when showOnFocus: true
-    // it's caused by bubbled event from cells/buttons, but the bubbling cannot
-    // be disabled because it's needed to keep the focus on the input element
-    if (!datepicker.inline && datepicker.picker.active && !datepicker.config.disableTouchKeyboard) {
+  function onClickPicker(datepicker) {
+    if (!datepicker.inline && !datepicker.config.disableTouchKeyboard) {
       datepicker.inputField.focus();
     }
   }
@@ -1560,7 +1554,7 @@
 
       // set up event listeners
       registerListeners(datepicker, [
-        [element, 'click', onClickPicker.bind(null, datepicker)],
+        [element, 'click', onClickPicker.bind(null, datepicker), {capture: true}],
         [main, 'click', onClickView.bind(null, datepicker)],
         [controls.viewSwitch, 'click', onClickViewSwitch.bind(null, datepicker)],
         [controls.prevBtn, 'click', onClickPrevBtn.bind(null, datepicker)],
@@ -1913,8 +1907,10 @@
   // for the prevention for entering edit mode while getting focus on click
   function onMousedown(datepicker, ev) {
     const el = ev.target;
-    if (datepicker.picker.active) {
+    if (datepicker.picker.active || datepicker.config.showOnClick) {
+      el._active = el === document.activeElement;
       el._clicking = setTimeout(() => {
+        delete el._active;
         delete el._clicking;
       }, 2000);
     }
@@ -1928,7 +1924,14 @@
     clearTimeout(el._clicking);
     delete el._clicking;
 
-    datepicker.enterEditMode();
+    if (el._active) {
+      datepicker.enterEditMode();
+    }
+    delete el._active;
+
+    if (datepicker.config.showOnClick) {
+      datepicker.show();
+    }
   }
 
   function onPaste(datepicker, ev) {

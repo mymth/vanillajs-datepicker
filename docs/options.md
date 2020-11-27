@@ -255,11 +255,21 @@ HTML (or plain text) for the button label of the "Prev" button.
 
 Whether to show the day names of the week.
 
+#### showOnClick
+- Type: `Boolean`
+- Default: `true`
+
+Whether to show the date picker when the associated input filed is clicked.
+
+> Not available on inline picker.
+
 #### showOnFocus
 - Type: `Boolean`
 - Default: `true`
 
 Whether to show the date picker automatically when the associated input filed receives focus.
+
+> Not available on inline picker.
 
 #### startView
 - Type: `Number`

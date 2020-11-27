@@ -92,6 +92,7 @@ const defaultOptions = {
   orientation: 'auto',
   prevArrow: '«',
   showDaysOfWeek: true,
+  showOnClick: true,
   showOnFocus: true,
   startView: 0,
   title: '',

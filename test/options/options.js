@@ -36,6 +36,16 @@ describe('options', function () {
       simulant.fire(input, 'keydown', {key: 'Enter'});
       expect(isVisible(picker), 'to be false');
 
+      // focus is kept on input field after auto-hidng by clicking day cell
+      // (issue #21)
+      const spyFocus = sinon.spy(input, 'focus');
+      dp.show();
+
+      getCells(picker)[25].click();
+      expect(spyFocus.called, 'to be true');
+
+      spyFocus.restore();
+
       dp.destroy();
       input.value = '';
     });
@@ -508,6 +518,39 @@ describe('options', function () {
 
       dp.setOptions({showDaysOfWeek: true});
       expect(isVisible(picker.querySelector('.days-of-week')), 'to be true');
+
+      dp.destroy();
+    });
+  });
+
+  describe('showOnClick', function () {
+    it('disables the picker to auto-open on clicking input when false', function () {
+      const {dp, picker} = createDP(input, {showOnClick: false});
+      input.focus();
+      dp.hide();
+
+      simulant.fire(input, 'mousedown');
+      input.click();
+      expect(isVisible(picker), 'to be false');
+
+      dp.destroy();
+    });
+
+    it('can be updated with setOptions()', function () {
+      const {dp, picker} = createDP(input);
+      dp.setOptions({showOnClick: false});
+      input.focus();
+      dp.hide();
+      simulant.fire(input, 'mousedown');
+      input.click();
+
+      expect(isVisible(picker), 'to be false');
+
+      dp.setOptions({showOnClick: true});
+      simulant.fire(input, 'mousedown');
+      input.click();
+
+      expect(isVisible(picker), 'to be true');
 
       dp.destroy();
     });

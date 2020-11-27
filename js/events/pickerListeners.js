@@ -65,15 +65,8 @@ export function onClickView(datepicker, ev) {
   }
 }
 
-export function onClickPicker(datepicker, ev) {
-  ev.preventDefault();
-  ev.stopPropagation();
-
-  // check if the picker is active in order to prevent the picker from being
-  // re-shown after auto-hide when showOnFocus: true
-  // it's caused by bubbled event from cells/buttons, but the bubbling cannot
-  // be disabled because it's needed to keep the focus on the input element
-  if (!datepicker.inline && datepicker.picker.active && !datepicker.config.disableTouchKeyboard) {
+export function onClickPicker(datepicker) {
+  if (!datepicker.inline && !datepicker.config.disableTouchKeyboard) {
     datepicker.inputField.focus();
   }
 }

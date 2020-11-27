@@ -161,8 +161,10 @@ export function onFocus(datepicker) {
 // for the prevention for entering edit mode while getting focus on click
 export function onMousedown(datepicker, ev) {
   const el = ev.target;
-  if (datepicker.picker.active) {
+  if (datepicker.picker.active || datepicker.config.showOnClick) {
+    el._active = el === document.activeElement;
     el._clicking = setTimeout(() => {
+      delete el._active;
       delete el._clicking;
     }, 2000);
   }
@@ -176,7 +178,14 @@ export function onClickInput(datepicker, ev) {
   clearTimeout(el._clicking);
   delete el._clicking;
 
-  datepicker.enterEditMode();
+  if (el._active) {
+    datepicker.enterEditMode();
+  }
+  delete el._active;
+
+  if (datepicker.config.showOnClick) {
+    datepicker.show();
+  }
 }
 
 export function onPaste(datepicker, ev) {
