@@ -284,4 +284,38 @@ describe('keyboard operation - edit mode', function () {
 
     dp.destroy();
   });
+
+  it('updates the selection with the input if picker hides while unfocusing input element', function () {
+    const outsider = document.createElement('p');
+    testContainer.appendChild(outsider);
+
+    const dp = new Datepicker(input);
+    const date = dateValue(2020, 3, 22);
+    // by tab key-press
+    dp.setDate('02/14/2020');
+    input.focus();
+    dp.enterEditMode();
+    input.value = '4/22/2020';
+
+    simulant.fire(input, 'keydown', {key: 'Tab'});
+    expect(dp.editMode, 'to be undefined');
+    expect(input.classList.contains('in-edit'), 'to be false');
+    expect(input.value, 'to be', '04/22/2020');
+    expect(dp.dates, 'to equal', [date]);
+
+    //by clicking outside
+    dp.setDate('02/14/2020');
+    dp.show();
+    dp.enterEditMode();
+    input.value = '4/22/2020';
+
+    simulant.fire(outsider, 'mousedown');
+    expect(dp.editMode, 'to be undefined');
+    expect(input.classList.contains('in-edit'), 'to be false');
+    expect(input.value, 'to be', '04/22/2020');
+    expect(dp.dates, 'to equal', [date]);
+
+    dp.destroy();
+    testContainer.removeChild(outsider);
+  });
 });

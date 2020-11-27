@@ -1,6 +1,6 @@
 import {isInRange} from '../lib/utils.js';
 import {addDays, addMonths, addYears, startOfYearPeriod} from '../lib/date.js';
-import {goToPrevOrNext, switchView} from './functions.js';
+import {goToPrevOrNext, switchView, unfocus} from './functions.js';
 
 // Find the closest date that doesn't meet the condition for unavailable date
 // Returns undefined if no available date is found
@@ -69,8 +69,7 @@ function moveByArrowKey(datepicker, ev, direction, vertical) {
 
 export function onKeydown(datepicker, ev) {
   if (ev.key === 'Tab') {
-    datepicker.refresh('input');
-    datepicker.hide();
+    unfocus(datepicker);
     return;
   }
 

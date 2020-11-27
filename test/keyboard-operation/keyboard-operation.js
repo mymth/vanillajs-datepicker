@@ -21,24 +21,35 @@ describe('keyboard operation', function () {
       dp.destroy();
     });
 
-    it('discards unparsed input', function () {
-      input.value = '04/22/2020';
+    it('updates the selected date with the input\'s value', function () {
+      const clock = sinon.useFakeTimers({now: new Date(2020, 1, 14)});
 
       const dp = new Datepicker(input);
+      // when picker is shown
       input.focus();
       input.value = 'foo';
+
+      simulant.fire(input, 'keydown', {key: 'Tab'});
+      expect(input.value, 'to be', '02/14/2020');
+      expect(dp.getDate().getTime(), 'to be', dateValue(2020, 1, 14));
+
+      // when picker is hidden
+      input.focus();
+      input.value = '04/22/2020';
 
       simulant.fire(input, 'keydown', {key: 'Tab'});
       expect(input.value, 'to be', '04/22/2020');
+      expect(dp.getDate().getTime(), 'to be', dateValue(2020, 3, 22));
 
-      dp.setDate({clear: true});
       input.focus();
-      input.value = 'foo';
+      input.value = '';
 
       simulant.fire(input, 'keydown', {key: 'Tab'});
       expect(input.value, 'to be', '');
+      expect(dp.getDate(), 'to be undefined');
 
       dp.destroy();
+      clock.restore();
     });
   });
 

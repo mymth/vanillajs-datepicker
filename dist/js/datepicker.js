@@ -443,6 +443,7 @@ var Datepicker = (function () {
     todayBtn: false,
     todayBtnMode: 0,
     todayHighlight: false,
+    updateOnBlur: true,
     weekStart: 0,
   };
 
@@ -1355,6 +1356,15 @@ var Datepicker = (function () {
     datepicker.picker.changeView(viewId + 1).render();
   }
 
+  function unfocus(datepicker) {
+    if (datepicker.config.updateOnBlur) {
+      datepicker.update({autohide: true});
+    } else {
+      datepicker.refresh('input');
+      datepicker.hide();
+    }
+  }
+
   function goToSelectedMonthOrYear(datepicker, selection) {
     const picker = datepicker.picker;
     const viewDate = new Date(picker.viewDate);
@@ -1811,8 +1821,7 @@ var Datepicker = (function () {
 
   function onKeydown(datepicker, ev) {
     if (ev.key === 'Tab') {
-      datepicker.refresh('input');
-      datepicker.hide();
+      unfocus(datepicker);
       return;
     }
 
@@ -1936,8 +1945,7 @@ var Datepicker = (function () {
     if (findElementInEventPath(ev, el => el === element || el === pickerElem)) {
       return;
     }
-    datepicker.refresh('input');
-    datepicker.hide();
+    unfocus(datepicker);
   }
 
   function stringifyDates(dates, config) {

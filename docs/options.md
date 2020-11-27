@@ -298,6 +298,16 @@ Mode | Name | Description
 
 Whether to highlight the current date.
 
+#### updateOnBlur
+- Type: `Boolean`
+- Default: `true`
+
+Whether to update the selected date(s) with the input field's value when the input field is losing focus.
+
+> When this option is `false`, if the user edits the date string in input field, it will be parsed and applied only when the user presses the <kbd>Enter</kbd> key. If the edit is left unparsed, it will be discarded when input field becomes unfocused (by <kbd>Tab</kbd> key press or click outside the picker element/input field).
+>
+> Not available on inline picker.
+
 #### weekStart
 - Type: `Number`
 - Default: `0`

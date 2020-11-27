@@ -107,7 +107,8 @@ For inline picker, you can set a date string to the `data-date` attribute of the
 
 You can update the selected date by editing the date string in the input field.
 
-> Your edit is parsed and applied when pressing <kbd>Enter</kbd> key. If the edit is unparsed, it will be discarded when date picker becomes unfocused (by pressing <kbd>Tab</kbd> key or clicking outside the picker element/input field).
+> Since the built-in parser is very torelant of format errors, a small typing error can cause an unexpected (and sometimes unimaginable) date in the input field. _(See [How Built-in Parser parses](./date-string+format?id=how-built-in-parser-parses))_  
+> If you think this is not good, you might want to consider using the [`updateOnBlur`](./options?id=updateonblur):`false` config option in order to implicitly nudge users to look at their input.
 
 ## Keyboad Operation
 
@@ -170,5 +171,3 @@ While date picker is in edit mode,
 
 - highlight of the `<input>` element becomes more prominent
 - keyboard operation of the picker element is temporarily disabled
-
-The edit made in edit mode is parsed and applied only when <kbd>enter</kbd> key is pressed. Unparsed edit is discarded on exiting edit mode. 

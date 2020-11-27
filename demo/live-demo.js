@@ -97,6 +97,7 @@ const defaultOptions = {
   title: '',
   todayBtn: false,
   todayHighlight: false,
+  updateOnBlur: true,
   weekStart: 0,
 };
 const languages = {

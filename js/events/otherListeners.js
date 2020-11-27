@@ -1,4 +1,5 @@
 import {findElementInEventPath} from '../lib/event.js';
+import {unfocus} from './functions.js';
 
 // for the `document` to delegate the events from outside the picker/input field
 export function onClickOutside(datepicker, ev) {
@@ -8,6 +9,5 @@ export function onClickOutside(datepicker, ev) {
   if (findElementInEventPath(ev, el => el === element || el === pickerElem)) {
     return;
   }
-  datepicker.refresh('input');
-  datepicker.hide();
+  unfocus(datepicker);
 }

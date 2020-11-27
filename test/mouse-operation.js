@@ -33,13 +33,13 @@ describe('mouse operation', function () {
     testContainer.removeChild(outsider);
   });
 
-  it('unparsed input is discarded if mouse is pressed outside the picker or the input', function () {
+  it('selection is updated with input\'s value if mouse is pressed outside the input', function () {
     const outsider = document.createElement('p');
     testContainer.appendChild(outsider);
-    input.value = '04/22/2020';
 
     const {dp, picker} = createDP(input);
-    dp.show();
+    // when picker is shown
+    input.focus();
     input.value = 'foo';
 
     simulant.fire(picker.querySelector('.dow'), 'mousedown');
@@ -49,13 +49,23 @@ describe('mouse operation', function () {
     expect(input.value, 'to be', 'foo');
 
     simulant.fire(outsider, 'mousedown');
-    expect(input.value, 'to be', '04/22/2020');
+    expect(input.value, 'to be', '02/14/2020');
+    expect(dp.getDate().getTime(), 'to be', dateValue(2020, 1, 14));
 
-    dp.setDate({clear: true});
-    input.value = 'foo';
+    // when picker is hidden
+    input.focus();
+    input.value = '04/22/2020';
+
+    simulant.fire(outsider, 'mousedown');
+    expect(input.value, 'to be', '04/22/2020');
+    expect(dp.getDate().getTime(), 'to be', dateValue(2020, 3, 22));
+
+    input.focus();
+    input.value = '';
 
     simulant.fire(outsider, 'mousedown');
     expect(input.value, 'to be', '');
+    expect(dp.getDate(), 'to be undefined');
 
     dp.destroy();
     testContainer.removeChild(outsider);

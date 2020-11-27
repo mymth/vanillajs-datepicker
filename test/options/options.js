@@ -652,6 +652,70 @@ describe('options', function () {
     });
   });
 
+  describe('updateOnBlur', function () {
+    it('discards unparsed input on losing focus when false', function () {
+      const outsider = document.createElement('p');
+      testContainer.appendChild(outsider);
+
+      const {dp, picker} = createDP(input, {updateOnBlur: false});
+      input.focus();
+      input.value = 'foo';
+
+      // on tab key press
+      simulant.fire(input, 'keydown', {key: 'Tab'});
+      expect(input.value, 'to be', '');
+
+      dp.setDate('04/22/2020');
+      dp.show();
+      dp.enterEditMode();
+      input.value = 'foo';
+
+      simulant.fire(input, 'keydown', {key: 'Tab'});
+      expect(input.value, 'to be', '04/22/2020');
+
+      // on click outside
+      dp.show();
+      input.value = 'foo';
+
+      simulant.fire(picker.querySelector('.dow'), 'mousedown');
+      expect(input.value, 'to be', 'foo');
+
+      simulant.fire(input, 'mousedown');
+      expect(input.value, 'to be', 'foo');
+
+      simulant.fire(outsider, 'mousedown');
+      expect(input.value, 'to be', '04/22/2020');
+
+      dp.setDate({clear: true});
+      input.value = 'foo';
+
+      simulant.fire(outsider, 'mousedown');
+      expect(input.value, 'to be', '');
+
+      dp.destroy();
+      testContainer.removeChild(outsider);
+    });
+
+    it('can be updated with setOptions()', function () {
+      const dp = new Datepicker(input);
+      dp.setOptions({updateOnBlur: false});
+      input.focus();
+      input.value = '04/22/2020';
+
+      simulant.fire(input, 'keydown', {key: 'Tab'});
+      expect(input.value, 'to be', '');
+
+      dp.setOptions({updateOnBlur: true});
+      input.focus();
+      input.value = '04/22/2020';
+
+      simulant.fire(input, 'keydown', {key: 'Tab'});
+      expect(input.value, 'to be', '04/22/2020');
+
+      dp.destroy();
+    });
+  });
+
   describe('weekStart', function () {
     const getDayNames = (picker) => {
       const daysOfWeek = picker.querySelector('.days-of-week');

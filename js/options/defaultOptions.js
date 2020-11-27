@@ -29,6 +29,7 @@ const defaultOptions = {
   todayBtn: false,
   todayBtnMode: 0,
   todayHighlight: false,
+  updateOnBlur: true,
   weekStart: 0,
 };
 

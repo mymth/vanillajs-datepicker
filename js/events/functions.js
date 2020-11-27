@@ -37,3 +37,12 @@ export function switchView(datepicker) {
   }
   datepicker.picker.changeView(viewId + 1).render();
 }
+
+export function unfocus(datepicker) {
+  if (datepicker.config.updateOnBlur) {
+    datepicker.update({autohide: true});
+  } else {
+    datepicker.refresh('input');
+    datepicker.hide();
+  }
+}
