@@ -1,9 +1,11 @@
 describe('Datepicker - API methods', function () {
+  let clock;
   let input;
   let dp;
   let picker;
 
   beforeEach(function () {
+    clock = sinon.useFakeTimers({now: new Date(2020, 2, 14)});
     input = parseHTML('<input type="text" value="04/22/2020">').firstChild;
     testContainer.appendChild(input);
     dp = new Datepicker(input);
@@ -16,6 +18,7 @@ describe('Datepicker - API methods', function () {
       dp.destroy();
     }
     testContainer.removeChild(input);
+    clock.restore();
   });
 
   describe('getDate()', function () {
@@ -72,6 +75,20 @@ describe('Datepicker - API methods', function () {
       // (issue #24)
       expect(spyChnageEvent.called, 'to be false');
       input.removeEventListener('change', spyChnageEvent);
+
+      // change the view to the selected daye's days view
+      // (issue #33)
+      dp.picker.changeFocus(dateValue(2021, 3, 20)).changeView(2).render();
+      dp.setDate('02/14/2020');
+
+      expect(dp.dates, 'to equal', [dateValue(2020, 1, 14)]);
+      expect(input.value, 'to be', '02/14/2020');
+      expect(viewSwitdh.textContent, 'to be', 'February 2020');
+
+      cells = getCells(picker);
+      expect(filterCells(cells, '.selected'), 'to equal', [cells[19]]);
+      expect(filterCells(cells, '.focused'), 'to equal', [cells[19]]);
+      expect(cells[19].textContent, 'to be', '14');
     });
 
     it('does nothing if no date or invalid date is given', function () {
@@ -154,18 +171,34 @@ describe('Datepicker - API methods', function () {
 
   describe('update()', function () {
     it('updates the selected date with the input element\'s value', function () {
+      const viewSwitdh = getViewSwitch(picker);
       const date = new Date(2019, 11, 23);
       input.value = '12/23/2019';
       dp.update();
 
       expect(dp.dates, 'to equal', [date.getTime()]);
       expect(input.value, 'to be', '12/23/2019');
-      expect(getViewSwitch(picker).textContent, 'to be', 'December 2019');
+      expect(viewSwitdh.textContent, 'to be', 'December 2019');
 
-      const cells = getCells(picker);
+      let cells = getCells(picker);
       expect(filterCells(cells, '.selected'), 'to equal', [cells[22]]);
       expect(filterCells(cells, '.focused'), 'to equal', [cells[22]]);
       expect(cells[22].textContent, 'to be', '23');
+
+      // change the view to the selected daye's days view
+      // (issue #33)
+      dp.picker.changeFocus(dateValue(2021, 3, 20)).changeView(2).render();
+      input.value = '02/14/2020';
+      dp.update();
+
+      expect(dp.dates, 'to equal', [dateValue(2020, 1, 14)]);
+      expect(input.value, 'to be', '02/14/2020');
+      expect(viewSwitdh.textContent, 'to be', 'February 2020');
+
+      cells = getCells(picker);
+      expect(filterCells(cells, '.selected'), 'to equal', [cells[19]]);
+      expect(filterCells(cells, '.focused'), 'to equal', [cells[19]]);
+      expect(cells[19].textContent, 'to be', '14');
     });
 
     it('notmalizes iput text\'s format', function () {
@@ -186,7 +219,6 @@ describe('Datepicker - API methods', function () {
       input.addEventListener('change', spyChnageEvent);
 
       dp.dates = [dateValue(2020, 1, 14)];
-      dp.picker.update();
       dp.refresh();
 
       expect(input.value, 'to be', '02/14/2020');
@@ -203,9 +235,37 @@ describe('Datepicker - API methods', function () {
       input.removeEventListener('change', spyChnageEvent);
     });
 
+    it('also changes the view back to the selected date\'s days view', function () {
+      dp.dates = [dateValue(2020, 1, 14)];
+      dp.picker.changeFocus(dateValue(2021, 3, 20)).changeView(2).render();
+      dp.refresh();
+
+      expect(input.value, 'to be', '02/14/2020');
+      expect(getViewSwitch(picker).textContent, 'to be', 'February 2020');
+
+      let cells = getCells(picker);
+      expect(filterCells(cells, '.selected'), 'to equal', [cells[19]]);
+      expect(filterCells(cells, '.focused'), 'to equal', [cells[19]]);
+      expect(cells[19].textContent, 'to be', '14');
+
+      // go back to the current date's days view if no date is selected
+      dp.dates = [];
+      dp.picker.changeFocus(dateValue(2019, 10, 22)).update().changeView(1).render();
+      dp.refresh();
+
+      expect(input.value, 'to be', '');
+      expect(getViewSwitch(picker).textContent, 'to be', 'March 2020');
+
+      cells = getCells(picker);
+      expect(filterCells(cells, '.selected'), 'to equal', []);
+      expect(filterCells(cells, '.focused'), 'to equal', [cells[13]]);
+      expect(cells[13].textContent, 'to be', '14');
+
+      clock.restore();
+    });
+
     it('refresh only picker UI if "picker" is passed', function () {
       dp.dates = [dateValue(2020, 1, 14)];
-      dp.picker.update();
       dp.refresh('picker');
 
       expect(input.value, 'to be', '04/22/2020');
@@ -219,7 +279,6 @@ describe('Datepicker - API methods', function () {
 
     it('refresh only input element if "input" is passed', function () {
       dp.dates = [dateValue(2020, 1, 14)];
-      dp.picker.update();
       dp.refresh('input');
 
       expect(input.value, 'to be', '02/14/2020');

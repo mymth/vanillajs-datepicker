@@ -320,6 +320,8 @@ describe('keyboard operation - arrow-up', function () {
     expect(filterCells(cells, '.focused'), 'to equal', [cells[0]]);
 
     dp.setDate('04/07/0000');
+    viewSwitch.click();
+
     simulant.fire(input, 'keydown', {key: 'ArrowUp'});
     expect(viewSwitch.textContent, 'to be', '0');
     expect(filterCells(cells, '.focused'), 'to equal', [cells[3]]);
@@ -344,6 +346,9 @@ describe('keyboard operation - arrow-up', function () {
     expect(cells[1].textContent, 'to be', '0');
 
     dp.setDate('04/07/0004');
+    viewSwitch.click();
+    viewSwitch.click();
+
     simulant.fire(input, 'keydown', {key: 'ArrowUp'});
     expect(viewSwitch.textContent, 'to be', '0-9');
     expect(filterCells(cells, '.focused'), 'to equal', [cells[5]]);
@@ -370,6 +375,10 @@ describe('keyboard operation - arrow-up', function () {
     expect(cells[1].textContent, 'to be', '0');
 
     dp.setDate('04/07/0047');
+    viewSwitch.click();
+    viewSwitch.click();
+    viewSwitch.click();
+
     simulant.fire(input, 'keydown', {key: 'ArrowUp'});
     expect(viewSwitch.textContent, 'to be', '0-90');
     expect(filterCells(cells, '.focused'), 'to equal', [cells[5]]);

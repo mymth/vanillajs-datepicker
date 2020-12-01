@@ -199,17 +199,6 @@ export default class Datepicker {
     Object.assign(this.config, newOptions);
     picker.setOptions(newOptions);
 
-    const currentViewId = picker.currentView.id;
-    if (newOptions.maxView < currentViewId) {
-      picker.changeView(newOptions.maxView);
-    } else if (
-      newOptions.startView !== undefined
-      && !picker.active
-      && newOptions.startView !== currentViewId
-    ) {
-      picker.changeView(newOptions.startView);
-    }
-
     this.refresh();
   }
 
@@ -333,12 +322,7 @@ export default class Datepicker {
     }
     if (newDates.toString() !== this.dates.toString()) {
       this.dates = newDates;
-      if (opts.render) {
-        this.picker.update();
-        this.refresh();
-      } else {
-        this.refresh('input');
-      }
+      this.refresh(opts.render ? undefined : 'input');
       triggerDatepickerEvent(this, 'changeDate');
     } else {
       this.refresh('input');
@@ -371,7 +355,6 @@ export default class Datepicker {
     }
     if (newDates.toString() !== this.dates.toString()) {
       this.dates = newDates;
-      this.picker.update();
       this.refresh();
       triggerDatepickerEvent(this, 'changeDate');
     } else {
@@ -389,7 +372,8 @@ export default class Datepicker {
    */
   refresh(target = undefined) {
     if (target !== 'input') {
-      this.picker.render();
+      const newView = this.picker.active ? 0 : this.config.startView;
+      this.picker.update().changeView(newView).render();
     }
     if (!this.inline && target !== 'picker') {
       this.inputField.value = stringifyDates(this.dates, this.config);
