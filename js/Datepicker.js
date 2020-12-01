@@ -409,8 +409,6 @@ export default class Datepicker {
     this.inputField.classList.remove('in-edit');
     if (opts.update) {
       this.update(opts);
-    } else {
-      this.inputField.value = stringifyDates(this.dates, this.config);
     }
   }
 }

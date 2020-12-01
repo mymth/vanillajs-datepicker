@@ -22,7 +22,7 @@ describe('keyboard operation - edit mode', function () {
     input.classList.remove('in-edit');
   });
 
-  it('turns on when a printable letter, backspace, delete or shift + escape key is pressed without ctrl/meta', function () {
+  it('turns on when a printable letter, backspace or delete key is pressed without ctrl/meta', function () {
     const dp = new Datepicker(input);
     input.focus();
 
@@ -62,12 +62,6 @@ describe('keyboard operation - edit mode', function () {
     delete dp.editMode;
     input.classList.remove('in-edit');
 
-    simulant.fire(input, 'keydown', {key: 'Escape', shiftKey: true});
-    expect(dp.editMode, 'to be true');
-
-    delete dp.editMode;
-    input.classList.remove('in-edit');
-
     // with modifier key
     simulant.fire(input, 'keydown', {key: '1', shiftKey: true});
     expect(dp.editMode, 'to be true');
@@ -95,6 +89,132 @@ describe('keyboard operation - edit mode', function () {
     expect(input.classList.contains('in-edit'), 'to be false');
 
     simulant.fire(input, 'keydown', {key: 'Escape', ctrlKey: true});
+    expect(dp.editMode, 'to be undefined');
+
+    dp.destroy();
+  });
+
+  it('turns on when shift + either of arrow keys is pressed without ctrl/meta', function () {
+    const dp = new Datepicker(input);
+    input.focus();
+
+    // shift + arrow
+    simulant.fire(input, 'keydown', {key: 'ArrowLeft', shiftKey: true});
+    expect(dp.editMode, 'to be true');
+
+    delete dp.editMode;
+    input.classList.remove('in-edit');
+
+    simulant.fire(input, 'keydown', {key: 'ArrowRight', shiftKey: true});
+    expect(dp.editMode, 'to be true');
+
+    delete dp.editMode;
+    input.classList.remove('in-edit');
+
+    simulant.fire(input, 'keydown', {key: 'ArrowUp', shiftKey: true});
+    expect(dp.editMode, 'to be true');
+
+    delete dp.editMode;
+    input.classList.remove('in-edit');
+
+    simulant.fire(input, 'keydown', {key: 'ArrowDown', shiftKey: true});
+    expect(dp.editMode, 'to be true');
+
+    delete dp.editMode;
+    input.classList.remove('in-edit');
+
+    // arrow + other modifire key
+    // arrow-left
+    simulant.fire(input, 'keydown', {key: 'ArrowLeft', altKey: true});
+    expect(dp.editMode, 'to be undefined');
+
+    simulant.fire(input, 'keydown', {key: 'ArrowLeft', ctrlKey: true});
+    expect(dp.editMode, 'to be undefined');
+
+    simulant.fire(input, 'keydown', {key: 'ArrowLeft', metaKey: true});
+    expect(dp.editMode, 'to be undefined');
+
+    // arrow-right
+    simulant.fire(input, 'keydown', {key: 'ArrowRight', altKey: true});
+    expect(dp.editMode, 'to be undefined');
+
+    simulant.fire(input, 'keydown', {key: 'ArrowRight', ctrlKey: true});
+    expect(dp.editMode, 'to be undefined');
+
+    simulant.fire(input, 'keydown', {key: 'ArrowRight', metaKey: true});
+    expect(dp.editMode, 'to be undefined');
+
+    // arrow-up
+    simulant.fire(input, 'keydown', {key: 'ArrowUp', altKey: true});
+    expect(dp.editMode, 'to be undefined');
+
+    simulant.fire(input, 'keydown', {key: 'ArrowUp', ctrlKey: true});
+    expect(dp.editMode, 'to be undefined');
+
+    simulant.fire(input, 'keydown', {key: 'ArrowUp', metaKey: true});
+    expect(dp.editMode, 'to be undefined');
+
+    // arrow-down
+    simulant.fire(input, 'keydown', {key: 'ArrowDown', altKey: true});
+    expect(dp.editMode, 'to be undefined');
+
+    simulant.fire(input, 'keydown', {key: 'ArrowDown', ctrlKey: true});
+    expect(dp.editMode, 'to be undefined');
+
+    simulant.fire(input, 'keydown', {key: 'ArrowDown', metaKey: true});
+    expect(dp.editMode, 'to be undefined');
+
+    // shift + arrow with other modifier key
+    // arrow-left
+    simulant.fire(input, 'keydown', {key: 'ArrowLeft', shiftKey: true, altKey: true});
+    expect(dp.editMode, 'to be true');
+
+    delete dp.editMode;
+    input.classList.remove('in-edit');
+
+    simulant.fire(input, 'keydown', {key: 'ArrowLeft', shiftKey: true, ctrlKey: true});
+    expect(dp.editMode, 'to be undefined');
+
+    simulant.fire(input, 'keydown', {key: 'ArrowLeft', shiftKey: true, metaKey: true});
+    expect(dp.editMode, 'to be undefined');
+
+    // arrow-right
+    simulant.fire(input, 'keydown', {key: 'ArrowRight', shiftKey: true, altKey: true});
+    expect(dp.editMode, 'to be true');
+
+    delete dp.editMode;
+    input.classList.remove('in-edit');
+
+    simulant.fire(input, 'keydown', {key: 'ArrowRight', shiftKey: true, ctrlKey: true});
+    expect(dp.editMode, 'to be undefined');
+
+    simulant.fire(input, 'keydown', {key: 'ArrowRight', shiftKey: true, metaKey: true});
+    expect(dp.editMode, 'to be undefined');
+
+    // arrow-up
+    simulant.fire(input, 'keydown', {key: 'ArrowUp', shiftKey: true, altKey: true});
+    expect(dp.editMode, 'to be true');
+
+    delete dp.editMode;
+    input.classList.remove('in-edit');
+
+    simulant.fire(input, 'keydown', {key: 'ArrowUp', shiftKey: true, ctrlKey: true});
+    expect(dp.editMode, 'to be undefined');
+
+    simulant.fire(input, 'keydown', {key: 'ArrowUp', shiftKey: true, metaKey: true});
+    expect(dp.editMode, 'to be undefined');
+
+    // arrow-down
+    simulant.fire(input, 'keydown', {key: 'ArrowDown', shiftKey: true, altKey: true});
+    expect(dp.editMode, 'to be true');
+
+    delete dp.editMode;
+    input.classList.remove('in-edit');
+
+    simulant.fire(input, 'keydown', {key: 'ArrowDown', shiftKey: true, ctrlKey: true});
+    expect(dp.editMode, 'to be undefined');
+
+    simulant.fire(input, 'keydown', {key: 'ArrowDown', shiftKey: true, metaKey: true});
     expect(dp.editMode, 'to be undefined');
 
     dp.destroy();
@@ -197,7 +317,7 @@ describe('keyboard operation - edit mode', function () {
   });
 
   it('turns off when the picker hides', function () {
-    const dp = new Datepicker(input);
+    const {dp, picker} = createDP(input);
     input.focus();
     dp.enterEditMode();
 
@@ -220,7 +340,7 @@ describe('keyboard operation - edit mode', function () {
     dp.destroy();
   });
 
-  it('cancels the edit on the input by default when turning off', function () {
+  it('leaves the edit on the input as-is by default when turning off', function () {
     const dp = new Datepicker(input);
     const date = dateValue(2020, 1, 14);
     dp.setDate(date);
@@ -229,20 +349,20 @@ describe('keyboard operation - edit mode', function () {
     input.value = '4/22/2020';
 
     dp.exitEditMode();
-    expect(input.value, 'to be', '02/14/2020');
+    expect(input.value, 'to be', '4/22/2020');
     expect(dp.dates, 'to equal', [date]);
 
     dp.show();
     dp.enterEditMode();
-    input.value = '4/22/2020';
+    input.value = '3/8/2020';
 
     dp.hide();
-    expect(input.value, 'to be', '02/14/2020');
+    expect(input.value, 'to be', '3/8/2020');
     expect(dp.dates, 'to equal', [date]);
 
     dp.show();
     dp.enterEditMode();
-    input.value = '4/22/2020';
+    input.value = '02/14/2020';
 
     simulant.fire(input, 'keydown', {key: 'Escape'});
     expect(input.value, 'to be', '02/14/2020');
@@ -251,7 +371,24 @@ describe('keyboard operation - edit mode', function () {
     dp.destroy();
   });
 
-  it('updates the selection with the input while turning off if update: true is passed to exitEditMode()', function () {
+  it('hides the picker when turning off by escape key press', function () {
+    const {dp, picker} = createDP(input);
+    input.focus();
+    dp.enterEditMode();
+
+    simulant.fire(input, 'keydown', {key: 'Escape'});
+    expect(isVisible(picker), 'to be false');
+
+    dp.show();
+    dp.enterEditMode();
+
+    dp.exitEditMode();
+    expect(isVisible(picker), 'to be true');
+
+    dp.destroy();
+  });
+
+  it('updates the selection with the input when turning off by exitEditMode() call with update: true option', function () {
     const dp = new Datepicker(input);
     const date = dateValue(2020, 3, 22);
     dp.setDate('02/14/2020');
@@ -268,7 +405,7 @@ describe('keyboard operation - edit mode', function () {
     dp.destroy();
   });
 
-  it('updates the selection with the input while turning off if enter key is pressed', function () {
+  it('updates the selection with the input when turning off by enter key press', function () {
     const dp = new Datepicker(input);
     const date = dateValue(2020, 3, 22);
     dp.setDate('02/14/2020');
@@ -285,7 +422,7 @@ describe('keyboard operation - edit mode', function () {
     dp.destroy();
   });
 
-  it('updates the selection with the input if picker hides while unfocusing input element', function () {
+  it('updates the selection with the input when turning off being induced by unfocusing input element', function () {
     const outsider = document.createElement('p');
     testContainer.appendChild(outsider);
 

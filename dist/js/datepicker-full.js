@@ -1835,7 +1835,7 @@
     } else if (datepicker.editMode) {
       switch (ev.key) {
         case 'Escape':
-          datepicker.exitEditMode();
+          datepicker.picker.hide();
           break;
         case 'Enter':
           datepicker.exitEditMode({update: true, autohide: datepicker.config.autohide});
@@ -1846,15 +1846,14 @@
     } else {
       switch (ev.key) {
         case 'Escape':
-          if (ev.shiftKey) {
-            datepicker.enterEditMode();
-          } else {
-            datepicker.picker.hide();
-          }
+          datepicker.picker.hide();
           break;
         case 'ArrowLeft':
           if (ev.ctrlKey || ev.metaKey) {
             goToPrevOrNext(datepicker, -1);
+          } else if (ev.shiftKey) {
+            datepicker.enterEditMode();
+            return;
           } else {
             moveByArrowKey(datepicker, ev, -1, false);
           }
@@ -1862,6 +1861,9 @@
         case 'ArrowRight':
           if (ev.ctrlKey || ev.metaKey) {
             goToPrevOrNext(datepicker, 1);
+          } else if (ev.shiftKey) {
+            datepicker.enterEditMode();
+            return;
           } else {
             moveByArrowKey(datepicker, ev, 1, false);
           }
@@ -1869,11 +1871,18 @@
         case 'ArrowUp':
           if (ev.ctrlKey || ev.metaKey) {
             switchView(datepicker);
+          } else if (ev.shiftKey) {
+            datepicker.enterEditMode();
+            return;
           } else {
             moveByArrowKey(datepicker, ev, -1, true);
           }
           break;
         case 'ArrowDown':
+          if (ev.shiftKey && !ev.ctrlKey && !ev.metaKey) {
+            datepicker.enterEditMode();
+            return;
+          }
           moveByArrowKey(datepicker, ev, 1, true);
           break;
         case 'Enter':
@@ -2350,8 +2359,6 @@
       this.inputField.classList.remove('in-edit');
       if (opts.update) {
         this.update(opts);
-      } else {
-        this.inputField.value = stringifyDates(this.dates, this.config);
       }
     }
   }

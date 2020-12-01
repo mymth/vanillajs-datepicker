@@ -140,13 +140,13 @@ You can operate date picker using keyboard. Here are the available keyboard oper
     Select the focused date 
   - *otherwise:*  
     Change the view downward for the forcused decade/year/month 
-- <kbd>**Backspace**</kbd>**,** <kbd>**Delete**</kbd>**, any printable character :**  
+- <kbd>**Backspace**</kbd>**,** <kbd>**Delete**</kbd>**, any printable character,** <kbd>**Shift**</kbd> **+ either of arrow keys** ( <kbd>←</kbd>/<kbd>→</kbd>/<kbd>↑</kbd>/<kbd>↓</kbd> ) **:**  
   Enter [edit mode](overview?id=edit-mode)
 
 **When in [edit mode](overview?id=edit-mode)**
 
 - <kbd>**Esc**</kbd> **:**  
-  Exit edit mode discarding the change on the input field
+  Hide the picker exiting edit mode
 - <kbd>**Enter**</kbd> **:**   
   Exit edit mode updating the picker with the change on the input field
 
@@ -161,6 +161,7 @@ Date picker automatically enters edit mode when:
 
 - the `<input>` element is clicked
 - <kbd>Backspace</kbd>, <kbd>Delete</kbd> or any of printable character key is pressed (without control/meta key).
+- <kbd>Shift</kbd> + either of arrow keys ( <kbd>←</kbd>/<kbd>→</kbd>/<kbd>↑</kbd>/<kbd>↓</kbd> ) is pressed (without control/meta key).
 
 and exits edit mode when:
 
