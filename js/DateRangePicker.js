@@ -22,10 +22,10 @@ function setupDatepicker(rangepicker, changeDateListener, el, options) {
 
 function onChangeDate(rangepicker, ev) {
   // to prevent both datepickers trigger the other side's update each other
-  if (rangepicker.updating) {
+  if (rangepicker._updating) {
     return;
   }
-  rangepicker.updating = true;
+  rangepicker._updating = true;
 
   const target = ev.target;
   if (target.datepicker === undefined) {
@@ -58,7 +58,7 @@ function onChangeDate(rangepicker, ev) {
   }
   datepickers[0].picker.update().render();
   datepickers[1].picker.update().render();
-  delete rangepicker.updating;
+  delete rangepicker._updating;
 }
 
 /**
@@ -101,12 +101,12 @@ export default class DateRangePicker  {
    * @type {Array} - selected date of the linked date pickers
    */
   get dates() {
-    if (this.datepickers) {
-      return [
-        this.datepickers[0].dates[0],
-        this.datepickers[1].dates[0],
-      ];
-    }
+    return this.datepickers
+      ? [
+          this.datepickers[0].dates[0],
+          this.datepickers[1].dates[0],
+        ]
+      : undefined;
   }
 
   /**
@@ -152,5 +152,52 @@ export default class DateRangePicker  {
       : date => new Date(date);
 
     return this.dates.map(date => date === undefined ? date : callback(date));
+  }
+
+  /**
+   * Set the start and end dates of the date range
+   *
+   * The method calls datepicker.setDate() internally using each of the
+   * arguments in start→end order.
+   *
+   * When a clear: true option object is passed instead of a date, the method
+   * clears the date.
+   *
+   * If an invalid date, the same date as the current one or an option object
+   * without clear: true is passed, the method cosiders that argument as an
+   * "ineffective" argument because calling datepicker.setDate() with those
+   * values makes no changes to the date selection.
+   *
+   * When the allowOneSidedRange config option is false, passing {clear: true}
+   * to clear the range works only when it is done to the last effective
+   * argument (in other words, passed to rangeEnd or to rangeStart along with
+   * ineffective rangeEnd). This is because when the date range is changed,
+   * it gets normalized based on the last change at the end of the changing
+   * process.
+   *
+   * @param {Date|Number|String|Object} rangeStart - Start date of the range
+   * or {clear: true} to clear the date
+   * @param {Date|Number|String|Object} rangeEnd - End date of the range
+   * or {clear: true} to clear the date
+   */
+  setDates(rangeStart, rangeEnd) {
+    const [datepicker0, datepicker1] = this.datepickers;
+    const origDates = this.dates;
+
+    // If range normalization runs on every change, we can't set a new range
+    // that starts after the end of the current range correctly because the
+    // normalization process swaps start↔︎end right after setting the new start
+    // date. To prevent this, the normalization process needs to run once after
+    // both of the new dates are set.
+    this._updating = true;
+    datepicker0.setDate(rangeStart);
+    datepicker1.setDate(rangeEnd);
+    delete this._updating;
+
+    if (datepicker1.dates[0] !== origDates[1]) {
+      onChangeDate(this, {target: this.inputs[1]});
+    } else if (datepicker0.dates[0] !== origDates[0]) {
+      onChangeDate(this, {target: this.inputs[0]});
+    }
   }
 }

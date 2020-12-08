@@ -232,6 +232,25 @@ rangepicker.getDates( [ format ] )
 - **Return:**
   - {`Date[]`|`String[]`} - Start and end dates
 
+#### rangepicker.setDates()
+
+Set the start and end dates of the date range
+
+The method calls [`datepicker.setDate()`](api?id=datepickersetdate) internally using each of the arguments in start→end order.
+
+When a `clear: true` option object is passed instead of a date, the method clears the date.
+
+If an invalid date, the same date as the current one or an option object without `clear: true` is passed, the method cosiders that argument as an "ineffective" argument because calling [`datepicker.setDate()`](api?id=datepickersetdate) with those values makes no changes to the date selection.
+
+When the [`allowOneSidedRange`](options?id=allowonesidedrange) config option is `false`, passing `{clear: true}` to clear the range works only when it is done to the last effective argument (in other words, passed to `rangeEnd` or to `rangeStart` along with ineffective `rangeEnd`). This is because when the date range is changed, it gets normalized based on the last change at the end of the changing process.
+
+```javascript
+rangepicker.setDates( rangeStart , rangeEnd )
+```
+- **Arguments:**
+  - `rangeStart` : {`Date`|`Number`|`String)`|`Object`} - Start date of the range or `{clear: true}` to clear the date
+  - `rangeEnd` : {`Date`|`Number`|`String)`|`Object`} - End date of the range or `{clear: true}` to clear the date
+
 #### rangepicker.setOptions()
 
 Set new values to the config options

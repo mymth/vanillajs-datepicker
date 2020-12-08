@@ -36,6 +36,7 @@ module.exports = {
         getViewSwitch: 'readonly',
         getCells: 'readonly',
         filterCells: 'readonly',
+        getCellIndices: 'readonly',
         datepicker: 'readonly',
         Datepicker: 'readonly',
         DateRangePicker: 'readonly',

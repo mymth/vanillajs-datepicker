@@ -54,6 +54,12 @@
         const fn = typeof criteria === 'string' ? el => el.matches(criteria) : criteria;
         return cells.filter(fn);
       };
+      var getCellIndices = (cells, criteria) => cells.reduce((indices, cell, idx) => {
+        if (cell.matches(criteria)) {
+          indices.push(idx);
+        }
+        return indices;
+      }, []);
     </script>
     <script src="../dist/js/datepicker-full.js"></script>
     <script src="../dist/js/locales/fr.js"></script>
@@ -76,7 +82,9 @@
     <script src="./options/orientation.js"></script>
     <script src="./options/before-show.js"></script>
     <script src="./inline-mode.js"></script>
-    <script src="./DateRangePicker.js"></script>
+    <script src="./DateRangePicker/DateRangePicker.js"></script>
+    <script src="./DateRangePicker/date-selection.js"></script>
+    <script src="./DateRangePicker/options.js"></script>
     <script class="mocha-exec">
       mocha.run();
     </script>
