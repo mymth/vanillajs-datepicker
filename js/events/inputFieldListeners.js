@@ -23,9 +23,10 @@ function findNextAvailableOne(date, addFn, increase, testFn, min, max) {
 // direction: -1 (left/up), 1 (right/down)
 // vertical: true for up/down, false for left/right
 function moveByArrowKey(datepicker, ev, direction, vertical) {
-  const currentView = datepicker.picker.currentView;
+  const picker = datepicker.picker;
+  const currentView = picker.currentView;
   const step = currentView.step || 1;
-  let viewDate = datepicker.picker.viewDate;
+  let viewDate = picker.viewDate;
   let addFn;
   let testFn;
   switch (currentView.id) {
@@ -63,7 +64,7 @@ function moveByArrowKey(datepicker, ev, direction, vertical) {
     currentView.maxDate
   );
   if (viewDate !== undefined) {
-    datepicker.picker.changeFocus(viewDate).render();
+    picker.changeFocus(viewDate).render();
   }
 }
 
@@ -73,12 +74,13 @@ export function onKeydown(datepicker, ev) {
     return;
   }
 
-  const viewId = datepicker.picker.currentView.id;
-  if (!datepicker.picker.active) {
+  const picker = datepicker.picker;
+  const {id, isMinView} = picker.currentView;
+  if (!picker.active) {
     switch (ev.key) {
       case 'ArrowDown':
       case 'Escape':
-        datepicker.picker.show();
+        picker.show();
         break;
       case 'Enter':
         datepicker.update();
@@ -89,7 +91,7 @@ export function onKeydown(datepicker, ev) {
   } else if (datepicker.editMode) {
     switch (ev.key) {
       case 'Escape':
-        datepicker.picker.hide();
+        picker.hide();
         break;
       case 'Enter':
         datepicker.exitEditMode({update: true, autohide: datepicker.config.autohide});
@@ -100,7 +102,7 @@ export function onKeydown(datepicker, ev) {
   } else {
     switch (ev.key) {
       case 'Escape':
-        datepicker.picker.hide();
+        picker.hide();
         break;
       case 'ArrowLeft':
         if (ev.ctrlKey || ev.metaKey) {
@@ -140,10 +142,10 @@ export function onKeydown(datepicker, ev) {
         moveByArrowKey(datepicker, ev, 1, true);
         break;
       case 'Enter':
-        if (viewId === 0) {
-          datepicker.setDate(datepicker.picker.viewDate);
+        if (isMinView) {
+          datepicker.setDate(picker.viewDate);
         } else {
-          datepicker.picker.changeView(viewId - 1).render();
+          picker.changeView(id - 1).render();
         }
         break;
       case 'Backspace':

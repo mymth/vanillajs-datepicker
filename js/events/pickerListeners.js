@@ -53,15 +53,13 @@ export function onClickView(datepicker, ev) {
     return;
   }
 
-  switch (datepicker.picker.currentView.id) {
-    case 0:
-      datepicker.setDate(Number(target.dataset.date));
-      break;
-    case 1:
-      goToSelectedMonthOrYear(datepicker, Number(target.dataset.month));
-      break;
-    default:
-      goToSelectedMonthOrYear(datepicker, Number(target.dataset.year));
+  const {id, isMinView} = datepicker.picker.currentView;
+  if (isMinView) {
+    datepicker.setDate(Number(target.dataset.date));
+  } else if (id === 1) {
+    goToSelectedMonthOrYear(datepicker, Number(target.dataset.month));
+  } else {
+    goToSelectedMonthOrYear(datepicker, Number(target.dataset.year));
   }
 }
 

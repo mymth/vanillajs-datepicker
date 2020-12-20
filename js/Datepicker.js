@@ -20,17 +20,36 @@ function stringifyDates(dates, config) {
 // returns undefined if there are no valid dates in inputDates
 // when origDates (current selection) is passed, the function works to mix
 // the input dates into the current selection
-function processInputDates(inputDates, config, origDates = undefined) {
-  if (inputDates.length === 0) {
+function processInputDates(datepicker, inputDates, clear = false) {
+  const {config, dates: origDates, rangepicker} = datepicker;
+    if (inputDates.length === 0) {
     // empty input is considered valid unless origiDates is passed
-    return origDates ? undefined : [];
+    return clear ? [] : undefined;
   }
 
+  const rangeEnd = rangepicker && datepicker === rangepicker.datepickers[1];
   let newDates = inputDates.reduce((dates, dt) => {
-    const date = parseDate(dt, config.format, config.locale);
+    let date = parseDate(dt, config.format, config.locale);
+    if (date === undefined) {
+      return dates;
+    }
+    if (config.pickLevel > 0) {
+      // adjust to 1st of the month/Jan 1st of the year
+      // or to the last day of the monh/Dec 31st of the year if the datepicker
+      // is the range-end picker of a rangepicker
+      const dt = new Date(date);
+      if (config.pickLevel === 1) {
+        date = rangeEnd
+          ? dt.setMonth(dt.getMonth() + 1, 1) - 86400000
+          : dt.setDate(1);
+      } else {
+        date = rangeEnd
+          ? dt.setFullYear(dt.getFullYear() + 1, 0, 1) - 86400000
+          : dt.setMonth(0, 1);
+      }
+    }
     if (
-      date !== undefined
-      && isInRange(date, config.minDate, config.maxDate)
+      isInRange(date, config.minDate, config.maxDate)
       && !dates.includes(date)
       && !config.datesDisabled.includes(date)
       && !config.daysOfWeekDisabled.includes(new Date(date).getDay())
@@ -42,7 +61,7 @@ function processInputDates(inputDates, config, origDates = undefined) {
   if (newDates.length === 0) {
     return;
   }
-  if (origDates && config.multidate) {
+  if (config.multidate && !clear) {
     // get the synmetric difference between origDates and newDates
     newDates = newDates.reduce((dates, date) => {
       if (!origDates.includes(date)) {
@@ -55,6 +74,33 @@ function processInputDates(inputDates, config, origDates = undefined) {
   return config.maxNumberOfDates && newDates.length > config.maxNumberOfDates
     ? newDates.slice(config.maxNumberOfDates * -1)
     : newDates;
+}
+
+function setDate(datepicker, inputDates, options) {
+  let {clear, render, autohide} = options;
+  if (render === undefined) {
+    render = true;
+  }
+  if (!render) {
+    autohide = false;
+  } else if (autohide === undefined) {
+    autohide = datepicker.config.autohide;
+  }
+
+  const newDates = processInputDates(datepicker, inputDates, clear);
+  if (!newDates) {
+    return;
+  }
+  if (newDates.toString() !== datepicker.dates.toString()) {
+    datepicker.dates = newDates;
+    datepicker.refresh(render ? undefined : 'input');
+    triggerDatepickerEvent(datepicker, 'changeDate');
+  } else {
+    datepicker.refresh('input');
+  }
+  if (autohide) {
+    datepicker.hide();
+  }
 }
 
 /**
@@ -102,17 +148,24 @@ export default class Datepicker {
       inputField.classList.add('datepicker-input');
       initialDates = stringToArray(inputField.value, config.dateDelimiter);
     }
-    // set initial value
-    this.dates = processInputDates(initialDates, config) || [];
-
     if (rangepicker && rangepicker.constructor.name === 'DateRangePicker') {
-      this.rangepicker = rangepicker;
-      // add getter for range
-      Object.defineProperty(this, 'range', {
+      // attach itaelf to the rangepicker here so that processInputDates() can
+      // determine if this is the range-end picker of the rangepicker while
+      // setting inital values when pickLevel > 0
+      const index = Number(rangepicker.inputs[1] === inputField);
+      rangepicker.datepickers[index] = this;
+      // add getter for rangepicker
+      Object.defineProperty(this, 'rangepicker', {
         get() {
-          return this.rangepicker.dates;
+          return rangepicker;
         },
       });
+    }
+
+    // set initial value
+    this.dates = processInputDates(this, initialDates) || [];
+    if (inputField) {
+      inputField.value = stringifyDates(this.dates, config);
     }
 
     const picker = this.picker = new Picker(this);
@@ -304,32 +357,19 @@ export default class Datepicker {
    */
   setDate(...args) {
     const dates = [...args];
-    const opts = {clear: false, render: true, autohide: this.config.autohide};
+    const opts = {};
     const lastArg = lastItemOf(args);
     if (
       typeof lastArg === 'object'
       && !Array.isArray(lastArg)
       && !(lastArg instanceof Date)
+      && lastArg
     ) {
       Object.assign(opts, dates.pop());
     }
 
     const inputDates = Array.isArray(dates[0]) ? dates[0] : dates;
-    const origDates = opts.clear ? undefined : this.dates;
-    const newDates = processInputDates(inputDates, this.config, origDates);
-    if (!newDates) {
-      return;
-    }
-    if (newDates.toString() !== this.dates.toString()) {
-      this.dates = newDates;
-      this.refresh(opts.render ? undefined : 'input');
-      triggerDatepickerEvent(this, 'changeDate');
-    } else {
-      this.refresh('input');
-    }
-    if (opts.render && opts.autohide) {
-      this.hide();
-    }
+    setDate(this, inputDates, opts);
   }
 
   /**
@@ -347,22 +387,9 @@ export default class Datepicker {
       return;
     }
 
-    const opts = Object.assign({autohide: false}, options);
+    const opts = {clear: true, autohide: !!(options && options.autohide)};
     const inputDates = stringToArray(this.inputField.value, this.config.dateDelimiter);
-    const newDates = processInputDates(inputDates, this.config);
-    if (!newDates) {
-      return;
-    }
-    if (newDates.toString() !== this.dates.toString()) {
-      this.dates = newDates;
-      this.refresh();
-      triggerDatepickerEvent(this, 'changeDate');
-    } else {
-      this.refresh('input');
-    }
-    if (opts.autohide) {
-      this.hide();
-    }
+    setDate(this, inputDates, opts);
   }
 
   /**
@@ -372,7 +399,9 @@ export default class Datepicker {
    */
   refresh(target = undefined) {
     if (target !== 'input') {
-      const newView = this.picker.active ? 0 : this.config.startView;
+      const newView = this.picker.active
+        ? this.config.pickLevel
+        : this.config.startView;
       this.picker.update().changeView(newView).render();
     }
     if (!this.inline && target !== 'picker') {

@@ -108,7 +108,7 @@ CSS selector for the element to appended the date picker.
 
 Delimiter string to separate the dates in a multi-date string.
 
-> The delimiter must not be included in date format string
+> The delimiter must not be included in date format string.
 
 #### datesDisabled
 - Type: `Array`
@@ -150,7 +150,7 @@ Whether to prevent on-screen keyboard on mobile devices from showing up when the
 
 [Date format](date-string+format?id=date-format) string.
 
-> The format string must not include the [dateDelimiter](options?id=datedelimiter) string
+> The format string must not include the [dateDelimiter](options?id=datedelimiter) string.
 
 Alternatively, object that contains custom parser and formatter functions can be used.
 
@@ -229,7 +229,7 @@ Minimum limit to selectable date. No limit is applied if `null` is set.
 
 HTML (or plain text) for the button label of the "Next" button.
 
-> see the note in [i18n ≻ Text Direction](i18n?id=text-direction) when using with RTL languages
+> See the note in [i18n ≻ Text Direction](i18n?id=text-direction) when using with RTL languages.
 
 #### orientation
 - Type: `String`
@@ -241,13 +241,22 @@ Space-separated string for date picker's horizontal and vertical placement to th
 > If one direction is omitted, it falls back to `auto`. (e.g. `'top'` == `'top auto'`)  
 > Not available on inline picker.
 
+#### pickLevel
+- Type: `Number`
+- Default: `0`
+
+The level that the date picker allows to pick. `0`:_date_,`1`: _month_ &nbsp;or `2`:_year_.
+
+> When this option is `1`, the selected date becomes the 1st of the month or, if the date picer is the end-date picker of date range picker, the last day of the month.  
+> When this option is `2`, the selected date becomes January 1st of the year or, if the date picer is the end-date picker of date range picker, December 31st of the year.
+
 #### prevArrow
 - Type: `String`
 - Default: `'«'`
 
 HTML (or plain text) for the button label of the "Prev" button.
 
-> see the note in [i18n ≻ Text Direction](i18n?id=text-direction) when using with RTL languages
+> See the note in [i18n ≻ Text Direction](i18n?id=text-direction) when using with RTL languages.
 
 #### showDaysOfWeek
 - Type: `Boolean`

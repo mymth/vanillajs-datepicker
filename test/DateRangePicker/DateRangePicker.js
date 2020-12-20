@@ -61,399 +61,487 @@ describe('DateRangePicker', function () {
     drp.destroy();
   });
 
-  describe('getDates()', function () {
-    it('returns an array of the Date objects of selected dates', function () {
-      input0.value = '04/20/2020';
-      input1.value = '04/22/2020';
-
-      const drp = new DateRangePicker(elem);
-      expect(drp.getDates(), 'to equal', [
-        new Date(dateValue(2020, 3, 20)),
-        new Date(dateValue(2020, 3, 22)),
-      ]);
-
-      drp.destroy();
-      input0.value = '';
-      input1.value = '';
-    });
-
-    it('returns a formatted date stirngs of selected dates if the format is specified', function () {
-      input0.value = '04/20/2020';
-      input1.value = '04/22/2020';
-
-      const drp = new DateRangePicker(elem);
-      expect(drp.getDates('yyyy-mm-dd'), 'to equal', ['2020-04-20', '2020-04-22']);
-      expect(drp.getDates('d M, yy'), 'to equal', ['20 Apr, 20', '22 Apr, 20']);
-
-      drp.destroy();
-      input0.value = '';
-      input1.value = '';
-    });
-
-    it('uses undefined instead of Date object if date is not selected', function () {
-      const drp = new DateRangePicker(elem);
-      expect(drp.getDates(), 'to equal', [undefined, undefined]);
-      expect(drp.getDates('yyyy-mm-dd'), 'to equal', [undefined, undefined]);
-
-      drp.destroy();
-    });
-  });
-
-  describe('setDates()', function () {
-    let drp;
-    let picker0;
-    let picker1;
-    let viewSwitch0;
-    let viewSwitch1;
-    let cells0;
-    let cells1;
-
-    it('changes the selected dates to given dates', function () {
-      ({drp, picker0, picker1} = createDRP(elem));
-      viewSwitch0 = picker0.querySelector('.view-switch');
-      viewSwitch1 = picker1.querySelector('.view-switch');
-      cells0 = getCells(picker0);
-      cells1 = getCells(picker1);
-
-      drp.setDates('2/11/2020', '2/14/2020');
-
-      expect(drp.datepickers[0].dates, 'to equal', [dateValue(2020, 1, 11)]);
-      expect(input0.value, 'to be', '02/11/2020');
-      expect(viewSwitch0.textContent, 'to be', 'February 2020');
-      expect(getCellIndices(cells0, '.selected'), 'to equal', [16]);
-      expect(getCellIndices(cells0, '.range-start'), 'to equal', [16]);
-      expect(getCellIndices(cells0, '.range-end'), 'to equal', [19]);
-      expect(getCellIndices(cells0, '.range'), 'to equal', [17, 18]);
-      expect(getCellIndices(cells0, '.focused'), 'to equal', [16]);
-
-      expect(drp.datepickers[1].dates, 'to equal', [dateValue(2020, 1, 14)]);
-      expect(input1.value, 'to be', '02/14/2020');
-      expect(viewSwitch1.textContent, 'to be', 'February 2020');
-      expect(getCellIndices(cells1, '.selected'), 'to equal', [19]);
-      expect(getCellIndices(cells1, '.range-start'), 'to equal', [16]);
-      expect(getCellIndices(cells1, '.range-end'), 'to equal', [19]);
-      expect(getCellIndices(cells1, '.range'), 'to equal', [17, 18]);
-      expect(getCellIndices(cells1, '.focused'), 'to equal', [19]);
-
-      drp.setDates(new Date(2020, 4, 31), new Date(2020, 6, 5).getTime());
-
-      expect(drp.datepickers[0].dates, 'to equal', [dateValue(2020, 4, 31)]);
-      expect(input0.value, 'to be', '05/31/2020');
-      expect(viewSwitch0.textContent, 'to be', 'May 2020');
-      expect(getCellIndices(cells0, '.selected'), 'to equal', [35]);
-      expect(getCellIndices(cells0, '.range-start'), 'to equal', [35]);
-      expect(getCellIndices(cells0, '.range-end'), 'to equal', []);
-      expect(getCellIndices(cells0, '.range'), 'to equal', [36, 37, 38, 39, 40, 41]);
-      expect(getCellIndices(cells0, '.focused'), 'to equal', [35]);
-
-      expect(drp.datepickers[1].dates, 'to equal', [dateValue(2020, 6, 5)]);
-      expect(input1.value, 'to be', '07/05/2020');
-      expect(viewSwitch1.textContent, 'to be', 'July 2020');
-      expect(getCellIndices(cells1, '.selected'), 'to equal', [7]);
-      expect(getCellIndices(cells1, '.range-start'), 'to equal', []);
-      expect(getCellIndices(cells1, '.range-end'), 'to equal', [7]);
-      expect(getCellIndices(cells1, '.range'), 'to equal', [0, 1, 2, 3, 4, 5, 6]);
-      expect(getCellIndices(cells1, '.focused'), 'to equal', [7]);
-
-      drp.destroy();
-      input0.value = '';
-      input1.value = '';
-    });
-
-    it('swapps star↔︎end dates if given start date > end date', function () {
-      ({drp, picker0, picker1} = createDRP(elem));
-      viewSwitch0 = picker0.querySelector('.view-switch');
-      viewSwitch1 = picker1.querySelector('.view-switch');
-      cells0 = getCells(picker0);
-      cells1 = getCells(picker1);
-
-      drp.setDates(new Date(2020, 6, 5).getTime(), new Date(2020, 4, 31));
-
-      expect(drp.datepickers[0].dates, 'to equal', [dateValue(2020, 4, 31)]);
-      expect(input0.value, 'to be', '05/31/2020');
-      expect(viewSwitch0.textContent, 'to be', 'May 2020');
-      expect(getCellIndices(cells0, '.selected'), 'to equal', [35]);
-
-      expect(drp.datepickers[1].dates, 'to equal', [dateValue(2020, 6, 5)]);
-      expect(input1.value, 'to be', '07/05/2020');
-      expect(viewSwitch1.textContent, 'to be', 'July 2020');
-      expect(getCellIndices(cells1, '.selected'), 'to equal', [7]);
-
-      drp.destroy();
-      input0.value = '';
-      input1.value = '';
-    });
-
-    it('ignores invalid dates and the same date as the current one and leaves that side untouched', function () {
-      input0.value = '02/11/2020';
-      input1.value = '02/14/2020';
-
-      ({drp, picker0, picker1} = createDRP(elem));
-      viewSwitch0 = picker0.querySelector('.view-switch');
-      viewSwitch1 = picker1.querySelector('.view-switch');
-      cells0 = getCells(picker0);
-      cells1 = getCells(picker1);
-
-      drp.setDates('', '3/14/2020');
-
-      expect(drp.datepickers[0].dates, 'to equal', [dateValue(2020, 1, 11)]);
-      expect(input0.value, 'to be', '02/11/2020');
-      expect(viewSwitch0.textContent, 'to be', 'February 2020');
-      expect(getCellIndices(cells0, '.selected'), 'to equal', [16]);
-
-      expect(drp.datepickers[1].dates, 'to equal', [dateValue(2020, 2, 14)]);
-      expect(input1.value, 'to be', '03/14/2020');
-      expect(viewSwitch1.textContent, 'to be', 'March 2020');
-      expect(getCellIndices(cells1, '.selected'), 'to equal', [13]);
-
-      let date0Str;
-      let date0YM;
-      let date0Indices;
-      if (new Date(0).getDate() === 1) {
-        date0Str = '01/01/1970';
-        date0YM = 'January 1970';
-        date0Indices = [4];
-      } else {
-        date0Str = '12/31/1969';
-        date0YM = 'December 1969';
-        date0Indices = [31];
-      }
-
-      drp.setDates(0, new Date(-1, 11, 31));
-
-      expect(drp.datepickers[0].dates, 'to equal', [dateValue(0)]);
-      expect(input0.value, 'to be', date0Str);
-      expect(viewSwitch0.textContent, 'to be', date0YM);
-      expect(getCellIndices(cells0, '.selected'), 'to equal', date0Indices);
-
-      expect(drp.datepickers[1].dates, 'to equal', [dateValue(2020, 2, 14)]);
-      expect(input1.value, 'to be', '03/14/2020');
-      expect(viewSwitch1.textContent, 'to be', 'March 2020');
-      expect(getCellIndices(cells1, '.selected'), 'to equal', [13]);
-
-      const spyDp1Refresh = sinon.spy(drp.datepickers[1], 'refresh');
-      drp.setDates('2/11/2020', '3/14/2020');
-
-      expect(drp.datepickers[0].dates, 'to equal', [dateValue(2020, 1, 11)]);
-      expect(input0.value, 'to be', '02/11/2020');
-      expect(viewSwitch0.textContent, 'to be', 'February 2020');
-      expect(getCellIndices(cells0, '.selected'), 'to equal', [16]);
-
-      expect(drp.datepickers[1].dates, 'to equal', [dateValue(2020, 2, 14)]);
-      expect(input1.value, 'to be', '03/14/2020');
-      expect(viewSwitch1.textContent, 'to be', 'March 2020');
-      expect(getCellIndices(cells1, '.selected'), 'to equal', [13]);
-      expect(spyDp1Refresh.calledWith('input'), 'to be true');
-
-      const spyDp0Refresh = sinon.spy(drp.datepickers[0], 'refresh');
-      drp.setDates('2/11/2020', '2/14/2020');
-
-      expect(drp.datepickers[0].dates, 'to equal', [dateValue(2020, 1, 11)]);
-      expect(input0.value, 'to be', '02/11/2020');
-      expect(viewSwitch0.textContent, 'to be', 'February 2020');
-      expect(getCellIndices(cells0, '.selected'), 'to equal', [16]);
-      expect(spyDp0Refresh.calledWith('input'), 'to be true');
-
-      expect(drp.datepickers[1].dates, 'to equal', [dateValue(2020, 1, 14)]);
-      expect(input1.value, 'to be', '02/14/2020');
-      expect(viewSwitch1.textContent, 'to be', 'February 2020');
-      expect(getCellIndices(cells1, '.selected'), 'to equal', [19]);
-
-      spyDp0Refresh.restore();
-      spyDp1Refresh.restore();
-
-      drp.destroy();
-      input0.value = '';
-      input1.value = '';
-    });
-
-    it('sets the same date to both sides if called with one side only when range is not selected', function () {
-      ({drp, picker0, picker1} = createDRP(elem));
-      viewSwitch0 = picker0.querySelector('.view-switch');
-      viewSwitch1 = picker1.querySelector('.view-switch');
-      cells0 = getCells(picker0);
-      cells1 = getCells(picker1);
-
-      drp.setDates('2/11/2020');
-
-      expect(drp.datepickers[0].dates, 'to equal', [dateValue(2020, 1, 11)]);
-      expect(input0.value, 'to be', '02/11/2020');
-      expect(viewSwitch0.textContent, 'to be', 'February 2020');
-      expect(getCellIndices(cells0, '.selected'), 'to equal', [16]);
-
-      expect(drp.datepickers[1].dates, 'to equal', [dateValue(2020, 1, 11)]);
-      expect(input1.value, 'to be', '02/11/2020');
-      expect(viewSwitch1.textContent, 'to be', 'February 2020');
-      expect(getCellIndices(cells1, '.selected'), 'to equal', [16]);
-
-      drp.destroy();
-      input0.value = '';
-      input1.value = '';
-
-      ({drp, picker0, picker1} = createDRP(elem));
-      viewSwitch0 = picker0.querySelector('.view-switch');
-      viewSwitch1 = picker1.querySelector('.view-switch');
-      cells0 = getCells(picker0);
-      cells1 = getCells(picker1);
-
-      drp.setDates(undefined, '3/14/2020');
-
-      expect(drp.datepickers[0].dates, 'to equal', [dateValue(2020, 2, 14)]);
-      expect(input0.value, 'to be', '03/14/2020');
-      expect(viewSwitch0.textContent, 'to be', 'March 2020');
-      expect(getCellIndices(cells0, '.selected'), 'to equal', [13]);
-
-      expect(drp.datepickers[1].dates, 'to equal', [dateValue(2020, 2, 14)]);
-      expect(input1.value, 'to be', '03/14/2020');
-      expect(viewSwitch1.textContent, 'to be', 'March 2020');
-      expect(getCellIndices(cells1, '.selected'), 'to equal', [13]);
-
-      drp.destroy();
-      input0.value = '';
-      input1.value = '';
-    });
-
-    it('clears both sides if {clear: true} is passed as the last effective argument instrad of a date', function () {
-      input0.value = '02/11/2020';
-      input1.value = '02/14/2020';
-
-      ({drp, picker0, picker1} = createDRP(elem));
-      viewSwitch0 = picker0.querySelector('.view-switch');
-      viewSwitch1 = picker1.querySelector('.view-switch');
-      cells0 = getCells(picker0);
-      cells1 = getCells(picker1);
-
-      // start: clear + end: ineffective (unspecified)
-      drp.setDates({clear: true});
-
-      expect(drp.datepickers[0].dates, 'to equal', []);
-      expect(input0.value, 'to be', '');
-      expect(viewSwitch0.textContent, 'to be', 'February 2020');
-      expect(getCellIndices(cells0, '.selected'), 'to equal', []);
-
-      expect(drp.datepickers[1].dates, 'to equal', []);
-      expect(input1.value, 'to be', '');
-      expect(viewSwitch1.textContent, 'to be', 'February 2020');
-      expect(getCellIndices(cells1, '.selected'), 'to equal', []);
-
-      drp.destroy();
-      input0.value = '02/11/2020';
-      input1.value = '02/14/2020';
-
-      ({drp, picker0, picker1} = createDRP(elem));
-      viewSwitch0 = picker0.querySelector('.view-switch');
-      viewSwitch1 = picker1.querySelector('.view-switch');
-      cells0 = getCells(picker0);
-      cells1 = getCells(picker1);
-
-      // start: clear + end: ineffective (same date)
-      drp.setDates({clear: true}, '2/14/2020');
-
-      expect(drp.datepickers[0].dates, 'to equal', []);
-      expect(input0.value, 'to be', '');
-      expect(viewSwitch0.textContent, 'to be', 'February 2020');
-      expect(getCellIndices(cells0, '.selected'), 'to equal', []);
-
-      expect(drp.datepickers[1].dates, 'to equal', []);
-      expect(input1.value, 'to be', '');
-      expect(viewSwitch1.textContent, 'to be', 'February 2020');
-      expect(getCellIndices(cells1, '.selected'), 'to equal', []);
-
-      drp.destroy();
-      input0.value = '02/11/2020';
-      input1.value = '02/14/2020';
-
-      ({drp, picker0, picker1} = createDRP(elem));
-      viewSwitch0 = picker0.querySelector('.view-switch');
-      viewSwitch1 = picker1.querySelector('.view-switch');
-      cells0 = getCells(picker0);
-      cells1 = getCells(picker1);
-
-      // start: valid date + end: clear
-      drp.setDates('4/20/2020', {clear: true});
-
-      expect(drp.datepickers[0].dates, 'to equal', []);
-      expect(input0.value, 'to be', '');
-      expect(viewSwitch0.textContent, 'to be', 'February 2020');
-      expect(getCellIndices(cells0, '.selected'), 'to equal', []);
-
-      expect(drp.datepickers[1].dates, 'to equal', []);
-      expect(input1.value, 'to be', '');
-      expect(viewSwitch1.textContent, 'to be', 'February 2020');
-      expect(getCellIndices(cells1, '.selected'), 'to equal', []);
-
-      drp.destroy();
-      input0.value = '02/11/2020';
-      input1.value = '02/14/2020';
-
-      ({drp, picker0, picker1} = createDRP(elem));
-      viewSwitch0 = picker0.querySelector('.view-switch');
-      viewSwitch1 = picker1.querySelector('.view-switch');
-      cells0 = getCells(picker0);
-      cells1 = getCells(picker1);
-
-      // start: ineffective (same date) + end: clear
-      drp.setDates('2/11/2020', {clear: true});
-
-      expect(drp.datepickers[0].dates, 'to equal', []);
-      expect(input0.value, 'to be', '');
-      expect(viewSwitch0.textContent, 'to be', 'February 2020');
-      expect(getCellIndices(cells0, '.selected'), 'to equal', []);
-
-      expect(drp.datepickers[1].dates, 'to equal', []);
-      expect(input1.value, 'to be', '');
-      expect(viewSwitch1.textContent, 'to be', 'February 2020');
-      expect(getCellIndices(cells1, '.selected'), 'to equal', []);
-
-      drp.destroy();
-    });
-
-    it('sets the end date to both sides if {clear: true} is passed to start and an eefective date to end', function () {
-      input0.value = '02/11/2020';
-      input1.value = '02/11/2020';
-
-      ({drp, picker0, picker1} = createDRP(elem));
-      viewSwitch0 = picker0.querySelector('.view-switch');
-      viewSwitch1 = picker1.querySelector('.view-switch');
-      cells0 = getCells(picker0);
-      cells1 = getCells(picker1);
-
-      drp.setDates({clear: true}, '2/14/2020');
-
-      expect(drp.datepickers[0].dates, 'to equal', [dateValue(2020, 1, 14)]);
-      expect(input0.value, 'to be', '02/14/2020');
-      expect(viewSwitch0.textContent, 'to be', 'February 2020');
-      expect(getCellIndices(cells0, '.selected'), 'to equal', [19]);
-
-      expect(drp.datepickers[1].dates, 'to equal', [dateValue(2020, 1, 14)]);
-      expect(input1.value, 'to be', '02/14/2020');
-      expect(viewSwitch1.textContent, 'to be', 'February 2020');
-      expect(getCellIndices(cells1, '.selected'), 'to equal', [19]);
-
-      drp.destroy();
-      input0.value = '';
-      input1.value = '';
-      ({drp, picker0, picker1} = createDRP(elem));
-      viewSwitch0 = picker0.querySelector('.view-switch');
-      viewSwitch1 = picker1.querySelector('.view-switch');
-      cells0 = getCells(picker0);
-      cells1 = getCells(picker1);
-
-      drp.setDates({clear: true}, '3/14/2020');
-
-      expect(drp.datepickers[0].dates, 'to equal', [dateValue(2020, 2, 14)]);
-      expect(input0.value, 'to be', '03/14/2020');
-      expect(viewSwitch0.textContent, 'to be', 'March 2020');
-      expect(getCellIndices(cells0, '.selected'), 'to equal', [13]);
-
-      expect(drp.datepickers[1].dates, 'to equal', [dateValue(2020, 2, 14)]);
-      expect(input1.value, 'to be', '03/14/2020');
-      expect(viewSwitch1.textContent, 'to be', 'March 2020');
-      expect(getCellIndices(cells1, '.selected'), 'to equal', [13]);
-
-      drp.destroy();
-      input0.value = '';
-      input1.value = '';
-    });
+  it('indicates the range with hilighting the start/end in the pickers', function () {
+    input0.value = '04/20/2020';
+    input1.value = '04/22/2020';
+
+    const partsClasses = ['.view-switch', '.prev-btn', '.next-btn'];
+    let {drp, picker0, picker1} = createDRP(elem);
+    let [viewSwitch0, prevBtn0, nextBtn0] = getParts(picker0, partsClasses);
+    let [viewSwitch1, prevBtn1, nextBtn1] = getParts(picker1, partsClasses);
+    input0.focus();
+
+    let cells = getCells(picker0);
+
+    expect(viewSwitch0.textContent, 'to be', 'April 2020');
+    expect(getCellIndices(cells, '.selected'), 'to equal', [22]);
+    expect(getCellIndices(cells, '.range-start'), 'to equal', [22]);
+    expect(getCellIndices(cells, '.range-end'), 'to equal', [24]);
+    expect(getCellIndices(cells, '.range'), 'to equal', [23]);
+    expect(getCellIndices(cells, '.focused'), 'to equal', [22]);
+
+    input1.focus();
+    cells = getCells(picker1);
+
+    expect(viewSwitch1.textContent, 'to be', 'April 2020');
+    expect(getCellIndices(cells, '.selected'), 'to equal', [24]);
+    expect(getCellIndices(cells, '.range-start'), 'to equal', [22]);
+    expect(getCellIndices(cells, '.range-end'), 'to equal', [24]);
+    expect(getCellIndices(cells, '.range'), 'to equal', [23]);
+    expect(getCellIndices(cells, '.focused'), 'to equal', [24]);
+
+    drp.destroy();
+
+    // range over months (days → months views)
+    input0.value = '02/26/2020';
+    input1.value = '04/12/2020';
+
+    ({drp, picker0, picker1} = createDRP(elem));
+    ([viewSwitch0, prevBtn0, nextBtn0] = getParts(picker0, partsClasses));
+    ([viewSwitch1, prevBtn1, nextBtn1] = getParts(picker1, partsClasses));
+
+    // range-start
+    input0.focus();
+    cells = getCells(picker0);
+
+    expect(viewSwitch0.textContent, 'to be', 'February 2020');
+    expect(getCellIndices(cells, '.selected'), 'to equal', [31]);
+    expect(getCellIndices(cells, '.range-start'), 'to equal', [31]);
+    expect(getCellIndices(cells, '.range-end'), 'to equal', []);
+    expect(getCellIndices(cells, '.range'), 'to equal', [32, 33, 34, 35, 36, 37, 38, 39, 40, 41]);
+    expect(getCellIndices(cells, '.focused'), 'to equal', [31]);
+
+    prevBtn0.click();
+    cells = getCells(picker0);
+
+    expect(viewSwitch0.textContent, 'to be', 'January 2020');
+    expect(getCellIndices(cells, '.selected'), 'to equal', []);
+    expect(getCellIndices(cells, '.range-start'), 'to equal', []);
+    expect(getCellIndices(cells, '.range-end'), 'to equal', []);
+    expect(getCellIndices(cells, '.range'), 'to equal', []);
+    expect(getCellIndices(cells, '.focused'), 'to equal', [28]);
+
+    nextBtn0.click();
+    nextBtn0.click();
+    cells = getCells(picker0);
+
+    expect(viewSwitch0.textContent, 'to be', 'March 2020');
+    expect(getCellIndices(cells, '.selected'), 'to equal', []);
+    expect(getCellIndices(cells, '.range-start'), 'to equal', []);
+    expect(getCellIndices(cells, '.range-end'), 'to equal', []);
+    expect(getCellIndices(cells, '.range').length, 'to be', 42);
+    expect(getCellIndices(cells, '.focused'), 'to equal', [25]);
+
+    nextBtn0.click();
+    cells = getCells(picker0);
+
+    expect(viewSwitch0.textContent, 'to be', 'April 2020');
+    expect(getCellIndices(cells, '.selected'), 'to equal', []);
+    expect(getCellIndices(cells, '.range-start'), 'to equal', []);
+    expect(getCellIndices(cells, '.range-end'), 'to equal', [14]);
+    expect(getCellIndices(cells, '.range'), 'to equal', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]);
+    expect(getCellIndices(cells, '.focused'), 'to equal', [28]);
+
+    viewSwitch0.click();
+    cells = getCells(picker0);
+
+    expect(viewSwitch0.textContent, 'to be', '2020');
+    expect(getCellIndices(cells, '.selected'), 'to equal', [1]);
+    expect(getCellIndices(cells, '.range-start'), 'to equal', [1]);
+    expect(getCellIndices(cells, '.range-end'), 'to equal', [3]);
+    expect(getCellIndices(cells, '.range'), 'to equal', [2]);
+    expect(getCellIndices(cells, '.focused'), 'to equal', [3]);
+
+    // range-end
+    input1.focus();
+    cells = getCells(picker1);
+
+    expect(viewSwitch1.textContent, 'to be', 'April 2020');
+    expect(getCellIndices(cells, '.selected'), 'to equal', [14]);
+    expect(getCellIndices(cells, '.range-start'), 'to equal', []);
+    expect(getCellIndices(cells, '.range-end'), 'to equal', [14]);
+    expect(getCellIndices(cells, '.range'), 'to equal', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]);
+    expect(getCellIndices(cells, '.focused'), 'to equal', [14]);
+
+    nextBtn1.click();
+    cells = getCells(picker1);
+
+    expect(viewSwitch1.textContent, 'to be', 'May 2020');
+    expect(getCellIndices(cells, '.selected'), 'to equal', []);
+    expect(getCellIndices(cells, '.range-start'), 'to equal', []);
+    expect(getCellIndices(cells, '.range-end'), 'to equal', []);
+    expect(getCellIndices(cells, '.range'), 'to equal', []);
+    expect(getCellIndices(cells, '.focused'), 'to equal', [16]);
+
+    prevBtn1.click();
+    prevBtn1.click();
+    cells = getCells(picker1);
+
+    expect(viewSwitch1.textContent, 'to be', 'March 2020');
+    expect(getCellIndices(cells, '.selected'), 'to equal', []);
+    expect(getCellIndices(cells, '.range-start'), 'to equal', []);
+    expect(getCellIndices(cells, '.range-end'), 'to equal', []);
+    expect(getCellIndices(cells, '.range').length, 'to be', 42);
+    expect(getCellIndices(cells, '.focused'), 'to equal', [11]);
+
+    prevBtn1.click();
+    cells = getCells(picker1);
+
+    expect(viewSwitch1.textContent, 'to be', 'February 2020');
+    expect(getCellIndices(cells, '.selected'), 'to equal', []);
+    expect(getCellIndices(cells, '.range-start'), 'to equal', [31]);
+    expect(getCellIndices(cells, '.range-end'), 'to equal', []);
+    expect(getCellIndices(cells, '.range'), 'to equal', [32, 33, 34, 35, 36, 37, 38, 39, 40, 41]);
+    expect(getCellIndices(cells, '.focused'), 'to equal', [17]);
+
+    viewSwitch1.click();
+    cells = getCells(picker1);
+
+    expect(viewSwitch0.textContent, 'to be', '2020');
+    expect(getCellIndices(cells, '.selected'), 'to equal', [3]);
+    expect(getCellIndices(cells, '.range-start'), 'to equal', [1]);
+    expect(getCellIndices(cells, '.range-end'), 'to equal', [3]);
+    expect(getCellIndices(cells, '.range'), 'to equal', [2]);
+    expect(getCellIndices(cells, '.focused'), 'to equal', [1]);
+
+    drp.destroy();
+
+    // range over years (months → years views)
+    input0.value = '10/01/2020';
+    input1.value = '03/31/2023';
+
+    ({drp, picker0, picker1} = createDRP(elem));
+    ([viewSwitch0, prevBtn0, nextBtn0] = getParts(picker0, partsClasses));
+    ([viewSwitch1, prevBtn1, nextBtn1] = getParts(picker1, partsClasses));
+
+    // range-start
+    input0.focus();
+    viewSwitch0.click();
+    cells = getCells(picker0);
+
+    expect(viewSwitch0.textContent, 'to be', '2020');
+    expect(getCellIndices(cells, '.selected'), 'to equal', [9]);
+    expect(getCellIndices(cells, '.range-start'), 'to equal', [9]);
+    expect(getCellIndices(cells, '.range-end'), 'to equal', []);
+    expect(getCellIndices(cells, '.range'), 'to equal', [10, 11]);
+    expect(getCellIndices(cells, '.focused'), 'to equal', [9]);
+
+    prevBtn0.click();
+    cells = getCells(picker0);
+
+    expect(viewSwitch0.textContent, 'to be', '2019');
+    expect(getCellIndices(cells, '.selected'), 'to equal', []);
+    expect(getCellIndices(cells, '.range-start'), 'to equal', []);
+    expect(getCellIndices(cells, '.range-end'), 'to equal', []);
+    expect(getCellIndices(cells, '.range'), 'to equal', []);
+    expect(getCellIndices(cells, '.focused'), 'to equal', [9]);
+
+    nextBtn0.click();
+    nextBtn0.click();
+    cells = getCells(picker0);
+
+    expect(viewSwitch0.textContent, 'to be', '2021');
+    expect(getCellIndices(cells, '.selected'), 'to equal', []);
+    expect(getCellIndices(cells, '.range-start'), 'to equal', []);
+    expect(getCellIndices(cells, '.range-end'), 'to equal', []);
+    expect(getCellIndices(cells, '.range').length, 'to be', 12);
+    expect(getCellIndices(cells, '.focused'), 'to equal', [9]);
+
+    nextBtn0.click();
+    nextBtn0.click();
+    cells = getCells(picker0);
+
+    expect(viewSwitch0.textContent, 'to be', '2023');
+    expect(getCellIndices(cells, '.selected'), 'to equal', []);
+    expect(getCellIndices(cells, '.range-start'), 'to equal', []);
+    expect(getCellIndices(cells, '.range-end'), 'to equal', [2]);
+    expect(getCellIndices(cells, '.range'), 'to equal', [0, 1]);
+    expect(getCellIndices(cells, '.focused'), 'to equal', [9]);
+
+    viewSwitch0.click();
+    cells = getCells(picker0);
+
+    expect(viewSwitch0.textContent, 'to be', '2020-2029');
+    expect(getCellIndices(cells, '.selected'), 'to equal', [1]);
+    expect(getCellIndices(cells, '.range-start'), 'to equal', [1]);
+    expect(getCellIndices(cells, '.range-end'), 'to equal', [4]);
+    expect(getCellIndices(cells, '.range'), 'to equal', [2, 3]);
+    expect(getCellIndices(cells, '.focused'), 'to equal', [4]);
+
+    // range-end
+    input1.focus();
+    viewSwitch1.click();
+    cells = getCells(picker1);
+
+    expect(viewSwitch1.textContent, 'to be', '2023');
+    expect(getCellIndices(cells, '.selected'), 'to equal', [2]);
+    expect(getCellIndices(cells, '.range-start'), 'to equal', []);
+    expect(getCellIndices(cells, '.range-end'), 'to equal', [2]);
+    expect(getCellIndices(cells, '.range'), 'to equal', [0, 1]);
+    expect(getCellIndices(cells, '.focused'), 'to equal', [2]);
+
+    nextBtn1.click();
+    cells = getCells(picker1);
+
+    expect(viewSwitch1.textContent, 'to be', '2024');
+    expect(getCellIndices(cells, '.selected'), 'to equal', []);
+    expect(getCellIndices(cells, '.range-start'), 'to equal', []);
+    expect(getCellIndices(cells, '.range-end'), 'to equal', []);
+    expect(getCellIndices(cells, '.range'), 'to equal', []);
+    expect(getCellIndices(cells, '.focused'), 'to equal', [2]);
+
+    prevBtn1.click();
+    prevBtn1.click();
+    cells = getCells(picker1);
+
+    expect(viewSwitch1.textContent, 'to be', '2022');
+    expect(getCellIndices(cells, '.selected'), 'to equal', []);
+    expect(getCellIndices(cells, '.range-start'), 'to equal', []);
+    expect(getCellIndices(cells, '.range-end'), 'to equal', []);
+    expect(getCellIndices(cells, '.range').length, 'to be', 12);
+    expect(getCellIndices(cells, '.focused'), 'to equal', [2]);
+
+    prevBtn1.click();
+    prevBtn1.click();
+    cells = getCells(picker1);
+
+    expect(viewSwitch1.textContent, 'to be', '2020');
+    expect(getCellIndices(cells, '.selected'), 'to equal', []);
+    expect(getCellIndices(cells, '.range-start'), 'to equal', [9]);
+    expect(getCellIndices(cells, '.range-end'), 'to equal', []);
+    expect(getCellIndices(cells, '.range'), 'to equal', [10, 11]);
+    expect(getCellIndices(cells, '.focused'), 'to equal', [2]);
+
+    viewSwitch1.click();
+    cells = getCells(picker1);
+
+    expect(viewSwitch1.textContent, 'to be', '2020-2029');
+    expect(getCellIndices(cells, '.selected'), 'to equal', [4]);
+    expect(getCellIndices(cells, '.range-start'), 'to equal', [1]);
+    expect(getCellIndices(cells, '.range-end'), 'to equal', [4]);
+    expect(getCellIndices(cells, '.range'), 'to equal', [2, 3]);
+    expect(getCellIndices(cells, '.focused'), 'to equal', [1]);
+
+    drp.destroy();
+
+    // range over decades (years → decades views)
+    input0.value = '01/01/2017';
+    input1.value = '12/31/2041';
+
+    ({drp, picker0, picker1} = createDRP(elem));
+    ([viewSwitch0, prevBtn0, nextBtn0] = getParts(picker0, partsClasses));
+    ([viewSwitch1, prevBtn1, nextBtn1] = getParts(picker1, partsClasses));
+
+    // range-start
+    input0.focus();
+    viewSwitch0.click();
+    viewSwitch0.click();
+    cells = getCells(picker0);
+
+    expect(viewSwitch0.textContent, 'to be', '2010-2019');
+    expect(getCellIndices(cells, '.selected'), 'to equal', [8]);
+    expect(getCellIndices(cells, '.range-start'), 'to equal', [8]);
+    expect(getCellIndices(cells, '.range-end'), 'to equal', []);
+    expect(getCellIndices(cells, '.range'), 'to equal', [9, 10, 11]);
+    expect(getCellIndices(cells, '.focused'), 'to equal', [8]);
+
+    prevBtn0.click();
+    cells = getCells(picker0);
+
+    expect(viewSwitch0.textContent, 'to be', '2000-2009');
+    expect(getCellIndices(cells, '.selected'), 'to equal', []);
+    expect(getCellIndices(cells, '.range-start'), 'to equal', []);
+    expect(getCellIndices(cells, '.range-end'), 'to equal', []);
+    expect(getCellIndices(cells, '.range'), 'to equal', []);
+    expect(getCellIndices(cells, '.focused'), 'to equal', [8]);
+
+    nextBtn0.click();
+    nextBtn0.click();
+    cells = getCells(picker0);
+
+    expect(viewSwitch0.textContent, 'to be', '2020-2029');
+    expect(getCellIndices(cells, '.selected'), 'to equal', []);
+    expect(getCellIndices(cells, '.range-start'), 'to equal', []);
+    expect(getCellIndices(cells, '.range-end'), 'to equal', []);
+    expect(getCellIndices(cells, '.range').length, 'to be', 12);
+    expect(getCellIndices(cells, '.focused'), 'to equal', [8]);
+
+    nextBtn0.click();
+    nextBtn0.click();
+    cells = getCells(picker0);
+
+    expect(viewSwitch0.textContent, 'to be', '2040-2049');
+    expect(getCellIndices(cells, '.selected'), 'to equal', []);
+    expect(getCellIndices(cells, '.range-start'), 'to equal', []);
+    expect(getCellIndices(cells, '.range-end'), 'to equal', [2]);
+    expect(getCellIndices(cells, '.range'), 'to equal', [0, 1]);
+    expect(getCellIndices(cells, '.focused'), 'to equal', [8]);
+
+    viewSwitch0.click();
+    cells = getCells(picker0);
+
+    expect(viewSwitch0.textContent, 'to be', '2000-2090');
+    expect(getCellIndices(cells, '.selected'), 'to equal', [2]);
+    expect(getCellIndices(cells, '.range-start'), 'to equal', [2]);
+    expect(getCellIndices(cells, '.range-end'), 'to equal', [5]);
+    expect(getCellIndices(cells, '.range'), 'to equal', [3, 4]);
+    expect(getCellIndices(cells, '.focused'), 'to equal', [5]);
+
+    // range-end
+    input1.focus();
+    viewSwitch1.click();
+    viewSwitch1.click();
+    cells = getCells(picker1);
+
+    expect(viewSwitch1.textContent, 'to be', '2040-2049');
+    expect(getCellIndices(cells, '.selected'), 'to equal', [2]);
+    expect(getCellIndices(cells, '.range-start'), 'to equal', []);
+    expect(getCellIndices(cells, '.range-end'), 'to equal', [2]);
+    expect(getCellIndices(cells, '.range'), 'to equal', [0, 1]);
+    expect(getCellIndices(cells, '.focused'), 'to equal', [2]);
+
+    nextBtn1.click();
+    cells = getCells(picker1);
+
+    expect(viewSwitch1.textContent, 'to be', '2050-2059');
+    expect(getCellIndices(cells, '.selected'), 'to equal', []);
+    expect(getCellIndices(cells, '.range-start'), 'to equal', []);
+    expect(getCellIndices(cells, '.range-end'), 'to equal', []);
+    expect(getCellIndices(cells, '.range'), 'to equal', []);
+    expect(getCellIndices(cells, '.focused'), 'to equal', [2]);
+
+    prevBtn1.click();
+    prevBtn1.click();
+    cells = getCells(picker1);
+
+    expect(viewSwitch1.textContent, 'to be', '2030-2039');
+    expect(getCellIndices(cells, '.selected'), 'to equal', []);
+    expect(getCellIndices(cells, '.range-start'), 'to equal', []);
+    expect(getCellIndices(cells, '.range-end'), 'to equal', []);
+    expect(getCellIndices(cells, '.range').length, 'to be', 12);
+    expect(getCellIndices(cells, '.focused'), 'to equal', [2]);
+
+    prevBtn1.click();
+    prevBtn1.click();
+    cells = getCells(picker1);
+
+    expect(viewSwitch1.textContent, 'to be', '2010-2019');
+    expect(getCellIndices(cells, '.selected'), 'to equal', []);
+    expect(getCellIndices(cells, '.range-start'), 'to equal', [8]);
+    expect(getCellIndices(cells, '.range-end'), 'to equal', []);
+    expect(getCellIndices(cells, '.range'), 'to equal', [9, 10, 11]);
+    expect(getCellIndices(cells, '.focused'), 'to equal', [2]);
+
+    viewSwitch1.click();
+    cells = getCells(picker1);
+
+    expect(viewSwitch1.textContent, 'to be', '2000-2090');
+    expect(getCellIndices(cells, '.selected'), 'to equal', [5]);
+    expect(getCellIndices(cells, '.range-start'), 'to equal', [2]);
+    expect(getCellIndices(cells, '.range-end'), 'to equal', [5]);
+    expect(getCellIndices(cells, '.range'), 'to equal', [3, 4]);
+    expect(getCellIndices(cells, '.focused'), 'to equal', [2]);
+
+    drp.destroy();
+
+    // range over centures (decades views)
+    input0.value = '01/22/1984';
+    input1.value = '12/31/2121';
+
+    ({drp, picker0, picker1} = createDRP(elem));
+    ([viewSwitch0, prevBtn0, nextBtn0] = getParts(picker0, partsClasses));
+    ([viewSwitch1, prevBtn1, nextBtn1] = getParts(picker1, partsClasses));
+
+    // range-start
+    input0.focus();
+    viewSwitch0.click();
+    viewSwitch0.click();
+    viewSwitch0.click();
+    cells = getCells(picker0);
+
+    expect(viewSwitch0.textContent, 'to be', '1900-1990');
+    expect(getCellIndices(cells, '.selected'), 'to equal', [9]);
+    expect(getCellIndices(cells, '.range-start'), 'to equal', [9]);
+    expect(getCellIndices(cells, '.range-end'), 'to equal', []);
+    expect(getCellIndices(cells, '.range'), 'to equal', [10, 11]);
+    expect(getCellIndices(cells, '.focused'), 'to equal', [9]);
+
+    prevBtn0.click();
+    cells = getCells(picker0);
+
+    expect(viewSwitch0.textContent, 'to be', '1800-1890');
+    expect(getCellIndices(cells, '.selected'), 'to equal', []);
+    expect(getCellIndices(cells, '.range-start'), 'to equal', []);
+    expect(getCellIndices(cells, '.range-end'), 'to equal', []);
+    expect(getCellIndices(cells, '.range'), 'to equal', []);
+    expect(getCellIndices(cells, '.focused'), 'to equal', [9]);
+
+    nextBtn0.click();
+    nextBtn0.click();
+    cells = getCells(picker0);
+
+    expect(viewSwitch0.textContent, 'to be', '2000-2090');
+    expect(getCellIndices(cells, '.selected'), 'to equal', []);
+    expect(getCellIndices(cells, '.range-start'), 'to equal', []);
+    expect(getCellIndices(cells, '.range-end'), 'to equal', []);
+    expect(getCellIndices(cells, '.range').length, 'to be', 12);
+    expect(getCellIndices(cells, '.focused'), 'to equal', [9]);
+
+    nextBtn0.click();
+    cells = getCells(picker0);
+
+    expect(viewSwitch0.textContent, 'to be', '2100-2190');
+    expect(getCellIndices(cells, '.selected'), 'to equal', []);
+    expect(getCellIndices(cells, '.range-start'), 'to equal', []);
+    expect(getCellIndices(cells, '.range-end'), 'to equal', [3]);
+    expect(getCellIndices(cells, '.range'), 'to equal', [0, 1, 2]);
+    expect(getCellIndices(cells, '.focused'), 'to equal', [9]);
+
+    // range-end
+    input1.focus();
+    viewSwitch1.click();
+    viewSwitch1.click();
+    viewSwitch1.click();
+    cells = getCells(picker1);
+
+    expect(viewSwitch1.textContent, 'to be', '2100-2190');
+    expect(getCellIndices(cells, '.selected'), 'to equal', [3]);
+    expect(getCellIndices(cells, '.range-start'), 'to equal', []);
+    expect(getCellIndices(cells, '.range-end'), 'to equal', [3]);
+    expect(getCellIndices(cells, '.range'), 'to equal', [0, 1, 2]);
+    expect(getCellIndices(cells, '.focused'), 'to equal', [3]);
+
+    nextBtn1.click();
+    cells = getCells(picker1);
+
+    expect(viewSwitch1.textContent, 'to be', '2200-2290');
+    expect(getCellIndices(cells, '.selected'), 'to equal', []);
+    expect(getCellIndices(cells, '.range-start'), 'to equal', []);
+    expect(getCellIndices(cells, '.range-end'), 'to equal', []);
+    expect(getCellIndices(cells, '.range'), 'to equal', []);
+    expect(getCellIndices(cells, '.focused'), 'to equal', [3]);
+
+    prevBtn1.click();
+    prevBtn1.click();
+    cells = getCells(picker1);
+
+    expect(viewSwitch1.textContent, 'to be', '2000-2090');
+    expect(getCellIndices(cells, '.selected'), 'to equal', []);
+    expect(getCellIndices(cells, '.range-start'), 'to equal', []);
+    expect(getCellIndices(cells, '.range-end'), 'to equal', []);
+    expect(getCellIndices(cells, '.range').length, 'to be', 12);
+    expect(getCellIndices(cells, '.focused'), 'to equal', [3]);
+
+    prevBtn1.click();
+    cells = getCells(picker1);
+
+    expect(viewSwitch1.textContent, 'to be', '1900-1990');
+    expect(getCellIndices(cells, '.selected'), 'to equal', []);
+    expect(getCellIndices(cells, '.range-start'), 'to equal', [9]);
+    expect(getCellIndices(cells, '.range-end'), 'to equal', []);
+    expect(getCellIndices(cells, '.range'), 'to equal', [10, 11]);
+    expect(getCellIndices(cells, '.focused'), 'to equal', [3]);
+
+    drp.destroy();
   });
 });

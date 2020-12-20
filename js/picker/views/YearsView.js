@@ -62,9 +62,17 @@ export default class YearsView extends View {
 
   // Update view's settings to reflect the selected dates
   updateSelection() {
-    this.selected = this.picker.datepicker.dates.reduce((years, timeValue) => {
+    const {dates, rangepicker} = this.picker.datepicker;
+    this.selected = dates.reduce((years, timeValue) => {
       return pushUnique(years, startOfYearPeriod(timeValue, this.step));
     }, []);
+    if (rangepicker && rangepicker.dates) {
+      this.range = rangepicker.dates.map(timeValue => {
+        if (timeValue !== undefined) {
+          return startOfYearPeriod(timeValue, this.step);
+        }
+      });
+    }
   }
 
   // Update the entire view UI
@@ -80,8 +88,12 @@ export default class YearsView extends View {
     Array.from(this.grid.children).forEach((el, index) => {
       const classList = el.classList;
       const current = this.start + (index * this.step);
+      const date = dateValue(current, 0, 1);
 
       el.className = `datepicker-cell ${this.cellClass}`;
+      if (this.isMinView) {
+        el.dataset.date = date;
+      }
       el.textContent = el.dataset.year = current;
 
       if (index === 0) {
@@ -92,6 +104,18 @@ export default class YearsView extends View {
       if (current < this.minYear || current > this.maxYear) {
         classList.add('disabled');
       }
+      if (this.range) {
+        const [rangeStart, rangeEnd] = this.range;
+        if (current > rangeStart && current < rangeEnd) {
+          classList.add('range');
+        }
+        if (current === rangeStart) {
+          classList.add('range-start');
+        }
+        if (current === rangeEnd) {
+          classList.add('range-end');
+        }
+      }
       if (this.selected.includes(current)) {
         classList.add('selected');
       }
@@ -100,19 +124,31 @@ export default class YearsView extends View {
       }
 
       if (this.beforeShow) {
-        this.performBeforeHook(el, current, dateValue(current, 0, 1));
+        this.performBeforeHook(el, current, date);
       }
     });
   }
 
   // Update the view UI by applying the changes of selected and focused items
   refresh() {
-    this.grid.querySelectorAll('.selected, .focused').forEach((el) => {
-      el.classList.remove('selected', 'focused');
-    });
+    const [rangeStart, rangeEnd] = this.range || [];
+    this.grid
+      .querySelectorAll('.range, .range-start, .range-end, .selected, .focused')
+      .forEach((el) => {
+        el.classList.remove('range', 'range-start', 'range-end', 'selected', 'focused');
+      });
     Array.from(this.grid.children).forEach((el) => {
       const current = Number(el.textContent);
       const classList = el.classList;
+      if (current > rangeStart && current < rangeEnd) {
+        classList.add('range');
+      }
+      if (current === rangeStart) {
+        classList.add('range-start');
+      }
+      if (current === rangeEnd) {
+        classList.add('range-end');
+      }
       if (this.selected.includes(current)) {
         classList.add('selected');
       }

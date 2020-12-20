@@ -435,6 +435,7 @@
     minDate: null,
     nextArrow: '»',
     orientation: 'auto',
+    pickLevel: 0,
     prevArrow: '«',
     showDaysOfWeek: true,
     showOnClick: true,
@@ -522,9 +523,9 @@
   }
 
   // Validate viewId. if invalid, fallback to the original value
-  function validateViewId(value, origValue) {
+  function validateViewId(value, origValue, max = 3) {
     const viewId = parseInt(value, 10);
-    return viewId >= 0 && viewId < 4 ? viewId : origValue;
+    return viewId >= 0 && viewId <= max ? viewId : origValue;
   }
 
   // Create Datepicker configuration to set
@@ -539,6 +540,7 @@
       maxDate,
       maxView,
       minDate,
+      pickLevel,
       startView,
       weekStart,
     } = datepicker.config || {};
@@ -671,12 +673,23 @@
       delete inOpts.dateDelimiter;
     }
 
-    //*** view mode ***//
+    //*** pick level & view ***//
+    let newPickLevel = pickLevel;
+    if (inOpts.pickLevel !== undefined) {
+      newPickLevel = validateViewId(inOpts.pickLevel, 2);
+      delete inOpts.pickLevel;
+    }
+    if (newPickLevel !== pickLevel) {
+      pickLevel = config.pickLevel = newPickLevel;
+    }
+
     let newMaxView = maxView;
     if (inOpts.maxView !== undefined) {
       newMaxView = validateViewId(inOpts.maxView, maxView);
       delete inOpts.maxView;
     }
+    // ensure max view >= pick level
+    newMaxView = pickLevel > newMaxView ? pickLevel : newMaxView;
     if (newMaxView !== maxView) {
       maxView = config.maxView = newMaxView;
     }
@@ -686,8 +699,12 @@
       newStartView = validateViewId(inOpts.startView, newStartView);
       delete inOpts.startView;
     }
-    // ensure start view < max
-    newStartView = maxView < newStartView ? maxView : newStartView;
+    // ensure pick level <= start view <= max view
+    if (newStartView < pickLevel) {
+      newStartView = pickLevel;
+    } else if (newStartView > maxView) {
+      newStartView = maxView;
+    }
     if (newStartView !== startView) {
       config.startView = newStartView;
     }
@@ -782,6 +799,9 @@
     }
 
     init(options) {
+      if (options.pickLevel !== undefined) {
+        this.isMinView = this.id === options.pickLevel;
+      }
       this.setOptions(options);
       this.updateFocus();
       this.updateSelection();
@@ -935,9 +955,11 @@
 
     // Apply update on the selected dates to view's settings
     updateSelection() {
-      const {dates, range} = this.picker.datepicker;
+      const {dates, rangepicker} = this.picker.datepicker;
       this.selected = dates;
-      this.range = range;
+      if (rangepicker) {
+        this.range = rangepicker.dates;
+      }
     }
 
      // Update the entire view UI
@@ -987,7 +1009,7 @@
         if (this.daysOfWeekHighlighted.includes(day)) {
           classList.add('highlighted');
         }
-        if (this.range){
+        if (this.range) {
           const [rangeStart, rangeEnd] = this.range;
           if (current > rangeStart && current < rangeEnd) {
             classList.add('range');
@@ -1051,6 +1073,21 @@
     }
   }
 
+  function computeMonthRange(range, thisYear) {
+    if (!range || !range[0] || !range[1]) {
+      return;
+    }
+
+    const [[startY, startM], [endY, endM]] = range;
+    if (startY > thisYear || endY < thisYear) {
+      return;
+    }
+    return [
+      startY === thisYear ? startM : -1,
+      endY === thisYear ? endM : 12,
+    ];
+  }
+
   class MonthsView extends View {
     constructor(picker) {
       super(picker, {
@@ -1110,7 +1147,8 @@
 
     // Update view's settings to reflect the selected dates
     updateSelection() {
-      this.selected = this.picker.datepicker.dates.reduce((selected, timeValue) => {
+      const {dates, rangepicker} = this.picker.datepicker;
+      this.selected = dates.reduce((selected, timeValue) => {
         const date = new Date(timeValue);
         const year = date.getFullYear();
         const month = date.getMonth();
@@ -1121,6 +1159,12 @@
         }
         return selected;
       }, {});
+      if (rangepicker && rangepicker.dates) {
+        this.range = rangepicker.dates.map(timeValue => {
+          const date = new Date(timeValue);
+          return isNaN(date) ? undefined : [date.getFullYear(), date.getMonth()];
+        });
+      }
     }
 
     // Update the entire view UI
@@ -1137,10 +1181,16 @@
       const yrOutOfRange = this.year < this.minYear || this.year > this.maxYear;
       const isMinYear = this.year === this.minYear;
       const isMaxYear = this.year === this.maxYear;
+      const range = computeMonthRange(this.range, this.year);
+
       Array.from(this.grid.children).forEach((el, index) => {
         const classList = el.classList;
+        const date = dateValue(this.year, index, 1);
 
         el.className = `datepicker-cell ${this.cellClass}`;
+        if (this.isMinView) {
+          el.dataset.date = date;
+        }
         // reset text on every render to clear the custom content set
         // by beforeShow hook at previous render
         el.textContent = this.monthNames[index];
@@ -1152,6 +1202,18 @@
         ) {
           classList.add('disabled');
         }
+        if (range) {
+          const [rangeStart, rangeEnd] = range;
+          if (index > rangeStart && index < rangeEnd) {
+            classList.add('range');
+          }
+          if (index === rangeStart) {
+            classList.add('range-start');
+          }
+          if (index === rangeEnd) {
+            classList.add('range-end');
+          }
+        }
         if (selected.includes(index)) {
           classList.add('selected');
         }
@@ -1160,7 +1222,7 @@
         }
 
         if (this.beforeShow) {
-          this.performBeforeHook(el, index, dateValue(this.year, index, 1));
+          this.performBeforeHook(el, index, date);
         }
       });
     }
@@ -1168,11 +1230,23 @@
     // Update the view UI by applying the changes of selected and focused items
     refresh() {
       const selected = this.selected[this.year] || [];
-      this.grid.querySelectorAll('.selected, .focused').forEach((el) => {
-        el.classList.remove('selected', 'focused');
-      });
+      const [rangeStart, rangeEnd] = computeMonthRange(this.range, this.year) || [];
+      this.grid
+        .querySelectorAll('.range, .range-start, .range-end, .selected, .focused')
+        .forEach((el) => {
+          el.classList.remove('range', 'range-start', 'range-end', 'selected', 'focused');
+        });
       Array.from(this.grid.children).forEach((el, index) => {
         const classList = el.classList;
+        if (index > rangeStart && index < rangeEnd) {
+          classList.add('range');
+        }
+        if (index === rangeStart) {
+          classList.add('range-start');
+        }
+        if (index === rangeEnd) {
+          classList.add('range-end');
+        }
         if (selected.includes(index)) {
           classList.add('selected');
         }
@@ -1250,9 +1324,17 @@
 
     // Update view's settings to reflect the selected dates
     updateSelection() {
-      this.selected = this.picker.datepicker.dates.reduce((years, timeValue) => {
+      const {dates, rangepicker} = this.picker.datepicker;
+      this.selected = dates.reduce((years, timeValue) => {
         return pushUnique(years, startOfYearPeriod(timeValue, this.step));
       }, []);
+      if (rangepicker && rangepicker.dates) {
+        this.range = rangepicker.dates.map(timeValue => {
+          if (timeValue !== undefined) {
+            return startOfYearPeriod(timeValue, this.step);
+          }
+        });
+      }
     }
 
     // Update the entire view UI
@@ -1268,8 +1350,12 @@
       Array.from(this.grid.children).forEach((el, index) => {
         const classList = el.classList;
         const current = this.start + (index * this.step);
+        const date = dateValue(current, 0, 1);
 
         el.className = `datepicker-cell ${this.cellClass}`;
+        if (this.isMinView) {
+          el.dataset.date = date;
+        }
         el.textContent = el.dataset.year = current;
 
         if (index === 0) {
@@ -1280,6 +1366,18 @@
         if (current < this.minYear || current > this.maxYear) {
           classList.add('disabled');
         }
+        if (this.range) {
+          const [rangeStart, rangeEnd] = this.range;
+          if (current > rangeStart && current < rangeEnd) {
+            classList.add('range');
+          }
+          if (current === rangeStart) {
+            classList.add('range-start');
+          }
+          if (current === rangeEnd) {
+            classList.add('range-end');
+          }
+        }
         if (this.selected.includes(current)) {
           classList.add('selected');
         }
@@ -1288,19 +1386,31 @@
         }
 
         if (this.beforeShow) {
-          this.performBeforeHook(el, current, dateValue(current, 0, 1));
+          this.performBeforeHook(el, current, date);
         }
       });
     }
 
     // Update the view UI by applying the changes of selected and focused items
     refresh() {
-      this.grid.querySelectorAll('.selected, .focused').forEach((el) => {
-        el.classList.remove('selected', 'focused');
-      });
+      const [rangeStart, rangeEnd] = this.range || [];
+      this.grid
+        .querySelectorAll('.range, .range-start, .range-end, .selected, .focused')
+        .forEach((el) => {
+          el.classList.remove('range', 'range-start', 'range-end', 'selected', 'focused');
+        });
       Array.from(this.grid.children).forEach((el) => {
         const current = Number(el.textContent);
         const classList = el.classList;
+        if (current > rangeStart && current < rangeEnd) {
+          classList.add('range');
+        }
+        if (current === rangeStart) {
+          classList.add('range-start');
+        }
+        if (current === rangeEnd) {
+          classList.add('range-end');
+        }
         if (this.selected.includes(current)) {
           classList.add('selected');
         }
@@ -1417,15 +1527,13 @@
       return;
     }
 
-    switch (datepicker.picker.currentView.id) {
-      case 0:
-        datepicker.setDate(Number(target.dataset.date));
-        break;
-      case 1:
-        goToSelectedMonthOrYear(datepicker, Number(target.dataset.month));
-        break;
-      default:
-        goToSelectedMonthOrYear(datepicker, Number(target.dataset.year));
+    const {id, isMinView} = datepicker.picker.currentView;
+    if (isMinView) {
+      datepicker.setDate(Number(target.dataset.date));
+    } else if (id === 1) {
+      goToSelectedMonthOrYear(datepicker, Number(target.dataset.month));
+    } else {
+      goToSelectedMonthOrYear(datepicker, Number(target.dataset.year));
     }
   }
 
@@ -1769,9 +1877,10 @@
   // direction: -1 (left/up), 1 (right/down)
   // vertical: true for up/down, false for left/right
   function moveByArrowKey(datepicker, ev, direction, vertical) {
-    const currentView = datepicker.picker.currentView;
+    const picker = datepicker.picker;
+    const currentView = picker.currentView;
     const step = currentView.step || 1;
-    let viewDate = datepicker.picker.viewDate;
+    let viewDate = picker.viewDate;
     let addFn;
     let testFn;
     switch (currentView.id) {
@@ -1809,7 +1918,7 @@
       currentView.maxDate
     );
     if (viewDate !== undefined) {
-      datepicker.picker.changeFocus(viewDate).render();
+      picker.changeFocus(viewDate).render();
     }
   }
 
@@ -1819,12 +1928,13 @@
       return;
     }
 
-    const viewId = datepicker.picker.currentView.id;
-    if (!datepicker.picker.active) {
+    const picker = datepicker.picker;
+    const {id, isMinView} = picker.currentView;
+    if (!picker.active) {
       switch (ev.key) {
         case 'ArrowDown':
         case 'Escape':
-          datepicker.picker.show();
+          picker.show();
           break;
         case 'Enter':
           datepicker.update();
@@ -1835,7 +1945,7 @@
     } else if (datepicker.editMode) {
       switch (ev.key) {
         case 'Escape':
-          datepicker.picker.hide();
+          picker.hide();
           break;
         case 'Enter':
           datepicker.exitEditMode({update: true, autohide: datepicker.config.autohide});
@@ -1846,7 +1956,7 @@
     } else {
       switch (ev.key) {
         case 'Escape':
-          datepicker.picker.hide();
+          picker.hide();
           break;
         case 'ArrowLeft':
           if (ev.ctrlKey || ev.metaKey) {
@@ -1886,10 +1996,10 @@
           moveByArrowKey(datepicker, ev, 1, true);
           break;
         case 'Enter':
-          if (viewId === 0) {
-            datepicker.setDate(datepicker.picker.viewDate);
+          if (isMinView) {
+            datepicker.setDate(picker.viewDate);
           } else {
-            datepicker.picker.changeView(viewId - 1).render();
+            picker.changeView(id - 1).render();
           }
           break;
         case 'Backspace':
@@ -1970,17 +2080,36 @@
   // returns undefined if there are no valid dates in inputDates
   // when origDates (current selection) is passed, the function works to mix
   // the input dates into the current selection
-  function processInputDates(inputDates, config, origDates = undefined) {
-    if (inputDates.length === 0) {
+  function processInputDates(datepicker, inputDates, clear = false) {
+    const {config, dates: origDates, rangepicker} = datepicker;
+      if (inputDates.length === 0) {
       // empty input is considered valid unless origiDates is passed
-      return origDates ? undefined : [];
+      return clear ? [] : undefined;
     }
 
+    const rangeEnd = rangepicker && datepicker === rangepicker.datepickers[1];
     let newDates = inputDates.reduce((dates, dt) => {
-      const date = parseDate(dt, config.format, config.locale);
+      let date = parseDate(dt, config.format, config.locale);
+      if (date === undefined) {
+        return dates;
+      }
+      if (config.pickLevel > 0) {
+        // adjust to 1st of the month/Jan 1st of the year
+        // or to the last day of the monh/Dec 31st of the year if the datepicker
+        // is the range-end picker of a rangepicker
+        const dt = new Date(date);
+        if (config.pickLevel === 1) {
+          date = rangeEnd
+            ? dt.setMonth(dt.getMonth() + 1, 1) - 86400000
+            : dt.setDate(1);
+        } else {
+          date = rangeEnd
+            ? dt.setFullYear(dt.getFullYear() + 1, 0, 1) - 86400000
+            : dt.setMonth(0, 1);
+        }
+      }
       if (
-        date !== undefined
-        && isInRange(date, config.minDate, config.maxDate)
+        isInRange(date, config.minDate, config.maxDate)
         && !dates.includes(date)
         && !config.datesDisabled.includes(date)
         && !config.daysOfWeekDisabled.includes(new Date(date).getDay())
@@ -1992,7 +2121,7 @@
     if (newDates.length === 0) {
       return;
     }
-    if (origDates && config.multidate) {
+    if (config.multidate && !clear) {
       // get the synmetric difference between origDates and newDates
       newDates = newDates.reduce((dates, date) => {
         if (!origDates.includes(date)) {
@@ -2005,6 +2134,33 @@
     return config.maxNumberOfDates && newDates.length > config.maxNumberOfDates
       ? newDates.slice(config.maxNumberOfDates * -1)
       : newDates;
+  }
+
+  function setDate(datepicker, inputDates, options) {
+    let {clear, render, autohide} = options;
+    if (render === undefined) {
+      render = true;
+    }
+    if (!render) {
+      autohide = false;
+    } else if (autohide === undefined) {
+      autohide = datepicker.config.autohide;
+    }
+
+    const newDates = processInputDates(datepicker, inputDates, clear);
+    if (!newDates) {
+      return;
+    }
+    if (newDates.toString() !== datepicker.dates.toString()) {
+      datepicker.dates = newDates;
+      datepicker.refresh(render ? undefined : 'input');
+      triggerDatepickerEvent(datepicker, 'changeDate');
+    } else {
+      datepicker.refresh('input');
+    }
+    if (autohide) {
+      datepicker.hide();
+    }
   }
 
   /**
@@ -2052,17 +2208,24 @@
         inputField.classList.add('datepicker-input');
         initialDates = stringToArray(inputField.value, config.dateDelimiter);
       }
-      // set initial value
-      this.dates = processInputDates(initialDates, config) || [];
-
       if (rangepicker && rangepicker.constructor.name === 'DateRangePicker') {
-        this.rangepicker = rangepicker;
-        // add getter for range
-        Object.defineProperty(this, 'range', {
+        // attach itaelf to the rangepicker here so that processInputDates() can
+        // determine if this is the range-end picker of the rangepicker while
+        // setting inital values when pickLevel > 0
+        const index = Number(rangepicker.inputs[1] === inputField);
+        rangepicker.datepickers[index] = this;
+        // add getter for rangepicker
+        Object.defineProperty(this, 'rangepicker', {
           get() {
-            return this.rangepicker.dates;
+            return rangepicker;
           },
         });
+      }
+
+      // set initial value
+      this.dates = processInputDates(this, initialDates) || [];
+      if (inputField) {
+        inputField.value = stringifyDates(this.dates, config);
       }
 
       const picker = this.picker = new Picker(this);
@@ -2254,32 +2417,19 @@
      */
     setDate(...args) {
       const dates = [...args];
-      const opts = {clear: false, render: true, autohide: this.config.autohide};
+      const opts = {};
       const lastArg = lastItemOf(args);
       if (
         typeof lastArg === 'object'
         && !Array.isArray(lastArg)
         && !(lastArg instanceof Date)
+        && lastArg
       ) {
         Object.assign(opts, dates.pop());
       }
 
       const inputDates = Array.isArray(dates[0]) ? dates[0] : dates;
-      const origDates = opts.clear ? undefined : this.dates;
-      const newDates = processInputDates(inputDates, this.config, origDates);
-      if (!newDates) {
-        return;
-      }
-      if (newDates.toString() !== this.dates.toString()) {
-        this.dates = newDates;
-        this.refresh(opts.render ? undefined : 'input');
-        triggerDatepickerEvent(this, 'changeDate');
-      } else {
-        this.refresh('input');
-      }
-      if (opts.render && opts.autohide) {
-        this.hide();
-      }
+      setDate(this, inputDates, opts);
     }
 
     /**
@@ -2297,22 +2447,9 @@
         return;
       }
 
-      const opts = Object.assign({autohide: false}, options);
+      const opts = {clear: true, autohide: !!(options && options.autohide)};
       const inputDates = stringToArray(this.inputField.value, this.config.dateDelimiter);
-      const newDates = processInputDates(inputDates, this.config);
-      if (!newDates) {
-        return;
-      }
-      if (newDates.toString() !== this.dates.toString()) {
-        this.dates = newDates;
-        this.refresh();
-        triggerDatepickerEvent(this, 'changeDate');
-      } else {
-        this.refresh('input');
-      }
-      if (opts.autohide) {
-        this.hide();
-      }
+      setDate(this, inputDates, opts);
     }
 
     /**
@@ -2322,7 +2459,9 @@
      */
     refresh(target = undefined) {
       if (target !== 'input') {
-        const newView = this.picker.active ? 0 : this.config.startView;
+        const newView = this.picker.active
+          ? this.config.pickLevel
+          : this.config.startView;
         this.picker.update().changeView(newView).render();
       }
       if (!this.inline && target !== 'picker') {
@@ -2378,7 +2517,7 @@
     registerListeners(rangepicker, [
       [el, 'changeDate', changeDateListener],
     ]);
-    return new Datepicker(el, options, rangepicker);
+    new Datepicker(el, options, rangepicker);
   }
 
   function onChangeDate(rangepicker, ev) {
@@ -2446,10 +2585,11 @@
 
       const changeDateListener = onChangeDate.bind(null, this);
       const cleanOptions = filterOptions(options);
-      this.datepickers = [
-        setupDatepicker(this, changeDateListener, this.inputs[0], cleanOptions),
-        setupDatepicker(this, changeDateListener, this.inputs[1], cleanOptions),
-      ];
+      // in order for initial date setup to work right when pcicLvel > 0,
+      // let Datepicker constructor add the instance to the rangepicker
+      this.datepickers = [];
+      setupDatepicker(this, changeDateListener, this.inputs[0], cleanOptions);
+      setupDatepicker(this, changeDateListener, this.inputs[1], cleanOptions);
       // normalize the range if inital dates are given
       if (this.dates[0] !== undefined) {
         onChangeDate(this, {target: this.inputs[0]});
@@ -2462,7 +2602,7 @@
      * @type {Array} - selected date of the linked date pickers
      */
     get dates() {
-      return this.datepickers
+      return this.datepickers.length === 2
         ? [
             this.datepickers[0].dates[0],
             this.datepickers[1].dates[0],

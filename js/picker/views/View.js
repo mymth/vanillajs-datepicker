@@ -13,6 +13,9 @@ export default class View {
   }
 
   init(options) {
+    if (options.pickLevel !== undefined) {
+      this.isMinView = this.id === options.pickLevel;
+    }
     this.setOptions(options);
     this.updateFocus();
     this.updateSelection();

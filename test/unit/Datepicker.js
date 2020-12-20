@@ -79,6 +79,7 @@ describe('Datepicker', function () {
       expect(dp.config.nextArrow[0].wholeText, 'to be', '»');
       //
       expect(dp.config.orientation, 'to equal', {x: 'auto', y: 'auto'});
+      expect(dp.config.pickLevel, 'to be', 0);
       //
       expect(dp.config.prevArrow, 'to be a', NodeList);
       expect(dp.config.prevArrow.length, 'to be', 1);
@@ -90,6 +91,7 @@ describe('Datepicker', function () {
       expect(dp.config.title, 'to be', '');
       expect(dp.config.todayBtn, 'to be false');
       expect(dp.config.todayHighlight, 'to be false');
+      expect(dp.config.updateOnBlur, 'to be true');
       expect(dp.config.weekStart, 'to be', 0);
       expect(dp.config.weekEnd, 'to be', 6);
     });
@@ -108,17 +110,13 @@ describe('Datepicker', function () {
       expect(dpElem.classList.contains('active'), 'to be false');
     });
 
-    it('sets rangepicker and range properties if DateRangePicker to link is passed', function () {
+    it('sets rangepicker properties if DateRangePicker to link is passed', function () {
       const fakeRangepicker = new (function DateRangePicker() {
         this.dates = ['foo', 'bar'];
       })();
       const dp = new Datepicker(input, {}, fakeRangepicker);
 
       expect(dp.rangepicker, 'to be', fakeRangepicker);
-      expect(dp.range, 'to equal', fakeRangepicker.dates);
-
-      fakeRangepicker.dates = [123, 456];
-      expect(dp.range, 'to equal', [123, 456]);
     });
   });
 

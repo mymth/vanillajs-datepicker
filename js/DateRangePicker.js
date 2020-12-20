@@ -17,7 +17,7 @@ function setupDatepicker(rangepicker, changeDateListener, el, options) {
   registerListeners(rangepicker, [
     [el, 'changeDate', changeDateListener],
   ]);
-  return new Datepicker(el, options, rangepicker);
+  new Datepicker(el, options, rangepicker);
 }
 
 function onChangeDate(rangepicker, ev) {
@@ -85,10 +85,11 @@ export default class DateRangePicker  {
 
     const changeDateListener = onChangeDate.bind(null, this);
     const cleanOptions = filterOptions(options);
-    this.datepickers = [
-      setupDatepicker(this, changeDateListener, this.inputs[0], cleanOptions),
-      setupDatepicker(this, changeDateListener, this.inputs[1], cleanOptions),
-    ];
+    // in order for initial date setup to work right when pcicLvel > 0,
+    // let Datepicker constructor add the instance to the rangepicker
+    this.datepickers = [];
+    setupDatepicker(this, changeDateListener, this.inputs[0], cleanOptions);
+    setupDatepicker(this, changeDateListener, this.inputs[1], cleanOptions);
     // normalize the range if inital dates are given
     if (this.dates[0] !== undefined) {
       onChangeDate(this, {target: this.inputs[0]});
@@ -101,7 +102,7 @@ export default class DateRangePicker  {
    * @type {Array} - selected date of the linked date pickers
    */
   get dates() {
-    return this.datepickers
+    return this.datepickers.length === 2
       ? [
           this.datepickers[0].dates[0],
           this.datepickers[1].dates[0],

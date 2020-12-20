@@ -90,6 +90,7 @@ const defaultOptions = {
   minDate: null,
   nextArrow: '»',
   orientation: 'auto',
+  pickLevel: 0,
   prevArrow: '«',
   showDaysOfWeek: true,
   showOnClick: true,

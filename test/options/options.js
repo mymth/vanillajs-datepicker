@@ -407,44 +407,6 @@ describe('options', function () {
     });
   });
 
-  describe('maxView', function () {
-    it('limits the available views', function () {
-      const {dp, picker} = createDP(input, {maxView: 1});
-      const viewSwitch = getViewSwitch(picker);
-      dp.show();
-
-      viewSwitch.click();
-      viewSwitch.click();
-
-      expect(viewSwitch.textContent, 'to be', '2020');
-      expect(getCells(picker)[0].textContent, 'to be', 'Jan');
-
-      dp.destroy();
-    });
-
-    it('can be updated with setOptions()', function () {
-      const {dp, picker} = createDP(input);
-      const viewSwitch = getViewSwitch(picker);
-      dp.setOptions({maxView: 2});
-      dp.show();
-
-      viewSwitch.click();
-      viewSwitch.click();
-      viewSwitch.click();
-
-      expect(viewSwitch.textContent, 'to be', '2020-2029');
-      expect(getCells(picker)[1].textContent, 'to be', '2020');
-
-      dp.setOptions({maxView: 0});
-      expect(viewSwitch.textContent, 'to be', 'February 2020');
-
-      viewSwitch.click();
-      expect(viewSwitch.textContent, 'to be', 'February 2020');
-
-      dp.destroy();
-    });
-  });
-
   describe('nextArrow', function () {
     it('specifies the label of the next button in HTML (or plain text)', function () {
       const html = '<i class="icn icn-arrow-right"></i>';
@@ -578,47 +540,6 @@ describe('options', function () {
       input.focus();
 
       expect(isVisible(picker), 'to be true');
-
-      dp.destroy();
-    });
-  });
-
-  describe('startView', function () {
-    it('specifies the view desplayed on open', function () {
-      const {dp, picker} = createDP(input, {startView: 3});
-      const viewSwitch = getViewSwitch(picker);
-      dp.show();
-
-      expect(viewSwitch.textContent, 'to be', '2000-2090');
-
-      let cells = getCells(picker);
-      expect(filterCells(cells, '.focused'), 'to equal', [cells[3]]);
-      expect(cells[3].textContent, 'to be', '2020');
-
-      dp.destroy();
-    });
-
-    it('can be updated with setOptions()', function () {
-      const {dp, picker} = createDP(input);
-      const viewSwitch = getViewSwitch(picker);
-      dp.setOptions({startView: 2});
-      dp.show();
-
-      expect(viewSwitch.textContent, 'to be', '2020-2029');
-
-      let cells = getCells(picker);
-      expect(filterCells(cells, '.focused'), 'to equal', [cells[1]]);
-      expect(cells[1].textContent, 'to be', '2020');
-
-      dp.hide();
-      dp.setOptions({startView: 0});
-      dp.show();
-
-      expect(viewSwitch.textContent, 'to be', 'February 2020');
-
-      cells = getCells(picker);
-      expect(filterCells(cells, '.focused'), 'to equal', [cells[19]]);
-      expect(cells[19].textContent, 'to be', '14');
 
       dp.destroy();
     });

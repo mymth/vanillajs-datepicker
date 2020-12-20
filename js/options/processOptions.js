@@ -28,9 +28,9 @@ function validateDate(value, format, locale, origValue) {
 }
 
 // Validate viewId. if invalid, fallback to the original value
-function validateViewId(value, origValue) {
+function validateViewId(value, origValue, max = 3) {
   const viewId = parseInt(value, 10);
-  return viewId >= 0 && viewId < 4 ? viewId : origValue;
+  return viewId >= 0 && viewId <= max ? viewId : origValue;
 }
 
 // Create Datepicker configuration to set
@@ -45,6 +45,7 @@ export default function processOptions(options, datepicker) {
     maxDate,
     maxView,
     minDate,
+    pickLevel,
     startView,
     weekStart,
   } = datepicker.config || {};
@@ -177,12 +178,23 @@ export default function processOptions(options, datepicker) {
     delete inOpts.dateDelimiter;
   }
 
-  //*** view mode ***//
+  //*** pick level & view ***//
+  let newPickLevel = pickLevel;
+  if (inOpts.pickLevel !== undefined) {
+    newPickLevel = validateViewId(inOpts.pickLevel, 2);
+    delete inOpts.pickLevel;
+  }
+  if (newPickLevel !== pickLevel) {
+    pickLevel = config.pickLevel = newPickLevel;
+  }
+
   let newMaxView = maxView;
   if (inOpts.maxView !== undefined) {
     newMaxView = validateViewId(inOpts.maxView, maxView);
     delete inOpts.maxView;
   }
+  // ensure max view >= pick level
+  newMaxView = pickLevel > newMaxView ? pickLevel : newMaxView;
   if (newMaxView !== maxView) {
     maxView = config.maxView = newMaxView;
   }
@@ -192,8 +204,12 @@ export default function processOptions(options, datepicker) {
     newStartView = validateViewId(inOpts.startView, newStartView);
     delete inOpts.startView;
   }
-  // ensure start view < max
-  newStartView = maxView < newStartView ? maxView : newStartView;
+  // ensure pick level <= start view <= max view
+  if (newStartView < pickLevel) {
+    newStartView = pickLevel;
+  } else if (newStartView > maxView) {
+    newStartView = maxView;
+  }
   if (newStartView !== startView) {
     config.startView = newStartView;
   }

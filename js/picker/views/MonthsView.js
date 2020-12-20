@@ -3,6 +3,21 @@ import {dateValue} from '../../lib/date.js';
 import {parseHTML} from '../../lib/dom.js';
 import View from './View.js';
 
+function computeMonthRange(range, thisYear) {
+  if (!range || !range[0] || !range[1]) {
+    return;
+  }
+
+  const [[startY, startM], [endY, endM]] = range;
+  if (startY > thisYear || endY < thisYear) {
+    return;
+  }
+  return [
+    startY === thisYear ? startM : -1,
+    endY === thisYear ? endM : 12,
+  ];
+}
+
 export default class MonthsView extends View {
   constructor(picker) {
     super(picker, {
@@ -62,7 +77,8 @@ export default class MonthsView extends View {
 
   // Update view's settings to reflect the selected dates
   updateSelection() {
-    this.selected = this.picker.datepicker.dates.reduce((selected, timeValue) => {
+    const {dates, rangepicker} = this.picker.datepicker;
+    this.selected = dates.reduce((selected, timeValue) => {
       const date = new Date(timeValue);
       const year = date.getFullYear();
       const month = date.getMonth();
@@ -73,6 +89,12 @@ export default class MonthsView extends View {
       }
       return selected;
     }, {});
+    if (rangepicker && rangepicker.dates) {
+      this.range = rangepicker.dates.map(timeValue => {
+        const date = new Date(timeValue);
+        return isNaN(date) ? undefined : [date.getFullYear(), date.getMonth()];
+      });
+    }
   }
 
   // Update the entire view UI
@@ -89,10 +111,16 @@ export default class MonthsView extends View {
     const yrOutOfRange = this.year < this.minYear || this.year > this.maxYear;
     const isMinYear = this.year === this.minYear;
     const isMaxYear = this.year === this.maxYear;
+    const range = computeMonthRange(this.range, this.year);
+
     Array.from(this.grid.children).forEach((el, index) => {
       const classList = el.classList;
+      const date = dateValue(this.year, index, 1);
 
       el.className = `datepicker-cell ${this.cellClass}`;
+      if (this.isMinView) {
+        el.dataset.date = date;
+      }
       // reset text on every render to clear the custom content set
       // by beforeShow hook at previous render
       el.textContent = this.monthNames[index];
@@ -104,6 +132,18 @@ export default class MonthsView extends View {
       ) {
         classList.add('disabled');
       }
+      if (range) {
+        const [rangeStart, rangeEnd] = range;
+        if (index > rangeStart && index < rangeEnd) {
+          classList.add('range');
+        }
+        if (index === rangeStart) {
+          classList.add('range-start');
+        }
+        if (index === rangeEnd) {
+          classList.add('range-end');
+        }
+      }
       if (selected.includes(index)) {
         classList.add('selected');
       }
@@ -112,7 +152,7 @@ export default class MonthsView extends View {
       }
 
       if (this.beforeShow) {
-        this.performBeforeHook(el, index, dateValue(this.year, index, 1));
+        this.performBeforeHook(el, index, date);
       }
     });
   }
@@ -120,11 +160,23 @@ export default class MonthsView extends View {
   // Update the view UI by applying the changes of selected and focused items
   refresh() {
     const selected = this.selected[this.year] || [];
-    this.grid.querySelectorAll('.selected, .focused').forEach((el) => {
-      el.classList.remove('selected', 'focused');
-    });
+    const [rangeStart, rangeEnd] = computeMonthRange(this.range, this.year) || [];
+    this.grid
+      .querySelectorAll('.range, .range-start, .range-end, .selected, .focused')
+      .forEach((el) => {
+        el.classList.remove('range', 'range-start', 'range-end', 'selected', 'focused');
+      });
     Array.from(this.grid.children).forEach((el, index) => {
       const classList = el.classList;
+      if (index > rangeStart && index < rangeEnd) {
+        classList.add('range');
+      }
+      if (index === rangeStart) {
+        classList.add('range-start');
+      }
+      if (index === rangeEnd) {
+        classList.add('range-end');
+      }
       if (selected.includes(index)) {
         classList.add('selected');
       }

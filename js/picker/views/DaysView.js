@@ -121,9 +121,11 @@ export default class DaysView extends View {
 
   // Apply update on the selected dates to view's settings
   updateSelection() {
-    const {dates, range} = this.picker.datepicker;
+    const {dates, rangepicker} = this.picker.datepicker;
     this.selected = dates;
-    this.range = range;
+    if (rangepicker) {
+      this.range = rangepicker.dates;
+    }
   }
 
    // Update the entire view UI
@@ -173,7 +175,7 @@ export default class DaysView extends View {
       if (this.daysOfWeekHighlighted.includes(day)) {
         classList.add('highlighted');
       }
-      if (this.range){
+      if (this.range) {
         const [rangeStart, rangeEnd] = this.range;
         if (current > rangeStart && current < rangeEnd) {
           classList.add('range');
