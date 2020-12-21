@@ -1693,7 +1693,7 @@
       this.currentView.render();
     }
 
-    detach(){
+    detach() {
       this.datepicker.config.container.removeChild(this.element);
     }
 
@@ -1848,8 +1848,8 @@
     }
 
     // Refresh the picker UI
-    render() {
-      const renderMethod = this._renderMethod || 'render';
+    render(quickRender = true) {
+      const renderMethod = (quickRender && this._renderMethod) || 'render';
       delete this._renderMethod;
 
       this.currentView[renderMethod]();
@@ -2136,6 +2136,19 @@
       : newDates;
   }
 
+  // refresh the UI elements
+  // modes: 1: input only, 2, picker only, 3 both
+  function refreshUI(datepicker, mode = 3, quickRender = true) {
+    const {config, picker, inputField} = datepicker;
+    if (mode & 2) {
+      const newView = picker.active ? config.pickLevel : config.startView;
+      picker.update().changeView(newView).render(quickRender);
+    }
+    if (mode & 1 && inputField) {
+      inputField.value = stringifyDates(datepicker.dates, config);
+    }
+  }
+
   function setDate(datepicker, inputDates, options) {
     let {clear, render, autohide} = options;
     if (render === undefined) {
@@ -2153,10 +2166,10 @@
     }
     if (newDates.toString() !== datepicker.dates.toString()) {
       datepicker.dates = newDates;
-      datepicker.refresh(render ? undefined : 'input');
+      refreshUI(datepicker, render ? 3 : 1);
       triggerDatepickerEvent(datepicker, 'changeDate');
     } else {
-      datepicker.refresh('input');
+      refreshUI(datepicker, 1);
     }
     if (autohide) {
       datepicker.hide();
@@ -2312,7 +2325,7 @@
       Object.assign(this.config, newOptions);
       picker.setOptions(newOptions);
 
-      this.refresh();
+      refreshUI(this, 3);
     }
 
     /**
@@ -2456,17 +2469,24 @@
      * Refresh the picker element and the associated input field
      * @param {String} [target] - target item when refreshing one item only
      * 'picker' or 'input'
+     * @param {Boolean} [forceRender] - whether to rerender the picker element
+     * regardless of its state instead of optimized refresh
      */
-    refresh(target = undefined) {
-      if (target !== 'input') {
-        const newView = this.picker.active
-          ? this.config.pickLevel
-          : this.config.startView;
-        this.picker.update().changeView(newView).render();
+    refresh(target = undefined, forceRender = false) {
+      if (target && typeof target !== 'string') {
+        forceRender = target;
+        target = undefined;
       }
-      if (!this.inline && target !== 'picker') {
-        this.inputField.value = stringifyDates(this.dates, this.config);
+
+      let mode;
+      if (target === 'picker') {
+        mode = 2;
+      } else if (target === 'input') {
+        mode = 1;
+      } else {
+        mode = 3;
       }
+      refreshUI(this, mode, !forceRender);
     }
 
     /**

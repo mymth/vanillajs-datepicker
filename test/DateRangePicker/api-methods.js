@@ -192,7 +192,7 @@ describe('DateRangePicker - API methods', function () {
       expect(viewSwitch1.textContent, 'to be', 'March 2020');
       expect(getCellIndices(cells1, '.selected'), 'to equal', [13]);
 
-      const spyDp1Refresh = sinon.spy(drp.datepickers[1], 'refresh');
+      input1.value = 'foo';
       drp.setDates('2/11/2020', '3/14/2020');
 
       expect(drp.datepickers[0].dates, 'to equal', [dateValue(2020, 1, 11)]);
@@ -204,24 +204,19 @@ describe('DateRangePicker - API methods', function () {
       expect(input1.value, 'to be', '03/14/2020');
       expect(viewSwitch1.textContent, 'to be', 'March 2020');
       expect(getCellIndices(cells1, '.selected'), 'to equal', [13]);
-      expect(spyDp1Refresh.calledWith('input'), 'to be true');
 
-      const spyDp0Refresh = sinon.spy(drp.datepickers[0], 'refresh');
+      input0.value = 'foo';
       drp.setDates('2/11/2020', '2/14/2020');
 
       expect(drp.datepickers[0].dates, 'to equal', [dateValue(2020, 1, 11)]);
       expect(input0.value, 'to be', '02/11/2020');
       expect(viewSwitch0.textContent, 'to be', 'February 2020');
       expect(getCellIndices(cells0, '.selected'), 'to equal', [16]);
-      expect(spyDp0Refresh.calledWith('input'), 'to be true');
 
       expect(drp.datepickers[1].dates, 'to equal', [dateValue(2020, 1, 14)]);
       expect(input1.value, 'to be', '02/14/2020');
       expect(viewSwitch1.textContent, 'to be', 'February 2020');
       expect(getCellIndices(cells1, '.selected'), 'to equal', [19]);
-
-      spyDp0Refresh.restore();
-      spyDp1Refresh.restore();
 
       drp.destroy();
       input0.value = '';

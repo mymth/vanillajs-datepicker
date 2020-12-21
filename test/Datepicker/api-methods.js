@@ -264,7 +264,7 @@ describe('Datepicker - API methods', function () {
       clock.restore();
     });
 
-    it('refresh only picker UI if "picker" is passed', function () {
+    it('refresh only picker UI if target: "picker" is passed', function () {
       dp.dates = [dateValue(2020, 1, 14)];
       dp.refresh('picker');
 
@@ -277,7 +277,7 @@ describe('Datepicker - API methods', function () {
       expect(cells[19].textContent, 'to be', '14');
     });
 
-    it('refresh only input element if "input" is passed', function () {
+    it('refresh only input element if target: "input" is passed', function () {
       dp.dates = [dateValue(2020, 1, 14)];
       dp.refresh('input');
 
@@ -288,6 +288,41 @@ describe('Datepicker - API methods', function () {
       expect(filterCells(cells, '.selected'), 'to equal', [cells[24]]);
       expect(filterCells(cells, '.focused'), 'to equal', [cells[24]]);
       expect(cells[24].textContent, 'to be', '22');
+    });
+
+    it('rerenders the picker regardless of its state if forceRender true is passed', function () {
+      let cells = getCells(picker);
+      cells[16].classList.add('foo');
+      cells[12].textContent = '♥︎';
+      dp.dates = [dateValue(2020, 3, 10)];
+      dp.refresh('picker');
+
+      cells = getCells(picker);
+      expect(input.value, 'to be', '04/22/2020');
+      expect(getViewSwitch(picker).textContent, 'to be', 'April 2020');
+      expect(filterCells(cells, '.selected'), 'to equal', [cells[12]]);
+      expect(filterCells(cells, '.foo'), 'to equal', [cells[16]]);
+      expect(cells[12].textContent, 'to be', '♥︎');
+
+      dp.refresh('picker', true);
+
+      cells = getCells(picker);
+      expect(input.value, 'to be', '04/22/2020');
+      expect(getViewSwitch(picker).textContent, 'to be', 'April 2020');
+      expect(filterCells(cells, '.selected'), 'to equal', [cells[12]]);
+      expect(filterCells(cells, '.foo'), 'to equal', []);
+      expect(cells[12].textContent, 'to be', '10');
+
+      cells[16].classList.add('foo');
+      cells[12].textContent = '♥︎';
+      dp.refresh(true);
+
+      cells = getCells(picker);
+      expect(input.value, 'to be', '04/10/2020');
+      expect(getViewSwitch(picker).textContent, 'to be', 'April 2020');
+      expect(filterCells(cells, '.selected'), 'to equal', [cells[12]]);
+      expect(filterCells(cells, '.foo'), 'to equal', []);
+      expect(cells[12].textContent, 'to be', '10');
     });
   });
 });

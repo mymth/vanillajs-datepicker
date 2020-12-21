@@ -167,7 +167,7 @@ export default class Picker {
     this.currentView.render();
   }
 
-  detach(){
+  detach() {
     this.datepicker.config.container.removeChild(this.element);
   }
 
@@ -322,8 +322,8 @@ export default class Picker {
   }
 
   // Refresh the picker UI
-  render() {
-    const renderMethod = this._renderMethod || 'render';
+  render(quickRender = true) {
+    const renderMethod = (quickRender && this._renderMethod) || 'render';
     delete this._renderMethod;
 
     this.currentView[renderMethod]();

@@ -100,10 +100,12 @@ datepicker.hide()
 Refresh the picker element and the associated input field
 
 ```javascript
-datepicker.refresh( [ target ] )
+datepicker.refresh( [ target ], [ forceRender ] )
 ```
 - **Arguments:**
-  - [`target`] : {`String`} - target item when refreshing one item only. `'picker'` or `'input'`
+  - [`target`] : {`String`} - Target item when refreshing one item only. `'picker'` or `'input'`
+  - [`forceRender`] : {`Boolean`} - Whether to rerender the picker element regardless of its state instead of optimized refresh  
+    – Default: `'false'`
 
 #### datepicker.setDate()
 
