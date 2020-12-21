@@ -45,7 +45,7 @@ beforeShowMonth(date) {
       return false;
   }
 },
-beforeShowYear(date){
+beforeShowYear(date) {
   switch (date.getFullYear()) {
     case 2017:
       return false;
@@ -53,7 +53,7 @@ beforeShowYear(date){
       return {content: '<span class="tooltip is-tooltip-bottom" data-tooltip="Tooltip text">2020</span>'};
   }
 },
-beforeShowDecade(date){
+beforeShowDecade(date) {
   switch (date.getFullYear()) {
     case 2000:
       return false;
@@ -67,6 +67,7 @@ beforeShowDecade(date){
 };
 var buttonClass;
 
+const today = new Date().setHours(0, 0, 0, 0);
 const defaultOptions = {
   allowOneSidedRange: false,
   autohide: false,
@@ -80,7 +81,7 @@ const defaultOptions = {
   datesDisabled: [],
   daysOfWeekDisabled: [],
   daysOfWeekHighlighted: [],
-  defaultViewDate: new Date().setHours(0, 0, 0, 0),
+  defaultViewDate: today,
   disableTouchKeyboard: false,
   format: 'mm/dd/yyyy',
   language: 'en',
@@ -222,6 +223,103 @@ function switchPicker(type) {
 
 const setOptions = function setOptions(name, value) {
   window.demoPicker.setOptions({[name]: value});
+  refreshOptionForm();
+};
+const refreshOptionForm = function refreshOptionForm() {
+  const demoPicker = window.demoPicker;
+  const rangePicker = demoPicker instanceof DateRangePicker;
+  const datepicker = rangePicker ? demoPicker.datepickers[0] : demoPicker;
+  const optsForm = document.getElementById('options');
+  const {config, _options} = datepicker;
+  const configDefaults = {
+    minDate: new Date(today).setFullYear(0, 0, 1),
+    maxDate: undefined,
+  };
+  const formElemByName = name => optsForm.querySelector(`[name="${name}"]`);
+  const formatDate = val => Datepicker.formatDate(val, config.format, config.lang);
+
+  if (!rangePicker) {
+    const allowOneSided = formElemByName('allowOneSidedRange');
+    if (allowOneSided.checked) {
+      allowOneSided.checked = false;
+    }
+  }
+  Object.entries(datepicker.config).forEach(entry => {
+    const [key, val] = entry;
+    let el;
+    switch (key) {
+      case 'format':
+      case 'weekStart':
+        el = formElemByName(key);
+        if (el.value || val !== defaultOptions[key]) {
+          el.value = val;
+        }
+        break;
+      case 'minDate':
+      case 'maxDate':
+        el = formElemByName(key);
+        if (val === configDefaults[key]) {
+          if (!el.value || el.value === 'null') {
+            break;
+          }
+          if (_options[key] === null) {
+            el.value = '';
+            break;
+          }
+        }
+        el.value = formatDate(val);
+        break;
+      case 'datesDisabled':
+        el = formElemByName(key);
+        if (val.length === 0) {
+          if (!el.value || el.value === '[]') {
+            break;
+          }
+          if (String(_options.datesDisabled) === '[]') {
+            el.value = '';
+            break;
+          }
+        }
+        el.value = JSON.stringify(val.map(item => formatDate(item)));
+        break;
+      case 'daysOfWeekDisabled':
+      case 'daysOfWeekHighlighted':
+        optsForm.querySelectorAll(`[name=${key}`).forEach(chkbox => {
+          chkbox.checked = val.includes(Number.parseInt(chkbox.value, 10));
+        });
+        break;
+      case 'defaultViewDate':
+        el = formElemByName(key);
+        if (val === defaultOptions[key]) {
+          if (!el.value || el.value === 'today') {
+            break;
+          }
+          if (_options[key] === 'today') {
+            el.value = '';
+            break;
+          }
+        }
+        el.value = formatDate(val);
+        break;
+      case 'maxView':
+      case 'pickLevel':
+      case 'startView':
+        formElemByName(key).value = val;
+        break;
+      case 'maxNumberOfDates':
+        el = formElemByName(key);
+        if (rangePicker) {
+          if (el.value) {
+            el.value = '';
+          }
+          break;
+        }
+        if (el.value || val !== defaultOptions[key]) {
+          el.value = val;
+        }
+        break;
+    }
+  });
 };
 const handleArrayOption = function handleArrayOption(name) {
   const checkedInputs = options.querySelectorAll(`input[name=${name}]:checked`);
@@ -285,6 +383,7 @@ function removeErrors(el) {
 
 function onChangeType(ev) {
   switchPicker(ev.target.value);
+  refreshOptionForm();
 }
 
 function onChnageDirection(ev) {
@@ -314,6 +413,12 @@ function onChangeTextareaOption(ev) {
         addError(ev.target, 'Invalid JSON string');
         return;
       }
+    }
+  }
+  if (name === 'datesDisabled') {
+    if (value && !Array.isArray(value)) {
+      addError(ev.target, 'This option must be an array');
+      return;
     }
   }
   updateOption(name, value);

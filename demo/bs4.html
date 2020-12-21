@@ -193,9 +193,7 @@
               <div class="form-group" data-toggle="tooltip" title="enter in JSON format">
                 <label class="label">datesDisabled</label>
                 <textarea class="form-control" name="datesDisabled" placeholder="[]"></textarea>
-                <div class="invalid-feedback">
-                  Invalid JSON string
-                </div>
+                <div class="invalid-feedback"></div>
               </div>
 
               <div class="form-group">
@@ -498,11 +496,13 @@ beforeShowDecade(date) {
 },
       };
       window.buttonClass = 'btn';
-      window.addError = function addError(el) {
+      window.addError = function addError(el, message) {
         el.classList.add('is-invalid');
+        el.parentElement.querySelector('.invalid-feedback').textContent = message;
       }
       window.removeErrors = function removeErrors(el) {
         el.classList.remove('is-invalid');
+        el.parentElement.querySelector('.invalid-feedback').textContent = '';
       }
 
       initialize();
