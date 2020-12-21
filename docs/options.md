@@ -29,11 +29,11 @@ Function to customize the day cells in the days view. The function is called whe
     - `date`: {`Date`} - Date associated with the cell
   - Return:
     - {`Object`} - Things to customize. Available properties are:
-      - `enabled`: {`Boolean`} - whether the cell is selctable
-      - `classes`: {`String`} - space-sparated additional CSS classes for the cell element
+      - `enabled`: {`Boolean`} - whether the cell is selectable
+      - `classes`: {`String`} - space-separated additional CSS classes for the cell element
       - `content`: {`String`} - HTML for the cell element's child nodes
     - {`String`} - additional classes — same as returning `{ classes: additionalClasses }`
-    - {`Boolean`} - whether the cell is selctable — same as returning `{ enabled: isSelectable }`
+    - {`Boolean`} - whether the cell is selectable — same as returning `{ enabled: isSelectable }`
 
 ```javascript
 function (date) {
@@ -97,7 +97,7 @@ Whether to show the clear button.
 - Type: `String`
 - Default: `body`
 
-CSS selector for the element to appended the date picker.
+CSS selector for the element to append the date picker.
 
 > For constructor only. Cannot be used with `setOptions()`.  
 > On inline picker, this option is ignored and overwritten to the associated element.
@@ -134,7 +134,7 @@ Days of the week to highlight. `0`:_Sunday_ – `6`:_Saturday_, up to 6 items.
 - Type: `String`|`Date`|`Number`
 - Default: current date
 
-The date to be focused when the date picker openes with no selected date(s).
+The date to be focused when the date picker opens with no selected date(s).
 
 #### disableTouchKeyboard
 - Type: `Boolean`
@@ -215,7 +215,7 @@ Maximum number of dates users can select. No limit is applied if `0` is set.
 - Type: Number
 - Default: `3`
 
-Maximum limit to the view that the date picker displayes. `0`:_days_ – `3`:_decades_.
+Maximum limit to the view that the date picker displays. `0`:_days_ – `3`:_decades_.
 
 #### minDate
 - Type: `String`|`Date`|`Number`
@@ -235,7 +235,7 @@ HTML (or plain text) for the button label of the "Next" button.
 - Type: `String`
 - Default: `'auto'`
 
-Space-separated string for date picker's horizontal and vertical placement to the associated input field. `left`|`right`|`auto` for horizontal and `top`|`bottom`|`auto` for virtical.
+Space-separated string for date picker's horizontal and vertical placement to the associated input field. `left`|`right`|`auto` for horizontal and `top`|`bottom`|`auto` for vertical.
 
 > The order can be random.  
 > If one direction is omitted, it falls back to `auto`. (e.g. `'top'` == `'top auto'`)  
@@ -247,8 +247,8 @@ Space-separated string for date picker's horizontal and vertical placement to th
 
 The level that the date picker allows to pick. `0`:_date_,`1`: _month_ &nbsp;or `2`:_year_.
 
-> When this option is `1`, the selected date becomes the 1st of the month or, if the date picer is the end-date picker of date range picker, the last day of the month.  
-> When this option is `2`, the selected date becomes January 1st of the year or, if the date picer is the end-date picker of date range picker, December 31st of the year.
+> When this option is `1`, the selected date becomes the 1st of the month or, if the date picker is the end-date picker of date range picker, the last day of the month.  
+> When this option is `2`, the selected date becomes January 1st of the year or, if the date picker is the end-date picker of date range picker, December 31st of the year.
 
 #### prevArrow
 - Type: `String`
@@ -284,7 +284,7 @@ Whether to show the date picker automatically when the associated input filed re
 - Type: `Number`
 - Default: `0`
 
-The view displayed when the date picker openes. `0`:_days_ – `3`:_decades_.
+The view displayed when the date picker opens. `0`:_days_ – `3`:_decades_.
 
 #### title
 - Type: `String`
@@ -343,11 +343,11 @@ Start day of the week. `0`:_Sunday_ – `6`:_Saturday_.
 Whether to allow one side of the date-range to be blank.
 
 > When this option is `false`, if the user selects a date on one side while the other side is blank, the date range picker complements the blank side with the same date as the selected side.  
-> Similally, if the user clears one side of the date-range, the date range picker also clears the other side automatically.
+> Similarly, if the user clears one side of the date-range, the date range picker also clears the other side automatically.
 
-#### input
+#### inputs
 - Type: `Element[]`
-- Default: `input` elemets inside the associated block element
+- Default: `input` elements inside the associated block element
 
 Input fields to attach start- and end-date pickers. Must contain 2 items.
 

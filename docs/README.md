@@ -45,7 +45,7 @@ npm install --save-dev vanillajs-datepicker
 import Datepicker from 'path/to/node_modules/vanillajs-datepicker/js/Datepicker.js';
 ```
 
-_Or if you use a baundler that supprots [pkg.module](https://github.com/rollup/rollup/wiki/pkg.module) (e.g. [Rollup](https://rollupjs.org/) with [node-resolve](https://github.com/rollup/plugins/tree/master/packages/node-resolve) plugin, [webpack](https://webpack.js.org/))_
+_Or if you use a bundler that supports [pkg.module](https://github.com/rollup/rollup/wiki/pkg.module) (e.g. [Rollup](https://rollupjs.org/) with [node-resolve](https://github.com/rollup/plugins/tree/master/packages/node-resolve) plugin, [webpack](https://webpack.js.org/))_
 
 ```javascript
 import { Datepicker } from 'vanillajs-datepicker';
@@ -104,7 +104,7 @@ const datepicker = new Datepicker(elem, {
 import DateRangePicker from 'path/to/node_modules/vanillajs-datepicker/js/DateRangePicker.js';
 ```
 
-_Or if you use a baundler that supprots [pkg.module](https://github.com/rollup/rollup/wiki/pkg.module) (e.g. [Rollup](https://rollupjs.org/) with [node-resolve](https://github.com/rollup/plugins/tree/master/packages/node-resolve) plugin, [webpack](https://webpack.js.org/))_
+_Or if you use a bundler that supports [pkg.module](https://github.com/rollup/rollup/wiki/pkg.module) (e.g. [Rollup](https://rollupjs.org/) with [node-resolve](https://github.com/rollup/plugins/tree/master/packages/node-resolve) plugin, [webpack](https://webpack.js.org/))_
 
 ```javascript
 import { DateRangePicker } from 'vanillajs-datepicker';
@@ -177,7 +177,7 @@ const datepicker = new Datepicker(elem, {
 
 ```scss
 /***
- Copy the datepicer variables (the ones with `dp-` prefix and `!default` flag)
+ Copy the datepicker variables (the ones with `dp-` prefix and `!default` flag)
  from `sass/Datepicker.scss` to here
  Then, edit them using your framework's variables/values
  e.g.:

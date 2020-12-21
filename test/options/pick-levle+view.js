@@ -65,7 +65,7 @@ describe('options - pick level & view', function () {
       expect(filterCells(cells, '.selected'), 'to equal', [cells[7]]);
       expect(filterCells(cells, '.focused'), 'to equal', [cells[7]]);
 
-      // keyboad operation
+      // keyboard operation
       simulant.fire(input, 'keydown', {key: 'ArrowLeft', ctrlKey: true});
       simulant.fire(input, 'keydown', {key: 'ArrowLeft'});
       simulant.fire(input, 'keydown', {key: 'Enter'});
@@ -147,7 +147,7 @@ describe('options - pick level & view', function () {
       expect(filterCells(cells, '.selected'), 'to equal', [cells[7]]);
       expect(filterCells(cells, '.focused'), 'to equal', [cells[7]]);
 
-      // keyboad operation
+      // keyboard operation
       simulant.fire(input, 'keydown', {key: 'ArrowLeft', ctrlKey: true});
       simulant.fire(input, 'keydown', {key: 'ArrowLeft'});
       simulant.fire(input, 'keydown', {key: 'Enter'});

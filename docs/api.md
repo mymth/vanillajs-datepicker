@@ -4,11 +4,6 @@
 
 ### Static Properties
 
-#### Datepicker.active
-- Type: `Boolean`
-
-Whether the picker element is shown. `true` when shown.
-
 #### Datepicker.locales
 - Type: `Object`
 
@@ -36,7 +31,7 @@ Datepicker.formatDate( date , format [, lang ] )
 
 #### Datepicker.parseDate()
 
-Pasre date string (or Date/time value) using given format and language
+Parse date string (or Date/time value) using given format and language
 
 ```javascript
 Datepicker.parseDate( dateStr , format [, lang ] )
@@ -58,6 +53,11 @@ Datepicker.parseDate( dateStr , format [, lang ] )
 
 Whether the picker element is shown.
 
+#### datepicker.rangepicker
+- Type: `DateRangePicker`
+
+DateRangePicker instance that the datepicker belongs to  
+Only avalable when the datepicker is a part of date range picker
 
 ### Instance Methods
 
@@ -83,13 +83,13 @@ datepicker.getDate( [ format ] )
 - **Arguments:**
   - [`format`] : {`String`} - Format string to stringify the date(s)
 - **Return:**
-  - {`Date`|`String`} - Selected date (or `undifined` if none is selected)
+  - {`Date`|`String`} - Selected date (or `undefined` if none is selected)
   - {`Date[]`|`String[]`} - Array of selected dates (or empty array if none is selected)
 
 #### datepicker.hide()
 
 Hide the picker element  
-Not avilable on inline picker
+Not available on inline picker
 
 ```javascript
 datepicker.hide()
@@ -104,7 +104,7 @@ datepicker.refresh( [ target ], [ forceRender ] )
 ```
 - **Arguments:**
   - [`target`] : {`String`} - Target item when refreshing one item only. `'picker'` or `'input'`
-  - [`forceRender`] : {`Boolean`} - Whether to rerender the picker element regardless of its state instead of optimized refresh  
+  - [`forceRender`] : {`Boolean`} - Whether to re-render the picker element regardless of its state instead of optimized refresh  
     – Default: `'false'`
 
 #### datepicker.setDate()
@@ -118,7 +118,7 @@ With `clear: true` option, the method can be used to clear the selection and to 
 
 When `render: false` option is used, the method omits re-rendering the picker element. In this case, you need to call [`refresh()`](api?id=datepickerrefresh) method later in order for the picker element to reflect the changes. The input field is refreshed always regardless of this option.
 
-When invalid (unparsable, repeated, disabled or out-of-range) dates are passed, the method ignores them and applies only valid ones. In the case that all the given dates are invalid, which is distiguished from passing no dates, the method considers it as an error and leaves the selection untouched.
+When invalid (unparsable, repeated, disabled or out-of-range) dates are passed, the method ignores them and applies only valid ones. In the case that all the given dates are invalid, which is distinguished from passing no dates, the method considers it as an error and leaves the selection untouched.
 
 ```javascript
 datepicker.setDate( date1 [, date2 [, ... dateN ]][, options ] )
@@ -157,7 +157,7 @@ datepicker.show()
 #### datepicker.update()
 
 Update the selected date(s) with input field's value  
-Not avilable on inline picker
+Not available on inline picker
 
 The input field will be refreshed with properly formatted date string.
 
@@ -172,7 +172,7 @@ datepicker.update( [ options ] )
 
 ### Events
 
-All Datepicker-event objects are `CustomEvent` instances and dispached to the associated `<input>` element (for inline picker, the block element).  
+All Datepicker-event objects are `CustomEvent` instances and dispatched to the associated `<input>` element (for inline picker, the block element).  
 They include the following extra data in the `details` property.
 
 - `date`: {`Date`} - Selected date(s) (see [getDate()](api?id=datepickergetdate))
@@ -182,7 +182,7 @@ They include the following extra data in the `details` property.
 
 #### changeDate
 
-Fired when the selcted dates are changed.
+Fired when the selected dates are changed.
 
 #### changeMonth
 
@@ -214,7 +214,7 @@ Fired when the date picker becomes visible.
 Destroy the DateRangePicker instance
 
 ```javascript
-rangepicker.destory()
+rangepicker.destroy()
 ```
 - **Return:**
   - {`DateRangePicker`} - The instance destroyed
@@ -224,7 +224,7 @@ rangepicker.destory()
 Get the start and end dates of the date-range
 
 The method returns Date objects by default. If format string is passed, it returns date strings formatted in given format.  
-The result array always contains 2 items (start date/end date) and `undifined` is used for unselected side. (e.g. If none is selected, the result will be `[undifined, undifined]`. If only the end date is set when `allowOneSidedRange` config option is `true`, `[undifined, endDate]` will be returned.)
+The result array always contains 2 items (start date/end date) and `undefined` is used for unselected side. (e.g. If none is selected, the result will be `[undefined, undefined]`. If only the end date is set when `allowOneSidedRange` config option is `true`, `[undefined, endDate]` will be returned.)
 
 ```javascript
 rangepicker.getDates( [ format ] )
@@ -242,7 +242,7 @@ The method calls [`datepicker.setDate()`](api?id=datepickersetdate) internally u
 
 When a `clear: true` option object is passed instead of a date, the method clears the date.
 
-If an invalid date, the same date as the current one or an option object without `clear: true` is passed, the method cosiders that argument as an "ineffective" argument because calling [`datepicker.setDate()`](api?id=datepickersetdate) with those values makes no changes to the date selection.
+If an invalid date, the same date as the current one or an option object without `clear: true` is passed, the method considers that argument as an "ineffective" argument because calling [`datepicker.setDate()`](api?id=datepickersetdate) with those values makes no changes to the date selection.
 
 When the [`allowOneSidedRange`](options?id=allowonesidedrange) config option is `false`, passing `{clear: true}` to clear the range works only when it is done to the last effective argument (in other words, passed to `rangeEnd` or to `rangeStart` along with ineffective `rangeEnd`). This is because when the date range is changed, it gets normalized based on the last change at the end of the changing process.
 

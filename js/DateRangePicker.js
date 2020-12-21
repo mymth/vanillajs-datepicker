@@ -139,9 +139,9 @@ export default class DateRangePicker  {
    * The method returns Date objects by default. If format string is passed,
    * it returns date strings formatted in given format.
    * The result array always contains 2 items (start date/end date) and
-   * undifined is used for unselected side. (e.g. If none is selected,
-   * the result will be [undifined, undifined]. If only the end date is set
-   * when allowOneSidedRange config option is true, [undifined, endDate] will
+   * undefined is used for unselected side. (e.g. If none is selected,
+   * the result will be [undefined, undefined]. If only the end date is set
+   * when allowOneSidedRange config option is true, [undefined, endDate] will
    * be returned.)
    *
    * @param  {String} [format] - Format string to stringify the dates
@@ -165,7 +165,7 @@ export default class DateRangePicker  {
    * clears the date.
    *
    * If an invalid date, the same date as the current one or an option object
-   * without clear: true is passed, the method cosiders that argument as an
+   * without clear: true is passed, the method considers that argument as an
    * "ineffective" argument because calling datepicker.setDate() with those
    * values makes no changes to the date selection.
    *

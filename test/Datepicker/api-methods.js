@@ -290,7 +290,7 @@ describe('Datepicker - API methods', function () {
       expect(cells[24].textContent, 'to be', '22');
     });
 
-    it('rerenders the picker regardless of its state if forceRender true is passed', function () {
+    it('re-renders the picker regardless of its state if forceRender true is passed', function () {
       let cells = getCells(picker);
       cells[16].classList.add('foo');
       cells[12].textContent = '♥︎';

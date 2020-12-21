@@ -37,9 +37,9 @@ Date range picker is essentially a wrapper/controller of 2 date pickers. It's th
    Button to change the view from days to months, months to years and years to decades  
    The button label is used for the title of view contents.
 3. **Prev button**:  
-   Button to change the contetns of the current view to the previous month/year/decade/century
+   Button to change the contents of the current view to the previous month/year/decade/century
 4. **Next button**:  
-   Button to change the contetns of the current view to the next month/year/decade/century
+   Button to change the contents of the current view to the next month/year/decade/century
 5. **View**:  
    Area to display a calendar (for days) or a grid of months, years, or decades
 6. **Cell**:  
@@ -80,7 +80,7 @@ The view to select a decade.
 
 When [`maxNumberOfDates`](options?id=maxnumberofdates) config option is set to other than `1`, date picker turns to the multdate mode.
 
-In this mode, the day cells in the days view act as toggle switch of the date's select status. The order of selection is kept; newly selected date is appended to the existing selection and the oldest item in the selection dropps if the number of selected dates exceeds the option's value.  
+In this mode, the day cells in the days view act as toggle switch of the date's select status. The order of selection is kept; newly selected date is appended to the existing selection and the oldest item in the selection drops if the number of selected dates exceeds the option's value.  
 In the input field, selected dates are joined with the delimiter string set in the [`dateDelimiter`](options?id=dateDelimiter) config option.
 
 ![](./images/multidate.jpg)
@@ -107,10 +107,10 @@ For inline picker, you can set a date string to the `data-date` attribute of the
 
 You can update the selected date by editing the date string in the input field.
 
-> Since the built-in parser is very torelant of format errors, a small typing error can cause an unexpected (and sometimes unimaginable) date in the input field. _(See [How Built-in Parser parses](./date-string+format?id=how-built-in-parser-parses))_  
+> Since the built-in parser is very tolerant of format errors, a small typing error can cause an unexpected (and sometimes unimaginable) date in the input field. _(See [How Built-in Parser parses](./date-string+format?id=how-built-in-parser-parses))_  
 > If you think this is not good, you might want to consider using the [`updateOnBlur`](./options?id=updateonblur):`false` config option in order to implicitly nudge users to look at their input.
 
-## Keyboad Operation
+## Keyboard Operation
 
 You can operate date picker using keyboard. Here are the available keyboard operations.
 
@@ -134,12 +134,12 @@ You can operate date picker using keyboard. Here are the available keyboard oper
 - <kbd>**Ctrl**</kbd> (or <kbd>Meta</kbd>) **+** <kbd>**→**</kbd> (arrowRight) **:**  
   Move to next month/year/decade/century _(Shortcut of the "Next" button)_
 - <kbd>**Ctrl**</kbd> (or <kbd>Meta</kbd>) **+** <kbd>**↑**</kbd> (arrowUp) **:**    
-  Change the view upword _(Shortcut of the view switch)_
+  Change the view upward _(Shortcut of the view switch)_
 - <kbd>**Enter**</kbd> **:**
   - *when days view is shown:*  
     Select the focused date 
   - *otherwise:*  
-    Change the view downward for the forcused decade/year/month 
+    Change the view downward for the focused decade/year/month 
 - <kbd>**Backspace**</kbd>**,** <kbd>**Delete**</kbd>**, any printable character,** <kbd>**Shift**</kbd> **+ either of arrow keys** ( <kbd>←</kbd>/<kbd>→</kbd>/<kbd>↑</kbd>/<kbd>↓</kbd> ) **:**  
   Enter [edit mode](overview?id=edit-mode)
 
@@ -154,7 +154,7 @@ You can operate date picker using keyboard. Here are the available keyboard oper
 
 ## Edit Mode 
 
-When the picker element is shown, date picker (in the primary state) caputures key-press events and uses them to control the picker element. Therefore, users cannot edit the `<input>` element in this state.  
+When the picker element is shown, date picker (in the primary state) captures key-press events and uses them to control the picker element. Therefore, users cannot edit the `<input>` element in this state.  
 To solve this, Datepicker has the edit mode.
 
 Date picker automatically enters edit mode when:

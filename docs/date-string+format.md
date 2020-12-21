@@ -46,12 +46,12 @@ There are some cases the parser treats the parts in specific way:
 - month number not between 1 and 12 is treated in the similar way to [`Date.prototype.setMonth()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/setMonth)
 - month name is evaluated in case-insensitive begin-with match
 - day not between 1 and last-day-of-the-month is treated in the same way as [`Date.prototype.setDate()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/setDate)
-- day-of-the-week is not evaluated _(not totally ignored, the existance is respected)_
-- if a part is omitted from the format, missing in the date string or parsed unsuccessfully, current date's value is used to compplement.
+- day-of-the-week is not evaluated _(not totally ignored, the existence is respected)_
+- if a part is omitted from the format, missing in the date string or parsed unsuccessfully, current date's value is used to complement.
 
 Here are some examples of how irregular date strings are parsed.
 
-- Differnet separators from the format:  
+- Different separators from the format:  
   - if format is `yyyy-mm-dd`, `2020/04/22` ⟹ _April 22nd, 2020_
   - if format is `m.d.y`, `1/15 (2018)` ⟹ _January 15th, 2018_
 - With/without leading zeros:  
