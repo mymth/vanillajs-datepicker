@@ -181,6 +181,10 @@
     color: #7a7a7a;
 }
 
+.datepicker-cell.prev.selected, .datepicker-cell.next.selected {
+    color: #e6e6e6;
+}
+
 .datepicker-cell.highlighted:not(.selected):not(.range):not(.today) {
     border-radius: 0;
     background-color: whitesmoke;

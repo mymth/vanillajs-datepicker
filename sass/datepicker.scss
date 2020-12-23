@@ -326,6 +326,10 @@ $dp-cell-shrinked-width: $dp-cell-size-base * 7 / 8;
     &:not(.disabled) {
       color: $dp-cell-prevnext-color;
     }
+
+    &.selected {
+      color: darken($dp-cell-selected-color, 10%);
+    }
   }
 
   &.highlighted:not(.selected):not(.range):not(.today) {
