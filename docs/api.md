@@ -51,13 +51,22 @@ Datepicker.parseDate( dateStr , format [, lang ] )
 #### datepicker.active
 - Type: `Boolean`
 
-Whether the picker element is shown.
+Whether the picker element is shown  
+(Read-only)
+
+#### datepicker.pickerElement
+- Type: `HTMLDivElement`
+
+DOM object of picker element  
+(Read-only)
 
 #### datepicker.rangepicker
 - Type: `DateRangePicker`
 
 DateRangePicker instance that the datepicker belongs to  
-Only avalable when the datepicker is a part of date range picker
+Only avalable when the datepicker is a part of date range picker  
+(Read-only)
+
 
 ### Instance Methods
 
@@ -206,6 +215,15 @@ Fired when the date picker becomes visible.
 
 
 ## DateRangePicker
+
+### Instance Properties
+
+#### rangepicker.datepickers
+- Type: `Array`
+
+Array of associated Datepicker instances  
+(Read-only)
+
 
 ### Instance Methods
 

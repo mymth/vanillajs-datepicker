@@ -2281,7 +2281,7 @@ var Datepicker = (function () {
     }
 
     /**
-     * Pasre date string
+     * Parse date string
      * @param  {String|Date|Number} dateStr - date string, Date object or time
      * value to parse
      * @param  {String|Object} format - format string or object that contains
@@ -2315,6 +2315,13 @@ var Datepicker = (function () {
     }
 
     /**
+     * @type {HTMLDivElement} - DOM object of picker element
+     */
+    get pickerElement() {
+      return this.picker ? this.picker.element : undefined;
+    }
+
+    /**
      * Set new values to the config options
      * @param {Object} options - config options to update
      */
@@ -2340,7 +2347,7 @@ var Datepicker = (function () {
 
     /**
      * Hide the picker element
-     * Not avilable on inline picker
+     * Not available on inline picker
      */
     hide() {
       if (this.inline) {
@@ -2413,7 +2420,7 @@ var Datepicker = (function () {
      *
      * When invalid (unparsable, repeated, disabled or out-of-range) dates are
      * passed, the method ignores them and applies only valid ones. In the case
-     * that all the given dates are invalid, which is distiguished from passing
+     * that all the given dates are invalid, which is distinguished from passing
      * no dates, the method considers it as an error and leaves the selection
      * untouched.
      *
@@ -2447,7 +2454,7 @@ var Datepicker = (function () {
 
     /**
      * Update the selected date(s) with input field's value
-     * Not avilable on inline picker
+     * Not available on inline picker
      *
      * The input field will be refreshed with properly formatted date string.
      *
@@ -2469,7 +2476,7 @@ var Datepicker = (function () {
      * Refresh the picker element and the associated input field
      * @param {String} [target] - target item when refreshing one item only
      * 'picker' or 'input'
-     * @param {Boolean} [forceRender] - whether to rerender the picker element
+     * @param {Boolean} [forceRender] - whether to re-render the picker element
      * regardless of its state instead of optimized refresh
      */
     refresh(target = undefined, forceRender = false) {
@@ -2491,7 +2498,7 @@ var Datepicker = (function () {
 
     /**
      * Enter edit mode
-     * Not avilable on inline picker or when the picker element is hidden
+     * Not available on inline picker or when the picker element is hidden
      */
     enterEditMode() {
       if (this.inline || !this.picker.active || this.editMode) {
@@ -2503,7 +2510,7 @@ var Datepicker = (function () {
 
     /**
      * Exit from edit mode
-     * Not avilable on inline picker
+     * Not available on inline picker
      * @param  {Object} [options] - function options
      * - update: {boolean} - whether to call update() after exiting
      *     If false, input field is revert to the existing selection

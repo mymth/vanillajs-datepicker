@@ -87,9 +87,15 @@ export default class DateRangePicker  {
     const cleanOptions = filterOptions(options);
     // in order for initial date setup to work right when pcicLvel > 0,
     // let Datepicker constructor add the instance to the rangepicker
-    this.datepickers = [];
+    const datepickers = [];
+    Object.defineProperty(this, 'datepickers', {
+      get() {
+        return datepickers;
+      },
+    });
     setupDatepicker(this, changeDateListener, this.inputs[0], cleanOptions);
     setupDatepicker(this, changeDateListener, this.inputs[1], cleanOptions);
+    Object.freeze(datepickers);
     // normalize the range if inital dates are given
     if (this.dates[0] !== undefined) {
       onChangeDate(this, {target: this.inputs[0]});

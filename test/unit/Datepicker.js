@@ -112,11 +112,30 @@ describe('Datepicker', function () {
 
     it('sets rangepicker properties if DateRangePicker to link is passed', function () {
       const fakeRangepicker = new (function DateRangePicker() {
-        this.dates = ['foo', 'bar'];
+        this.inputs = [];
+        this.datepickers = [];
       })();
       const dp = new Datepicker(input, {}, fakeRangepicker);
 
       expect(dp.rangepicker, 'to be', fakeRangepicker);
+    });
+
+    it('adds itself to rangepicker.datepickers if DateRangePicker to link is passed', function () {
+      let fakeRangepicker = new (function DateRangePicker() {
+        this.inputs = [input];
+        this.datepickers = [];
+      })();
+      let dp = new Datepicker(input, {}, fakeRangepicker);
+
+      expect(fakeRangepicker.datepickers[0], 'to be', dp);
+
+      fakeRangepicker = new (function DateRangePicker() {
+        this.inputs = [undefined, input];
+        this.datepickers = [];
+      })();
+      dp = new Datepicker(input, {}, fakeRangepicker);
+
+      expect(fakeRangepicker.datepickers[1], 'to be', dp);
     });
   });
 

@@ -255,6 +255,13 @@ export default class Datepicker {
   }
 
   /**
+   * @type {HTMLDivElement} - DOM object of picker element
+   */
+  get pickerElement() {
+    return this.picker ? this.picker.element : undefined;
+  }
+
+  /**
    * Set new values to the config options
    * @param {Object} options - config options to update
    */

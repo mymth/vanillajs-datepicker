@@ -65,6 +65,14 @@ describe('DateRangePicker', function () {
       spyDPConstructor.restore();
     });
 
+    it('makes datepickers property read-only/immutable', function () {
+      const drp = new DateRangePicker(elem);
+
+      expect(() => { drp.datepickers = []; }, 'to throw a', TypeError);
+      expect(() => { drp.datepickers[0] = null; }, 'to throw a', TypeError);
+      expect(() => { drp.datepickers[2] = {}; }, 'to throw a', TypeError);
+    });
+
     it('excludes inputs, allowOneSidedRange and maxNumberOfDates from options to pass Datepicker container', function () {
       const spyDPConstructor = sinon.spy(DP, 'default');
       new DateRangePicker(elem, {
