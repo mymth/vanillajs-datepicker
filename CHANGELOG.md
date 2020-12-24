@@ -1,5 +1,31 @@
 # changelog
 
+## 1.1.0
+
+### New features
+
+- Add `updateOnBlur` option (#13)
+- Add `showOnClick` option (#21)
+    - Along with this, picker element's click handler is changed to keep the focus on input field after auto-hiding on date selection
+- Add `pickLevel` option (#22, #23)
+    - minView feature + comprehensive control on date picking level that works with edit on input field and `setDate()` call as well
+- Add optional `forceRender` argument to `refresh()`API
+- Add `setDates()` API to DateRangePicker (#27)
+- Add support for package entry points 
+
+### Bug fixes
+
+- Fix #33 — the view doesn't go back to the days view after changing the selection by other than mouse operation
+
+### Changes
+
+- Change the edit mode so that it no longer discards unparsed changes when exiting
+- Add shift + arrow key to the key patterns to enter the edit mode
+- Make range highlight between range-start and -end available on all views as well as the days view
+- Revise the cross reference between DateRangePicker and Datepicker instances to make it securely usable in custom event handler, etc.
+- Improve readability of selected date in previous/next month area in the calendar
+
+
 ## 1.0.3
 
 - Fix #24 — change event was fired inappropriately through setDate() API call 
@@ -7,7 +33,7 @@
 ## 1.0.2
 
 - Fix #11, #17, #19 — calendar wasn't redrawn properly in some conditions
-- Fix #3 — keybaoad showed up by clicking on a calendar element when disableTouchKeyboard = true
+- Fix #3 — keyboard showed up by clicking on a calendar element when disableTouchKeyboard = true
 
 ## 1.0.1
 

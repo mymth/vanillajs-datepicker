@@ -15,11 +15,11 @@ The package also includes pre-built js/css files for those who like to use it di
 - Easily customizable to adapt stylesheet for various CSS frameworks
 - Dependency free
 - Made for modern browsers — no IE support
-- Lightweight (well, relatively…) — 31kB (minified, uncompressed)
+- Lightweight (well, relatively…) — 33kB (minified, uncompressed)
 
 ### Demo
 
-[Live Online Demo](https://raw.githack.com/mymth/vanillajs-datepicker/v1.0.3/demo/)
+[Live Online Demo](https://raw.githack.com/mymth/vanillajs-datepicker/v1.1.0/demo/)
 
 ### Documentation
 
