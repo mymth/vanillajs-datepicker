@@ -3,6 +3,13 @@
   "version": "1.0.3",
   "description": "A vanilla JavaScript remake of bootstrap-datepicker for Bulma and other CSS frameworks",
   "module": "js/main.js",
+  "exports": {
+    ".": "./js/main.js",
+    "./Datepicker": "./js/Datepicker.js",
+    "./DateRangePicker": "./js/DateRangePicker.js",
+    "./locales/*": "./js/i18n/locales/*.js",
+    "./locales/": "./js/i18n/locales/"
+  },
   "scripts": {
     "build:js": "rollup -c",
     "build:locales": "node scripts/build-locales.js",

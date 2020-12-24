@@ -51,6 +51,12 @@ _Or if you use a bundler that supports [pkg.module](https://github.com/rollup/ro
 import { Datepicker } from 'vanillajs-datepicker';
 ```
 
+_Or if your bundler supports [package entry points](https://nodejs.org/api/packages.html#packages_package_entry_points) (e.g. Rollup with node-resolve plugin v8.4+, webpack v5+), you can also do this._
+
+```javascript
+import Datepicker from 'vanillajs-datepicker/Datepicker';
+```
+
 3. call `Datepicker` constructor with the input element and, optionally, [config options](options).
 
 ```javascript
@@ -108,6 +114,12 @@ _Or if you use a bundler that supports [pkg.module](https://github.com/rollup/ro
 
 ```javascript
 import { DateRangePicker } from 'vanillajs-datepicker';
+```
+
+_Or if your bundler supports [package entry points](https://nodejs.org/api/packages.html#packages_package_entry_points) (e.g. Rollup with node-resolve plugin v8.4+, webpack v5+), you can also do this._
+
+```javascript
+import DateRangePicker from 'vanillajs-datepicker/DateRangePicker';
 ```
 
 3. call `DateRangePicker` constructor with the block element and, optionally, [config options](options).
