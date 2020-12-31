@@ -18,7 +18,7 @@ describe('mouse operation', function () {
     testContainer.appendChild(outsider);
 
     const {dp, picker} = createDP(input);
-    dp.show();
+    input.focus();
 
     simulant.fire(picker.querySelector('.dow'), 'mousedown');
     expect(isVisible(picker), 'to be true');
@@ -29,6 +29,15 @@ describe('mouse operation', function () {
     simulant.fire(outsider, 'mousedown');
     expect(isVisible(picker), 'to be false');
 
+    // hide() should not called when picker is hidden
+    // (issue #45)
+    const spyHide = sinon.spy(dp, 'hide');
+    input.blur();
+
+    simulant.fire(outsider, 'mousedown');
+    expect(spyHide.called, 'to be false');
+
+    spyHide.restore();
     dp.destroy();
     testContainer.removeChild(outsider);
   });
