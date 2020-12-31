@@ -1,5 +1,12 @@
 # changelog
 
+## 1.1.1
+
+### Bug fixes
+
+- Fix #46 — date range picker cannot be created when using datepicker-full.min.js
+- Fix #45 - onClickOutside listener calls unfocus() when the input field is not focused
+
 ## 1.1.0
 
 ### New features
