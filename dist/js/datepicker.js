@@ -2221,12 +2221,17 @@ var Datepicker = (function () {
         inputField.classList.add('datepicker-input');
         initialDates = stringToArray(inputField.value, config.dateDelimiter);
       }
-      if (rangepicker && rangepicker.constructor.name === 'DateRangePicker') {
+      if (rangepicker) {
+        // check validiry
+        const index = rangepicker.inputs.indexOf(inputField);
+        const datepickers = rangepicker.datepickers;
+        if (index < 0 || index > 1 || !Array.isArray(datepickers)) {
+          throw Error('Invalid rangepicker object.');
+        }
         // attach itaelf to the rangepicker here so that processInputDates() can
         // determine if this is the range-end picker of the rangepicker while
         // setting inital values when pickLevel > 0
-        const index = Number(rangepicker.inputs[1] === inputField);
-        rangepicker.datepickers[index] = this;
+        datepickers[index] = this;
         // add getter for rangepicker
         Object.defineProperty(this, 'rangepicker', {
           get() {

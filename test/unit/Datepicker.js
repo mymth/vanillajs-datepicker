@@ -111,31 +111,53 @@ describe('Datepicker', function () {
     });
 
     it('sets rangepicker properties if DateRangePicker to link is passed', function () {
-      const fakeRangepicker = new (function DateRangePicker() {
-        this.inputs = [];
-        this.datepickers = [];
-      })();
+      const fakeRangepicker = {
+        inputs: [input],
+        datepickers: [],
+      };
       const dp = new Datepicker(input, {}, fakeRangepicker);
 
       expect(dp.rangepicker, 'to be', fakeRangepicker);
     });
 
     it('adds itself to rangepicker.datepickers if DateRangePicker to link is passed', function () {
-      let fakeRangepicker = new (function DateRangePicker() {
-        this.inputs = [input];
-        this.datepickers = [];
-      })();
+      let fakeRangepicker = {
+        inputs: [input],
+        datepickers: [],
+      };
       let dp = new Datepicker(input, {}, fakeRangepicker);
 
       expect(fakeRangepicker.datepickers[0], 'to be', dp);
 
-      fakeRangepicker = new (function DateRangePicker() {
-        this.inputs = [undefined, input];
-        this.datepickers = [];
-      })();
+      fakeRangepicker = {
+        inputs: [undefined, input],
+        datepickers: [],
+      };
       dp = new Datepicker(input, {}, fakeRangepicker);
 
       expect(fakeRangepicker.datepickers[1], 'to be', dp);
+    });
+
+    it.skip('throws an error if invalid rangepicker is passed', function () {
+      const testFn = rangepicker => new Datepicker(input, {}, rangepicker);
+      const errMsg = 'Invalid rangepicker object';
+
+      let fakeRangepicker = {
+        inputs: [],
+        datepickers: [],
+      };
+      expect(testFn(fakeRangepicker), 'to throww', errMsg);
+
+      fakeRangepicker = {
+        inputs: ['foo', 'bar', input],
+        datepickers: [],
+      };
+      expect(testFn(fakeRangepicker), 'to throww', errMsg);
+
+      fakeRangepicker = {
+        inputs: [input],
+      };
+      expect(testFn(fakeRangepicker), 'to throww', errMsg);
     });
   });
 
