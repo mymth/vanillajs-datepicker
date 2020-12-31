@@ -890,7 +890,6 @@
         const locale = this.locale = options.locale;
         this.dayNames = locale.daysMin;
         this.switchLabelFormat = locale.titleFormat;
-        this.switchLabel = formatDate(this.picker.viewDate, locale.titleFormat, locale);
         updateDOW = true;
       }
       if (options.beforeShowDay !== undefined) {
@@ -948,8 +947,6 @@
       this.first = firstOfMonth;
       this.last = dateValue(viewYear, viewMonth + 1, 0);
       this.start = start;
-
-      this.switchLabel = formatDate(viewDate, this.switchLabelFormat, this.locale);
       this.focused = this.picker.viewDate;
     }
 
@@ -970,7 +967,8 @@
       // by beforeShow hook at previous render
       this.disabled = [...this.datesDisabled];
 
-      this.picker.setViewSwitchLabel(this.switchLabel);
+      const switchLabel = formatDate(this.focused, this.switchLabelFormat, this.locale);
+      this.picker.setViewSwitchLabel(switchLabel);
       this.picker.setPrevBtnDisabled(this.first <= this.minDate);
       this.picker.setNextBtnDisabled(this.last >= this.maxDate);
 
@@ -1141,7 +1139,6 @@
     updateFocus() {
       const viewDate = new Date(this.picker.viewDate);
       this.year = viewDate.getFullYear();
-      this.switchLabel = this.year;
       this.focused = viewDate.getMonth();
     }
 
@@ -1173,7 +1170,7 @@
       // by beforeShow hook at previous render
       this.disabled = [];
 
-      this.picker.setViewSwitchLabel(this.switchLabel);
+      this.picker.setViewSwitchLabel(this.year);
       this.picker.setPrevBtnDisabled(this.year <= this.minYear);
       this.picker.setNextBtnDisabled(this.year >= this.maxYear);
 
@@ -1318,7 +1315,6 @@
       this.first = first;
       this.last = last;
       this.start = first - this.step;
-      this.switchLabel = `${first}-${last}`;
       this.focused = startOfYearPeriod(viewDate, this.step);
     }
 
@@ -1343,7 +1339,7 @@
       // by beforeShow hook at previous render
       this.disabled = [];
 
-      this.picker.setViewSwitchLabel(this.switchLabel);
+      this.picker.setViewSwitchLabel(`${this.first}-${this.last}`);
       this.picker.setPrevBtnDisabled(this.first <= this.minYear);
       this.picker.setNextBtnDisabled(this.last >= this.maxYear);
 
@@ -2102,11 +2098,11 @@
         const dt = new Date(date);
         if (config.pickLevel === 1) {
           date = rangeEnd
-            ? dt.setMonth(dt.getMonth() + 1, 1) - 86400000
+            ? dt.setMonth(dt.getMonth() + 1, 0)
             : dt.setDate(1);
         } else {
           date = rangeEnd
-            ? dt.setFullYear(dt.getFullYear() + 1, 0, 1) - 86400000
+            ? dt.setFullYear(dt.getFullYear() + 1, 0, 0)
             : dt.setMonth(0, 1);
         }
       }

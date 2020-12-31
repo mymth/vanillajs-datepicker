@@ -56,7 +56,6 @@ export default class YearsView extends View {
     this.first = first;
     this.last = last;
     this.start = first - this.step;
-    this.switchLabel = `${first}-${last}`;
     this.focused = startOfYearPeriod(viewDate, this.step);
   }
 
@@ -81,7 +80,7 @@ export default class YearsView extends View {
     // by beforeShow hook at previous render
     this.disabled = [];
 
-    this.picker.setViewSwitchLabel(this.switchLabel);
+    this.picker.setViewSwitchLabel(`${this.first}-${this.last}`);
     this.picker.setPrevBtnDisabled(this.first <= this.minYear);
     this.picker.setNextBtnDisabled(this.last >= this.maxYear);
 

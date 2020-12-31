@@ -71,7 +71,6 @@ export default class MonthsView extends View {
   updateFocus() {
     const viewDate = new Date(this.picker.viewDate);
     this.year = viewDate.getFullYear();
-    this.switchLabel = this.year;
     this.focused = viewDate.getMonth();
   }
 
@@ -103,7 +102,7 @@ export default class MonthsView extends View {
     // by beforeShow hook at previous render
     this.disabled = [];
 
-    this.picker.setViewSwitchLabel(this.switchLabel);
+    this.picker.setViewSwitchLabel(this.year);
     this.picker.setPrevBtnDisabled(this.year <= this.minYear);
     this.picker.setNextBtnDisabled(this.year >= this.maxYear);
 

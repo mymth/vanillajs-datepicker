@@ -56,7 +56,6 @@ export default class DaysView extends View {
       const locale = this.locale = options.locale;
       this.dayNames = locale.daysMin;
       this.switchLabelFormat = locale.titleFormat;
-      this.switchLabel = formatDate(this.picker.viewDate, locale.titleFormat, locale);
       updateDOW = true;
     }
     if (options.beforeShowDay !== undefined) {
@@ -114,8 +113,6 @@ export default class DaysView extends View {
     this.first = firstOfMonth;
     this.last = dateValue(viewYear, viewMonth + 1, 0);
     this.start = start;
-
-    this.switchLabel = formatDate(viewDate, this.switchLabelFormat, this.locale);
     this.focused = this.picker.viewDate;
   }
 
@@ -136,7 +133,8 @@ export default class DaysView extends View {
     // by beforeShow hook at previous render
     this.disabled = [...this.datesDisabled];
 
-    this.picker.setViewSwitchLabel(this.switchLabel);
+    const switchLabel = formatDate(this.focused, this.switchLabelFormat, this.locale);
+    this.picker.setViewSwitchLabel(switchLabel);
     this.picker.setPrevBtnDisabled(this.first <= this.minDate);
     this.picker.setNextBtnDisabled(this.last >= this.maxDate);
 

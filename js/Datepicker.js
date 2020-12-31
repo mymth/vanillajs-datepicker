@@ -40,11 +40,11 @@ function processInputDates(datepicker, inputDates, clear = false) {
       const dt = new Date(date);
       if (config.pickLevel === 1) {
         date = rangeEnd
-          ? dt.setMonth(dt.getMonth() + 1, 1) - 86400000
+          ? dt.setMonth(dt.getMonth() + 1, 0)
           : dt.setDate(1);
       } else {
         date = rangeEnd
-          ? dt.setFullYear(dt.getFullYear() + 1, 0, 1) - 86400000
+          ? dt.setFullYear(dt.getFullYear() + 1, 0, 0)
           : dt.setMonth(0, 1);
       }
     }
