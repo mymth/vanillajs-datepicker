@@ -30,7 +30,9 @@ const parseFns = {
       if (monthIndex < 0) {
         monthIndex = locale.months.findIndex(compareNames);
       }
-      return monthIndex < 0 ? NaN : newDate.setMonth(monthIndex);
+      if (monthIndex < 0) {
+        return NaN;
+      }
     }
 
     newDate.setMonth(monthIndex);

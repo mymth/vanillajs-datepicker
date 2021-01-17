@@ -146,6 +146,9 @@ describe('lib/date', function () {
     });
 
     it('evaluates month name with case-insensible begin-with match', function () {
+      const fakeToday = new Date(thisYear, 2, 31);
+      const clock = sinon.useFakeTimers({now: fakeToday});
+
       expect(parseDate('march 5, 2012', 'M d, yyyy', locales.en), 'to be', new Date(2012, 2, 5).getTime());
       expect(parseDate('DEC 15, 2012', 'MM d, yyyy', locales.en), 'to be', new Date(2012, 11, 15).getTime());
 
@@ -159,6 +162,8 @@ describe('lib/date', function () {
       expect(parseDate('MA/05/2012', 'mm/dd/yyyy', locales.en), 'to be', new Date(2012, 2, 5).getTime());
       expect(parseDate('j/05/2012', 'mm/dd/yyyy', locales.en), 'to be', new Date(2012, 0, 5).getTime());
       expect(parseDate('ju/05/2012', 'mm/dd/yyyy', locales.en), 'to be', new Date(2012, 5, 5).getTime());
+
+      clock.restore();
     });
 
     it('uses format: "y", "yy" or "yyyy" as year to parse date string', function () {
