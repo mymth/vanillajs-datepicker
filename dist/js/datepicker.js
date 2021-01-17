@@ -157,7 +157,6 @@ var Datepicker = (function () {
     y(date, year) {
       return new Date(date).setFullYear(parseInt(year, 10));
     },
-    M: undefined,  // placeholder to maintain the key order
     m(date, month, locale) {
       const newDate = new Date(date);
       let monthIndex = parseInt(month, 10) - 1;
@@ -189,7 +188,6 @@ var Datepicker = (function () {
       return new Date(date).setDate(parseInt(day, 10));
     },
   };
-  parseFns.M = parseFns.m;  // make "M" an alias of "m"
   // format functions for date parts
   const formatFns = {
     d(date) {
@@ -254,35 +252,35 @@ var Datepicker = (function () {
     // collect format functions used in the format
     const partFormatters = parts.map(token => formatFns[token]);
 
-    // collect parse functions used in the format
+    // collect parse function keys used in the format
     // iterate over parseFns' keys in order to keep the order of the keys.
-    const partParsers = Object.keys(parseFns).reduce((parsers, key) => {
-      const token = parts.find(part => part[0] === key);
-      if (!token) {
-        return parsers;
+    const partParserKeys = Object.keys(parseFns).reduce((keys, key) => {
+      const token = parts.find(part => part[0] !== 'D' && part[0].toLowerCase() === key);
+      if (token) {
+        keys.push(key);
       }
-      parsers[key] = parseFns[key];
-      return parsers;
-    }, {});
-    const partParserKeys = Object.keys(partParsers);
+      return keys;
+    }, []);
 
     return knownFormats[format] = {
       parser(dateStr, locale) {
         const dateParts = dateStr.split(reNonDateParts).reduce((dtParts, part, index) => {
           if (part.length > 0 && parts[index]) {
             const token = parts[index][0];
-            if (parseFns[token] !== undefined) {
+            if (token === 'M') {
+              dtParts.m = part;
+            } else if (token !== 'D') {
               dtParts[token] = part;
             }
           }
           return dtParts;
         }, {});
 
-        // iterate over partParsers' keys so that the parsing is made in the oder
+        // iterate over partParserkeys so that the parsing is made in the oder
         // of year, month and day to prevent the day parser from correcting last
         // day of month wrongly
         return partParserKeys.reduce((origDate, key) => {
-          const newDate = partParsers[key](origDate, dateParts[key], locale);
+          const newDate = parseFns[key](origDate, dateParts[key], locale);
           // ingnore the part failed to parse
           return isNaN(newDate) ? origDate : newDate;
         }, today());

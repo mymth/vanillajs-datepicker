@@ -138,26 +138,26 @@ describe('Datepicker', function () {
       expect(fakeRangepicker.datepickers[1], 'to be', dp);
     });
 
-    it.skip('throws an error if invalid rangepicker is passed', function () {
+    it('throws an error if invalid rangepicker is passed', function () {
       const testFn = rangepicker => new Datepicker(input, {}, rangepicker);
-      const errMsg = 'Invalid rangepicker object';
+      const errMsg = 'Invalid rangepicker object.';
 
       let fakeRangepicker = {
         inputs: [],
         datepickers: [],
       };
-      expect(testFn(fakeRangepicker), 'to throww', errMsg);
+      expect(() => testFn(fakeRangepicker), 'to throw', errMsg);
 
       fakeRangepicker = {
         inputs: ['foo', 'bar', input],
         datepickers: [],
       };
-      expect(testFn(fakeRangepicker), 'to throww', errMsg);
+      expect(() => testFn(fakeRangepicker), 'to throw', errMsg);
 
       fakeRangepicker = {
         inputs: [input],
       };
-      expect(testFn(fakeRangepicker), 'to throww', errMsg);
+      expect(() => testFn(fakeRangepicker), 'to throw', errMsg);
     });
   });
 
