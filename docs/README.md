@@ -19,7 +19,7 @@ The package also includes pre-built js/css files for those who like to use it di
 
 ##### Demo
 
-[Live Online Demo](https://raw.githack.com/mymth/vanillajs-datepicker/v1.1.1/demo/)
+[Live Online Demo](https://raw.githack.com/mymth/vanillajs-datepicker/v1.1.2/demo/)
 
 ## Quick Start
 
@@ -232,27 +232,27 @@ const datepicker = new Datepicker(elem, {
 1. From CDN, load css and js files.
 
 ```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vanillajs-datepicker@1.1.1/dist/css/datepicker.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vanillajs-datepicker@1.1.2/dist/css/datepicker.min.css">
 
 ...
 
-<script src="https://cdn.jsdelivr.net/npm/vanillajs-datepicker@1.1.1/dist/js/datepicker-full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vanillajs-datepicker@1.1.2/dist/js/datepicker-full.min.js"></script>
 ```
 
 _If you use Bulma, Bootstrap or Foundation, you can use the css for your framework instead._
 
 ```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vanillajs-datepicker@1.1.1/dist/css/datepicker-bulma.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vanillajs-datepicker@1.1.2/dist/css/datepicker-bulma.min.css">
 <!-- or -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vanillajs-datepicker@1.1.1/dist/css/datepicker-bs4.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vanillajs-datepicker@1.1.2/dist/css/datepicker-bs4.min.css">
 <!-- or -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vanillajs-datepicker@1.1.1/dist/css/datepicker-foundation.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vanillajs-datepicker@1.1.2/dist/css/datepicker-foundation.min.css">
 ```
 
 _And if don't need date range, you can use the datepicker-only version of js file._
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/vanillajs-datepicker@1.1.1/dist/js/datepicker.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vanillajs-datepicker@1.1.2/dist/js/datepicker.min.js"></script>
 ```
 
 2. Call `Datepicker`/`DateRangePicker` constructor in the same way as explained [above](?id=quick-start). (The classes are exposed to global scope.)

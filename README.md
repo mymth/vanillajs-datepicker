@@ -19,7 +19,7 @@ The package also includes pre-built js/css files for those who like to use it di
 
 ### Demo
 
-[Live Online Demo](https://raw.githack.com/mymth/vanillajs-datepicker/v1.1.1/demo/)
+[Live Online Demo](https://raw.githack.com/mymth/vanillajs-datepicker/v1.1.2/demo/)
 
 ### Documentation
 

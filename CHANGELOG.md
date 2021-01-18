@@ -1,5 +1,12 @@
 # changelog
 
+## 1.1.2
+
+### Bug fixes
+
+- Fix #48 — inline picker submits form by click on prev/next buttons
+- Fix — date with the name of 30-day month is parsed incorrectly if the current date is the 31st
+
 ## 1.1.1
 
 ### Bug fixes
