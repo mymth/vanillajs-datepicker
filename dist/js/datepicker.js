@@ -2080,7 +2080,7 @@ var Datepicker = (function () {
   // the input dates into the current selection
   function processInputDates(datepicker, inputDates, clear = false) {
     const {config, dates: origDates, rangepicker} = datepicker;
-      if (inputDates.length === 0) {
+    if (inputDates.length === 0) {
       // empty input is considered valid unless origiDates is passed
       return clear ? [] : undefined;
     }
@@ -2238,8 +2238,13 @@ var Datepicker = (function () {
         });
       }
 
-      // set initial value
-      this.dates = processInputDates(this, initialDates) || [];
+      // set initial dates
+      this.dates = [];
+      // process initial value
+      const inputDateValues = processInputDates(this, initialDates);
+      if (inputDateValues && inputDateValues.length > 0) {
+        this.dates = inputDateValues;
+      }
       if (inputField) {
         inputField.value = stringifyDates(this.dates, config);
       }

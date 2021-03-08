@@ -90,6 +90,18 @@ describe('options - multi date', function () {
       expect(filterCells(cells, '.selected'), 'to equal', [cells[8], cells[27]]);
       expect(filterCells(cells, '.focused'), 'to equal', [cells[27]]);
 
+      // setting initial dates does not cuase error
+      // (issue #51)
+      dp.destroy();
+      input.value = '02/14/2020,04/22/2020,03/21/2020';
+      ({dp, picker} = createDP(input, {maxNumberOfDates: 2}));
+
+      expect(dp.dates, 'to equal', [
+        dateValue(2020, 3, 22),
+        dateValue(2020, 2, 21),
+      ]);
+      expect(input.value, 'to be', '04/22/2020,03/21/2020');
+
       dp.destroy();
       input.value = '';
     });
