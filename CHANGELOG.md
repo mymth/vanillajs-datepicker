@@ -1,5 +1,11 @@
 # changelog
 
+## 1.1.3
+
+### Bug fixes
+
+- Fix #51 - TypeError occurs when initial dates are set in the input filed in multidate mode
+
 ## 1.1.2
 
 ### Bug fixes
