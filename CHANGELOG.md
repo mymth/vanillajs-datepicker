@@ -1,5 +1,12 @@
 # changelog
 
+## 1.1.4
+
+### Changes
+
+- Chnage `datepicer.show()` to move the focus to the input field if it's not focused
+  - Fix #52 — picker shown by calling show() doesn't hide by clicking outside
+
 ## 1.1.3
 
 ### Bug fixes
