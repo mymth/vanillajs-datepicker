@@ -289,8 +289,15 @@ export default class Datepicker {
    * Show the picker element
    */
   show() {
-    if (this.inputField && this.inputField.disabled) {
-      return;
+    if (this.inputField) {
+      if (this.inputField.disabled) {
+        return;
+      }
+      if (this.inputField !== document.activeElement) {
+        this._showing = true;
+        this.inputField.focus();
+        delete this._showing;
+      }
     }
     this.picker.show();
   }

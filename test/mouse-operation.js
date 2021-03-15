@@ -38,6 +38,14 @@ describe('mouse operation', function () {
     expect(spyHide.called, 'to be false');
 
     spyHide.restore();
+
+    // picker shown programmatically should be closed by clicking outside
+    // (issue #52)
+    dp.show();
+
+    simulant.fire(outsider, 'mousedown');
+    expect(isVisible(picker), 'to be false');
+
     dp.destroy();
     testContainer.removeChild(outsider);
   });

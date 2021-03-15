@@ -164,7 +164,7 @@ export function onKeydown(datepicker, ev) {
 }
 
 export function onFocus(datepicker) {
-  if (datepicker.config.showOnFocus) {
+  if (datepicker.config.showOnFocus && !datepicker._showing) {
     datepicker.show();
   }
 }

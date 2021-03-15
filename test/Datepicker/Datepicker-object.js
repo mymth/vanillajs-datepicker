@@ -6,7 +6,7 @@ describe('Datepicker', function () {
     testContainer.appendChild(input);
   });
 
-  after (function () {
+  after(function () {
     testContainer.removeChild(input);
   });
 
@@ -57,6 +57,21 @@ describe('Datepicker', function () {
       expect(isVisible(document.querySelector('.datepicker')), 'to be true');
       expect(dp.active, 'to be true');
 
+      dp.destroy();
+    });
+
+    it('moves the focus onto the input field', function () {
+      // related to issue #52
+      const dp = new Datepicker(input);
+      const spyShow = sinon.spy(dp, 'show');
+      input.blur();
+      dp.show();
+
+      expect(document.activeElement, 'to be', input);
+      // the focus listener's calling show() is prevented
+      expect(spyShow.calledOnce, 'to be true');
+
+      spyShow.restore();
       dp.destroy();
     });
 
