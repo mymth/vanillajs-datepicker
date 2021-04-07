@@ -33,23 +33,34 @@ function processInputDates(datepicker, inputDates, clear = false) {
     if (date === undefined) {
       return dates;
     }
+    let minDate = config.minDate
+    let maxDate = config.maxDate
     if (config.pickLevel > 0) {
       // adjust to 1st of the month/Jan 1st of the year
       // or to the last day of the monh/Dec 31st of the year if the datepicker
       // is the range-end picker of a rangepicker
       const dt = new Date(date);
       if (config.pickLevel === 1) {
+        // picklevel => MONTH
         date = rangeEnd
-          ? dt.setMonth(dt.getMonth() + 1, 0)
-          : dt.setDate(1);
+          ? dt.setMonth(dt.getMonth() + 1, 0) // set to last day of month
+          : dt.setDate(1); // set to first day of month
       } else {
+        // picklevel => YEAR
         date = rangeEnd
-          ? dt.setFullYear(dt.getFullYear() + 1, 0, 0)
-          : dt.setMonth(0, 1);
+          ? dt.setFullYear(dt.getFullYear() + 1, 0, 0) // set to last day of year
+          : dt.setMonth(0, 1); // set to jan 1st
       }
+      // We need to also adjust the month / year view for min and max dates
+      maxDate = config.pickLevel === 1
+        ? (new Date(maxDate)).setMonth(dt.getMonth() + 1, 0) // set to last day of month
+        : (new Date(maxDate)).setFullYear(dt.getFullYear() + 1, 0, 0) // set to last day of year
+      minDate = config.pickLevel === 1
+        ? (new Date(minDate)).setDate(1) // set to first day of month
+        : (new Date(minDate)).setMonth(0, 1) // set to jan 1st
     }
     if (
-      isInRange(date, config.minDate, config.maxDate)
+      isInRange(date, minDate, maxDate)
       && !dates.includes(date)
       && !config.datesDisabled.includes(date)
       && !config.daysOfWeekDisabled.includes(new Date(date).getDay())
