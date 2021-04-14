@@ -92,6 +92,12 @@ export default class DaysView extends View {
       }
     }
 
+    if (options.showDaysWithTwoDigits !== undefined) {
+      if (options.showDaysWithTwoDigits) {
+        this.showDaysWithTwoDigits = options.showDaysWithTwoDigits;
+      }
+    }
+
     // update days-of-week when locale, daysOfweekDisabled or weekStart is changed
     if (updateDOW) {
       Array.from(this.dow.children).forEach((el, index) => {
@@ -153,7 +159,9 @@ export default class DaysView extends View {
 
       el.className = `datepicker-cell ${this.cellClass}`;
       el.dataset.date = current;
-      el.textContent = date.getDate();
+      el.textContent = this.showDaysWithTwoDigits ? 
+        (date.getDate() < 10 ? `0${date.getDate()}` : date.getDate()) :
+        date.getDate();
 
       if (current < this.first) {
         classList.add('prev');

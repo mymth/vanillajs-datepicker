@@ -24,6 +24,7 @@ const defaultOptions = {
   pickLevel: 0,
   prevArrow: '«',
   showDaysOfWeek: true,
+  showDaysWithTwoDigits:false,
   showOnClick: true,
   showOnFocus: true,
   startView: 0,
