@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Vanilla JS Datepicker Demo</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="../dist/css/datepicker-bs5.css">
+    <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+    <style type="text/css">
+      main .section {
+        padding: 3rem 1.5rem;
+      }
+      aside {
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        right: -300px;
+        width: 300px;
+        overflow: auto;
+        background-color: #fff;
+        box-shadow: inset 1px 1px rgba(0, 0, 0, 10%);
+        transition: right 0.3s;
+      }
+      .open aside {
+        right: 0;
+      }
+      aside hr {
+        margin-top: 0.5rem;
+      }
+      .code-wrap {
+        position: relative;
+      }
+      .code-wrap pre {
+        background-color: whitesmoke;
+        padding: 1.25rem 1.5rem;
+      }
+      .code-wrap pre:not(.is-active) {
+        height: 0;
+        overflow: hidden;
+        opacity: 0.5;
+      }
+      .code-wrap .collapse-button {
+        position: absolute;
+        top: 0;
+        right: 0;
+        left: auto;
+        cursor: pointer;
+        padding: 0.125rem 0.25rem;
+        font-size: 0.75rem;
+      }
+
+      .toggle-btn {
+        position: fixed;
+        top: 0.75rem;
+        right: 0.75rem;
+        width: 1.5rem;
+        background-color: #fff;
+        line-height: 1.5rem;
+        border: 1px solid rgba(0, 0, 0, 10%);
+        border-radius: 2px;
+        box-shadow: 1px 1px rgba(0, 0, 0, 10%);
+        cursor: pointer;
+      }
+      .toggle-btn::before {
+        content: '\25c0';
+        padding-left: 0.25rem;
+      }
+      .open .toggle-btn::before {
+        content: '\25b6';
+      }
+
+      @media (min-width: 481px) {
+        main {
+          margin-right: 38.1966%;
+        }
+        aside {
+          right: 0;
+          width: 38.1966%;
+        }
+        .toggle-btn {
+          display: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <section class="section container-fluid">
+        <div class="row">
+          <div class="col">
+            <p>Vanilla JS Datepicker</p>
+            <h1 class="title">Demo</h1>
+            <div id="sandbox"></div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <p><small>Style: <a href="index.html">Bulma</a> | <em>Bootstrap</em> | <a href="foundation.html">Foundation</a> | <a href="plain-css.html">Plain CSS</a></small></p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <aside>
+      <section class="section">
+        <div class="card">
+          <div class="card-body">
+            <h4 class="subtitle">Type</h4>
+            <form id="types">
+              <div class="form-group">
+                <div class="form-check form-check-inline">
+                  <input type="radio" class="form-check-input" id="type-input" name="type" value="input" checked>
+                  <label for="type-input" class="form-check-label">Input</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input type="radio" class="form-check-input" id="type-inline" name="type" value="inline">
+                  <label for="type-inline" class="form-check-label">Inline</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input type="radio" class="form-check-input" id="type-range" name="type" value="range">
+                  <label for="type-range" class="form-check-label">Range</label>
+                </div>
+              </div>
+            </form>
+          </div>
+          <hr>
+          <div class="card-body">
+            <h4 class="subtitle">Options</h4>
+            <form id="options">
+
+              <div class="form-group form-check" data-toggle="tooltip" title="Only effective in range picker">
+                <input type="checkbox" class="form-check-input" id="allowOneSidedRange" name="allowOneSidedRange" value="true">
+                <label for="allowOneSidedRange" class="form-check-label">allowOneSidedRange</label>
+              </div>
+
+              <div class="form-group form-check">
+                <input type="checkbox" class="form-check-input" id="autohide" name="autohide" value="true">
+                <label for="autohide" class="form-check-label">autohide</label>
+              </div>
+
+              <div class="form-group form-check">
+                <input type="checkbox" class="form-check-input" id="beforeShowDay" name="beforeShowDay" value="true">
+                <label for="beforeShowDay" class="form-check-label">beforeShowDay</label>
+                <div class="code-wrap">
+                  <pre id="code-beforeShowDay"></pre>
+                  <div class="collapse-button" data-target="code-beforeShowDay">show/hide</div>
+                </div>
+              </div>
+
+              <div class="form-group form-check">
+                <input type="checkbox" class="form-check-input" id="beforeShowMonth" name="beforeShowMonth" value="true">
+                <label for="beforeShowMonth" class="form-check-label">beforeShowMonth</label>
+                <div class="code-wrap">
+                  <pre id="code-beforeShowMonth"></pre>
+                  <div class="collapse-button" data-target="code-beforeShowMonth">show/hide</div>
+                </div>
+              </div>
+
+              <div class="form-group form-check">
+                <input type="checkbox" class="form-check-input" id="beforeShowYear" name="beforeShowYear" value="true">
+                <label for="beforeShowYear" class="form-check-label">beforeShowYear</label>
+                <div class="code-wrap">
+                  <pre id="code-beforeShowYear"></pre>
+                  <div class="collapse-button" data-target="code-beforeShowYear">show/hide</div>
+                </div>
+              </div>
+
+              <div class="form-group form-check">
+                <input type="checkbox" class="form-check-input" id="beforeShowDecade" name="beforeShowDecade" value="true">
+                <label for="beforeShowDecade" class="form-check-label">beforeShowDecade</label>
+                <div class="code-wrap">
+                  <pre id="code-beforeShowDecade"></pre>
+                  <div class="collapse-button" data-target="code-beforeShowDecade">show/hide</div>
+                </div>
+              </div>
+
+              <div class="form-group form-check">
+                <input type="checkbox" class="form-check-input" id="calendarWeeks" name="calendarWeeks" value="true">
+                <label for="calendarWeeks" class="form-check-label">calendarWeeks</label>
+              </div>
+
+              <div class="form-group form-check">
+                <input type="checkbox" class="form-check-input" id="clearBtn" name="clearBtn" value="true">
+                <label for="clearBtn" class="form-check-label">clearBtn</label>
+              </div>
+
+              <div class="form-group">
+                <label class="label">dateDelimiter</label>
+                <input type="text" class="form-control" name="dateDelimiter" placeholder=",">
+              </div>
+
+              <div class="form-group" data-toggle="tooltip" title="enter in JSON format">
+                <label class="label">datesDisabled</label>
+                <textarea class="form-control" name="datesDisabled" placeholder="[]"></textarea>
+                <div class="invalid-feedback"></div>
+              </div>
+
+              <div class="form-group">
+                <label for="daysOfWeekDisabled" class="label">daysOfWeekDisabled</label>
+                <div>
+                  <div class="form-check form-check-inline">
+                    <input type="checkbox" class="form-check-input" id="daysOfWeekDisabled-0" name="daysOfWeekDisabled" value="0">
+                    <label for="daysOfWeekDisabled-0" class="form-check-label">0</label>&nbsp;
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input type="checkbox" class="form-check-input" id="daysOfWeekDisabled-1" name="daysOfWeekDisabled" value="1">
+                    <label for="daysOfWeekDisabled-1" class="form-check-label">1</label>&nbsp;
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input type="checkbox" class="form-check-input" id="daysOfWeekDisabled-2" name="daysOfWeekDisabled" value="2">
+                    <label for="daysOfWeekDisabled-2" class="form-check-label">2</label>&nbsp;
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input type="checkbox" class="form-check-input" id="daysOfWeekDisabled-3" name="daysOfWeekDisabled" value="3">
+                    <label for="daysOfWeekDisabled-3" class="form-check-label">3</label>&nbsp;
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input type="checkbox" class="form-check-input" id="daysOfWeekDisabled-4" name="daysOfWeekDisabled" value="4">
+                    <label for="daysOfWeekDisabled-4" class="form-check-label">4</label>&nbsp;
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input type="checkbox" class="form-check-input" id="daysOfWeekDisabled-5" name="daysOfWeekDisabled" value="5">
+                    <label for="daysOfWeekDisabled-5" class="form-check-label">5</label>&nbsp;
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input type="checkbox" class="form-check-input" id="daysOfWeekDisabled-6" name="daysOfWeekDisabled" value="6">
+                    <label for="daysOfWeekDisabled-6" class="form-check-label">6</label>&nbsp;
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="daysOfWeekHighlighted" class="label">daysOfWeekHighlighted</label>
+                <div>
+                  <div class="form-check form-check-inline">
+                    <input type="checkbox" class="form-check-input" id="daysOfWeekHighlighted-0" name="daysOfWeekHighlighted" value="0">
+                    <label for="daysOfWeekHighlighted-0" class="form-check-label">0</label>&nbsp;
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input type="checkbox" class="form-check-input" id="daysOfWeekHighlighted-1" name="daysOfWeekHighlighted" value="1">
+                    <label for="daysOfWeekHighlighted-1" class="form-check-label">1</label>&nbsp;
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input type="checkbox" class="form-check-input" id="daysOfWeekHighlighted-2" name="daysOfWeekHighlighted" value="2">
+                    <label for="daysOfWeekHighlighted-2" class="form-check-label">2</label>&nbsp;
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input type="checkbox" class="form-check-input" id="daysOfWeekHighlighted-3" name="daysOfWeekHighlighted" value="3">
+                    <label for="daysOfWeekHighlighted-3" class="form-check-label">3</label>&nbsp;
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input type="checkbox" class="form-check-input" id="daysOfWeekHighlighted-4" name="daysOfWeekHighlighted" value="4">
+                    <label for="daysOfWeekHighlighted-4" class="form-check-label">4</label>&nbsp;
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input type="checkbox" class="form-check-input" id="daysOfWeekHighlighted-5" name="daysOfWeekHighlighted" value="5">
+                    <label for="daysOfWeekHighlighted-5" class="form-check-label">5</label>&nbsp;
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input type="checkbox" class="form-check-input" id="daysOfWeekHighlighted-6" name="daysOfWeekHighlighted" value="6">
+                    <label for="daysOfWeekHighlighted-6" class="form-check-label">6</label>&nbsp;
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="label">defaultViewDate</label>
+                <input type="text" class="form-control" name="defaultViewDate" placeholder="today">
+              </div>
+
+              <div class="form-group form-check">
+                <input type="checkbox" class="form-check-input" id="disableTouchKeyboard" name="disableTouchKeyboard" value="true">
+                <label for="disableTouchKeyboard" class="form-check-label">disableTouchKeyboard</label>
+              </div>
+
+              <div class="form-group">
+                <label class="label">format</label>
+                <input type="text" class="form-control" name="format" placeholder="mm/dd/yyyy">
+              </div>
+
+              <div class="form-group">
+                <label class="label">language</label>
+                <select class="form-control" name="language" >
+                  <option value="en">en – English (US)</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="label">maxDate</label>
+                <input type="text" class="form-control" name="maxDate" placeholder="null">
+              </div>
+
+              <div class="form-group" data-toggle="tooltip" title="Not effective in range picker">
+                <label class="label">maxNumberOfDates</label>
+                <input type="text" class="form-control" name="maxNumberOfDates" placeholder="1">
+              </div>
+
+              <div class="form-group">
+                <label class="label">maxView</label>
+                <select class="form-control" name="maxView">
+                  <option value="0">0 – days</option>
+                  <option value="1">1 – months</option>
+                  <option value="2">2 – years</option>
+                  <option value="3" selected>3 – decades</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="label">minDate</label>
+                <input type="text" class="form-control" name="minDate" placeholder="null">
+              </div>
+
+              <div class="form-group">
+                <label class="label">nextArrow</label>
+                <textarea class="form-control" name="nextArrow" placeholder="»"></textarea>
+              </div>
+
+              <div class="form-group">
+                <label class="label">orientation</label>
+                <select class="form-control" name="orientation" >
+                  <option value="auto">auto</option>
+                  <option value="top auto">top auto</option>
+                  <option value="bottom auto">bottom auto</option>
+                  <option value="auto left">auto left</option>
+                  <option value="top left">top left</option>
+                  <option value="bottom left">bottom left</option>
+                  <option value="auto right">auto right</option>
+                  <option value="top right">top right</option>
+                  <option value="bottom right">bottom right</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="label">pickLevel</label>
+                <select class="form-control" name="pickLevel">
+                  <option value="0">0 – date</option>
+                  <option value="1">1 – month</option>
+                  <option value="2">2 – year</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="label">prevArrow</label>
+                <textarea class="form-control" name="prevArrow" placeholder="«"></textarea>
+              </div>
+
+              <div class="form-group form-check">
+                <input type="checkbox" class="form-check-input" id="showDaysOfWeek" name="showDaysOfWeek" value="true" checked>
+                <label for="showDaysOfWeek" class="form-check-label">showDaysOfWeek</label>
+              </div>
+
+              <div class="form-group form-check">
+                <input type="checkbox" class="form-check-input" id="showOnClick" name="showOnClick" value="true" checked>
+                <label for="showOnClick" class="form-check-label">showOnClick</label>
+              </div>
+
+              <div class="form-group form-check">
+                <input type="checkbox" class="form-check-input" id="showOnFocus" name="showOnFocus" value="true" checked>
+                <label for="showOnFocus" class="form-check-label">showOnFocus</label>
+              </div>
+
+              <div class="form-group">
+                <label class="label">startView</label>
+                <select class="form-control" name="startView">
+                  <option value="0">0 – days</option>
+                  <option value="1">1 – months</option>
+                  <option value="2">2 – years</option>
+                  <option value="3">3 – decades</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="label">title</label>
+                <input type="text" class="form-control" name="title">
+              </div>
+
+              <div class="form-group form-check">
+                <input type="checkbox" class="form-check-input" id="todayBtn" name="todayBtn" value="true">
+                <label for="todayBtn" class="form-check-label">todayBtn</label>
+              </div>
+
+              <div class="form-group">
+                <label class="label">todayBtnMode</label>
+                <select class="form-control" name="todayBtnMode">
+                  <option value="0">0 – focus</option>
+                  <option value="1">1 – select</option>
+                </select>
+              </div>
+
+              <div class="form-group form-check">
+                <input type="checkbox" class="form-check-input" id="todayHighlight" name="todayHighlight" value="true">
+                <label for="todayHighlight" class="form-check-label">todayHighlight</label>
+              </div>
+
+              <div class="form-group form-check">
+                <input type="checkbox" class="form-check-input" id="updateOnBlur" name="updateOnBlur" value="true" checked>
+                <label for="updateOnBlur" class="form-check-label">updateOnBlur</label>
+              </div>
+
+              <div class="form-group">
+                <label class="label">weekStart</label>
+                <input type="text" class="form-control" name="weekStart" placeholder="0">
+              </div>
+
+            </form>
+          </div>
+          <hr>
+          <div class="card-body">
+            <h4 class="subtitle">Text direction</h4>
+            <form id="direction">
+              <div class="form-group">
+                <div class="form-check form-check-inline">
+                  <input type="radio" class="form-check-input" id="direction-ltr" name="direction" value="ltr" checked>
+                  <label for="direction-ltr" class="form-check-label">LTR</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input type="radio" class="form-check-input" id="direction-rtl" name="direction" value="rtl">
+                  <label for="direction-rtl" class="form-check-label">RTL</label>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </section>
+    </aside>
+
+    <div class="toggle-btn"></div>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script src="../dist/js/datepicker-full.js"></script>
+    <script src="./live-demo.js"></script>
+    <script>
+      /*global $ initialize onChangeType onChnageDirection onChangeInputOption onChangeInputOption onChangeTextareaOption onClickCheckboxOptions switchPicker */
+      window.templates = {
+        input: `<div class="form-group"><input type="text" class="form-control date"></div>`,
+        inline: `<div class="date"></div>`,
+        range: `<div class="d-flex flex-row date input-daterange">
+  <div class="form-group">
+    <input type="text" name="range-start" class="form-control">
+  </div>
+  <div class="flex-grow-0">
+    <a class="btn" disabled>to</a>
+  </div>
+  <div class="form-group">
+    <input type="text" name="range-end" class="form-control">
+  </div>
+</div>`,
+      };
+      window.beforeShowFns = {
+beforeShowDay(date) {
+  if (date.getMonth() == new Date().getMonth()) {
+    switch (date.getDate()) {
+      case 4:
+        return {
+          content: '<span data-toggle="tooltip" title="Example tooltip">4</span>',
+          classes: 'bg-info'
+        };
+      case 8:
+        return false;
+      case 12:
+        return "text-success";
+    }
+  }
+},
+beforeShowMonth(date) {
+  switch (date.getMonth()) {
+    case 6:
+      if (date.getFullYear() === new Date().getFullYear()) {
+        return {content: '🎉'};
+      }
+      break;
+    case 8:
+      return false;
+  }
+},
+beforeShowYear(date) {
+  switch (date.getFullYear()) {
+    case 2017:
+      return false;
+    case 2020:
+      return {content: '<span data-toggle="tooltip" data-placement="bottom" title="Tooltip text">2020</span>'};
+  }
+},
+beforeShowDecade(date) {
+  switch (date.getFullYear()) {
+    case 2000:
+      return false;
+    case 2100:
+      return {
+        content: '💯',
+        classes: 'bg-success',
+      };
+  }
+},
+      };
+      window.buttonClass = 'btn';
+      window.addError = function addError(el, message) {
+        el.classList.add('is-invalid');
+        el.parentElement.querySelector('.invalid-feedback').textContent = message;
+      }
+      window.removeErrors = function removeErrors(el) {
+        el.classList.remove('is-invalid');
+        el.parentElement.querySelector('.invalid-feedback').textContent = '';
+      }
+
+      initialize();
+
+      document.getElementById('types').querySelectorAll('input').forEach((el) => {
+        el.addEventListener('change', onChangeType);
+      });
+
+      document.getElementById('direction').querySelectorAll('input').forEach((el) => {
+        el.addEventListener('change', onChnageDirection);
+      });
+
+      const optsForm = document.getElementById('options');
+      optsForm.querySelectorAll('input[type=text], input[type=radio], select').forEach((el) => {
+        el.addEventListener('change', onChangeInputOption);
+      });
+      optsForm.querySelectorAll('textarea').forEach((el) => {
+        el.addEventListener('change', onChangeTextareaOption);
+      });
+      optsForm.querySelectorAll('input[type=checkbox]').forEach((el) => {
+        el.addEventListener('click', onClickCheckboxOptions);
+      });
+
+      switchPicker('input');
+
+      const initTooltips = () => {
+        $('[data-toggle="tooltip"]').tooltip();
+      };
+      setInterval(initTooltips, 1000);
+      initTooltips();
+    </script>
+  </body>
+</html>

@@ -8,6 +8,7 @@ const files = [
   'datepicker',
   'datepicker-bulma',
   'datepicker-bs4',
+  'datepicker-bs5',
   'datepicker-foundation',
 ];
 
