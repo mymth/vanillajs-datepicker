@@ -167,6 +167,30 @@ describe('Datepicker - API methods', function () {
       expect(filterCells(getCells(picker), '.selected')[0].textContent, 'to be', '14');
       expect(isVisible(picker), 'to be false');
     });
+
+    it('cancels the edit when no valied date is passed if revert option = true', function () {
+      input.value = '2/14';
+      dp.setDate(new Date(-1, 0, 1), {revert: true});
+
+      expect(dp.dates, 'to equal', [dateValue(2020, 3, 22)]);
+      expect(input.value, 'to be', '04/22/2020');
+
+      dp.setDate({clear: true});
+
+      input.value = '2/14';
+      dp.setDate('0/0/0', {revert: true});
+
+      expect(input.value, 'to be', '');
+      expect(dp.dates, 'to equal', []);
+
+      // autohide also works if specified
+      input.value = '2/14';
+      dp.setDate(new Date(-1, 0, 1), {revert: true, autohide: true});
+
+      expect(input.value, 'to be', '');
+      expect(dp.dates, 'to equal', []);
+      expect(isVisible(picker), 'to be false');
+    });
   });
 
   describe('update()', function () {
@@ -210,6 +234,39 @@ describe('Datepicker - API methods', function () {
       expect(input.value, 'to be', '07/04/2020');
       expect(getViewSwitch(picker).textContent, 'to be', 'July 2020');
       expect(filterCells(getCells(picker), '.selected')[0].textContent, 'to be', '4');
+    });
+
+    it('hides the picker if autohide options = true', function () {
+      input.value = '7 4 2020';
+      dp.update({autohide: true});
+
+      expect(input.value, 'to be', '07/04/2020');
+      expect(isVisible(picker), 'to be false');
+    });
+
+    it('cancels the edit when no valied date is enterd if revert option = true', function () {
+      input.value = '0/0/0';
+      dp.update({revert: true});
+
+      expect(input.value, 'to be', '04/22/2020');
+      expect(dp.dates, 'to equal', [dateValue(2020, 3, 22)]);
+
+      input.value = '';
+      dp.update();
+
+      input.value = '0/0/0';
+      dp.update({revert: true});
+
+      expect(input.value, 'to be', '');
+      expect(dp.dates, 'to equal', []);
+
+      // autohide also works if specified
+      input.value = '0/0/0';
+      dp.update({revert: true, autohide: true});
+
+      expect(input.value, 'to be', '');
+      expect(dp.dates, 'to equal', []);
+      expect(isVisible(picker), 'to be false');
     });
   });
 

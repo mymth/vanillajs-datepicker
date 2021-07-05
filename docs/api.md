@@ -127,7 +127,7 @@ With `clear: true` option, the method can be used to clear the selection and to 
 
 When `render: false` option is used, the method omits re-rendering the picker element. In this case, you need to call [`refresh()`](api?id=datepickerrefresh) method later in order for the picker element to reflect the changes. The input field is refreshed always regardless of this option.
 
-When invalid (unparsable, repeated, disabled or out-of-range) dates are passed, the method ignores them and applies only valid ones. In the case that all the given dates are invalid, which is distinguished from passing no dates, the method considers it as an error and leaves the selection untouched.
+When invalid (unparsable, repeated, disabled or out-of-range) dates are passed, the method ignores them and applies only valid ones. In the case that all the given dates are invalid, which is distinguished from passing no dates, the method considers it as an error and leaves the selection untouched. (The input field also remains untouched unless `revert: true` option is used.)
 
 ```javascript
 datepicker.setDate( date1 [, date2 [, ... dateN ]][, options ] )
@@ -144,6 +144,8 @@ datepicker.setDate( [ options ] )
     - `autohide`: {`Boolean`} - Whether to hide the picker element after re-render  
       Ignored when used with `render: false`  
       – Default: the value of `autohide` config option
+    - `revert`: {`Boolean`} - Whether to refresh the input field when all the passed dates are invalid  
+      – Default: `false`
 
 #### datepicker.setOptions()
 
@@ -170,6 +172,8 @@ Not available on inline picker
 
 The input field will be refreshed with properly formatted date string.
 
+In the case that all the entered dates are invalid (unparsable, repeated, disabled or out-of-range), whixh is distinguished from empty input field, the method leaves the input field untouched as well as the selection by default. If `revert: true` option is used in this case, the input field is refreshed with the existing selection.
+
 ```javascript
 datepicker.update( [ options ] )
 ```
@@ -177,12 +181,14 @@ datepicker.update( [ options ] )
   - [`options`] : {`Object`} - Function options:
     - `autohide`: {`Boolean`} - Whether to hide the picker element after update  
        – Default: `false`
+    - `revert`: {`Boolean`} - Whether to refresh the input field when all the passed dates are invalid  
+      – Default: `false`
 
 
 ### Events
 
 All Datepicker-event objects are `CustomEvent` instances and dispatched to the associated `<input>` element (for inline picker, the block element).  
-They include the following extra data in the `details` property.
+They include the following extra data in the `detail` property.
 
 - `date`: {`Date`} - Selected date(s) (see [getDate()](api?id=datepickergetdate))
 - `viewDate`: {`Date`} - Focused date

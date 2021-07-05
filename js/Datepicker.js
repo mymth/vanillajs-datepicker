@@ -90,7 +90,7 @@ function refreshUI(datepicker, mode = 3, quickRender = true) {
 }
 
 function setDate(datepicker, inputDates, options) {
-  let {clear, render, autohide} = options;
+  let {clear, render, autohide, revert} = options;
   if (render === undefined) {
     render = true;
   }
@@ -101,16 +101,17 @@ function setDate(datepicker, inputDates, options) {
   }
 
   const newDates = processInputDates(datepicker, inputDates, clear);
-  if (!newDates) {
+  if (!newDates && !revert) {
     return;
   }
-  if (newDates.toString() !== datepicker.dates.toString()) {
+  if (newDates && newDates.toString() !== datepicker.dates.toString()) {
     datepicker.dates = newDates;
     refreshUI(datepicker, render ? 3 : 1);
     triggerDatepickerEvent(datepicker, 'changeDate');
   } else {
     refreshUI(datepicker, 1);
   }
+
   if (autohide) {
     datepicker.hide();
   }
@@ -379,7 +380,8 @@ export default class Datepicker {
    * passed, the method ignores them and applies only valid ones. In the case
    * that all the given dates are invalid, which is distinguished from passing
    * no dates, the method considers it as an error and leaves the selection
-   * untouched.
+   * untouched. (The input field also remains untouched unless revert: true
+   * option is used.)
    *
    * @param {...(Date|Number|String)|Array} [dates] - Date strings, Date
    * objects, time values or mix of those for new selection
@@ -391,6 +393,9 @@ export default class Datepicker {
    * - autohide: {boolean} - Whether to hide the picker element after re-render
    *     Ignored when used with render: false
    *     default: config.autohide
+   * - revert: {boolean} - Whether to refresh the input field when all the
+   *     passed dates are invalid
+   *     default: false
    */
   setDate(...args) {
     const dates = [...args];
@@ -415,8 +420,17 @@ export default class Datepicker {
    *
    * The input field will be refreshed with properly formatted date string.
    *
+   * In the case that all the entered dates are invalid (unparsable, repeated,
+   * disabled or out-of-range), whixh is distinguished from empty input field,
+   * the method leaves the input field untouched as well as the selection by
+   * default. If revert: true option is used in this case, the input field is
+   * refreshed with the existing selection.
+   *
    * @param  {Object} [options] - function options
    * - autohide: {boolean} - whether to hide the picker element after refresh
+   *     default: false
+   * - revert: {boolean} - Whether to refresh the input field when all the
+   *     passed dates are invalid
    *     default: false
    */
   update(options = undefined) {
@@ -424,7 +438,7 @@ export default class Datepicker {
       return;
     }
 
-    const opts = {clear: true, autohide: !!(options && options.autohide)};
+    const opts = Object.assign(options || {}, {clear: true, render: true});
     const inputDates = stringToArray(this.inputField.value, this.config.dateDelimiter);
     setDate(this, inputDates, opts);
   }
