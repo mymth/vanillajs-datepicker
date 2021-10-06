@@ -229,15 +229,18 @@ export default class Picker {
     let scrollTop;
     let left;
     let top;
+    let bottom;
 
     if (container === document.body) {
       scrollTop = window.scrollY;
       left = inputLeft + window.scrollX;
       top = inputTop + scrollTop;
+      bottom = window.innerHeight - inputField.offsetTop - inputHeight;
     } else {
       scrollTop = container.scrollTop;
       left = inputLeft - containerLeft;
       top = inputTop - containerTop + scrollTop;
+      bottom = window.innerHeight - container.offsetTop - inputHeight;
     }
 
     if (orientX === 'auto') {
@@ -257,7 +260,11 @@ export default class Picker {
     }
 
     if (orientY === 'auto') {
-      orientY = top - calendarHeight < scrollTop ? 'bottom' : 'top';
+        if (bottom > calendarHeight || top - calendarHeight < scrollTop) {
+            orientY = 'bottom';
+        } else {
+            orientY = 'top';
+        }
     }
     if (orientY === 'top') {
       top -= calendarHeight;
