@@ -146,6 +146,24 @@ var Datepicker = (function () {
     return Math.floor(year / years) * years;
   }
 
+  // Convert date to the first/last date of the month/year of the date
+  function regularizeDate(date, timeSpan, useLastDate) {
+    if (timeSpan !== 1 && timeSpan !== 2) {
+      return date;
+    }
+    const newDate = new Date(date);
+    if (timeSpan === 1) {
+      useLastDate
+        ? newDate.setMonth(newDate.getMonth() + 1, 0)
+        : newDate.setDate(1);
+    } else {
+      useLastDate
+        ? newDate.setFullYear(newDate.getFullYear() + 1, 0, 0)
+        : newDate.setMonth(0, 1);
+    }
+    return newDate.setHours(0, 0, 0, 0);
+  }
+
   // pattern for format parts
   const reFormatTokens = /dd?|DD?|mm?|MM?|yy?(?:yy)?/;
   // pattern for non date parts
@@ -533,6 +551,7 @@ var Datepicker = (function () {
     const inOpts = Object.assign({}, options);
     const config = {};
     const locales = datepicker.constructor.locales;
+    const rangeSideIndex = datepicker.rangeSideIndex;
     let {
       format,
       language,
@@ -596,6 +615,30 @@ var Datepicker = (function () {
       delete inOpts.format;
     }
 
+    //*** pick level ***//
+    let newPickLevel = pickLevel;
+    if (inOpts.pickLevel !== undefined) {
+      newPickLevel = validateViewId(inOpts.pickLevel, 2);
+      delete inOpts.pickLevel;
+    }
+    if (newPickLevel !== pickLevel) {
+      if (newPickLevel > pickLevel) {
+        // complement current minDate/madDate so that the existing range will be
+        // expanded to fit the new level later
+        if (inOpts.minDate === undefined) {
+          inOpts.minDate = minDate;
+        }
+        if (inOpts.maxDate === undefined) {
+          inOpts.maxDate = maxDate;
+        }
+      }
+      // complement datesDisabled so that it will be reset later
+      if (!inOpts.datesDisabled) {
+        inOpts.datesDisabled = [];
+      }
+      pickLevel = config.pickLevel = newPickLevel;
+    }
+
     //*** dates ***//
     // while min and maxDate for "no limit" in the options are better to be null
     // (especially when updating), the ones in the config have to be undefined
@@ -603,15 +646,22 @@ var Datepicker = (function () {
     let minDt = minDate;
     let maxDt = maxDate;
     if (inOpts.minDate !== undefined) {
+      const defaultMinDt = dateValue(0, 0, 1);
       minDt = inOpts.minDate === null
-        ? dateValue(0, 0, 1)  // set 0000-01-01 to prevent negative values for year
+        ? defaultMinDt  // set 0000-01-01 to prevent negative values for year
         : validateDate(inOpts.minDate, format, locale, minDt);
+      if (minDt !== defaultMinDt) {
+        minDt = regularizeDate(minDt, pickLevel, false);
+      }
       delete inOpts.minDate;
     }
     if (inOpts.maxDate !== undefined) {
       maxDt = inOpts.maxDate === null
         ? undefined
         : validateDate(inOpts.maxDate, format, locale, maxDt);
+      if (maxDt !== undefined) {
+        maxDt = regularizeDate(maxDt, pickLevel, true);
+      }
       delete inOpts.maxDate;
     }
     if (maxDt < minDt) {
@@ -629,7 +679,9 @@ var Datepicker = (function () {
     if (inOpts.datesDisabled) {
       config.datesDisabled = inOpts.datesDisabled.reduce((dates, dt) => {
         const date = parseDate(dt, format, locale);
-        return date !== undefined ? pushUnique(dates, date) : dates;
+        return date !== undefined
+          ? pushUnique(dates, regularizeDate(date, pickLevel, rangeSideIndex))
+          : dates;
       }, []);
       delete inOpts.datesDisabled;
     }
@@ -673,16 +725,7 @@ var Datepicker = (function () {
       delete inOpts.dateDelimiter;
     }
 
-    //*** pick level & view ***//
-    let newPickLevel = pickLevel;
-    if (inOpts.pickLevel !== undefined) {
-      newPickLevel = validateViewId(inOpts.pickLevel, 2);
-      delete inOpts.pickLevel;
-    }
-    if (newPickLevel !== pickLevel) {
-      pickLevel = config.pickLevel = newPickLevel;
-    }
-
+    //*** view ***//
     let newMaxView = maxView;
     if (inOpts.maxView !== undefined) {
       newMaxView = validateViewId(inOpts.maxView, maxView);
@@ -1128,6 +1171,13 @@ var Datepicker = (function () {
           this.maxDate = dateValue(this.maxYear, this.maxMonth + 1, 0);
         }
       }
+      if (this.isMinView) {
+        if (options.datesDisabled) {
+          this.datesDisabled = options.datesDisabled;
+        }
+      } else {
+        this.datesDisabled = [];
+      }
       if (options.beforeShowMonth !== undefined) {
         this.beforeShow = typeof options.beforeShowMonth === 'function'
           ? options.beforeShowMonth
@@ -1168,7 +1218,14 @@ var Datepicker = (function () {
     render() {
       // refresh disabled months on every render in order to clear the ones added
       // by beforeShow hook at previous render
-      this.disabled = [];
+      // this.disabled = [...this.datesDisabled];
+      this.disabled = this.datesDisabled.reduce((arr, disabled) => {
+        const dt = new Date(disabled);
+        if (this.year === dt.getFullYear()) {
+          arr.push(dt.getMonth());
+        }
+        return arr;
+      }, []);
 
       this.picker.setViewSwitchLabel(this.year);
       this.picker.setPrevBtnDisabled(this.year <= this.minYear);
@@ -1196,6 +1253,7 @@ var Datepicker = (function () {
           yrOutOfRange
           || isMinYear && index < this.minMonth
           || isMaxYear && index > this.maxMonth
+          || this.disabled.includes(index)
         ) {
           classList.add('disabled');
         }
@@ -1300,6 +1358,13 @@ var Datepicker = (function () {
           this.maxDate = dateValue(this.maxYear, 11, 31);
         }
       }
+      if (this.isMinView) {
+        if (options.datesDisabled) {
+          this.datesDisabled = options.datesDisabled;
+        }
+      } else {
+        this.datesDisabled = [];
+      }
       if (options[this.beforeShowOption] !== undefined) {
         const beforeShow = options[this.beforeShowOption];
         this.beforeShow = typeof beforeShow === 'function' ? beforeShow : undefined;
@@ -1337,7 +1402,8 @@ var Datepicker = (function () {
     render() {
       // refresh disabled years on every render in order to clear the ones added
       // by beforeShow hook at previous render
-      this.disabled = [];
+      // this.disabled = [...this.datesDisabled];
+      this.disabled = this.datesDisabled.map(disabled => new Date(disabled).getFullYear());
 
       this.picker.setViewSwitchLabel(`${this.first}-${this.last}`);
       this.picker.setPrevBtnDisabled(this.first <= this.minYear);
@@ -1359,7 +1425,7 @@ var Datepicker = (function () {
         } else if (index === 11) {
           classList.add('next');
         }
-        if (current < this.minYear || current > this.maxYear) {
+        if (current < this.minYear || current > this.maxYear || this.disabled.includes(current)) {
           classList.add('disabled');
         }
         if (this.range) {
@@ -2079,38 +2145,28 @@ var Datepicker = (function () {
   // when origDates (current selection) is passed, the function works to mix
   // the input dates into the current selection
   function processInputDates(datepicker, inputDates, clear = false) {
-    const {config, dates: origDates, rangepicker} = datepicker;
+    // const {config, dates: origDates, rangepicker} = datepicker;
+    const {config, dates: origDates, rangeSideIndex} = datepicker;
     if (inputDates.length === 0) {
       // empty input is considered valid unless origiDates is passed
       return clear ? [] : undefined;
     }
 
-    const rangeEnd = rangepicker && datepicker === rangepicker.datepickers[1];
+    // const rangeEnd = rangepicker && datepicker === rangepicker.datepickers[1];
     let newDates = inputDates.reduce((dates, dt) => {
       let date = parseDate(dt, config.format, config.locale);
       if (date === undefined) {
         return dates;
       }
-      if (config.pickLevel > 0) {
-        // adjust to 1st of the month/Jan 1st of the year
-        // or to the last day of the monh/Dec 31st of the year if the datepicker
-        // is the range-end picker of a rangepicker
-        const dt = new Date(date);
-        if (config.pickLevel === 1) {
-          date = rangeEnd
-            ? dt.setMonth(dt.getMonth() + 1, 0)
-            : dt.setDate(1);
-        } else {
-          date = rangeEnd
-            ? dt.setFullYear(dt.getFullYear() + 1, 0, 0)
-            : dt.setMonth(0, 1);
-        }
-      }
+      // adjust to 1st of the month/Jan 1st of the year
+      // or to the last day of the monh/Dec 31st of the year if the datepicker
+      // is the range-end picker of a rangepicker
+      date = regularizeDate(date, config.pickLevel, rangeSideIndex);
       if (
         isInRange(date, config.minDate, config.maxDate)
         && !dates.includes(date)
         && !config.datesDisabled.includes(date)
-        && !config.daysOfWeekDisabled.includes(new Date(date).getDay())
+        && (config.pickLevel > 0 || !config.daysOfWeekDisabled.includes(new Date(date).getDay()))
       ) {
         dates.push(date);
       }
@@ -2191,7 +2247,6 @@ var Datepicker = (function () {
       element.datepicker = this;
       this.element = element;
 
-      // set up config
       const config = this.config = Object.assign({
         buttonClass: (options.buttonClass && String(options.buttonClass)) || 'button',
         container: document.body,
@@ -2199,18 +2254,11 @@ var Datepicker = (function () {
         maxDate: undefined,
         minDate: undefined,
       }, processOptions(defaultOptions, this));
-      this._options = options;
-      Object.assign(config, processOptions(options, this));
-
       // configure by type
       const inline = this.inline = element.tagName !== 'INPUT';
       let inputField;
-      let initialDates;
-
       if (inline) {
         config.container = element;
-        initialDates = stringToArray(element.dataset.date, config.dateDelimiter);
-        delete element.dataset.date;
       } else {
         const container = options.container ? document.querySelector(options.container) : null;
         if (container) {
@@ -2218,7 +2266,6 @@ var Datepicker = (function () {
         }
         inputField = this.inputField = element;
         inputField.classList.add('datepicker-input');
-        initialDates = stringToArray(inputField.value, config.dateDelimiter);
       }
       if (rangepicker) {
         // check validiry
@@ -2237,9 +2284,25 @@ var Datepicker = (function () {
             return rangepicker;
           },
         });
+        Object.defineProperty(this, 'rangeSideIndex', {
+          get() {
+            return index;
+          },
+        });
       }
 
+      // set up config
+      this._options = options;
+      Object.assign(config, processOptions(options, this));
+
       // set initial dates
+      let initialDates;
+      if (inline) {
+        initialDates = stringToArray(element.dataset.date, config.dateDelimiter);
+        delete element.dataset.date;
+      } else {
+        initialDates = stringToArray(inputField.value, config.dateDelimiter);
+      }
       this.dates = [];
       // process initial value
       const inputDateValues = processInputDates(this, initialDates);

@@ -60,6 +60,12 @@
         }
         return indices;
       }, []);
+      var cellInfo = (cells, criteria) => cells.reduce((res, cell, idx) => {
+        if (cell.matches(criteria)) {
+          res.push([idx, cell.textContent]);
+        }
+        return res;
+      }, []);
     </script>
     <script src="../dist/js/datepicker-full.js"></script>
     <script src="../dist/js/locales/fr.js"></script>

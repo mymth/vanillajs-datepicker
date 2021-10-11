@@ -84,6 +84,24 @@ var dateUtils = (function (exports) {
     return Math.floor(year / years) * years;
   }
 
+  // Convert date to the first/last date of the month/year of the date
+  function regularizeDate(date, timeSpan, useLastDate) {
+    if (timeSpan !== 1 && timeSpan !== 2) {
+      return date;
+    }
+    const newDate = new Date(date);
+    if (timeSpan === 1) {
+      useLastDate
+        ? newDate.setMonth(newDate.getMonth() + 1, 0)
+        : newDate.setDate(1);
+    } else {
+      useLastDate
+        ? newDate.setFullYear(newDate.getFullYear() + 1, 0, 0)
+        : newDate.setMonth(0, 1);
+    }
+    return newDate.setHours(0, 0, 0, 0);
+  }
+
   exports.addDays = addDays;
   exports.addMonths = addMonths;
   exports.addWeeks = addWeeks;
@@ -91,6 +109,7 @@ var dateUtils = (function (exports) {
   exports.dateValue = dateValue;
   exports.dayOfTheWeekOf = dayOfTheWeekOf;
   exports.getWeek = getWeek;
+  exports.regularizeDate = regularizeDate;
   exports.startOfYearPeriod = startOfYearPeriod;
   exports.stripTime = stripTime;
   exports.today = today;

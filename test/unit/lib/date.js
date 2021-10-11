@@ -9,7 +9,8 @@ import {
   addYears,
   dayOfTheWeekOf,
   getWeek,
-  startOfYearPeriod
+  startOfYearPeriod,
+  regularizeDate
 } from '../../../js/lib/date.js';
 
 describe('lib/date', function () {
@@ -206,6 +207,58 @@ describe('lib/date', function () {
 
       expect(startOfYearPeriod(new Date(738, 5, 30), 20), 'to be', 720);
       expect(startOfYearPeriod(new Date(0, 5, 30).setFullYear(88), 25), 'to be', 75);
+    });
+  });
+
+  describe('regularizeDate()', function () {
+    it('returns the first of the month of the given date if timeSpan = 1 and useLastDate = false', function () {
+      expect(regularizeDate(new Date(2020, 0, 15), 1, false), 'to be', new Date(2020, 0, 1).getTime());
+      expect(regularizeDate(new Date(2020, 1, 14), 1, false), 'to be', new Date(2020, 1, 1).getTime());
+      expect(regularizeDate(new Date(2020, 3, 20), 1, false), 'to be', new Date(2020, 3, 1).getTime());
+      expect(regularizeDate(new Date(2020, 7, 31), 1, false), 'to be', new Date(2020, 7, 1).getTime());
+      expect(regularizeDate(new Date(2020, 10, 30).getTime(), 1, false), 'to be', new Date(2020, 10, 1).getTime());
+      expect(regularizeDate(new Date(2020, 11, 24).getTime(), 1, false), 'to be', new Date(2020, 11, 1).getTime());
+      expect(regularizeDate(new Date(2021, 1, 14).getTime(), 1, false), 'to be', new Date(2021, 1, 1).getTime());
+    });
+
+    it('returns the last day of the month of the given date if timeSpan = 1 and useLastDate = true', function () {
+      expect(regularizeDate(new Date(2020, 0, 15), 1, true), 'to be', new Date(2020, 0, 31).getTime());
+      expect(regularizeDate(new Date(2020, 1, 14), 1, true), 'to be', new Date(2020, 1, 29).getTime());
+      expect(regularizeDate(new Date(2020, 3, 20), 1, true), 'to be', new Date(2020, 3, 30).getTime());
+      expect(regularizeDate(new Date(2020, 7, 31), 1, true), 'to be', new Date(2020, 7, 31).getTime());
+      expect(regularizeDate(new Date(2020, 10, 30).getTime(), 1, true), 'to be', new Date(2020, 10, 30).getTime());
+      expect(regularizeDate(new Date(2020, 11, 24).getTime(), 1, true), 'to be', new Date(2020, 11, 31).getTime());
+      expect(regularizeDate(new Date(2021, 1, 14).getTime(), 1, true), 'to be', new Date(2021, 1, 28).getTime());
+    });
+
+    it('returns the Jan 1 of the year of the given date if timeSpan = 2 and useLastDate = false', function () {
+      expect(regularizeDate(new Date(2020, 0, 15), 2, false), 'to be', new Date(2020, 0, 1).getTime());
+      expect(regularizeDate(new Date(2020, 6, 14), 2, false), 'to be', new Date(2020, 0, 1).getTime());
+      expect(regularizeDate(new Date(2018, 3, 20), 2, false), 'to be', new Date(2018, 0, 1).getTime());
+      expect(regularizeDate(new Date(2021, 4, 6), 2, false), 'to be', new Date(2021, 0, 1).getTime());
+      expect(regularizeDate(new Date(2199, 10, 3).getTime(), 2, false), 'to be', new Date(2199, 0, 1).getTime());
+      expect(regularizeDate(new Date(1999, 11, 31).getTime(), 2, false), 'to be', new Date(1999, 0, 1).getTime());
+      expect(regularizeDate(new Date(2000, 1, 14).getTime(), 2, false), 'to be', new Date(2000, 0, 1).getTime());
+    });
+
+    it('returns Dec 31 of the year of the given date if timeSpan = 2 and useLastDate = true', function () {
+      expect(regularizeDate(new Date(2020, 0, 15), 2, true), 'to be', new Date(2020, 11, 31).getTime());
+      expect(regularizeDate(new Date(2020, 6, 14), 2, true), 'to be', new Date(2020, 11, 31).getTime());
+      expect(regularizeDate(new Date(2018, 3, 20), 2, true), 'to be', new Date(2018, 11, 31).getTime());
+      expect(regularizeDate(new Date(2021, 4, 6), 2, true), 'to be', new Date(2021, 11, 31).getTime());
+      expect(regularizeDate(new Date(2199, 10, 3).getTime(), 2, true), 'to be', new Date(2199, 11, 31).getTime());
+      expect(regularizeDate(new Date(1999, 11, 31).getTime(), 2, true), 'to be', new Date(1999, 11, 31).getTime());
+      expect(regularizeDate(new Date(2000, 1, 14).getTime(), 2, true), 'to be', new Date(2000, 11, 31).getTime());
+    });
+
+    it('returns passed date without modification if timeSpan is other than 1 or 2', function () {
+      let date = new Date(2020, 0, 15);
+      expect(regularizeDate(date, 0, false), 'to be', date);
+      expect(regularizeDate(date, 3, true), 'to be', date);
+      date = new Date(2020, 10, 30).getTime();
+      expect(regularizeDate(date, '1', false), 'to be', date);
+      expect(regularizeDate(date, {}, true), 'to be', date);
+      expect(regularizeDate(NaN, null, false), 'to be NaN');
     });
   });
 });

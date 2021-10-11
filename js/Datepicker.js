@@ -1,5 +1,5 @@
 import {lastItemOf, stringToArray, isInRange} from './lib/utils.js';
-import {today} from './lib/date.js';
+import {today, regularizeDate} from './lib/date.js';
 import {parseDate, formatDate} from './lib/date-format.js';
 import {registerListeners, unregisterListeners} from './lib/event.js';
 import {locales} from './i18n/base-locales.js';
@@ -21,38 +21,28 @@ function stringifyDates(dates, config) {
 // when origDates (current selection) is passed, the function works to mix
 // the input dates into the current selection
 function processInputDates(datepicker, inputDates, clear = false) {
-  const {config, dates: origDates, rangepicker} = datepicker;
+  // const {config, dates: origDates, rangepicker} = datepicker;
+  const {config, dates: origDates, rangeSideIndex} = datepicker;
   if (inputDates.length === 0) {
     // empty input is considered valid unless origiDates is passed
     return clear ? [] : undefined;
   }
 
-  const rangeEnd = rangepicker && datepicker === rangepicker.datepickers[1];
+  // const rangeEnd = rangepicker && datepicker === rangepicker.datepickers[1];
   let newDates = inputDates.reduce((dates, dt) => {
     let date = parseDate(dt, config.format, config.locale);
     if (date === undefined) {
       return dates;
     }
-    if (config.pickLevel > 0) {
-      // adjust to 1st of the month/Jan 1st of the year
-      // or to the last day of the monh/Dec 31st of the year if the datepicker
-      // is the range-end picker of a rangepicker
-      const dt = new Date(date);
-      if (config.pickLevel === 1) {
-        date = rangeEnd
-          ? dt.setMonth(dt.getMonth() + 1, 0)
-          : dt.setDate(1);
-      } else {
-        date = rangeEnd
-          ? dt.setFullYear(dt.getFullYear() + 1, 0, 0)
-          : dt.setMonth(0, 1);
-      }
-    }
+    // adjust to 1st of the month/Jan 1st of the year
+    // or to the last day of the monh/Dec 31st of the year if the datepicker
+    // is the range-end picker of a rangepicker
+    date = regularizeDate(date, config.pickLevel, rangeSideIndex);
     if (
       isInRange(date, config.minDate, config.maxDate)
       && !dates.includes(date)
       && !config.datesDisabled.includes(date)
-      && !config.daysOfWeekDisabled.includes(new Date(date).getDay())
+      && (config.pickLevel > 0 || !config.daysOfWeekDisabled.includes(new Date(date).getDay()))
     ) {
       dates.push(date);
     }
@@ -133,7 +123,6 @@ export default class Datepicker {
     element.datepicker = this;
     this.element = element;
 
-    // set up config
     const config = this.config = Object.assign({
       buttonClass: (options.buttonClass && String(options.buttonClass)) || 'button',
       container: document.body,
@@ -141,18 +130,11 @@ export default class Datepicker {
       maxDate: undefined,
       minDate: undefined,
     }, processOptions(defaultOptions, this));
-    this._options = options;
-    Object.assign(config, processOptions(options, this));
-
     // configure by type
     const inline = this.inline = element.tagName !== 'INPUT';
     let inputField;
-    let initialDates;
-
     if (inline) {
       config.container = element;
-      initialDates = stringToArray(element.dataset.date, config.dateDelimiter);
-      delete element.dataset.date;
     } else {
       const container = options.container ? document.querySelector(options.container) : null;
       if (container) {
@@ -160,7 +142,6 @@ export default class Datepicker {
       }
       inputField = this.inputField = element;
       inputField.classList.add('datepicker-input');
-      initialDates = stringToArray(inputField.value, config.dateDelimiter);
     }
     if (rangepicker) {
       // check validiry
@@ -179,9 +160,25 @@ export default class Datepicker {
           return rangepicker;
         },
       });
+      Object.defineProperty(this, 'rangeSideIndex', {
+        get() {
+          return index;
+        },
+      });
     }
 
+    // set up config
+    this._options = options;
+    Object.assign(config, processOptions(options, this));
+
     // set initial dates
+    let initialDates;
+    if (inline) {
+      initialDates = stringToArray(element.dataset.date, config.dateDelimiter);
+      delete element.dataset.date;
+    } else {
+      initialDates = stringToArray(inputField.value, config.dateDelimiter);
+    }
     this.dates = [];
     // process initial value
     const inputDateValues = processInputDates(this, initialDates);

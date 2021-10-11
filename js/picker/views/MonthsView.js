@@ -60,6 +60,13 @@ export default class MonthsView extends View {
         this.maxDate = dateValue(this.maxYear, this.maxMonth + 1, 0);
       }
     }
+    if (this.isMinView) {
+      if (options.datesDisabled) {
+        this.datesDisabled = options.datesDisabled;
+      }
+    } else {
+      this.datesDisabled = [];
+    }
     if (options.beforeShowMonth !== undefined) {
       this.beforeShow = typeof options.beforeShowMonth === 'function'
         ? options.beforeShowMonth
@@ -100,7 +107,14 @@ export default class MonthsView extends View {
   render() {
     // refresh disabled months on every render in order to clear the ones added
     // by beforeShow hook at previous render
-    this.disabled = [];
+    // this.disabled = [...this.datesDisabled];
+    this.disabled = this.datesDisabled.reduce((arr, disabled) => {
+      const dt = new Date(disabled);
+      if (this.year === dt.getFullYear()) {
+        arr.push(dt.getMonth());
+      }
+      return arr;
+    }, []);
 
     this.picker.setViewSwitchLabel(this.year);
     this.picker.setPrevBtnDisabled(this.year <= this.minYear);
@@ -128,6 +142,7 @@ export default class MonthsView extends View {
         yrOutOfRange
         || isMinYear && index < this.minMonth
         || isMaxYear && index > this.maxMonth
+        || this.disabled.includes(index)
       ) {
         classList.add('disabled');
       }
