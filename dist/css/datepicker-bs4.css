@@ -182,7 +182,7 @@
 }
 
 .datepicker-cell.focused:not(.selected) {
-    background-color: #f1f3f5;
+    background-color: #e2e6ea;
 }
 
 .datepicker-cell.selected, .datepicker-cell.selected:hover {
@@ -192,7 +192,7 @@
 }
 
 .datepicker-cell.disabled {
-    color: #6c757d;
+    color: #adb5bd;
 }
 
 .datepicker-cell.prev:not(.disabled), .datepicker-cell.next:not(.disabled) {
@@ -213,7 +213,7 @@
 }
 
 .datepicker-cell.highlighted:not(.selected):not(.range):not(.today).focused {
-    background-color: #f1f3f5;
+    background-color: #e2e6ea;
 }
 
 .datepicker-cell.today:not(.selected) {

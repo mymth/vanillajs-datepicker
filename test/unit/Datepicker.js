@@ -96,11 +96,29 @@ describe('Datepicker', function () {
       expect(dp.config.weekEnd, 'to be', 6);
     });
 
-    it('append datepicker element to the container)', function () {
+    it('append datepicker element to the container', function () {
       new Datepicker(input);
 
       const dpElem = Array.from(document.body.children).find(el => el.matches('.datepicker'));
       expect(dpElem, 'not to be undefined');
+    });
+
+    it('append datepicker element to the container configured by CSS selector', function () {
+      new Datepicker(input, {
+        container: '#test-container'
+      });
+
+      const dpElem = testContainer.querySelector('.datepicker');
+      expect(dpElem, 'not to be null');
+    });
+
+    it('append datepicker element to the container configured by HTML element', function () {
+      new Datepicker(input, {
+        container: testContainer
+      });
+
+      const dpElem = testContainer.querySelector('.datepicker');
+      expect(dpElem, 'not to be null');
     });
 
     it('does not add the active class to the picker element', function () {
