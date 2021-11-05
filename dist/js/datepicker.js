@@ -428,6 +428,7 @@ var Datepicker = (function () {
     defaultViewDate: undefined, // placeholder, defaults to today() by the program
     disableTouchKeyboard: false,
     format: 'mm/dd/yyyy',
+    getCalendarWeek: null,
     language: 'en',
     maxDate: null,
     maxNumberOfDates: 1,
@@ -535,6 +536,7 @@ var Datepicker = (function () {
     const locales = datepicker.constructor.locales;
     let {
       format,
+      getCalendarWeek,
       language,
       locale,
       maxDate,
@@ -747,6 +749,13 @@ var Datepicker = (function () {
       delete inOpts.todayBtnMode;
     }
 
+    config.getCalendarWeek =
+      typeof inOpts.getCalendarWeek === 'function'
+        ? inOpts.getCalendarWeek
+        : getCalendarWeek || null;
+
+    delete inOpts.getCalendarWeek;
+
     //*** copy the rest ***//
     Object.keys(inOpts).forEach((key) => {
       if (inOpts[key] !== undefined && hasProperty(defaultOptions, key)) {
@@ -912,6 +921,11 @@ var Datepicker = (function () {
           this.calendarWeeks = null;
         }
       }
+
+      if (typeof options.getCalendarWeek === 'function') {
+        this.getCalendarWeek = options.getCalendarWeek;
+      }
+
       if (options.showDaysOfWeek !== undefined) {
         if (options.showDaysOfWeek) {
           showElement(this.dow);
@@ -973,10 +987,11 @@ var Datepicker = (function () {
       this.picker.setNextBtnDisabled(this.last >= this.maxDate);
 
       if (this.calendarWeeks) {
-        // start of the UTC week (Monday) of the 1st of the month
-        const startOfWeek = dayOfTheWeekOf(this.first, 1, 1);
+        const startOfWeek = dayOfTheWeekOf(this.first, 1, this.weekStart);
+        const calcWeek = this.getCalendarWeek || getWeek;
+
         Array.from(this.calendarWeeks.weeks.children).forEach((el, index) => {
-          el.textContent = getWeek(addWeeks(startOfWeek, index));
+          el.textContent = calcWeek(addWeeks(startOfWeek, index), this.weekStart);
         });
       }
       Array.from(this.grid.children).forEach((el, index) => {

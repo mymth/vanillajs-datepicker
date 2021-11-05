@@ -121,6 +121,30 @@ describe('Datepicker', function () {
       expect(dpElem, 'not to be null');
     });
 
+    it('allows customizing of `getCalendarWeek` function', function () {
+      const clock = sinon.useFakeTimers({now: new Date(2017, 0, 1)});
+
+      const dp = new Datepicker(input, {
+        calendarWeeks: true,
+
+        // customized (artificial) calendar week calculation
+        getCalendarWeek(timestamp, weekStart) {
+          expect(weekStart, 'to be', 0);
+          const date = new Date(timestamp);
+          const firstDayOfYear = new Date(date.getFullYear(), 0, 1);
+          return Math.floor((timestamp - firstDayOfYear.getTime()) / 86400000 / 7) + 1;
+        }
+      });
+
+      const weekNumbers = Array.from(dp.picker.element.querySelectorAll('.week'))
+        .map(weekElem => parseInt(weekElem.textContent));
+
+      expect(weekNumbers, 'to equal', [1, 2, 3, 4, 5, 6]);
+
+      dp.destroy();
+      clock.restore();
+    });
+
     it('does not add the active class to the picker element', function () {
       new Datepicker(input);
 

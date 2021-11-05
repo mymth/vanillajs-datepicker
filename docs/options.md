@@ -188,6 +188,14 @@ Alternatively, object that contains custom parser and formatter functions can be
 }
 ```
 
+#### getCalendarWeek
+- Type: `Function`
+- Default: `null`
+
+Allows to customize the algorithm how calendar week numbers are calculated.<br>
+The type of the `getCalendarWeek` function has to be `(timestamp: number, weekStart: number) => number`, where `timestamp` is a unix timestamp (= milliseconds since 1/1/1970) and `weekStart` is a number between `0` and `6` (`0` means Sunday, `1` means Monday, ..., `6` means Saturday).<br>
+The return value is the calendar week number (`1` to `53`).
+
 #### language
 - Type: `String`
 - Default: `'en'`
