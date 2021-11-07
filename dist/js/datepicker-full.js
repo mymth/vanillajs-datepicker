@@ -2831,4 +2831,4 @@
   window.Datepicker = Datepicker;
   window.DateRangePicker = DateRangePicker;
 
-}());
+})();
