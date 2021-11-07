@@ -192,7 +192,7 @@ They include the following extra data in the `detail` property.
 
 - `date`: {`Date`} - Selected date(s) (see [getDate()](api?id=datepickergetdate))
 - `viewDate`: {`Date`} - Focused date
-- `viewMode`: {`Number`} - ID of the current view
+- `viewId`: {`Number`} - ID of the current view
 - `datepicker`: {`Datepicker`} - Datepicker instance
 
 #### changeDate
