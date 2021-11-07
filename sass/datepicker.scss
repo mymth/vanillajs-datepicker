@@ -1,3 +1,5 @@
+@use 'sass:math';
+
 //== foundational variables ==//
 $black: hsl(0, 0%, 4%) !default;
 $white: hsl(0, 0%, 100%) !default;
@@ -48,7 +50,7 @@ $dp-input-in-edit-focus-box-shadow-size: 0 0 0.25em 0.25em !default;
 
 //== non-configurable variables ==//
 $dp-cell-shrink-threshold: $dp-cell-size-base * 10;  // = 8 * 1.25
-$dp-cell-shrinked-width: $dp-cell-size-base * 7 / 8;
+$dp-cell-shrinked-width: $dp-cell-size-base * math.div(7, 8);
 
 //== mixins ==//
 @import 'mixins';
@@ -114,7 +116,7 @@ $dp-cell-shrinked-width: $dp-cell-size-base * 7 / 8;
 }
 
 %flex-basis-day {
-  flex-basis: percentage(1 / 7);
+  flex-basis: percentage(math.div(1, 7));
 }
 
 %flex-basis-month-year {
@@ -267,7 +269,7 @@ $dp-cell-shrinked-width: $dp-cell-size-base * 7 / 8;
     @extend %flex-basis-day;
     height: $dp-font-size-normal * $dp-line-height-base;
     line-height: $dp-font-size-normal * $dp-line-height-base;
-    font-size: ($dp-font-size-small + $dp-font-size-normal) / 2;
+    font-size: math.div(($dp-font-size-small + $dp-font-size-normal), 2);
     font-weight: $dp-font-weight-bold;
   }
 

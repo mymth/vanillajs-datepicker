@@ -23,9 +23,10 @@ Promise.all(files.map((basename) => {
       .then((result) => {
         fs.writeFileSync(`${fileNameBase}.min.css`, result.css);
         resolve();
-      })
-      .catch((err) => {
-        console.error(err);
       });
+  })
+  .catch((err) => {
+    console.error(err);
+    return err;
   });
 }));
