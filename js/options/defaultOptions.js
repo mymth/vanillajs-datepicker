@@ -13,6 +13,7 @@ const defaultOptions = {
   daysOfWeekHighlighted: [],
   defaultViewDate: undefined, // placeholder, defaults to today() by the program
   disableTouchKeyboard: false,
+  focusIgnoredSelector: null,
   format: 'mm/dd/yyyy',
   language: 'en',
   maxDate: null,
