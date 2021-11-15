@@ -164,6 +164,12 @@ const datepicker = new Datepicker(elem, {
 2. import scss file for Bootstrap instead.
 
 ```scss
+@import 'path/to/node_modules/vanillajs-datepicker/sass/datepicker-bs5';
+```
+
+_Or if your Bootstrap's version is v4.x_
+
+```scss
 @import 'path/to/node_modules/vanillajs-datepicker/sass/datepicker-bs4';
 ```
 
@@ -239,10 +245,12 @@ const datepicker = new Datepicker(elem, {
 <script src="https://cdn.jsdelivr.net/npm/vanillajs-datepicker@1.1.4/dist/js/datepicker-full.min.js"></script>
 ```
 
-_If you use Bulma, Bootstrap or Foundation, you can use the css for your framework instead._
+_If you use Bulma, Bootstrap (v5, v4) or Foundation, you can use the css for your framework instead._
 
 ```html
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vanillajs-datepicker@1.1.4/dist/css/datepicker-bulma.min.css">
+<!-- or -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vanillajs-datepicker@1.1.4/dist/css/datepicker-bs5.min.css">
 <!-- or -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vanillajs-datepicker@1.1.4/dist/css/datepicker-bs4.min.css">
 <!-- or -->
