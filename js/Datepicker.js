@@ -136,7 +136,13 @@ export default class Datepicker {
     if (inline) {
       config.container = element;
     } else {
-      const container = options.container ? document.querySelector(options.container) : null;
+      const container =
+        options.container instanceof window.HTMLElement
+          ? options.container
+          : typeof options.container === 'string'
+          ? document.querySelector(options.container)
+          : null;
+
       if (container) {
         config.container = container;
       }

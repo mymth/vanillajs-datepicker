@@ -2123,10 +2123,10 @@
 
   // for the `document` to delegate the events from outside the picker/input field
   function onClickOutside(datepicker, ev) {
-    const element = datepicker.element;
-    if (element !== document.activeElement) {
+    if (!datepicker.active) {
       return;
     }
+    const element = datepicker.element;
     const pickerElem = datepicker.picker.element;
     if (findElementInEventPath(ev, el => el === element || el === pickerElem)) {
       return;
@@ -2260,7 +2260,13 @@
       if (inline) {
         config.container = element;
       } else {
-        const container = options.container ? document.querySelector(options.container) : null;
+        const container =
+          options.container instanceof window.HTMLElement
+            ? options.container
+            : typeof options.container === 'string'
+            ? document.querySelector(options.container)
+            : null;
+
         if (container) {
           config.container = container;
         }

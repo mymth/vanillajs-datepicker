@@ -94,10 +94,10 @@ Whether to show the week number ([ISO week](https://en.wikipedia.org/wiki/ISO_we
 Whether to show the clear button.
 
 #### container
-- Type: `String`
+- Type: `String | HTMLElement`
 - Default: `body`
 
-CSS selector for the element to append the date picker.
+CSS selector for the container element or the container element itself to append the date picker.
 
 > For constructor only. Cannot be used with `setOptions()`.  
 > On inline picker, this option is ignored and overwritten to the associated element.
