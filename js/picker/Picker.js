@@ -237,7 +237,7 @@ export default class Picker {
     } else {
       scrollTop = container.scrollTop;
       left = inputLeft - containerLeft;
-      top = inputTop - containerTop + scrollTop;
+      top = inputTop + scrollTop;
     }
 
     if (orientX === 'auto') {
