@@ -145,7 +145,14 @@ export default class DaysView extends View {
 
     if (this.calendarWeeks) {
       const startOfWeek = dayOfTheWeekOf(this.first, 1, this.weekStart);
-      const calcWeek = this.getCalendarWeek || getWeek;
+
+      const calcWeek = (timestamp, weekStart) => {
+        if (this.getCalendarWeek) {
+          return this.getCalendarWeek(new Date(timestamp), weekStart);
+        }
+
+        return getWeek(timestamp, weekStart);
+      };
 
       Array.from(this.calendarWeeks.weeks.children).forEach((el, index) => {
         el.textContent = calcWeek(addWeeks(startOfWeek, index), this.weekStart);

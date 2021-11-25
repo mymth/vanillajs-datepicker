@@ -128,9 +128,10 @@ describe('Datepicker', function () {
         calendarWeeks: true,
 
         // customized (artificial) calendar week calculation
-        getCalendarWeek(timestamp, weekStart) {
+        getCalendarWeek(date, weekStart) {
+          expect(date.getFullYear(), 'to be', 2017)
           expect(weekStart, 'to be', 0);
-          const date = new Date(timestamp);
+          const timestamp = date.getTime();
           const firstDayOfYear = new Date(date.getFullYear(), 0, 1);
           return Math.floor((timestamp - firstDayOfYear.getTime()) / 86400000 / 7) + 1;
         }
