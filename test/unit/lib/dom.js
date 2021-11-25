@@ -1,6 +1,7 @@
 import '../_setup.js';
 import {
   parseHTML,
+  isActiveElement,
   isVisible,
   hideElement,
   showElement,
@@ -30,6 +31,38 @@ describe('lib/dom', function () {
       expect(spyFragment.returned(result), 'to be true');
 
       spyFragment.restore();
+    });
+  });
+
+  describe('isActiveElement', function () {
+    it('returns true if the element is the focued element', function () {
+      class CustomElement extends HTMLElement {
+        constructor() {
+          super();
+
+          const shadowRoot = this.attachShadow({mode: 'open'});
+          const el = document.createElement('input');
+          shadowRoot.append(el);
+        }
+      }
+
+      window.customElements.define('custom-element', CustomElement);
+
+      const customElem = document.createElement('custom-element');
+      const input1 = document.createElement('input');
+      const input2 = customElem.shadowRoot.firstChild;
+      testContainer.append(input1, customElem);
+
+      expect(isActiveElement(input1), 'to be false');
+      expect(isActiveElement(input2), 'to be false');
+
+      input1.focus();
+      expect(isActiveElement(input1), 'to be true');
+      expect(isActiveElement(input2), 'to be false');
+
+      input2.focus();
+      expect(isActiveElement(input1), 'to be false');
+      expect(isActiveElement(input2), 'to be true');
     });
   });
 

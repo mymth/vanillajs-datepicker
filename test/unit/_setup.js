@@ -20,6 +20,7 @@ const exposeToGlobal = [
   'EventTarget',
   'NodeList',
   'Range',
+  'HTMLElement',
 ];
 exposeToGlobal.forEach((prop) => {
   global[prop] = window[prop];

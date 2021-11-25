@@ -1,6 +1,7 @@
 import {lastItemOf, stringToArray, isInRange} from './lib/utils.js';
 import {today, regularizeDate} from './lib/date.js';
 import {parseDate, formatDate} from './lib/date-format.js';
+import {isActiveElement} from './lib/dom.js';
 import {registerListeners, unregisterListeners} from './lib/event.js';
 import {locales} from './i18n/base-locales.js';
 import defaultOptions from './options/defaultOptions.js';
@@ -297,7 +298,7 @@ export default class Datepicker {
       if (this.inputField.disabled) {
         return;
       }
-      if (this.inputField !== document.activeElement) {
+      if (!isActiveElement(this.inputField)) {
         this._showing = true;
         this.inputField.focus();
         delete this._showing;

@@ -7,6 +7,10 @@ var domUtils = (function (exports) {
     return range.createContextualFragment(html);
   }
 
+  function isActiveElement(el) {
+    return el.getRootNode().activeElement === el;
+  }
+
   // equivalent to jQuery's :visble
   function isVisible(el) {
     return !!(el.offsetWidth || el.offsetHeight || el.getClientRects().length);
@@ -58,6 +62,7 @@ var domUtils = (function (exports) {
 
   exports.emptyChildNodes = emptyChildNodes;
   exports.hideElement = hideElement;
+  exports.isActiveElement = isActiveElement;
   exports.isVisible = isVisible;
   exports.parseHTML = parseHTML;
   exports.replaceChildNodes = replaceChildNodes;
