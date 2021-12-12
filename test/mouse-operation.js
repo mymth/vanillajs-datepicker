@@ -46,12 +46,27 @@ describe('mouse operation', function () {
     simulant.fire(outsider, 'mousedown');
     expect(isVisible(picker), 'to be false');
 
+    // picker hides even when input is already unfocused
+    dp.show();
+    input.blur();
+
+    simulant.fire(outsider, 'mousedown');
+    expect(isVisible(picker), 'to be false');
+
     // picker hides reverting the input when invalid date is in the input (bugfix)
     dp.show();
     input.value = '0/0/0';
 
     simulant.fire(outsider, 'mousedown');
     expect(isVisible(picker), 'to be false');
+    expect(input.value, 'to be', '');
+
+    // reverting the input also works when picker is already hidden
+    dp.show();
+    input.value = '0/0/0';
+    dp.hide();
+
+    simulant.fire(outsider, 'mousedown');
     expect(input.value, 'to be', '');
 
     dp.destroy();
