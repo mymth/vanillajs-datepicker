@@ -9,8 +9,11 @@ describe('mouse operation', function () {
   });
 
   after(function () {
-    clock.restore();
+    if (input.datepicker) {
+      input.datepicker.destroy();
+    }
     testContainer.removeChild(input);
+    clock.restore();
   });
 
   it('picker hides if mouse is pressed outside the picker or the input', function () {

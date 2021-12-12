@@ -7,6 +7,9 @@ describe('keyboard operation - arrow-right', function () {
   });
 
   afterEach(function () {
+    if (input.datepicker) {
+      input.datepicker.destroy();
+    }
     testContainer.removeChild(input);
   });
 

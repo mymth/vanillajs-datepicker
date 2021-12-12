@@ -7,6 +7,9 @@ describe('Datepicker', function () {
   });
 
   after(function () {
+    if (input.datepicker) {
+      input.datepicker.destroy();
+    }
     testContainer.removeChild(input);
   });
 

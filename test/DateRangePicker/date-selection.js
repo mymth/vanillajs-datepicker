@@ -29,6 +29,9 @@ describe('DateRangePicker - date selection', function () {
   });
 
   afterEach(function () {
+    if (elem.rangepicker) {
+      elem.rangepicker.destroy();
+    }
     testContainer.removeChild(elem);
   });
 
