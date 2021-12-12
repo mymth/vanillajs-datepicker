@@ -42,11 +42,11 @@
 
       var createDP = (el, options) => {
         const dp = new Datepicker(el, options);
-        return {dp, picker: document.querySelector('.datepicker')};
+        return {dp, picker: dp.picker.element};
       };
       var createDRP = (el, options) => {
         const drp = new DateRangePicker(el, options);
-        const [picker0, picker1] = document.querySelectorAll('.datepicker');
+        const [picker0, picker1] = drp.datepickers.map(dp => dp.picker.element);
         return {drp, picker0, picker1};
       };
       var getParts = (picker, selectors) => selectors.map(sel => picker.querySelector(sel));
@@ -68,6 +68,24 @@
         }
         return res;
       }, []);
+
+      // create <test-wrapper> custom element
+      class TestWrapper extends HTMLElement {
+        constructor() {
+          super();
+
+          const shadowRoot = this.attachShadow({mode: 'open'});
+
+          const styleLink = document.createElement('link');
+          styleLink.setAttribute('rel', 'stylesheet');
+          styleLink.setAttribute('href', '../dist/css/datepicker.css');
+          const styleElem = document.createElement('style');
+          styleElem.textContent = ':host { display: block }';
+
+          shadowRoot.append(styleLink, styleElem, document.createElement('slot'));
+        }
+      }
+      customElements.define('test-wrapper', TestWrapper);
     </script>
     <script src="../dist/js/datepicker-full.js"></script>
     <script src="../dist/js/locales/fr.js"></script>

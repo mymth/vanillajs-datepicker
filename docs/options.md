@@ -251,6 +251,8 @@ HTML (or plain text) for the button label of the "Next" button.
 
 Space-separated string for date picker's horizontal and vertical placement to the associated input field. `left`|`right`|`auto` for horizontal and `top`|`bottom`|`auto` for vertical.
 
+> The default picker placement of `auto` is the start of the input field's text direction for horizontal and bottom for vertical.  
+>   
 > The order can be random.  
 > If one direction is omitted, it falls back to `auto`. (e.g. `'top'` == `'top auto'`)  
 > Not available on inline picker.
