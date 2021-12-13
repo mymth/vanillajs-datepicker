@@ -2478,7 +2478,7 @@ var Datepicker = (function () {
         if (this.inputField.disabled) {
           return;
         }
-        if (!isActiveElement(this.inputField)) {
+        if (!isActiveElement(this.inputField) && !this.config.disableTouchKeyboard) {
           this._showing = true;
           this.inputField.focus();
           delete this._showing;

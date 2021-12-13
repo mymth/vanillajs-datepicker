@@ -41,13 +41,10 @@ describe('options', function () {
 
       // focus is kept on input field after auto-hidng by clicking day cell
       // (issue #21)
-      const spyFocus = sinon.spy(input, 'focus');
       dp.show();
 
       getCells(picker)[25].click();
-      expect(spyFocus.called, 'to be true');
-
-      spyFocus.restore();
+      expect(document.activeElement, 'to be', input);
 
       dp.destroy();
       input.value = '';
@@ -336,22 +333,30 @@ describe('options', function () {
 
       expect(document.activeElement, 'not to be', input);
 
+      dp.hide();
+
+      // input is unfocused when tapped to shou picker (bugfix)
+      simulant.fire(input, 'mousedown');
+      simulant.fire(input, 'focus');
+      simulant.fire(input, 'click');
+
+      expect(document.activeElement, 'not to be', input);
+
       dp.destroy();
     });
 
-    it('prevents the input from getting focus after an eleent in the picker is clicked', function () {
+    it('prevents the input from getting focus after an element in the picker is clicked', function () {
       const {dp, picker} = createDP(input, {disableTouchKeyboard: true});
       const [viewSwitch, prevBtn] = getParts(picker, ['.view-switch', '.prev-btn']);
       dp.show();
+      input.blur();
 
-      prevBtn.focus();
       simulant.fire(prevBtn, 'click');
       expect(document.activeElement, 'not to be', input);
 
       simulant.fire(getCells(picker)[15], 'click');
       expect(document.activeElement, 'not to be', input);
 
-      viewSwitch.focus();
       simulant.fire(viewSwitch, 'click');
       expect(document.activeElement, 'not to be', input);
 
@@ -373,19 +378,24 @@ describe('options', function () {
 
       expect(document.activeElement, 'to be', input);
 
-      prevBtn.focus();
+      dp.hide();
+      input.blur();
+
+      simulant.fire(input, 'mousedown');
+      simulant.fire(input, 'focus');
+      simulant.fire(input, 'click');
+
+      expect(document.activeElement, 'to be', input);
+
       simulant.fire(prevBtn, 'click');
       expect(document.activeElement, 'to be', input);
 
-      prevBtn.focus();
       simulant.fire(getCells(picker)[15], 'click');
       expect(document.activeElement, 'to be', input);
 
-      viewSwitch.focus();
       simulant.fire(viewSwitch, 'click');
       expect(document.activeElement, 'to be', input);
 
-      viewSwitch.focus();
       simulant.fire(getCells(picker)[6], 'click');
       expect(document.activeElement, 'to be', input);
 
