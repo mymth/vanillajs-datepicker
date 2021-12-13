@@ -131,6 +131,36 @@ describe('mouse operation', function () {
     dp.destroy();
   });
 
+  it('move of focus from input by clicking on picker is prevented by canceling mousedown event', function () {
+    const {dp, picker} = createDP(input);
+    const [viewSwitch, prevBtn] = getParts(picker, ['.view-switch', '.prev-btn']);
+    const cells = getCells(picker);
+    let event;
+
+    const listener = ev => {
+      event = ev;
+    };
+    picker.addEventListener('mousedown', listener);
+
+    input.focus();
+    simulant.fire(picker, 'mousedown');
+    expect(event.defaultPrevented, 'to be true');
+
+    event = undefined;
+    simulant.fire(viewSwitch, 'mousedown');
+    expect(event.defaultPrevented, 'to be true');
+
+    event = undefined;
+    simulant.fire(prevBtn, 'mousedown');
+    expect(event.defaultPrevented, 'to be true');
+
+    event = undefined;
+    simulant.fire(cells[11], 'mousedown');
+    expect(event.defaultPrevented, 'to be true');
+
+    dp.destroy();
+  });
+
   describe('view-switch', function () {
     it('changes the view to the next greater one', function () {
       input.value = '04/22/2020';
