@@ -95,12 +95,14 @@ Whether to show the clear button.
 
 #### container
 - Type: `String | HTMLElement`
-- Default: `body`
+- Default: `null`
 
 CSS selector for the container element or the container element itself to append the date picker.
 
-> For constructor only. Cannot be used with `setOptions()`.  
+> When container is not used, the date picker is inserted after the associated input field.  
 > On inline picker, this option is ignored and overwritten to the associated element.
+>
+> For constructor only. Cannot be used with `setOptions()`.  
 
 #### dateDelimiter
 - Type: `String`

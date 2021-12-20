@@ -167,7 +167,7 @@ describe('lib/evnet', function () {
       };
 
       document.addEventListener('click', test);
-      simulant.fire(input, 'click');
+      input.click();
       document.removeEventListener('click', test);
     });
 
@@ -177,7 +177,7 @@ describe('lib/evnet', function () {
       };
 
       document.addEventListener('click', test);
-      simulant.fire(input, 'click');
+      input.click();
       document.removeEventListener('click', test);
     });
 
@@ -188,7 +188,7 @@ describe('lib/evnet', function () {
       };
 
       control.addEventListener('click', test);
-      simulant.fire(input, 'click');
+      input.click();
       control.removeEventListener('click', test);
     });
 
@@ -200,8 +200,42 @@ describe('lib/evnet', function () {
       };
 
       document.addEventListener('click', test);
-      simulant.fire(input, 'click');
+      input.click();
       document.removeEventListener('click', test);
+    });
+
+    it('works the same with shadow DOM', function () {
+      const customElem = document.createElement('custom-element');
+      customElem.className = control.className;
+      control.removeChild(input);
+      customElem.shadowRoot.append(input);
+      field.replaceChild(customElem, control);
+
+      let test = (ev) => {
+        expect(findElementInEventPath(ev, '.control'), 'to be', customElem);
+        expect(findElementInEventPath(ev, '.field'), 'to be', field);
+      };
+
+      document.addEventListener('click', test);
+      input.click();
+      document.removeEventListener('click', test);
+
+      test = (ev) => {
+        expect(findElementInEventPath(ev, '.foo'), 'to be undefined',);
+      };
+
+      document.addEventListener('click', test);
+      input.click();
+      document.removeEventListener('click', test);
+
+      test = (ev) => {
+        expect(findElementInEventPath(ev, '.control'), 'to be', customElem);
+        expect(findElementInEventPath(ev, '.field'), 'to be undefined',);
+      };
+
+      customElem.addEventListener('click', test);
+      input.click();
+      customElem.removeEventListener('click', test);
     });
   });
 });

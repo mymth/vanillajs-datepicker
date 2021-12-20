@@ -1,6 +1,7 @@
 import '../_setup.js';
 import {
   parseHTML,
+  getParent,
   isActiveElement,
   isVisible,
   hideElement,
@@ -34,35 +35,79 @@ describe('lib/dom', function () {
     });
   });
 
-  describe('isActiveElement', function () {
-    it('returns true if the element is the focued element', function () {
-      class CustomElement extends HTMLElement {
-        constructor() {
-          super();
-
-          const shadowRoot = this.attachShadow({mode: 'open'});
-          const el = document.createElement('input');
-          shadowRoot.append(el);
-        }
-      }
-
-      window.customElements.define('custom-element', CustomElement);
-
+  describe('getParentElement', function () {
+    it('returns the parent element', function () {
       const customElem = document.createElement('custom-element');
       const input1 = document.createElement('input');
-      const input2 = customElem.shadowRoot.firstChild;
-      testContainer.append(input1, customElem);
+      const input2 = document.createElement('input');
+      const div = document.createElement('div');
+      div.append(input1);
+      customElem.shadowRoot.append(div);
+      customElem.append(input2);
+      el.append(customElem);
+
+      expect(getParent(el), 'to be', testContainer);
+      expect(getParent(customElem), 'to be', el);
+      // inside shadow tree
+      expect(getParent(input1), 'to be', div);
+      // slotted light dom
+      expect(getParent(input2), 'to be', customElem);
+
+      customElem.remove();
+    });
+
+    it('returns the shadow host if the element is a direct child of shadow root', function () {
+      const customElem = document.createElement('custom-element');
+      const input = document.createElement('input');
+      customElem.shadowRoot.append(input);
+      el.append(customElem);
+
+      expect(getParent(input), 'to be', customElem);
+
+      customElem.remove();
+    });
+
+    it('returns undefined if the element has no parent element', function () {
+      // <html>
+      expect(getParent(document.documentElement), 'to be undefined');
+
+      // direct child of fragment
+      const fragment = parseHTML('<dic></div>');
+      expect(getParent(fragment.firstChild), 'to be undefined');
+    });
+  });
+
+  describe('isActiveElement', function () {
+    it('returns true if the element is the focued element', function () {
+      const customElem = document.createElement('custom-element');
+      const input1 = document.createElement('input');
+      const input2 = document.createElement('input');
+      const input3 = document.createElement('input');
+      customElem.append(input3);
+      customElem.shadowRoot.append(input2);
+      el.append(input1, customElem);
 
       expect(isActiveElement(input1), 'to be false');
       expect(isActiveElement(input2), 'to be false');
+      expect(isActiveElement(input3), 'to be false');
 
       input1.focus();
       expect(isActiveElement(input1), 'to be true');
       expect(isActiveElement(input2), 'to be false');
+      expect(isActiveElement(input3), 'to be false');
 
       input2.focus();
       expect(isActiveElement(input1), 'to be false');
       expect(isActiveElement(input2), 'to be true');
+      expect(isActiveElement(input3), 'to be false');
+
+      input3.focus();
+      expect(isActiveElement(input1), 'to be false');
+      expect(isActiveElement(input2), 'to be false');
+      expect(isActiveElement(input3), 'to be true');
+
+      input1.remove();
+      customElem.remove();
     });
   });
 

@@ -126,7 +126,7 @@ export default class Datepicker {
 
     const config = this.config = Object.assign({
       buttonClass: (options.buttonClass && String(options.buttonClass)) || 'button',
-      container: document.body,
+      container: null,
       defaultViewDate: today(),
       maxDate: undefined,
       minDate: undefined,
@@ -137,15 +137,12 @@ export default class Datepicker {
     if (inline) {
       config.container = element;
     } else {
-      const container =
-        options.container instanceof window.HTMLElement
+      if (options.container) {
+        // omit string type check because it doesn't guarantee to avoid errors
+        // (invalid selector string causes abend with sytax error)
+        config.container = options.container instanceof HTMLElement
           ? options.container
-          : typeof options.container === 'string'
-          ? document.querySelector(options.container)
-          : null;
-
-      if (container) {
-        config.container = container;
+          : document.querySelector(options.container);
       }
       inputField = this.inputField = element;
       inputField.classList.add('datepicker-input');

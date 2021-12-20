@@ -173,7 +173,9 @@ describe('options', function () {
     let foo;
 
     beforeEach(function () {
-      foo = parseHTML('<div id="foo"><div>').firstChild;
+      // foo = parseHTML('<div id="foo"><div>').firstChild;
+      foo = document.createElement('div');
+      foo.id = 'foo';
       testContainer.appendChild(foo);
     });
 
@@ -182,8 +184,28 @@ describe('options', function () {
     });
 
     it('specifies the element to attach the picker', function () {
-      const dp = new Datepicker(input, {container: '#foo'});
-      expect(document.querySelector('.datepicker').parentElement, 'to be', foo);
+      // with css selector
+      let {dp, picker} = createDP(input, {container: '#foo'});
+      expect(picker.parentElement, 'to be', foo);
+
+      dp.destroy();
+      // the picker should be removed from the container when destroyed
+      expect(Array.from(foo.children).includes(picker), 'to be false');
+
+      ({dp, picker} = createDP(input, {container: 'body'}));
+      expect(picker.parentElement, 'to be', document.body);
+
+      dp.destroy();
+      expect(Array.from(document.body.children).includes(picker), 'to be false');
+
+      // with DOM
+      ({dp, picker} = createDP(input, {container: foo}));
+      expect(picker.parentElement, 'to be', foo);
+
+      dp.destroy();
+
+      ({dp, picker} = createDP(input, {container: document.body}));
+      expect(picker.parentElement, 'to be', document.body);
 
       dp.destroy();
     });
@@ -192,9 +214,60 @@ describe('options', function () {
       const dp = new Datepicker(input);
       dp.setOptions({container: '#foo'});
 
-      expect(document.querySelector('.datepicker').parentElement, 'to be', document.body);
+      expect(document.querySelector('.datepicker').parentElement, 'to be', input.parentElement);
 
       dp.destroy();
+    });
+
+    describe('picker\'s text direction', function () {
+      it('is adjussted to match the input field in the same way as without container', function (done) {
+        // input's direction differs from the document's and the container's
+        input.dir = 'rtl';
+
+        const {dp, picker} = createDP(input, {container: foo});
+        dp.show();
+        expect(picker.dir, 'to be', 'rtl');
+
+        dp.hide();
+        // container's direction becomes the same as the input's but differnet from the document's
+        foo.dir = 'rtl';
+
+        dp.show();
+        expect(picker.hasAttribute('dir'), 'to be false');
+
+        dp.hide();
+        input.removeAttribute('dir');
+        foo.removeAttribute('dir');
+
+        // container's direction differs from the document's and input's
+        const htmlElem = document.querySelector('html');
+        htmlElem.dir = 'rtl';
+        foo.style.direction = 'ltr';
+
+        dp.show();
+        expect(picker.dir, 'to be', 'rtl');
+
+        dp.hide();
+        // container's direction becomes the same as the document's and input's
+        foo.removeAttribute('style');
+
+        dp.show();
+        expect(picker.hasAttribute('dir'), 'to be false');
+
+        dp.destroy();
+        htmlElem.removeAttribute('dir');
+        htmlElem.style.direction = 'ltr';
+
+        const checkDirChange = () => {
+          if (window.getComputedStyle(htmlElem).direction === 'ltr') {
+            htmlElem.removeAttribute('style');
+            done();
+          } else {
+            setTimeout(checkDirChange, 10);
+          }
+        };
+        checkDirChange();
+      });
     });
   });
 
@@ -337,8 +410,8 @@ describe('options', function () {
 
       // input is unfocused when tapped to shou picker (bugfix)
       simulant.fire(input, 'mousedown');
-      simulant.fire(input, 'focus');
-      simulant.fire(input, 'click');
+      input.focus();
+      input.click();
 
       expect(document.activeElement, 'not to be', input);
 
@@ -351,13 +424,13 @@ describe('options', function () {
       dp.show();
       input.blur();
 
-      simulant.fire(prevBtn, 'click');
+      prevBtn.click();
       expect(document.activeElement, 'not to be', input);
 
       simulant.fire(getCells(picker)[15], 'click');
       expect(document.activeElement, 'not to be', input);
 
-      simulant.fire(viewSwitch, 'click');
+      viewSwitch.click();
       expect(document.activeElement, 'not to be', input);
 
       simulant.fire(getCells(picker)[6], 'click');
@@ -382,18 +455,18 @@ describe('options', function () {
       input.blur();
 
       simulant.fire(input, 'mousedown');
-      simulant.fire(input, 'focus');
-      simulant.fire(input, 'click');
+      input.focus();
+      input.click();
 
       expect(document.activeElement, 'to be', input);
 
-      simulant.fire(prevBtn, 'click');
+      prevBtn.click();
       expect(document.activeElement, 'to be', input);
 
       simulant.fire(getCells(picker)[15], 'click');
       expect(document.activeElement, 'to be', input);
 
-      simulant.fire(viewSwitch, 'click');
+      viewSwitch.click();
       expect(document.activeElement, 'to be', input);
 
       simulant.fire(getCells(picker)[6], 'click');

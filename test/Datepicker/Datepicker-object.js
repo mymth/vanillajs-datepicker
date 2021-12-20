@@ -79,25 +79,31 @@ describe('Datepicker', function () {
     });
 
     it('adds or removes dir attribute to/from the picker if picker\'s text direction != input\'s', function (done) {
-      testContainer.dir = 'rtl';
+      // input's direction differs from the parent's
+      input.dir = 'rtl';
 
       const {dp, picker} = createDP(input);
       dp.show();
       expect(picker.dir, 'to be', 'rtl');
 
       dp.hide();
-      testContainer.removeAttribute('dir');
+      // parent's direction becomes the same as the input's
+      testContainer.dir = 'rtl';
 
       dp.show();
       expect(picker.hasAttribute('dir'), 'to be false');
 
       dp.hide();
+      input.removeAttribute('dir');
+      testContainer.removeAttribute('dir');
 
+      // input's direction differs from the document's
       const htmlElem = document.querySelector('html');
       htmlElem.dir = 'rtl';
       input.style.direction = 'ltr';
 
       dp.show();
+      // input's direction becomes the same as the document's
       expect(picker.dir, 'to be', 'ltr');
 
       dp.hide();
