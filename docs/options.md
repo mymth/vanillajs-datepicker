@@ -144,13 +144,19 @@ Days of the week to highlight. `0`:_Sunday_ – `6`:_Saturday_, up to 6 items.
 
 The date to be focused when the date picker opens with no selected date(s).
 
-#### disableTouchKeyboard
-- Type: `Boolean`
-- Default: `false`
+#### <span style="color: #999;">disableTouchKeyboard (deprecated)</span>
+This option will be removed. Use the attribute: `inputmode="none"` on the `<input>` element instead.
+
+<div style="color: #999;">
+<ul>
+  <li>Type: <code style="color: #999;">Boolean</code></li>
+  <li>Default: <code style="color: #999;">false</code></li>
+</ul>
 
 Whether to prevent on-screen keyboard on mobile devices from showing up when the associated input field receives focus.
 
-> Not available on inline picker.
+<blockquote style="border-left-color: #bbb;">Not available on inline picker.</blockquote>
+</div>
 
 #### format
 - Type: `String`|`Object`
