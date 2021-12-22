@@ -1,11 +1,10 @@
-const fs = require('fs');
-const path = require('path');
-const sass = require('sass');
-const postcss = require('postcss');
-const autoprefixer = require('autoprefixer');
-const prettify = require('postcss-prettify');
+import fs from 'fs';
+import sass from 'sass';
+import postcss from 'postcss';
+import autoprefixer from 'autoprefixer';
+import prettify from 'postcss-prettify';
+import rootDir from './lib/rootDir.js';
 
-const rootDir = path.dirname(__dirname);
 const srcDir = `${rootDir}/sass`;
 const distDir = `${rootDir}/dist/css`;
 const files = [
