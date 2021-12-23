@@ -82,7 +82,6 @@ const defaultOptions = {
   daysOfWeekDisabled: [],
   daysOfWeekHighlighted: [],
   defaultViewDate: today,
-  disableTouchKeyboard: false,
   format: 'mm/dd/yyyy',
   language: 'en',
   maxDate: null,
