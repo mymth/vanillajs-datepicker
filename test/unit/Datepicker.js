@@ -128,7 +128,7 @@ describe('Datepicker', function () {
       expect(dpElem.classList.contains('active'), 'to be false');
     });
 
-    it('sets rangepicker properties if DateRangePicker to link is passed', function () {
+    it('sets rangepicker property if DateRangePicker to link is passed', function () {
       const fakeRangepicker = {
         inputs: [input],
         datepickers: [],
@@ -136,6 +136,23 @@ describe('Datepicker', function () {
       const dp = new Datepicker(input, {}, fakeRangepicker);
 
       expect(dp.rangepicker, 'to be', fakeRangepicker);
+    });
+
+    it('sets the index of the datepicker of the range to rangeSideIndex property if DateRangePicker to link is passed', function () {
+      const fakeRangepicker = {
+        inputs: [input],
+        datepickers: [],
+      };
+      let dp = new Datepicker(input, {}, fakeRangepicker);
+
+      expect(dp.rangeSideIndex, 'to be', 0);
+
+      dp.destroy();
+
+      fakeRangepicker.inputs = [undefined, input];
+      dp = new Datepicker(input, {}, fakeRangepicker);
+
+      expect(dp.rangeSideIndex, 'to be', 1);
     });
 
     it('adds itself to rangepicker.datepickers if DateRangePicker to link is passed', function () {

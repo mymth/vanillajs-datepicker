@@ -35,6 +35,7 @@ module.exports = {
         getParts: 'readonly',
         getViewSwitch: 'readonly',
         getCells: 'readonly',
+        cellInfo: 'readonly',
         filterCells: 'readonly',
         getCellIndices: 'readonly',
         datepicker: 'readonly',
@@ -50,7 +51,9 @@ module.exports = {
       env: {
         node: true,
       },
-      parser: '/usr/local/lib/node_modules/babel-eslint',
+      parserOptions: {
+        ecmaVersion: 2020,
+      },
       globals: {
         JSDOM: 'readonly',
       },

@@ -116,13 +116,19 @@ Delimiter string to separate the dates in a multi-date string.
 
 Dates to disable. Array of date strings, Date objects, time values or mix of those.
 
-> Multi-date string cannot be used. Use multiple single-date strings instead.
+> Multi-date string cannot be used. Use multiple single-date strings instead.  
+>
+> Given dates are processed to match the [`pickLevel`](#pickLevel) at the time.    
+> If [`pickLevel`](#pickLevel) is changed dynamically and independently, this option will be reset.  
+> This option should be changed together when changing [`pickLevel`](#pickLevel) dynamically.
 
 #### daysOfWeekDisabled
 - Type: `Number[]`
 - Default: `[]`
 
 Days of the week to disable. `0`:_Sunday_ – `6`:_Saturday_, up to 6 items.
+
+> ignored when [`pickLevel`](#pickLevel) is not `0`:_date_
 
 #### daysOfWeekHighlighted
 - Type: `Number[]`
@@ -203,6 +209,10 @@ The language code of the language used by the date picker.
 
 Maximum limit to selectable date. No limit is applied if `null` is set.
 
+> Given date is processed to match the [`pickLevel`](#pickLevel) at the time.  
+> If [`pickLevel`](#pickLevel) is changed dynamically to higher level independently, this option will be adjusted automatically to the last day of the month or December 31st of the year.  
+> This option should be changed together when changing [`pickLevel`](#pickLevel) to lower level dynamically.
+
 #### maxNumberOfDates
 - Type: `Number`
 - Default: `1`
@@ -222,6 +232,10 @@ Maximum limit to the view that the date picker displays. `0`:_days_ – `3`:_dec
 - Default: `null`
 
 Minimum limit to selectable date. No limit is applied if `null` is set.
+
+> Given date is processed to match the [`pickLevel`](#pickLevel) at the time.  
+> If [`pickLevel`](#pickLevel) is changed dynamically to higher level independently, this option will be adjusted automatically to the 1st of the month or January 1st of the year.  
+> This option should be changed together when changing [`pickLevel`](#pickLevel) to lower level dynamically.
 
 #### nextArrow
 - Type: `String`
@@ -249,6 +263,8 @@ The level that the date picker allows to pick. `0`:_date_,`1`: _month_ &nbsp;or 
 
 > When this option is `1`, the selected date becomes the 1st of the month or, if the date picker is the end-date picker of date range picker, the last day of the month.  
 > When this option is `2`, the selected date becomes January 1st of the year or, if the date picker is the end-date picker of date range picker, December 31st of the year.
+>
+> Changing this option dynamically affects existing [`datesDisabled`](#datesDisabled), [`maxDate`](#maxdate) and [`minDate`](#minDate). This options should be updated together with those options when they are customized.
 
 #### prevArrow
 - Type: `String`

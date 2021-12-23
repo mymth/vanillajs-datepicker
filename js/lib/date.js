@@ -80,3 +80,21 @@ export function startOfYearPeriod(date, years) {
   const year = new Date(date).getFullYear();
   return Math.floor(year / years) * years;
 }
+
+// Convert date to the first/last date of the month/year of the date
+export function regularizeDate(date, timeSpan, useLastDate) {
+  if (timeSpan !== 1 && timeSpan !== 2) {
+    return date;
+  }
+  const newDate = new Date(date);
+  if (timeSpan === 1) {
+    useLastDate
+      ? newDate.setMonth(newDate.getMonth() + 1, 0)
+      : newDate.setDate(1);
+  } else {
+    useLastDate
+      ? newDate.setFullYear(newDate.getFullYear() + 1, 0, 0)
+      : newDate.setMonth(0, 1);
+  }
+  return newDate.setHours(0, 0, 0, 0);
+}

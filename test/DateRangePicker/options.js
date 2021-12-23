@@ -305,4 +305,86 @@ describe('DateRangePicker - options', function () {
       drp.destroy();
     });
   });
+
+  // for issue #54
+  describe('maxDate/minDate', function () {
+    it('does not prevent selecting start/end of available range when pickLevel > 0 and given date != the satar/end of month/year', function () {
+      let {drp, picker0, picker1} = createDRP(elem, {pickLevel: 1, minDate: '2/14/2020', maxDate: '7/14/2020'});
+      let cells0 = getCells(picker0);
+      let cells1 = getCells(picker1);
+
+      input0.focus();
+      cells0[1].click();
+      input1.focus();
+      cells1[6].click();
+      expect(drp.dates, 'to equal', [dateValue(2020, 1, 1), dateValue(2020, 6, 31)]);
+
+      drp.destroy();
+
+      ({drp, picker0, picker1} = createDRP(elem, {pickLevel: 2, minDate: '2/14/2020', maxDate: '2/14/2023'}));
+      cells0 = getCells(picker0);
+      cells1 = getCells(picker1);
+
+      input0.focus();
+      cells0[2].click();
+      input1.focus();
+      cells1[4].click();
+      expect(drp.dates, 'to equal', [dateValue(2020, 0, 1), dateValue(2023, 11, 31)]);
+
+      drp.destroy();
+    });
+  });
+
+  describe('datesDisabled', function () {
+    it('disables months or years when pickLevel > 0 and given date != the satar/end of month/year', function () {
+      let {drp, picker0, picker1} = createDRP(elem, {pickLevel: 1, datesDisabled: ['2/14/2020', '7/14/2020']});
+      let cells0 = getCells(picker0);
+      let cells1 = getCells(picker1);
+
+      input0.focus();
+      cells0[1].click();
+      expect(drp.dates, 'to equal', [undefined, undefined]);
+      cells1[6].click();
+      expect(drp.dates, 'to equal', [undefined, undefined]);
+      cells0[2].click();
+      expect(drp.dates, 'to equal', [dateValue(2020, 2, 1), dateValue(2020, 2, 31)]);
+
+      drp.setDates({clear: true});
+
+      input1.focus();
+      cells0[1].click();
+      expect(drp.dates, 'to equal', [undefined, undefined]);
+      cells1[6].click();
+      expect(drp.dates, 'to equal', [undefined, undefined]);
+      cells1[7].click();
+      expect(drp.dates, 'to equal', [dateValue(2020, 7, 1), dateValue(2020, 7, 31)]);
+
+      drp.setDates({clear: true});
+      drp.destroy();
+
+      ({drp, picker0, picker1} = createDRP(elem, {pickLevel: 2, datesDisabled: ['2/14/2021', '2/14/2024']}));
+      cells0 = getCells(picker0);
+      cells1 = getCells(picker1);
+
+      input0.focus();
+      cells0[2].click();
+      expect(drp.dates, 'to equal', [undefined, undefined]);
+      cells1[5].click();
+      expect(drp.dates, 'to equal', [undefined, undefined]);
+      cells0[1].click();
+      expect(drp.dates, 'to equal', [dateValue(2020, 0, 1), dateValue(2020, 11, 31)]);
+
+      drp.setDates({clear: true});
+
+      input1.focus();
+      cells0[2].click();
+      expect(drp.dates, 'to equal', [undefined, undefined]);
+      cells1[5].click();
+      expect(drp.dates, 'to equal', [undefined, undefined]);
+      cells1[6].click();
+      expect(drp.dates, 'to equal', [dateValue(2025, 0, 1), dateValue(2025, 11, 31)]);
+
+      drp.destroy();
+    });
+  });
 });

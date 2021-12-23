@@ -230,6 +230,190 @@ describe('options - pick level & view', function () {
 
       dp.destroy();
     });
+
+    it('makes datesDisabled be cleared if updated separately from it', function () {
+      const getDisabled = cells => cellInfo(cells, '.disabled');
+      const {dp, picker} = createDP(input, {datesDisabled: ['2/11/2020', '2/20/2020']});
+      dp.setOptions({pickLevel: 1});
+      dp.show();
+
+      expect(getDisabled(getCells(picker)), 'to equal', []);
+
+      dp.setOptions({datesDisabled: ['2/11/2020']});
+      dp.setOptions({pickLevel: 2});
+
+      expect(getDisabled(getCells(picker)), 'to equal', []);
+
+      dp.setOptions({datesDisabled: ['2/11/2020']});
+      dp.setOptions({pickLevel: 1});
+
+      expect(getDisabled(getCells(picker)), 'to equal', []);
+
+      dp.setOptions({datesDisabled: ['2/11/2020']});
+      dp.setOptions({pickLevel: 0});
+
+      expect(getDisabled(getCells(picker)), 'to equal', []);
+
+      dp.setOptions({datesDisabled: ['2/11/2020'], pickLevel: 1});
+      expect(getDisabled(getCells(picker)), 'to equal', [[1, 'Feb']]);
+
+      dp.setOptions({datesDisabled: ['2/11/2020'], pickLevel: 2});
+      expect(getDisabled(getCells(picker)), 'to equal', [[1, '2020']]);
+
+      dp.setOptions({datesDisabled: ['2/11/2020'], pickLevel: 1});
+      expect(getDisabled(getCells(picker)), 'to equal', [[1, 'Feb']]);
+
+      dp.setOptions({datesDisabled: ['2/11/2020', '2/20/2020'], pickLevel: 0});
+      expect(getDisabled(getCells(picker)), 'to equal', [[16, '11'], [25, '20']]);
+
+      dp.destroy();
+    });
+
+    it('makes maxDate be changed to the end of the mont/year if updated to larger span separately from them', function () {
+      const getDisabled = cells => cellInfo(cells, '.disabled');
+      const {dp, picker} = createDP(input, {maxDate: '9/28/2018', defaultViewDate: '9/15/2018'});
+      const [nextBtn] = getParts(picker, ['.next-btn']);
+      dp.setOptions({pickLevel: 1});
+      dp.show();
+
+      let cells = getCells(picker);
+      expect(getDisabled(cells), 'to equal', [
+        [9, 'Oct'],
+        [10, 'Nov'],
+        [11, 'Dec'],
+      ]);
+      expect(nextBtn.disabled, 'to be true');
+
+      cells[8].click();
+      expect(input.value, 'to be', '09/01/2018');
+
+      dp.setDate({clear: true});
+      dp.setOptions({pickLevel: 0});
+
+      cells = getCells(picker);
+      expect(getDisabled(cells), 'to equal', [
+        [36, '1'],
+        [37, '2'],
+        [38, '3'],
+        [39, '4'],
+        [40, '5'],
+        [41, '6'],
+      ]);
+      expect(nextBtn.disabled, 'to be true');
+
+      dp.setOptions({pickLevel: 2});
+
+      cells = getCells(picker);
+      expect(getDisabled(cells), 'to equal', [
+        [10, '2019'],
+        [11, '2020'],
+      ]);
+      expect(nextBtn.disabled, 'to be true');
+
+      cells[9].click();
+      expect(input.value, 'to be', '01/01/2018');
+
+      dp.setDate({clear: true});
+      dp.setOptions({pickLevel: 1});
+
+      cells = getCells(picker);
+      expect(getDisabled(cells), 'to equal', []);
+      expect(nextBtn.disabled, 'to be true');
+
+      dp.setOptions({pickLevel: 0});
+
+      cells = getCells(picker);
+      expect(getDisabled(cells), 'to equal', []);
+      expect(nextBtn.disabled, 'to be false');
+
+      nextBtn.click();
+      nextBtn.click();
+      nextBtn.click();
+
+      cells = getCells(picker);
+      expect(getDisabled(cells), 'to equal', [
+        [37, '1'],
+        [38, '2'],
+        [39, '3'],
+        [40, '4'],
+        [41, '5'],
+      ]);
+      expect(nextBtn.disabled, 'to be true');
+
+      dp.destroy();
+    });
+
+    it('makes minDate be changed to the start of the mont/year if updated to larger span separately from them', function () {
+      const getDisabled = cells => cellInfo(cells, '.disabled');
+      const {dp, picker} = createDP(input, {minDate: '4/4/2021', defaultViewDate: '4/15/2021'});
+      const [prevBtn] = getParts(picker, ['.prev-btn']);
+      dp.setOptions({pickLevel: 1});
+      dp.show();
+
+      let cells = getCells(picker);
+      expect(getDisabled(cells), 'to equal', [
+        [0, 'Jan'],
+        [1, 'Feb'],
+        [2, 'Mar'],
+      ]);
+      expect(prevBtn.disabled, 'to be true');
+
+      cells[3].click();
+      expect(input.value, 'to be', '04/01/2021');
+
+      dp.setDate({clear: true});
+      dp.setOptions({pickLevel: 0});
+
+      cells = getCells(picker);
+      expect(getDisabled(cells), 'to equal', [
+        [0, '28'],
+        [1, '29'],
+        [2, '30'],
+        [3, '31'],
+      ]);
+      expect(prevBtn.disabled, 'to be true');
+
+      dp.setOptions({pickLevel: 2});
+
+      cells = getCells(picker);
+      expect(getDisabled(cells), 'to equal', [
+        [0, '2019'],
+        [1, '2020'],
+      ]);
+      expect(prevBtn.disabled, 'to be true');
+
+      cells[2].click();
+      expect(input.value, 'to be', '01/01/2021');
+
+      dp.setDate({clear: true});
+      dp.setOptions({pickLevel: 1});
+
+      cells = getCells(picker);
+      expect(getDisabled(cells), 'to equal', []);
+      expect(prevBtn.disabled, 'to be true');
+
+      dp.setOptions({pickLevel: 0});
+
+      cells = getCells(picker);
+      expect(getDisabled(cells), 'to equal', []);
+      expect(prevBtn.disabled, 'to be false');
+
+      prevBtn.click();
+      prevBtn.click();
+      prevBtn.click();
+
+      cells = getCells(picker);
+      expect(getDisabled(cells), 'to equal', [
+        [0, '27'],
+        [1, '28'],
+        [2, '29'],
+        [3, '30'],
+        [4, '31'],
+      ]);
+      expect(prevBtn.disabled, 'to be true');
+
+      dp.destroy();
+    });
   });
 
   describe('maxView', function () {
