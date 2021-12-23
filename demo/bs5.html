@@ -4,9 +4,9 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Vanilla JS Datepicker Demo</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="../dist/css/datepicker-bs5.css">
-    <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.15.4/js/all.js"></script>
     <style type="text/css">
       main .section {
         padding: 3rem 1.5rem;
@@ -96,7 +96,7 @@
         </div>
         <div class="row">
           <div class="col">
-            <p><small>Style: <a href="index.html">Bulma</a> | <em>Bootstrap</em> | <a href="foundation.html">Foundation</a> | <a href="plain-css.html">Plain CSS</a></small></p>
+            <p><small>Style: <a href="index.html">Bulma</a> | <em>Bootstrap (v5, <a href="bs4.html">v4</a>)</em> | <a href="foundation.html">Foundation</a> | <a href="plain-css.html">Plain CSS</a></small></p>
           </div>
         </div>
       </section>
@@ -108,7 +108,7 @@
           <div class="card-body">
             <h4 class="subtitle">Type</h4>
             <form id="types">
-              <div class="form-group">
+              <div class="mb-3">
                 <div class="form-check form-check-inline">
                   <input type="radio" class="form-check-input" id="type-input" name="type" value="input" checked>
                   <label for="type-input" class="form-check-label">Input</label>
@@ -129,17 +129,17 @@
             <h4 class="subtitle">Options</h4>
             <form id="options">
 
-              <div class="form-group form-check" data-toggle="tooltip" title="Only effective in range picker">
+              <div class="mb-3 form-check" data-bs-toggle="tooltip" title="Only effective in range picker">
                 <input type="checkbox" class="form-check-input" id="allowOneSidedRange" name="allowOneSidedRange" value="true">
                 <label for="allowOneSidedRange" class="form-check-label">allowOneSidedRange</label>
               </div>
 
-              <div class="form-group form-check">
+              <div class="mb-3 form-check">
                 <input type="checkbox" class="form-check-input" id="autohide" name="autohide" value="true">
                 <label for="autohide" class="form-check-label">autohide</label>
               </div>
 
-              <div class="form-group form-check">
+              <div class="mb-3 form-check">
                 <input type="checkbox" class="form-check-input" id="beforeShowDay" name="beforeShowDay" value="true">
                 <label for="beforeShowDay" class="form-check-label">beforeShowDay</label>
                 <div class="code-wrap">
@@ -148,7 +148,7 @@
                 </div>
               </div>
 
-              <div class="form-group form-check">
+              <div class="mb-3 form-check">
                 <input type="checkbox" class="form-check-input" id="beforeShowMonth" name="beforeShowMonth" value="true">
                 <label for="beforeShowMonth" class="form-check-label">beforeShowMonth</label>
                 <div class="code-wrap">
@@ -157,7 +157,7 @@
                 </div>
               </div>
 
-              <div class="form-group form-check">
+              <div class="mb-3 form-check">
                 <input type="checkbox" class="form-check-input" id="beforeShowYear" name="beforeShowYear" value="true">
                 <label for="beforeShowYear" class="form-check-label">beforeShowYear</label>
                 <div class="code-wrap">
@@ -166,7 +166,7 @@
                 </div>
               </div>
 
-              <div class="form-group form-check">
+              <div class="mb-3 form-check">
                 <input type="checkbox" class="form-check-input" id="beforeShowDecade" name="beforeShowDecade" value="true">
                 <label for="beforeShowDecade" class="form-check-label">beforeShowDecade</label>
                 <div class="code-wrap">
@@ -175,29 +175,29 @@
                 </div>
               </div>
 
-              <div class="form-group form-check">
+              <div class="mb-3 form-check">
                 <input type="checkbox" class="form-check-input" id="calendarWeeks" name="calendarWeeks" value="true">
                 <label for="calendarWeeks" class="form-check-label">calendarWeeks</label>
               </div>
 
-              <div class="form-group form-check">
+              <div class="mb-3 form-check">
                 <input type="checkbox" class="form-check-input" id="clearBtn" name="clearBtn" value="true">
                 <label for="clearBtn" class="form-check-label">clearBtn</label>
               </div>
 
-              <div class="form-group">
-                <label class="label">dateDelimiter</label>
+              <div class="mb-3">
+                <label class="form-label">dateDelimiter</label>
                 <input type="text" class="form-control" name="dateDelimiter" placeholder=",">
               </div>
 
-              <div class="form-group" data-toggle="tooltip" title="enter in JSON format">
-                <label class="label">datesDisabled</label>
+              <div class="mb-3" data-bs-toggle="tooltip" title="enter in JSON format">
+                <label class="form-label">datesDisabled</label>
                 <textarea class="form-control" name="datesDisabled" placeholder="[]"></textarea>
                 <div class="invalid-feedback"></div>
               </div>
 
-              <div class="form-group">
-                <label for="daysOfWeekDisabled" class="label">daysOfWeekDisabled</label>
+              <div class="mb-3">
+                <label for="daysOfWeekDisabled" class="form-label">daysOfWeekDisabled</label>
                 <div>
                   <div class="form-check form-check-inline">
                     <input type="checkbox" class="form-check-input" id="daysOfWeekDisabled-0" name="daysOfWeekDisabled" value="0">
@@ -230,8 +230,8 @@
                 </div>
               </div>
 
-              <div class="form-group">
-                <label for="daysOfWeekHighlighted" class="label">daysOfWeekHighlighted</label>
+              <div class="mb-3">
+                <label for="daysOfWeekHighlighted" class="form-label">daysOfWeekHighlighted</label>
                 <div>
                   <div class="form-check form-check-inline">
                     <input type="checkbox" class="form-check-input" id="daysOfWeekHighlighted-0" name="daysOfWeekHighlighted" value="0">
@@ -264,40 +264,40 @@
                 </div>
               </div>
 
-              <div class="form-group">
-                <label class="label">defaultViewDate</label>
+              <div class="mb-3">
+                <label class="form-label">defaultViewDate</label>
                 <input type="text" class="form-control" name="defaultViewDate" placeholder="today">
               </div>
 
-              <div class="form-group form-check">
+              <div class="mb-3 form-check">
                 <input type="checkbox" class="form-check-input" id="disableTouchKeyboard" name="disableTouchKeyboard" value="true">
                 <label for="disableTouchKeyboard" class="form-check-label">disableTouchKeyboard</label>
               </div>
 
-              <div class="form-group">
-                <label class="label">format</label>
+              <div class="mb-3">
+                <label class="form-label">format</label>
                 <input type="text" class="form-control" name="format" placeholder="mm/dd/yyyy">
               </div>
 
-              <div class="form-group">
-                <label class="label">language</label>
+              <div class="mb-3">
+                <label class="form-label">language</label>
                 <select class="form-control" name="language" >
                   <option value="en">en – English (US)</option>
                 </select>
               </div>
 
-              <div class="form-group">
-                <label class="label">maxDate</label>
+              <div class="mb-3">
+                <label class="form-label">maxDate</label>
                 <input type="text" class="form-control" name="maxDate" placeholder="null">
               </div>
 
-              <div class="form-group" data-toggle="tooltip" title="Not effective in range picker">
-                <label class="label">maxNumberOfDates</label>
+              <div class="mb-3" data-bs-toggle="tooltip" title="Not effective in range picker">
+                <label class="form-label">maxNumberOfDates</label>
                 <input type="text" class="form-control" name="maxNumberOfDates" placeholder="1">
               </div>
 
-              <div class="form-group">
-                <label class="label">maxView</label>
+              <div class="mb-3">
+                <label class="form-label">maxView</label>
                 <select class="form-control" name="maxView">
                   <option value="0">0 – days</option>
                   <option value="1">1 – months</option>
@@ -306,18 +306,18 @@
                 </select>
               </div>
 
-              <div class="form-group">
-                <label class="label">minDate</label>
+              <div class="mb-3">
+                <label class="form-label">minDate</label>
                 <input type="text" class="form-control" name="minDate" placeholder="null">
               </div>
 
-              <div class="form-group">
-                <label class="label">nextArrow</label>
+              <div class="mb-3">
+                <label class="form-label">nextArrow</label>
                 <textarea class="form-control" name="nextArrow" placeholder="»"></textarea>
               </div>
 
-              <div class="form-group">
-                <label class="label">orientation</label>
+              <div class="mb-3">
+                <label class="form-label">orientation</label>
                 <select class="form-control" name="orientation" >
                   <option value="auto">auto</option>
                   <option value="top auto">top auto</option>
@@ -331,8 +331,8 @@
                 </select>
               </div>
 
-              <div class="form-group">
-                <label class="label">pickLevel</label>
+              <div class="mb-3">
+                <label class="form-label">pickLevel</label>
                 <select class="form-control" name="pickLevel">
                   <option value="0">0 – date</option>
                   <option value="1">1 – month</option>
@@ -340,28 +340,28 @@
                 </select>
               </div>
 
-              <div class="form-group">
-                <label class="label">prevArrow</label>
+              <div class="mb-3">
+                <label class="form-label">prevArrow</label>
                 <textarea class="form-control" name="prevArrow" placeholder="«"></textarea>
               </div>
 
-              <div class="form-group form-check">
+              <div class="mb-3 form-check">
                 <input type="checkbox" class="form-check-input" id="showDaysOfWeek" name="showDaysOfWeek" value="true" checked>
                 <label for="showDaysOfWeek" class="form-check-label">showDaysOfWeek</label>
               </div>
 
-              <div class="form-group form-check">
+              <div class="mb-3 form-check">
                 <input type="checkbox" class="form-check-input" id="showOnClick" name="showOnClick" value="true" checked>
                 <label for="showOnClick" class="form-check-label">showOnClick</label>
               </div>
 
-              <div class="form-group form-check">
+              <div class="mb-3 form-check">
                 <input type="checkbox" class="form-check-input" id="showOnFocus" name="showOnFocus" value="true" checked>
                 <label for="showOnFocus" class="form-check-label">showOnFocus</label>
               </div>
 
-              <div class="form-group">
-                <label class="label">startView</label>
+              <div class="mb-3">
+                <label class="form-label">startView</label>
                 <select class="form-control" name="startView">
                   <option value="0">0 – days</option>
                   <option value="1">1 – months</option>
@@ -370,36 +370,36 @@
                 </select>
               </div>
 
-              <div class="form-group">
-                <label class="label">title</label>
+              <div class="mb-3">
+                <label class="form-label">title</label>
                 <input type="text" class="form-control" name="title">
               </div>
 
-              <div class="form-group form-check">
+              <div class="mb-3 form-check">
                 <input type="checkbox" class="form-check-input" id="todayBtn" name="todayBtn" value="true">
                 <label for="todayBtn" class="form-check-label">todayBtn</label>
               </div>
 
-              <div class="form-group">
-                <label class="label">todayBtnMode</label>
+              <div class="mb-3">
+                <label class="form-label">todayBtnMode</label>
                 <select class="form-control" name="todayBtnMode">
                   <option value="0">0 – focus</option>
                   <option value="1">1 – select</option>
                 </select>
               </div>
 
-              <div class="form-group form-check">
+              <div class="mb-3 form-check">
                 <input type="checkbox" class="form-check-input" id="todayHighlight" name="todayHighlight" value="true">
                 <label for="todayHighlight" class="form-check-label">todayHighlight</label>
               </div>
 
-              <div class="form-group form-check">
+              <div class="mb-3 form-check">
                 <input type="checkbox" class="form-check-input" id="updateOnBlur" name="updateOnBlur" value="true" checked>
                 <label for="updateOnBlur" class="form-check-label">updateOnBlur</label>
               </div>
 
-              <div class="form-group">
-                <label class="label">weekStart</label>
+              <div class="mb-3">
+                <label class="form-label">weekStart</label>
                 <input type="text" class="form-control" name="weekStart" placeholder="0">
               </div>
 
@@ -409,7 +409,7 @@
           <div class="card-body">
             <h4 class="subtitle">Text direction</h4>
             <form id="direction">
-              <div class="form-group">
+              <div class="mb-3">
                 <div class="form-check form-check-inline">
                   <input type="radio" class="form-check-input" id="direction-ltr" name="direction" value="ltr" checked>
                   <label for="direction-ltr" class="form-check-label">LTR</label>
@@ -426,26 +426,19 @@
     </aside>
 
     <div class="toggle-btn"></div>
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js" integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous"></script>
     <script src="../dist/js/datepicker-full.js"></script>
     <script src="./live-demo.js"></script>
     <script>
       /*global $ initialize onChangeType onChnageDirection onChangeInputOption onChangeInputOption onChangeTextareaOption onClickCheckboxOptions switchPicker */
       window.templates = {
-        input: `<div class="form-group"><input type="text" class="form-control date"></div>`,
-        inline: `<div class="date"></div>`,
-        range: `<div class="d-flex flex-row date input-daterange">
-  <div class="form-group">
-    <input type="text" name="range-start" class="form-control">
-  </div>
-  <div class="flex-grow-0">
-    <a class="btn" disabled>to</a>
-  </div>
-  <div class="form-group">
-    <input type="text" name="range-end" class="form-control">
-  </div>
+        input: `<div class="mb-3"><input type="text" class="form-control date"></div>`,
+        inline: `<div class="date mb-3"></div>`,
+        range: `<div class="input-group mb-3 date input-daterange">
+  <input type="text" name="range-start" class="form-control">
+  <span class="input-group-text">to</span>
+  <input type="text" name="range-end" class="form-control">
 </div>`,
       };
       window.beforeShowFns = {
@@ -454,7 +447,7 @@ beforeShowDay(date) {
     switch (date.getDate()) {
       case 4:
         return {
-          content: '<span data-toggle="tooltip" title="Example tooltip">4</span>',
+          content: '<span data-bs-toggle="tooltip" title="Example tooltip">4</span>',
           classes: 'bg-info'
         };
       case 8:
@@ -480,7 +473,7 @@ beforeShowYear(date) {
     case 2017:
       return false;
     case 2020:
-      return {content: '<span data-toggle="tooltip" data-placement="bottom" title="Tooltip text">2020</span>'};
+      return {content: '<span data-bs-toggle="tooltip" data-placement="bottom" title="Tooltip text">2020</span>'};
   }
 },
 beforeShowDecade(date) {
@@ -528,8 +521,16 @@ beforeShowDecade(date) {
 
       switchPicker('input');
 
+      let tooltipElems = [];
       const initTooltips = () => {
-        $('[data-toggle="tooltip"]').tooltip();
+        const elems = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+        elems.forEach((el) => {
+          if (tooltipElems.includes(el)) {
+            return;
+          }
+          new bootstrap.Tooltip(el);
+        });
+        tooltipElems = [...elems];
       };
       setInterval(initTooltips, 1000);
       initTooltips();
