@@ -23,6 +23,9 @@ describe('options - orientation', function () {
   });
 
   afterEach(function () {
+    if (input.datepicker) {
+      input.datepicker.destroy();
+    }
     domUtils.emptyChildNodes(testContainer);
   });
 

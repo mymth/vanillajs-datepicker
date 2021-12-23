@@ -9,6 +9,9 @@ describe('options - multi date', function () {
   });
 
   afterEach(function () {
+    if (input.datepicker) {
+      input.datepicker.destroy();
+    }
     testContainer.removeChild(input);
     clock.restore();
   });

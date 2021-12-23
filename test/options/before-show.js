@@ -9,6 +9,9 @@ describe('options - beforeShow hooks', function () {
   });
 
   afterEach(function () {
+    if (input.datepicker) {
+      input.datepicker.destroy();
+    }
     testContainer.removeChild(input);
     clock.restore();
   });

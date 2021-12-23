@@ -19,6 +19,9 @@ describe('DateRangePicker - API methods', function () {
   });
 
   afterEach(function () {
+    if (elem.rangepicker) {
+      elem.rangepicker.destroy();
+    }
     testContainer.removeChild(elem);
   });
 

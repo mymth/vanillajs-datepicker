@@ -12,6 +12,9 @@ describe('keyboard operation - arrow-down', function () {
   });
 
   afterEach(function () {
+    if (input.datepicker) {
+      input.datepicker.destroy();
+    }
     testContainer.removeChild(input);
   });
 
