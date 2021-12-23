@@ -1,8 +1,8 @@
-const fs = require('fs');
-const path = require('path');
-const {minify} = require('terser');
+import fs from 'fs';
+import {minify} from 'terser';
+import rootDir from './lib/rootDir.js';
 
-const distDir = `${path.dirname(__dirname)}/dist/js`;
+const distDir = `${rootDir}/dist/js`;
 const files = ['datepicker', 'datepicker-full'];
 
 Promise.all(files.map((basename) => {
