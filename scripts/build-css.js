@@ -1,11 +1,9 @@
 const fs = require('fs');
 const path = require('path');
+const sass = require('sass');
 const postcss = require('postcss');
-const nodeSass = require('postcss-node-sass')({
-  outputStyle: 'expanded',
-});
 const autoprefixer = require('autoprefixer');
-const syntax = require('postcss-scss');
+const prettify = require('postcss-prettify');
 
 const rootDir = path.dirname(__dirname);
 const srcDir = `${rootDir}/sass`;
@@ -25,15 +23,17 @@ if (!fs.existsSync(distDir)) {
 Promise.all(files.map((entry) => {
   return new Promise((resolve) => {
     const from = `${srcDir}/${entry.in}`;
-    const file = fs.readFileSync(from, 'utf8');
-    postcss([nodeSass, autoprefixer])
-      .process(file, {syntax, from, map: false})
+    const css = sass.renderSync({file: from}).css.toString();
+
+    postcss([autoprefixer, prettify])
+      .process(css, {from, map: false})
       .then((result) => {
         fs.writeFileSync(`${distDir}/${entry.out}`, result.css);
         resolve();
-      })
-      .catch((err) => {
-        console.error(err);
       });
+  })
+  .catch((err) => {
+    console.error(err);
+    return err;
   });
 }));
