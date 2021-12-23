@@ -347,6 +347,60 @@
     return parseFormatString(format).formatter(dateObj, locale);
   }
 
+  const range = document.createRange();
+
+  function parseHTML(html) {
+    return range.createContextualFragment(html);
+  }
+
+  function isActiveElement(el) {
+    return el.getRootNode().activeElement === el;
+  }
+
+  function hideElement(el) {
+    if (el.style.display === 'none') {
+      return;
+    }
+    // back up the existing display setting in data-style-display
+    if (el.style.display) {
+      el.dataset.styleDisplay = el.style.display;
+    }
+    el.style.display = 'none';
+  }
+
+  function showElement(el) {
+    if (el.style.display !== 'none') {
+      return;
+    }
+    if (el.dataset.styleDisplay) {
+      // restore backed-up dispay property
+      el.style.display = el.dataset.styleDisplay;
+      delete el.dataset.styleDisplay;
+    } else {
+      el.style.display = '';
+    }
+  }
+
+  function emptyChildNodes(el) {
+    if (el.firstChild) {
+      el.removeChild(el.firstChild);
+      emptyChildNodes(el);
+    }
+  }
+
+  function replaceChildNodes(el, newChildNodes) {
+    emptyChildNodes(el);
+    if (newChildNodes instanceof DocumentFragment) {
+      el.appendChild(newChildNodes);
+    } else if (typeof newChildNodes === 'string') {
+      el.appendChild(parseHTML(newChildNodes));
+    } else if (typeof newChildNodes.forEach === 'function') {
+      newChildNodes.forEach((node) => {
+        el.appendChild(node);
+      });
+    }
+  }
+
   const listenerRegistry = new WeakMap();
   const {addEventListener, removeEventListener} = EventTarget.prototype;
 
@@ -466,56 +520,6 @@
     updateOnBlur: true,
     weekStart: 0,
   };
-
-  const range = document.createRange();
-
-  function parseHTML(html) {
-    return range.createContextualFragment(html);
-  }
-
-  function hideElement(el) {
-    if (el.style.display === 'none') {
-      return;
-    }
-    // back up the existing display setting in data-style-display
-    if (el.style.display) {
-      el.dataset.styleDisplay = el.style.display;
-    }
-    el.style.display = 'none';
-  }
-
-  function showElement(el) {
-    if (el.style.display !== 'none') {
-      return;
-    }
-    if (el.dataset.styleDisplay) {
-      // restore backed-up dispay property
-      el.style.display = el.dataset.styleDisplay;
-      delete el.dataset.styleDisplay;
-    } else {
-      el.style.display = '';
-    }
-  }
-
-  function emptyChildNodes(el) {
-    if (el.firstChild) {
-      el.removeChild(el.firstChild);
-      emptyChildNodes(el);
-    }
-  }
-
-  function replaceChildNodes(el, newChildNodes) {
-    emptyChildNodes(el);
-    if (newChildNodes instanceof DocumentFragment) {
-      el.appendChild(newChildNodes);
-    } else if (typeof newChildNodes === 'string') {
-      el.appendChild(parseHTML(newChildNodes));
-    } else if (typeof newChildNodes.forEach === 'function') {
-      newChildNodes.forEach((node) => {
-        el.appendChild(node);
-      });
-    }
-  }
 
   const {
     language: defaultLang,
@@ -2089,7 +2093,7 @@
   function onMousedown(datepicker, ev) {
     const el = ev.target;
     if (datepicker.picker.active || datepicker.config.showOnClick) {
-      el._active = el === document.activeElement;
+      el._active = isActiveElement(el);
       el._clicking = setTimeout(() => {
         delete el._active;
         delete el._clicking;
@@ -2123,10 +2127,10 @@
 
   // for the `document` to delegate the events from outside the picker/input field
   function onClickOutside(datepicker, ev) {
-    if (!datepicker.active) {
+    const element = datepicker.element;
+    if (!isActiveElement(element)) {
       return;
     }
-    const element = datepicker.element;
     const pickerElem = datepicker.picker.element;
     if (findElementInEventPath(ev, el => el === element || el === pickerElem)) {
       return;
@@ -2421,7 +2425,7 @@
         if (this.inputField.disabled) {
           return;
         }
-        if (this.inputField !== document.activeElement) {
+        if (!isActiveElement(this.inputField)) {
           this._showing = true;
           this.inputField.focus();
           delete this._showing;
