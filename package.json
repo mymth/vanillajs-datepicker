@@ -46,9 +46,9 @@
   "homepage": "https://github.com/mymth/vanillajs-datepicker#readme",
   "devDependencies": {
     "@rollup/plugin-node-resolve": "^11.0.1",
+    "autoprefixer": "^10.3.7",
     "bootstrap4": "npm:bootstrap@^4.5.3",
     "bootstrap5": "npm:bootstrap@^5.0.1",
-    "autoprefixer": "^10.3.7",
     "bulma": "^0.9.1",
     "bulma-tooltip": "^3.0.2",
     "cssnano": "^4.1.10",
@@ -63,7 +63,7 @@
     "sass": "^1.43.4",
     "simulant": "^0.2.2",
     "sinon": "^9.2.2",
-    "uglify-es": "^3.3.9",
+    "terser": "^5.9.0",
     "unexpected": "^12.0.0"
   }
 }

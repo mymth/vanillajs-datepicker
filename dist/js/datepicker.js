@@ -2629,4 +2629,4 @@ var Datepicker = (function () {
 
   return Datepicker;
 
-}());
+})();
