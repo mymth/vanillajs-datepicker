@@ -7,6 +7,11 @@ var domUtils = (function (exports) {
     return range.createContextualFragment(html);
   }
 
+  function getParent(el) {
+    return el.parentElement
+      || (el.parentNode instanceof ShadowRoot ? el.parentNode.host : undefined);
+  }
+
   function isActiveElement(el) {
     return el.getRootNode().activeElement === el;
   }
@@ -61,6 +66,7 @@ var domUtils = (function (exports) {
   }
 
   exports.emptyChildNodes = emptyChildNodes;
+  exports.getParent = getParent;
   exports.hideElement = hideElement;
   exports.isActiveElement = isActiveElement;
   exports.isVisible = isVisible;

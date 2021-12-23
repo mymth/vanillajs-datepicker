@@ -97,11 +97,15 @@ describe('DateRangePicker', function () {
       expect([input0.datepicker, input1.datepicker], 'to equal', drp.datepickers);
     });
 
-    it('append datepicker elements to the container)', function () {
+    it('inserts datepicker elements after the associated input elements)', function () {
       new DateRangePicker(elem);
 
-      const dpElems = Array.from(document.body.children).filter(el => el.matches('.datepicker'));
-      expect(dpElems, 'to have length', 2);
+      const dpElems = document.querySelectorAll('.datepicker');
+      expect(dpElems.length, 'to be', 2);
+
+      const index = [input0, input1].indexOf(dpElems[0].previousElementSibling);
+      expect(index, 'to be one of', [0, 1]);
+      expect(dpElems[1].previousElementSibling, 'to be', index === 1 ? input0 : input1);
     });
 
     it('does not add the active class to the picker elements', function () {

@@ -50,19 +50,22 @@ if (!Event.prototype.composedPath) {
   };
 }
 
-function findFromPath(path, criteria, currentTarget, index = 0) {
-  const el = path[index];
-  if (criteria(el)) {
-    return el;
-  } else if (el === currentTarget || !el.parentElement) {
+function findFromPath(path, criteria, currentTarget) {
+  const [node, ...rest] = path;
+  if (criteria(node)) {
+    return node;
+  }
+  if (node === currentTarget || node.tagName === 'HTML' || rest.length === 0) {
     // stop when reaching currentTarget or <html>
     return;
   }
-  return findFromPath(path, criteria, currentTarget, index + 1);
+  return findFromPath(rest, criteria, currentTarget);
 }
 
 // Search for the actual target of a delegated event
 export function findElementInEventPath(ev, selector) {
-  const criteria = typeof selector === 'function' ? selector : el => el.matches(selector);
+  const criteria = typeof selector === 'function'
+    ? selector
+    : el => el instanceof Element && el.matches(selector);
   return findFromPath(ev.composedPath(), criteria, ev.currentTarget);
 }

@@ -353,6 +353,11 @@
     return range.createContextualFragment(html);
   }
 
+  function getParent(el) {
+    return el.parentElement
+      || (el.parentNode instanceof ShadowRoot ? el.parentNode.host : undefined);
+  }
+
   function isActiveElement(el) {
     return el.getRootNode().activeElement === el;
   }
@@ -453,20 +458,23 @@
     };
   }
 
-  function findFromPath(path, criteria, currentTarget, index = 0) {
-    const el = path[index];
-    if (criteria(el)) {
-      return el;
-    } else if (el === currentTarget || !el.parentElement) {
+  function findFromPath(path, criteria, currentTarget) {
+    const [node, ...rest] = path;
+    if (criteria(node)) {
+      return node;
+    }
+    if (node === currentTarget || node.tagName === 'HTML' || rest.length === 0) {
       // stop when reaching currentTarget or <html>
       return;
     }
-    return findFromPath(path, criteria, currentTarget, index + 1);
+    return findFromPath(rest, criteria, currentTarget);
   }
 
   // Search for the actual target of a delegated event
   function findElementInEventPath(ev, selector) {
-    const criteria = typeof selector === 'function' ? selector : el => el.matches(selector);
+    const criteria = typeof selector === 'function'
+      ? selector
+      : el => el instanceof Element && el.matches(selector);
     return findFromPath(ev.composedPath(), criteria, ev.currentTarget);
   }
 
@@ -1703,9 +1711,9 @@
   }
 
   // find the closet scrollable ancestor elemnt under the body
-  function findScrollParents({parentElement, parentNode}) {
-    const parent = parentElement || parentNode.host;
-    if (parent === document.body || !(parent instanceof Element)) {
+  function findScrollParents(el) {
+    const parent = getParent(el);
+    if (parent === document.body || !parent) {
       return;
     }
 
@@ -1722,9 +1730,9 @@
   // Class representing the picker UI
   class Picker {
     constructor(datepicker) {
-      this.datepicker = datepicker;
+      const {config} = this.datepicker = datepicker;
 
-      const template = pickerTemplate.replace(/%buttonClass%/g, datepicker.config.buttonClass);
+      const template = pickerTemplate.replace(/%buttonClass%/g, config.buttonClass);
       const element = this.element = parseHTML(template).firstChild;
       const [header, main, footer] = element.firstChild.children;
       const title = header.firstElementChild;
@@ -1744,7 +1752,7 @@
       const elementClass = datepicker.inline ? 'inline' : 'dropdown';
       element.classList.add(`datepicker-${elementClass}`);
 
-      processPickerOptions(this, datepicker.config);
+      processPickerOptions(this, config);
       this.viewDate = computeResetViewDate(datepicker);
 
       // set up event listeners
@@ -1765,11 +1773,15 @@
         new YearsView(this, {id: 2, name: 'years', cellClass: 'year', step: 1}),
         new YearsView(this, {id: 3, name: 'decades', cellClass: 'decade', step: 10}),
       ];
-      this.currentView = this.views[datepicker.config.startView];
+      this.currentView = this.views[config.startView];
 
       this.currentView.render();
       this.main.appendChild(this.currentView.element);
-      datepicker.config.container.appendChild(this.element);
+      if (config.container) {
+        config.container.appendChild(this.element);
+      } else {
+        datepicker.inputField.after(this.element);
+      }
     }
 
     setOptions(options) {
@@ -1781,7 +1793,7 @@
     }
 
     detach() {
-      this.datepicker.config.container.removeChild(this.element);
+      this.element.remove();
     }
 
     show() {
@@ -1795,7 +1807,7 @@
       if (!datepicker.inline) {
         // ensure picker's direction matches input's
         const inputDirection = getTextDirection(datepicker.inputField);
-        if (inputDirection !== getTextDirection(datepicker.config.container)) {
+        if (inputDirection !== getTextDirection(getParent(this.element))) {
           this.element.dir = inputDirection;
         } else if (this.element.dir) {
           this.element.removeAttribute('dir');
@@ -2304,7 +2316,7 @@
 
       const config = this.config = Object.assign({
         buttonClass: (options.buttonClass && String(options.buttonClass)) || 'button',
-        container: document.body,
+        container: null,
         defaultViewDate: today(),
         maxDate: undefined,
         minDate: undefined,
@@ -2315,15 +2327,12 @@
       if (inline) {
         config.container = element;
       } else {
-        const container =
-          options.container instanceof window.HTMLElement
+        if (options.container) {
+          // omit string type check because it doesn't guarantee to avoid errors
+          // (invalid selector string causes abend with sytax error)
+          config.container = options.container instanceof HTMLElement
             ? options.container
-            : typeof options.container === 'string'
-            ? document.querySelector(options.container)
-            : null;
-
-        if (container) {
-          config.container = container;
+            : document.querySelector(options.container);
         }
         inputField = this.inputField = element;
         inputField.classList.add('datepicker-input');

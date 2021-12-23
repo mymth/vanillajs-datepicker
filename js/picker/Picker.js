@@ -1,6 +1,6 @@
 import {hasProperty, lastItemOf, isInRange, limitToRange} from '../lib/utils.js';
 import {today} from '../lib/date.js';
-import {parseHTML, showElement, hideElement, emptyChildNodes} from '../lib/dom.js';
+import {parseHTML, getParent, showElement, hideElement, emptyChildNodes} from '../lib/dom.js';
 import {registerListeners} from '../lib/event.js';
 import pickerTemplate from './templates/pickerTemplate.js';
 import DaysView from './views/DaysView.js';
@@ -113,9 +113,9 @@ function getTextDirection(el) {
 }
 
 // find the closet scrollable ancestor elemnt under the body
-function findScrollParents({parentElement, parentNode}) {
-  const parent = parentElement || parentNode.host;
-  if (parent === document.body || !(parent instanceof Element)) {
+function findScrollParents(el) {
+  const parent = getParent(el);
+  if (parent === document.body || !parent) {
     return;
   }
 
@@ -132,9 +132,9 @@ function findScrollParents({parentElement, parentNode}) {
 // Class representing the picker UI
 export default class Picker {
   constructor(datepicker) {
-    this.datepicker = datepicker;
+    const {config} = this.datepicker = datepicker;
 
-    const template = pickerTemplate.replace(/%buttonClass%/g, datepicker.config.buttonClass);
+    const template = pickerTemplate.replace(/%buttonClass%/g, config.buttonClass);
     const element = this.element = parseHTML(template).firstChild;
     const [header, main, footer] = element.firstChild.children;
     const title = header.firstElementChild;
@@ -154,7 +154,7 @@ export default class Picker {
     const elementClass = datepicker.inline ? 'inline' : 'dropdown';
     element.classList.add(`datepicker-${elementClass}`);
 
-    processPickerOptions(this, datepicker.config);
+    processPickerOptions(this, config);
     this.viewDate = computeResetViewDate(datepicker);
 
     // set up event listeners
@@ -175,11 +175,15 @@ export default class Picker {
       new YearsView(this, {id: 2, name: 'years', cellClass: 'year', step: 1}),
       new YearsView(this, {id: 3, name: 'decades', cellClass: 'decade', step: 10}),
     ];
-    this.currentView = this.views[datepicker.config.startView];
+    this.currentView = this.views[config.startView];
 
     this.currentView.render();
     this.main.appendChild(this.currentView.element);
-    datepicker.config.container.appendChild(this.element);
+    if (config.container) {
+      config.container.appendChild(this.element);
+    } else {
+      datepicker.inputField.after(this.element);
+    }
   }
 
   setOptions(options) {
@@ -191,7 +195,7 @@ export default class Picker {
   }
 
   detach() {
-    this.datepicker.config.container.removeChild(this.element);
+    this.element.remove();
   }
 
   show() {
@@ -205,7 +209,7 @@ export default class Picker {
     if (!datepicker.inline) {
       // ensure picker's direction matches input's
       const inputDirection = getTextDirection(datepicker.inputField);
-      if (inputDirection !== getTextDirection(datepicker.config.container)) {
+      if (inputDirection !== getTextDirection(getParent(this.element))) {
         this.element.dir = inputDirection;
       } else if (this.element.dir) {
         this.element.removeAttribute('dir');

@@ -20,7 +20,7 @@ describe('mouse operation', function () {
     const outsider = document.createElement('p');
     testContainer.appendChild(outsider);
 
-    const {dp, picker} = createDP(input);
+    let {dp, picker} = createDP(input);
     input.focus();
 
     simulant.fire(picker.querySelector('.dow'), 'mousedown');
@@ -73,6 +73,26 @@ describe('mouse operation', function () {
     expect(input.value, 'to be', '');
 
     dp.destroy();
+
+    // works with shadow dom
+    const testWrapper = document.createElement('test-wrapper');
+    testContainer.replaceChild(testWrapper, input);
+    testWrapper.shadowRoot.appendChild(input);
+
+    ({dp, picker} = createDP(input));
+    input.focus();
+
+    simulant.fire(picker.querySelector('.dow'), 'mousedown');
+    expect(isVisible(picker), 'to be true');
+
+    simulant.fire(input, 'mousedown');
+    expect(isVisible(picker), 'to be true');
+
+    simulant.fire(outsider, 'mousedown');
+    expect(isVisible(picker), 'to be false');
+
+    dp.destroy();
+    testContainer.replaceChild(input, testWrapper);
     testContainer.removeChild(outsider);
   });
 
