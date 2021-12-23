@@ -48,6 +48,15 @@ describe('keyboard operation', function () {
       expect(input.value, 'to be', '');
       expect(dp.getDate(), 'to be undefined');
 
+      // picker hides reverting the input when invalid date is in the input (bugfix)
+      input.focus();
+      input.value = '0/0/0';
+
+      simulant.fire(input, 'keydown', {key: 'Tab'});
+      expect(isVisible(dp.picker.element), 'to be false');
+      expect(input.value, 'to be', '');
+      expect(dp.getDate(), 'to be undefined');
+
       dp.destroy();
       clock.restore();
     });

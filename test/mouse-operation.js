@@ -46,6 +46,14 @@ describe('mouse operation', function () {
     simulant.fire(outsider, 'mousedown');
     expect(isVisible(picker), 'to be false');
 
+    // picker hides reverting the input when invalid date is in the input (bugfix)
+    dp.show();
+    input.value = '0/0/0';
+
+    simulant.fire(outsider, 'mousedown');
+    expect(isVisible(picker), 'to be false');
+    expect(input.value, 'to be', '');
+
     dp.destroy();
     testContainer.removeChild(outsider);
   });
