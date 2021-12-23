@@ -14,7 +14,7 @@ import {
   onClickPrevBtn,
   onClickNextBtn,
   onClickView,
-  onClickPicker,
+  onMousedownPicker,
 } from '../events/pickerListeners.js';
 
 const orientClasses = ['left', 'top', 'right', 'bottom'].reduce((obj, key) => {
@@ -159,7 +159,7 @@ export default class Picker {
 
     // set up event listeners
     registerListeners(datepicker, [
-      [element, 'click', onClickPicker.bind(null, datepicker), {capture: true}],
+      [element, 'mousedown', onMousedownPicker],
       [main, 'click', onClickView.bind(null, datepicker)],
       [controls.viewSwitch, 'click', onClickViewSwitch.bind(null, datepicker)],
       [controls.prevBtn, 'click', onClickPrevBtn.bind(null, datepicker)],

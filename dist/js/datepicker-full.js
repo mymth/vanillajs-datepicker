@@ -1603,10 +1603,8 @@
     }
   }
 
-  function onClickPicker(datepicker) {
-    if (!datepicker.inline && !datepicker.config.disableTouchKeyboard) {
-      datepicker.inputField.focus();
-    }
+  function onMousedownPicker(ev) {
+    ev.preventDefault();
   }
 
   const orientClasses = ['left', 'top', 'right', 'bottom'].reduce((obj, key) => {
@@ -1751,7 +1749,7 @@
 
       // set up event listeners
       registerListeners(datepicker, [
-        [element, 'click', onClickPicker.bind(null, datepicker), {capture: true}],
+        [element, 'mousedown', onMousedownPicker],
         [main, 'click', onClickView.bind(null, datepicker)],
         [controls.viewSwitch, 'click', onClickViewSwitch.bind(null, datepicker)],
         [controls.prevBtn, 'click', onClickPrevBtn.bind(null, datepicker)],
