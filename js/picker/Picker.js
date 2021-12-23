@@ -17,6 +17,12 @@ import {
   onClickPicker,
 } from '../events/pickerListeners.js';
 
+const orientClasses = ['left', 'top', 'right', 'bottom'].reduce((obj, key) => {
+  obj[key] = `datepicker-orient-${key}`;
+  return obj;
+}, {});
+const toPx = num => num ? `${num}px` : num;
+
 function processPickerOptions(picker, options) {
   if (options.title !== undefined) {
     if (options.title) {
@@ -104,6 +110,23 @@ function setViewDate(picker, newDate) {
 
 function getTextDirection(el) {
   return window.getComputedStyle(el).direction;
+}
+
+// find the closet scrollable ancestor elemnt under the body
+function findScrollParents({parentElement, parentNode}) {
+  const parent = parentElement || parentNode.host;
+  if (parent === document.body || !(parent instanceof Element)) {
+    return;
+  }
+
+  // checking overflow only is enough because computed overflow cannot be
+  // visible or a combination of visible and other when either axis is set
+  // to other than visible.
+  // (Setting one axis to other than 'visible' while the other is 'visible'
+  // results in the other axis turning to 'auto')
+  return window.getComputedStyle(parent).overflow !== 'visible'
+    ? parent
+    : findScrollParents(parent);
 }
 
 // Class representing the picker UI
@@ -207,57 +230,88 @@ export default class Picker {
   }
 
   place() {
-    const {classList, style} = this.element;
+    const {classList, offsetParent, style} = this.element;
     const {config, inputField} = this.datepicker;
-    const container = config.container;
     const {
       width: calendarWidth,
       height: calendarHeight,
     } = this.element.getBoundingClientRect();
     const {
-      left: containerLeft,
-      top: containerTop,
-      width: containerWidth,
-    } = container.getBoundingClientRect();
-    const {
       left: inputLeft,
       top: inputTop,
+      right: inputRight,
+      bottom: inputBottom,
       width: inputWidth,
       height: inputHeight
     } = inputField.getBoundingClientRect();
     let {x: orientX, y: orientY} = config.orientation;
-    let scrollTop;
-    let left;
-    let top;
+    let left = inputLeft;
+    let top = inputTop;
 
-    if (container === document.body) {
-      scrollTop = window.scrollY;
-      left = inputLeft + window.scrollX;
-      top = inputTop + scrollTop;
+    // caliculate offsetLeft/Top of inputField
+    if (offsetParent === document.body || !offsetParent) {
+      left += window.scrollX;
+      top += window.scrollY;
     } else {
-      scrollTop = container.scrollTop;
-      left = inputLeft - containerLeft;
-      top = inputTop + scrollTop;
+      const offsetParentRect = offsetParent.getBoundingClientRect();
+      left -= offsetParentRect.left - offsetParent.scrollLeft;
+      top -= offsetParentRect.top - offsetParent.scrollTop;
     }
 
+    // caliculate the boundaries of the visible area that contains inputField
+    const scrollParent = findScrollParents(inputField);
+    let scrollAreaLeft = 0;
+    let scrollAreaTop = 0;
+    let {
+      clientWidth: scrollAreaRight,
+      clientHeight: scrollAreaBottom,
+    } = document.documentElement;
+
+    if (scrollParent) {
+      const scrollParentRect = scrollParent.getBoundingClientRect();
+      if (scrollParentRect.top > 0) {
+        scrollAreaTop = scrollParentRect.top;
+      }
+      if (scrollParentRect.left > 0) {
+        scrollAreaLeft = scrollParentRect.left;
+      }
+      if (scrollParentRect.right < scrollAreaRight) {
+        scrollAreaRight = scrollParentRect.right;
+      }
+      if (scrollParentRect.bottom < scrollAreaBottom) {
+        scrollAreaBottom = scrollParentRect.bottom;
+      }
+    }
+
+    // determine the horizontal orientation and left position
+    let adjustment = 0;
     if (orientX === 'auto') {
-      if (left < 0) {
-        // align to the left and move into visible area if input's left edge < window's
+      if (inputLeft < scrollAreaLeft) {
         orientX = 'left';
-        left = 10;
-      } else if (left + calendarWidth > containerWidth) {
-        // align to the right if canlendar's right edge > container's
+        adjustment = scrollAreaLeft - inputLeft;
+      } else if (inputLeft + calendarWidth > scrollAreaRight) {
         orientX = 'right';
+        if (scrollAreaRight < inputRight) {
+          adjustment = scrollAreaRight - inputRight;
+        }
+      } else if (getTextDirection(inputField) === 'rtl') {
+        orientX = inputRight - calendarWidth < scrollAreaLeft ? 'left' : 'right';
       } else {
-        orientX = getTextDirection(inputField) === 'rtl' ? 'right' : 'left';
+        orientX = 'left';
       }
     }
     if (orientX === 'right') {
-      left -= calendarWidth - inputWidth;
+      left += inputWidth - calendarWidth;
     }
+    left += adjustment;
 
+    // determine the vertical orientation and top position
     if (orientY === 'auto') {
-      orientY = top - calendarHeight < scrollTop ? 'bottom' : 'top';
+      if (inputTop - calendarHeight > scrollAreaTop) {
+        orientY = inputBottom + calendarHeight > scrollAreaBottom ? 'top' : 'bottom';
+      } else {
+        orientY = 'bottom';
+      }
     }
     if (orientY === 'top') {
       top -= calendarHeight;
@@ -265,16 +319,11 @@ export default class Picker {
       top += inputHeight;
     }
 
-    classList.remove(
-      'datepicker-orient-top',
-      'datepicker-orient-bottom',
-      'datepicker-orient-right',
-      'datepicker-orient-left'
-    );
-    classList.add(`datepicker-orient-${orientY}`, `datepicker-orient-${orientX}`);
+    classList.remove(...Object.values(orientClasses));
+    classList.add(orientClasses[orientX], orientClasses[orientY]);
 
-    style.top = top ? `${top}px` : top;
-    style.left = left ? `${left}px` : left;
+    style.left = toPx(left);
+    style.top = toPx(top);
   }
 
   setViewSwitchLabel(labelText) {
