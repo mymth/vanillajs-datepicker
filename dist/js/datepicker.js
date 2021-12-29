@@ -1800,24 +1800,29 @@ var Datepicker = (function () {
       if (this.active) {
         return;
       }
-      this.element.classList.add('active');
-      this.active = true;
 
-      const datepicker = this.datepicker;
-      if (!datepicker.inline) {
+      const {datepicker, element} = this;
+      if (datepicker.inline) {
+        element.classList.add('active');
+      } else {
         // ensure picker's direction matches input's
         const inputDirection = getTextDirection(datepicker.inputField);
-        if (inputDirection !== getTextDirection(getParent(this.element))) {
-          this.element.dir = inputDirection;
-        } else if (this.element.dir) {
-          this.element.removeAttribute('dir');
+        if (inputDirection !== getTextDirection(getParent(element))) {
+          element.dir = inputDirection;
+        } else if (element.dir) {
+          element.removeAttribute('dir');
         }
 
+        element.style.visiblity = 'hidden';
+        element.classList.add('active');
         this.place();
+        element.style.visiblity = '';
+
         if (datepicker.config.disableTouchKeyboard) {
           datepicker.inputField.blur();
         }
       }
+      this.active = true;
       triggerDatepickerEvent(datepicker, 'show');
     }
 
