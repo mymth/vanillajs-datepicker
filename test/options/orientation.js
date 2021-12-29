@@ -1,19 +1,28 @@
 describe('options - orientation', function () {
-  const scrollToElem = (el, twoDirection = false) => {
+  const docElem = document.documentElement;
+  const scrollToElem = (el, useBottom = false) => {
     const rect = el.getBoundingClientRect();
-    window.scrollTo((twoDirection ? rect.x : 0) + window.scrollX, rect.y + window.scrollY);
+    let newY = rect.top + window.scrollY;
+    if (useBottom) {
+      newY += Math.abs(docElem.clientHeight - rect.height);
+    }
+    window.scrollTo(window.scrollX, newY);
   };
   const pushToBottom = (el) => {
-    const gap = documentElem.clientHeight - document.body.clientHeight;
+    const gap = docElem.clientHeight - document.body.clientHeight;
     if (gap > 0) {
       el.style.marginTop = `${gap}px`;
     }
   };
-  const getRectsOf = (...elems) => elems.map(el => el.getBoundingClientRect());
+  const getRectsOf = (...elems) => new Promise((resolve) => {
+    window.requestAnimationFrame(() => {
+      resolve(elems.map(el => el.getBoundingClientRect()));
+    });
+  });
   const defaultWrapperStyle = {
     paddingTop: '300px',
     paddingRight: '20px',
-    paddingBottom: '300px',
+    paddingBottom: '320px',
     paddingLeft: '20px',
   };
   const resetPositioning = () => {
@@ -22,7 +31,6 @@ describe('options - orientation', function () {
     wrapper.removeAttribute('style');
     Object.assign(wrapper.style, defaultWrapperStyle);
   };
-  const documentElem = document.documentElement;
   let options;
   let outer;
   let wrapper;
@@ -50,12 +58,12 @@ describe('options - orientation', function () {
     testContainer.removeChild(outer);
   });
 
-  const testAutoDefault = function () {
+  const testAutoDefault = async function () {
     const {dp, picker} = createDP(input, options);
     scrollToElem(outer);
     dp.show();
 
-    let [pickerRect, inputRect] = getRectsOf(picker, input);
+    let [pickerRect, inputRect] = await getRectsOf(picker, input);
     expect(pickerRect.left, 'to be', inputRect.left);
     expect(pickerRect.top, 'to be', inputRect.bottom);
     expect(picker.classList.contains('datepicker-orient-left'), 'to be true');
@@ -65,7 +73,7 @@ describe('options - orientation', function () {
     outer.style.position = 'relative';
     dp.show();
 
-    ([pickerRect, inputRect] = getRectsOf(picker, input));
+    ([pickerRect, inputRect] = await getRectsOf(picker, input));
     expect(pickerRect.left, 'to be', inputRect.left);
     expect(pickerRect.top, 'to be', inputRect.bottom);
     expect(picker.classList.contains('datepicker-orient-left'), 'to be true');
@@ -81,7 +89,7 @@ describe('options - orientation', function () {
     scrollToElem(outer);
     dp.show();
 
-    ([pickerRect, inputRect] = getRectsOf(picker, input));
+    ([pickerRect, inputRect] = await getRectsOf(picker, input));
     expect(pickerRect.left, 'to be', inputRect.left);
     expect(pickerRect.top, 'to be', inputRect.bottom);
     expect(picker.classList.contains('datepicker-orient-left'), 'to be true');
@@ -89,16 +97,18 @@ describe('options - orientation', function () {
 
     dp.destroy();
     resetPositioning();
+
+    return Promise.resolve();
   };
   it('"auto" makes the picker show on left bottom of the input by default', testAutoDefault);
 
-  const testAutoRtl = function () {
+  const testAutoRtl = async function () {
     wrapper.setAttribute('dir', 'rtl');
     const {dp, picker} = createDP(input, options);
     scrollToElem(outer);
     dp.show();
 
-    let [pickerRect, inputRect] = getRectsOf(picker, input);
+    let [pickerRect, inputRect] = await getRectsOf(picker, input);
     expect(pickerRect.left, 'to be', inputRect.right - pickerRect.width);
     expect(pickerRect.top, 'to be', inputRect.bottom);
     expect(picker.classList.contains('datepicker-orient-right'), 'to be true');
@@ -108,7 +118,7 @@ describe('options - orientation', function () {
     outer.style.position = 'relative';
     dp.show();
 
-    ([pickerRect, inputRect] = getRectsOf(picker, input));
+    ([pickerRect, inputRect] = await getRectsOf(picker, input));
     expect(pickerRect.left, 'to be', inputRect.right - pickerRect.width);
     expect(pickerRect.top, 'to be', inputRect.bottom);
     expect(picker.classList.contains('datepicker-orient-right'), 'to be true');
@@ -124,7 +134,7 @@ describe('options - orientation', function () {
     scrollToElem(outer);
     dp.show();
 
-    ([pickerRect, inputRect] = getRectsOf(picker, input));
+    ([pickerRect, inputRect] = await getRectsOf(picker, input));
     expect(pickerRect.left, 'to be', inputRect.right - pickerRect.width);
     expect(pickerRect.top, 'to be', inputRect.bottom);
     expect(picker.classList.contains('datepicker-orient-right'), 'to be true');
@@ -132,17 +142,19 @@ describe('options - orientation', function () {
 
     dp.destroy();
     resetPositioning();
+
+    return Promise.resolve();
   };
   it('"auto" makes the picker show on bottom right of the input if the computed style of the input has direction: rrl', testAutoRtl);
 
-  const testAutoNoBottomSpace = function () {
+  const testAutoNoBottomSpace = async function () {
     const {dp, picker} = createDP(input, options);
     wrapper.style.paddingBottom = '';
     pushToBottom(outer);
-    scrollToElem(outer);
+    scrollToElem(outer, true);
     dp.show();
 
-    let [pickerRect, inputRect] = getRectsOf(picker, input);
+    let [pickerRect, inputRect] = await getRectsOf(picker, input);
     expect(pickerRect.left, 'to be', inputRect.left);
     expect(pickerRect.top, 'to be', inputRect.top - pickerRect.height);
     expect(picker.classList.contains('datepicker-orient-left'), 'to be true');
@@ -152,7 +164,7 @@ describe('options - orientation', function () {
     wrapper.setAttribute('dir', 'rtl');
     dp.show();
 
-    ([pickerRect, inputRect] = getRectsOf(picker, input));
+    ([pickerRect, inputRect] = await getRectsOf(picker, input));
     expect(pickerRect.left, 'to be', inputRect.right - pickerRect.width);
     expect(pickerRect.top, 'to be', inputRect.top - pickerRect.height);
     expect(picker.classList.contains('datepicker-orient-right'), 'to be true');
@@ -162,23 +174,24 @@ describe('options - orientation', function () {
     outer.style.position = 'relative';
     dp.show();
 
-    ([pickerRect, inputRect] = getRectsOf(picker, input));
+    ([pickerRect, inputRect] = await getRectsOf(picker, input));
     expect(pickerRect.left, 'to be', inputRect.right - pickerRect.width);
     expect(pickerRect.top, 'to be', inputRect.top - pickerRect.height);
     expect(picker.classList.contains('datepicker-orient-right'), 'to be true');
     expect(picker.classList.contains('datepicker-orient-top'), 'to be true');
 
     dp.hide();
+    const bottom = docElem.clientHeight > 659 ? 300 : docElem.clientHeight - 360;
     Object.assign(outer.style, {
       height: '360px',
-      marginBottom: '300px',
+      marginBottom: `${bottom}px`,
       overflow: 'auto',
     });
-    wrapper.style.paddingBottom = '300px';
+    wrapper.style.paddingBottom = '320px';
     wrapper.setAttribute('dir', 'ltr');
     dp.show();
 
-    ([pickerRect, inputRect] = getRectsOf(picker, input));
+    ([pickerRect, inputRect] = await getRectsOf(picker, input));
     expect(pickerRect.left, 'to be', inputRect.left);
     expect(pickerRect.top, 'to be', inputRect.top - pickerRect.height);
     expect(picker.classList.contains('datepicker-orient-left'), 'to be true');
@@ -196,7 +209,7 @@ describe('options - orientation', function () {
     scrollToElem(outer);
     dp.show();
 
-    ([pickerRect, inputRect] = getRectsOf(picker, input));
+    ([pickerRect, inputRect] = await getRectsOf(picker, input));
     expect(pickerRect.left, 'to be', inputRect.left);
     expect(pickerRect.top, 'to be', inputRect.top - pickerRect.height);
     expect(picker.classList.contains('datepicker-orient-left'), 'to be true');
@@ -204,15 +217,15 @@ describe('options - orientation', function () {
 
     dp.hide();
     Object.assign(outer.style, {
-      bottom: '300px',
+      bottom:  `${bottom}px`,
       height: '360px',
       overflow: 'auto',
     });
-    wrapper.style.paddingBottom = '300px';
+    wrapper.style.paddingBottom = '320px';
     wrapper.setAttribute('dir', 'rtl');
     dp.show();
 
-    ([pickerRect, inputRect] = getRectsOf(picker, input));
+    ([pickerRect, inputRect] = await getRectsOf(picker, input));
     expect(pickerRect.left, 'to be', inputRect.right - pickerRect.width);
     expect(pickerRect.top, 'to be', inputRect.top - pickerRect.height);
     expect(picker.classList.contains('datepicker-orient-right'), 'to be true');
@@ -220,21 +233,23 @@ describe('options - orientation', function () {
 
     dp.destroy();
     resetPositioning();
+
+    return Promise.resolve();
   };
   it('"auto" makes the picker show on top of the input if the visible space below the input < picker height', testAutoNoBottomSpace);
 
-  const testAutoAlsoNoTopSpace = function () {
+  const testAutoAlsoNoTopSpace = async function () {
     const {dp, picker} = createDP(input, options);
     Object.assign(outer.style, {
       height: '360px',
       overflow: 'auto',
     });
     pushToBottom(outer);
-    scrollToElem(outer);
+    scrollToElem(outer, true);
     outer.scrollTo(0, 150);
     dp.show();
 
-    let [pickerRect, inputRect] = getRectsOf(picker, input);
+    let [pickerRect, inputRect] = await getRectsOf(picker, input);
     expect(pickerRect.left, 'to be', inputRect.left);
     expect(pickerRect.top, 'to be', inputRect.bottom);
     expect(picker.classList.contains('datepicker-orient-left'), 'to be true');
@@ -244,7 +259,7 @@ describe('options - orientation', function () {
     outer.style.position = 'relative';
     dp.show();
 
-    ([pickerRect, inputRect] = getRectsOf(picker, input));
+    ([pickerRect, inputRect] = await getRectsOf(picker, input));
     expect(pickerRect.left, 'to be', inputRect.left);
     expect(pickerRect.top, 'to be', inputRect.bottom);
     expect(picker.classList.contains('datepicker-orient-left'), 'to be true');
@@ -261,7 +276,7 @@ describe('options - orientation', function () {
     scrollToElem(outer);
     dp.show();
 
-    ([pickerRect, inputRect] = getRectsOf(picker, input));
+    ([pickerRect, inputRect] = await getRectsOf(picker, input));
     expect(pickerRect.left, 'to be', inputRect.left);
     expect(pickerRect.top, 'to be', inputRect.bottom);
     expect(picker.classList.contains('datepicker-orient-left'), 'to be true');
@@ -269,16 +284,18 @@ describe('options - orientation', function () {
 
     dp.destroy();
     resetPositioning();
+
+    return Promise.resolve();
   };
   it('"auto" makes the picker show on bottom if the visible space both above and below the input < picker height', testAutoAlsoNoTopSpace);
 
-  const testAutoNoRighSpace = function () {
+  const testAutoNoRighSpace = async function () {
     const {dp, picker} = createDP(input, options);
-    outer.style.marginLeft = 'calc(100vw - 200px)';
-    scrollToElem(outer);
+    outer.style.marginLeft = 'calc(100vw - 220px)';
+    scrollToElem(outer, true);
     dp.show();
 
-    let [pickerRect, inputRect] = getRectsOf(picker, input);
+    let [pickerRect, inputRect] = await getRectsOf(picker, input);
     expect(pickerRect.left, 'to be', inputRect.right - pickerRect.width);
     expect(pickerRect.top, 'to be', inputRect.bottom);
     expect(picker.classList.contains('datepicker-orient-right'), 'to be true');
@@ -288,7 +305,7 @@ describe('options - orientation', function () {
     outer.style.position = 'relative';
     dp.show();
 
-    ([pickerRect, inputRect] = getRectsOf(picker, input));
+    ([pickerRect, inputRect] = await getRectsOf(picker, input));
     expect(pickerRect.left, 'to be', inputRect.right - pickerRect.width);
     expect(pickerRect.top, 'to be', inputRect.bottom);
     expect(picker.classList.contains('datepicker-orient-right'), 'to be true');
@@ -305,7 +322,7 @@ describe('options - orientation', function () {
     scrollToElem(outer);
     dp.show();
 
-    ([pickerRect, inputRect] = getRectsOf(picker, input));
+    ([pickerRect, inputRect] = await getRectsOf(picker, input));
     expect(pickerRect.left, 'to be', inputRect.right - pickerRect.width);
     expect(pickerRect.top, 'to be', inputRect.bottom);
     expect(picker.classList.contains('datepicker-orient-right'), 'to be true');
@@ -313,17 +330,19 @@ describe('options - orientation', function () {
 
     dp.destroy();
     resetPositioning();
+
+    return Promise.resolve();
   };
   it('"auto" makes the picker show on right if the visible space on the right of the input < picker width', testAutoNoRighSpace);
 
-  const testAutoNoLeftSpaneWhenRtl = function () {
+  const testAutoNoLeftSpaneWhenRtl = async function () {
     const {dp, picker} = createDP(input, options);
     outer.style.width = '200px';
     wrapper.style.direction = 'rtl';
     scrollToElem(outer);
     dp.show();
 
-    let [pickerRect, inputRect] = getRectsOf(picker, input);
+    let [pickerRect, inputRect] = await getRectsOf(picker, input);
     expect(pickerRect.left, 'to be', inputRect.left);
     expect(pickerRect.top, 'to be', inputRect.bottom);
     expect(picker.classList.contains('datepicker-orient-left'), 'to be true');
@@ -333,7 +352,7 @@ describe('options - orientation', function () {
     outer.style.position = 'relative';
     dp.show();
 
-    ([pickerRect, inputRect] = getRectsOf(picker, input));
+    ([pickerRect, inputRect] = await getRectsOf(picker, input));
     expect(pickerRect.left, 'to be', inputRect.left);
     expect(pickerRect.top, 'to be', inputRect.bottom);
     expect(picker.classList.contains('datepicker-orient-left'), 'to be true');
@@ -349,7 +368,7 @@ describe('options - orientation', function () {
     scrollToElem(outer);
     dp.show();
 
-    ([pickerRect, inputRect] = getRectsOf(picker, input));
+    ([pickerRect, inputRect] = await getRectsOf(picker, input));
     expect(pickerRect.left, 'to be', inputRect.left);
     expect(pickerRect.top, 'to be', inputRect.bottom);
     expect(picker.classList.contains('datepicker-orient-left'), 'to be true');
@@ -357,16 +376,18 @@ describe('options - orientation', function () {
 
     dp.destroy();
     resetPositioning();
+
+    return Promise.resolve();
   };
   it('"auto" makes the picker show on left if the input\'s direction = rtl and the visible space on the left of the input < picker width', testAutoNoLeftSpaneWhenRtl);
 
-  const testAutoInputExceedsLeftEdge = function () {
+  const testAutoInputExceedsLeftEdge = async function () {
     const {dp, picker} = createDP(input, options);
     outer.style.marginLeft = '-40px';
-    scrollToElem(outer);
+    scrollToElem(outer, true);
     dp.show();
 
-    let [pickerRect, inputRect] = getRectsOf(picker, input);
+    let [pickerRect, inputRect] = await getRectsOf(picker, input);
     expect(pickerRect.left, 'to be', 0);
     expect(pickerRect.top, 'to be', inputRect.bottom);
     expect(picker.classList.contains('datepicker-orient-left'), 'to be true');
@@ -376,7 +397,7 @@ describe('options - orientation', function () {
     outer.style.position = 'relative';
     dp.show();
 
-    ([pickerRect, inputRect] = getRectsOf(picker, input));
+    ([pickerRect, inputRect] = await getRectsOf(picker, input));
     expect(pickerRect.left, 'to be', 0);
     expect(pickerRect.top, 'to be', inputRect.bottom);
     expect(picker.classList.contains('datepicker-orient-left'), 'to be true');
@@ -407,7 +428,7 @@ describe('options - orientation', function () {
     outer.scrollTo(40, 0);
     dp.show();
 
-    ([pickerRect, inputRect] = getRectsOf(picker, input));
+    ([pickerRect, inputRect] = await getRectsOf(picker, input));
     expect(pickerRect.left, 'to be', 30);
     expect(pickerRect.top, 'to be', inputRect.bottom);
     expect(picker.classList.contains('datepicker-orient-left'), 'to be true');
@@ -424,17 +445,19 @@ describe('options - orientation', function () {
 
     dp.destroy();
     resetPositioning();
+
+    return Promise.resolve();
   };
   it('"auto" makes the picker move to the left edge of visible area if picker\'s left < visible area\'s', testAutoInputExceedsLeftEdge);
 
-  const testAutoInputExceedsRightEdge = function () {
+  const testAutoInputExceedsRightEdge = async function () {
     const {dp, picker} = createDP(input, options);
     outer.style.marginLeft = 'calc(100vw - 100px)';
-    scrollToElem(outer);
+    scrollToElem(outer, true);
     dp.show();
 
-    let [pickerRect, inputRect] = getRectsOf(picker, input);
-    expect(pickerRect.left, 'to be', documentElem.clientWidth - pickerRect.width);
+    let [pickerRect, inputRect] = await getRectsOf(picker, input);
+    expect(pickerRect.left, 'to be', docElem.clientWidth - pickerRect.width);
     expect(pickerRect.top, 'to be', inputRect.bottom);
     expect(picker.classList.contains('datepicker-orient-right'), 'to be true');
     expect(picker.classList.contains('datepicker-orient-bottom'), 'to be true');
@@ -443,8 +466,8 @@ describe('options - orientation', function () {
     outer.style.position = 'relative';
     dp.show();
 
-    ([pickerRect, inputRect] = getRectsOf(picker, input));
-    expect(pickerRect.left, 'to be', documentElem.clientWidth - pickerRect.width);
+    ([pickerRect, inputRect] = await getRectsOf(picker, input));
+    expect(pickerRect.left, 'to be', docElem.clientWidth - pickerRect.width);
     expect(pickerRect.top, 'to be', inputRect.bottom);
     expect(picker.classList.contains('datepicker-orient-right'), 'to be true');
     expect(picker.classList.contains('datepicker-orient-bottom'), 'to be true');
@@ -455,11 +478,12 @@ describe('options - orientation', function () {
       width: '300px',
       overflow: 'auto',
     });
-    wrapper.style.marginLeft = '150px';
+    wrapper.style.marginLeft = '130px';
     dp.show();
 
-    pickerRect = picker.getBoundingClientRect();
-    expect(pickerRect.left, 'to be', documentElem.clientWidth - 40 - pickerRect.width);
+    let outerRect;
+    ([pickerRect, outerRect] = await getRectsOf(picker, outer));
+    expect(pickerRect.left, 'to be', outerRect.right - pickerRect.width);
     expect(picker.classList.contains('datepicker-orient-right'), 'to be true');
 
     dp.hide();
@@ -472,8 +496,8 @@ describe('options - orientation', function () {
 
     dp.show();
 
-    ([pickerRect, inputRect] = getRectsOf(picker, input));
-    expect(pickerRect.left, 'to be', documentElem.clientWidth - 40 - pickerRect.width);
+    ([pickerRect, inputRect] = await getRectsOf(picker, input));
+    expect(pickerRect.left, 'to be', docElem.clientWidth - 40 - pickerRect.width);
     expect(pickerRect.top, 'to be', inputRect.bottom);
     expect(picker.classList.contains('datepicker-orient-right'), 'to be true');
     expect(picker.classList.contains('datepicker-orient-bottom'), 'to be true');
@@ -483,57 +507,63 @@ describe('options - orientation', function () {
     outer.style.right = '-150px';
     dp.show();
 
-    ([pickerRect, inputRect] = getRectsOf(picker, input));
-    expect(pickerRect.left, 'to be', documentElem.clientWidth - pickerRect.width);
+    ([pickerRect, inputRect] = await getRectsOf(picker, input));
+    expect(pickerRect.left, 'to be', docElem.clientWidth - pickerRect.width);
     expect(picker.classList.contains('datepicker-orient-right'), 'to be true');
 
     dp.destroy();
     resetPositioning();
+
+    return Promise.resolve();
   };
   it('"auto" makes the picker move to the right edge of visible area if picker\'s right < visible area\'s', testAutoInputExceedsRightEdge);
 
-  it('"top" makes the picker show on top of the input regardless of the size of the space above', function () {
-    const {dp, picker} = createDP(input, {orientation: 'top'});
+  it('"top" makes the picker show on top of the input regardless of the size of the space above', async function () {
+    let {dp, picker} = createDP(input, {orientation: 'top'});
     // bottom-left when auto
     scrollToElem(outer);
     dp.show();
 
-    let [pickerRect, inputRect] = getRectsOf(picker, input);
+    let [pickerRect, inputRect] = await getRectsOf(picker, input);
     expect(pickerRect.left, 'to be', inputRect.left);
     expect(pickerRect.top, 'to be', inputRect.top - pickerRect.height);
     expect(picker.classList.contains('datepicker-orient-top'), 'to be true');
     expect(picker.classList.contains('datepicker-orient-left'), 'to be true');
 
     dp.hide();
-    // top-left when auto
-    // bottom space of window < picker height
-    wrapper.style.paddingBottom = '';
-    pushToBottom(outer);
-    scrollToElem(outer);
-    dp.show();
 
-    ([pickerRect, inputRect] = getRectsOf(picker, input));
-    expect(pickerRect.top, 'to be', inputRect.top - pickerRect.height);
-    expect(picker.classList.contains('datepicker-orient-top'), 'to be true');
-
-    dp.hide();
     // bottom-right when auto
-    outer.style.marginTop = '';
-    wrapper.style.paddingBottom = '300px';
     wrapper.setAttribute('dir', 'rtl');
     scrollToElem(outer);
     dp.show();
 
-    ([pickerRect, inputRect] = getRectsOf(picker, input));
+    ([pickerRect, inputRect] = await getRectsOf(picker, input));
     expect(pickerRect.left, 'to be', inputRect.right - pickerRect.width);
     expect(pickerRect.top, 'to be', inputRect.top - pickerRect.height);
     expect(picker.classList.contains('datepicker-orient-top'), 'to be true');
     expect(picker.classList.contains('datepicker-orient-right'), 'to be true');
 
-    dp.hide();
+    dp.destroy();
+    resetPositioning();
+
+    // top-left when auto
+    // bottom space of window < picker height
+    ({dp, picker} = createDP(input, {orientation: 'top'}));
+    wrapper.style.paddingBottom = '';
+    pushToBottom(outer);
+    scrollToElem(outer, true);
+    dp.show();
+
+    ([pickerRect, inputRect] = await getRectsOf(picker, input));
+    expect(pickerRect.top, 'to be', inputRect.top - pickerRect.height);
+    expect(picker.classList.contains('datepicker-orient-top'), 'to be true');
+
+    dp.destroy();
+    resetPositioning();
+
     // bottom-left when auto
     // both top/bottom spaces of scroll parent < picker height
-    wrapper.removeAttribute('dir');
+    ({dp, picker} = createDP(input, {orientation: 'top'}));
     Object.assign(outer.style, {
       height: '360px',
       overflow: 'auto',
@@ -543,7 +573,7 @@ describe('options - orientation', function () {
     outer.scrollTo(0, 150);
     dp.show();
 
-    ([pickerRect, inputRect] = getRectsOf(picker, input));
+    ([pickerRect, inputRect] = await getRectsOf(picker, input));
     expect(pickerRect.top, 'to be', inputRect.top - pickerRect.height);
     expect(picker.classList.contains('datepicker-orient-top'), 'to be true');
 
@@ -552,7 +582,7 @@ describe('options - orientation', function () {
     outer.style.position = 'relative';
     dp.show();
 
-    ([pickerRect, inputRect] = getRectsOf(picker, input));
+    ([pickerRect, inputRect] = await getRectsOf(picker, input));
     expect(pickerRect.top, 'to be', inputRect.top - pickerRect.height);
     expect(picker.classList.contains('datepicker-orient-top'), 'to be true');
 
@@ -568,160 +598,161 @@ describe('options - orientation', function () {
     scrollToElem(outer);
     dp.show();
 
-    ([pickerRect, inputRect] = getRectsOf(picker, input));
+    ([pickerRect, inputRect] = await getRectsOf(picker, input));
     expect(pickerRect.top, 'to be', inputRect.top - pickerRect.height);
     expect(picker.classList.contains('datepicker-orient-top'), 'to be true');
 
     dp.destroy();
+
+    return Promise.resolve();
   });
 
-  it('"bottom" makes the picker show on bottom of the input regardless of the size of the space above', function () {
-    const {dp, picker} = createDP(input, {orientation: 'bottom'});
+  it('"bottom" makes the picker show on bottom of the input regardless of the size of the space above', async function () {
+    let {dp, picker} = createDP(input, {orientation: 'bottom'});
     // bottom-left when auto
     scrollToElem(outer);
     dp.show();
 
-    let [pickerRect, inputRect] = getRectsOf(picker, input);
+    let [pickerRect, inputRect] = await getRectsOf(picker, input);
     expect(pickerRect.left, 'to be', inputRect.left);
     expect(pickerRect.top, 'to be', inputRect.bottom);
     expect(picker.classList.contains('datepicker-orient-left'), 'to be true');
     expect(picker.classList.contains('datepicker-orient-bottom'), 'to be true');
 
+    dp.destroy();
+
+    // top-left when auto
+    // bottom space of window < picker height
+    ({dp, picker} = createDP(input, {orientation: 'bottom'}));
+    wrapper.style.paddingBottom = '';
+    pushToBottom(outer);
+    scrollToElem(outer, true);
+    dp.show();
+
+    ([pickerRect, inputRect] = await getRectsOf(picker, input));
+    expect(pickerRect.top, 'to be', inputRect.bottom);
+    expect(picker.classList.contains('datepicker-orient-bottom'), 'to be true');
+
     dp.hide();
+
+    // top-right when auto
+    wrapper.setAttribute('dir', 'rtl');
+    dp.show();
+
+    ([pickerRect, inputRect] = await getRectsOf(picker, input));
+    expect(pickerRect.left, 'to be', inputRect.right - pickerRect.width);
+    expect(pickerRect.top, 'to be', inputRect.bottom);
+    expect(picker.classList.contains('datepicker-orient-right'), 'to be true');
+    expect(picker.classList.contains('datepicker-orient-bottom'), 'to be true');
+
+    dp.destroy();
+    resetPositioning();
+
     // top-left when auto
     // bottom space of scroll parent < picker height
+    ({dp, picker} = createDP(input, {orientation: 'bottom'}));
     Object.assign(outer.style, {
       height: '360px',
       overflow: 'auto',
     });
     dp.show();
 
-    ([pickerRect, inputRect] = getRectsOf(picker, input));
+    ([pickerRect, inputRect] = await getRectsOf(picker, input));
     expect(pickerRect.left, 'to be', inputRect.left);
     expect(pickerRect.top, 'to be', inputRect.bottom);
     expect(picker.classList.contains('datepicker-orient-left'), 'to be true');
     expect(picker.classList.contains('datepicker-orient-bottom'), 'to be true');
 
     dp.hide();
-    // top-right when auto
-    wrapper.setAttribute('dir', 'rtl');
-    dp.show();
 
-    ([pickerRect, inputRect] = getRectsOf(picker, input));
-    expect(pickerRect.left, 'to be', inputRect.right - pickerRect.width);
-    expect(pickerRect.top, 'to be', inputRect.bottom);
-    expect(picker.classList.contains('datepicker-orient-right'), 'to be true');
-    expect(picker.classList.contains('datepicker-orient-bottom'), 'to be true');
-
-    dp.hide();
     // top-left when auto
     // bottom space of scroll parent (relative) < picker height
-    wrapper.removeAttribute('dir');
     outer.style.position = 'relative';
     dp.show();
 
-    ([pickerRect, inputRect] = getRectsOf(picker, input));
-    expect(pickerRect.top, 'to be', inputRect.bottom);
-    expect(picker.classList.contains('datepicker-orient-bottom'), 'to be true');
-
-    dp.hide();
-    // bottom space of window < picker height
-    Object.assign(outer.style, {
-      height: '',
-      overflow: '',
-    });
-    wrapper.style.paddingBottom = '';
-    pushToBottom(outer);
-    scrollToElem(outer);
-    dp.show();
-
-    ([pickerRect, inputRect] = getRectsOf(picker, input));
-    expect(pickerRect.top, 'to be', inputRect.bottom);
-    expect(picker.classList.contains('datepicker-orient-bottom'), 'to be true');
-
-    dp.hide();
-    // bottom space of window < picker height
-    Object.assign(outer.style, {
-      position: 'fixed',
-      bottom: '0',
-      left: '0',
-      width: '300px',
-      marginTop: '',
-    });
-    scrollToElem(outer);
-    dp.show();
-
-    ([pickerRect, inputRect] = getRectsOf(picker, input));
+    ([pickerRect, inputRect] = await getRectsOf(picker, input));
     expect(pickerRect.top, 'to be', inputRect.bottom);
     expect(picker.classList.contains('datepicker-orient-bottom'), 'to be true');
 
     dp.hide();
     // bottom spave of scroll parent (fixed) < picker height
     Object.assign(outer.style, {
+      position: 'fixed',
+      left: '0',
       bottom: '300px',
       height: '360px',
+      width: '300px',
       overflow: 'auto',
+      marginTop: '',
     });
-    wrapper.style.marginBottom = '300px';
     dp.show();
 
-    ([pickerRect, inputRect] = getRectsOf(picker, input));
+    ([pickerRect, inputRect] = await getRectsOf(picker, input));
     expect(pickerRect.top, 'to be', inputRect.bottom);
     expect(picker.classList.contains('datepicker-orient-bottom'), 'to be true');
 
     dp.destroy();
+
+    return Promise.resolve();
   });
 
-  it('"left" makes the picker show on left of the input regardless of the text direction or picker\'s right edge position', function () {
-    const {dp, picker} = createDP(input, {orientation: 'left'});
+  it('"left" makes the picker show on left of the input regardless of the text direction or picker\'s right edge position', async function () {
+    let {dp, picker} = createDP(input, {orientation: 'left'});
     // bottom-left when auto
     scrollToElem(outer);
     dp.show();
 
-    let [pickerRect, inputRect] = getRectsOf(picker, input);
+    let [pickerRect, inputRect] = await getRectsOf(picker, input);
     expect(pickerRect.left, 'to be', inputRect.left);
     expect(pickerRect.top, 'to be', inputRect.bottom);
     expect(picker.classList.contains('datepicker-orient-left'), 'to be true');
     expect(picker.classList.contains('datepicker-orient-bottom'), 'to be true');
 
     dp.hide();
+
     // bottom-right when auto
     wrapper.setAttribute('dir', 'rtl');
     dp.show();
 
-    ([pickerRect, inputRect] = getRectsOf(picker, input));
+    ([pickerRect, inputRect] = await getRectsOf(picker, input));
     expect(pickerRect.left, 'to be', inputRect.left);
     expect(pickerRect.top, 'to be', inputRect.bottom);
     expect(picker.classList.contains('datepicker-orient-left'), 'to be true');
     expect(picker.classList.contains('datepicker-orient-bottom'), 'to be true');
 
-    dp.hide();
+    dp.destroy();
+    resetPositioning();
+
     // top-right when auto
     // bottom space of window < picker height
+    ({dp, picker} = createDP(input, {orientation: 'left'}));
+    wrapper.setAttribute('dir', 'rtl');
     wrapper.style.paddingBottom = '';
     pushToBottom(outer);
-    scrollToElem(outer);
+    scrollToElem(outer, true);
     dp.show();
 
-    ([pickerRect, inputRect] = getRectsOf(picker, input));
+    ([pickerRect, inputRect] = await getRectsOf(picker, input));
     expect(pickerRect.left, 'to be', inputRect.left);
     expect(pickerRect.top, 'to be', inputRect.top - pickerRect.height);
     expect(picker.classList.contains('datepicker-orient-left'), 'to be true');
     expect(picker.classList.contains('datepicker-orient-top'), 'to be true');
 
-    dp.hide();
+    dp.destroy();
+    resetPositioning();
+
     // bottom-right when auto
     // right space of window < picker's right - input's right
-    wrapper.removeAttribute('dir');
+    ({dp, picker} = createDP(input, {orientation: 'left'}));
     Object.assign(outer.style, {
       marginTop: '',
       marginLeft: 'calc(100vw - 200px)',
     });
-    wrapper.style.paddingBottom = '300px';
+    wrapper.style.paddingBottom = '320px';
     scrollToElem(outer);
     dp.show();
 
-    ([pickerRect, inputRect] = getRectsOf(picker, input));
+    ([pickerRect, inputRect] = await getRectsOf(picker, input));
     expect(pickerRect.left, 'to be', inputRect.left);
     expect(picker.classList.contains('datepicker-orient-left'), 'to be true');
 
@@ -730,7 +761,7 @@ describe('options - orientation', function () {
     outer.style.position = 'relative';
     dp.show();
 
-    ([pickerRect, inputRect] = getRectsOf(picker, input));
+    ([pickerRect, inputRect] = await getRectsOf(picker, input));
     expect(pickerRect.left, 'to be', inputRect.left);
     expect(picker.classList.contains('datepicker-orient-left'), 'to be true');
 
@@ -746,7 +777,7 @@ describe('options - orientation', function () {
     scrollToElem(outer);
     dp.show();
 
-    ([pickerRect, inputRect] = getRectsOf(picker, input));
+    ([pickerRect, inputRect] = await getRectsOf(picker, input));
     expect(pickerRect.left, 'to be', inputRect.left);
     expect(picker.classList.contains('datepicker-orient-left'), 'to be true');
 
@@ -756,7 +787,7 @@ describe('options - orientation', function () {
     scrollToElem(outer);
     dp.show();
 
-    ([pickerRect, inputRect] = getRectsOf(picker, input));
+    ([pickerRect, inputRect] = await getRectsOf(picker, input));
     expect(pickerRect.left, 'to be', inputRect.left);
     expect(picker.classList.contains('datepicker-orient-left'), 'to be true');
 
@@ -765,7 +796,7 @@ describe('options - orientation', function () {
     outer.style.position = 'relative';
     dp.show();
 
-    ([pickerRect, inputRect] = getRectsOf(picker, input));
+    ([pickerRect, inputRect] = await getRectsOf(picker, input));
     expect(pickerRect.left, 'to be', inputRect.left);
     expect(picker.classList.contains('datepicker-orient-left'), 'to be true');
 
@@ -779,7 +810,7 @@ describe('options - orientation', function () {
     wrapper.style.marginLeft = '150px';
     dp.show();
 
-    ([pickerRect, inputRect] = getRectsOf(picker, input));
+    ([pickerRect, inputRect] = await getRectsOf(picker, input));
     expect(pickerRect.left, 'to be', inputRect.left);
     expect(picker.classList.contains('datepicker-orient-left'), 'to be true');
 
@@ -793,7 +824,7 @@ describe('options - orientation', function () {
     scrollToElem(outer);
     dp.show();
 
-    ([pickerRect, inputRect] = getRectsOf(picker, input));
+    ([pickerRect, inputRect] = await getRectsOf(picker, input));
     expect(pickerRect.left, 'to be', inputRect.left);
     expect(picker.classList.contains('datepicker-orient-left'), 'to be true');
 
@@ -803,20 +834,22 @@ describe('options - orientation', function () {
     outer.style.right = '-150px';
     dp.show();
 
-    ([pickerRect, inputRect] = getRectsOf(picker, input));
+    ([pickerRect, inputRect] = await getRectsOf(picker, input));
     expect(pickerRect.left, 'to be', inputRect.left);
     expect(picker.classList.contains('datepicker-orient-left'), 'to be true');
 
     dp.destroy();
+
+    return Promise.resolve();
   });
 
-  it('"right" makes the picker show on right of the input regardless of the text direction or picker\'s left edge position', function () {
-    const {dp, picker} = createDP(input, {orientation: 'right'});
+  it('"right" makes the picker show on right of the input regardless of the text direction or picker\'s left edge position', async function () {
+    let {dp, picker} = createDP(input, {orientation: 'right'});
     // bottom-left when auto
     scrollToElem(outer);
     dp.show();
 
-    let [pickerRect, inputRect] = getRectsOf(picker, input);
+    let [pickerRect, inputRect] = await getRectsOf(picker, input);
     expect(pickerRect.left, 'to be', inputRect.right - pickerRect.width);
     expect(pickerRect.top, 'to be', inputRect.bottom);
     expect(picker.classList.contains('datepicker-orient-right'), 'to be true');
@@ -827,40 +860,41 @@ describe('options - orientation', function () {
     wrapper.setAttribute('dir', 'rtl');
     dp.show();
 
-    ([pickerRect, inputRect] = getRectsOf(picker, input));
+    ([pickerRect, inputRect] = await getRectsOf(picker, input));
     expect(pickerRect.left, 'to be', inputRect.right - pickerRect.width);
     expect(pickerRect.top, 'to be', inputRect.bottom);
     expect(picker.classList.contains('datepicker-orient-right'), 'to be true');
     expect(picker.classList.contains('datepicker-orient-bottom'), 'to be true');
 
-    dp.hide();
+    dp.destroy();
+    resetPositioning();
+
     // top-left when auto
     // bottom space of window < picker height
-    wrapper.removeAttribute('dir',);
+    ({dp, picker} = createDP(input, {orientation: 'right'}));
     wrapper.style.paddingBottom = '';
     pushToBottom(outer);
-    scrollToElem(outer);
+    scrollToElem(outer, true);
     dp.show();
 
-    ([pickerRect, inputRect] = getRectsOf(picker, input));
+    ([pickerRect, inputRect] = await getRectsOf(picker, input));
     expect(pickerRect.left, 'to be', inputRect.right - pickerRect.width);
     expect(pickerRect.top, 'to be', inputRect.top - pickerRect.height);
     expect(picker.classList.contains('datepicker-orient-right'), 'to be true');
     expect(picker.classList.contains('datepicker-orient-top'), 'to be true');
 
-    dp.hide();
+    dp.destroy();
+    resetPositioning();
+
     // bottom-left when auto
     // left space of window < picker's left - input's left (direcion = rtl)
-    Object.assign(outer.style, {
-      marginTop: '',
-      width: '200px',
-    });
-    wrapper.style.paddingBottom = '300px';
+    ({dp, picker} = createDP(input, {orientation: 'right'}));
+    outer.style.width = '200px';
     wrapper.style.direction = 'rtl';
     scrollToElem(outer);
     dp.show();
 
-    ([pickerRect, inputRect] = getRectsOf(picker, input));
+    ([pickerRect, inputRect] = await getRectsOf(picker, input));
     expect(pickerRect.left, 'to be', inputRect.right - pickerRect.width);
     expect(picker.classList.contains('datepicker-orient-right'), 'to be true');
 
@@ -869,7 +903,7 @@ describe('options - orientation', function () {
     outer.style.position = 'relative';
     dp.show();
 
-    ([pickerRect, inputRect] = getRectsOf(picker, input));
+    ([pickerRect, inputRect] = await getRectsOf(picker, input));
     expect(pickerRect.left, 'to be', inputRect.right - pickerRect.width);
     expect(picker.classList.contains('datepicker-orient-right'), 'to be true');
 
@@ -884,7 +918,7 @@ describe('options - orientation', function () {
     scrollToElem(outer);
     dp.show();
 
-    ([pickerRect, inputRect] = getRectsOf(picker, input));
+    ([pickerRect, inputRect] = await getRectsOf(picker, input));
     expect(pickerRect.left, 'to be', inputRect.right - pickerRect.width);
     expect(picker.classList.contains('datepicker-orient-right'), 'to be true');
 
@@ -895,7 +929,7 @@ describe('options - orientation', function () {
     scrollToElem(outer);
     dp.show();
 
-    ([pickerRect, inputRect] = getRectsOf(picker, input));
+    ([pickerRect, inputRect] = await getRectsOf(picker, input));
     expect(pickerRect.left, 'to be', inputRect.right - pickerRect.width);
     expect(picker.classList.contains('datepicker-orient-right'), 'to be true');
 
@@ -904,7 +938,7 @@ describe('options - orientation', function () {
     outer.style.position = 'relative';
     dp.show();
 
-    ([pickerRect, inputRect] = getRectsOf(picker, input));
+    ([pickerRect, inputRect] = await getRectsOf(picker, input));
     expect(pickerRect.left, 'to be', inputRect.right - pickerRect.width);
     expect(picker.classList.contains('datepicker-orient-right'), 'to be true');
 
@@ -919,7 +953,7 @@ describe('options - orientation', function () {
     outer.scrollTo(40, 0);
     dp.show();
 
-    ([pickerRect, inputRect] = getRectsOf(picker, input));
+    ([pickerRect, inputRect] = await getRectsOf(picker, input));
     expect(pickerRect.left, 'to be', inputRect.right - pickerRect.width);
     expect(picker.classList.contains('datepicker-orient-right'), 'to be true');
 
@@ -935,7 +969,7 @@ describe('options - orientation', function () {
     outer.scrollTo(40, 0);
     dp.show();
 
-    ([pickerRect, inputRect] = getRectsOf(picker, input));
+    ([pickerRect, inputRect] = await getRectsOf(picker, input));
     expect(pickerRect.left, 'to be', inputRect.right - pickerRect.width);
     expect(picker.classList.contains('datepicker-orient-right'), 'to be true');
 
@@ -949,188 +983,215 @@ describe('options - orientation', function () {
     wrapper.style.width = '';
     dp.show();
 
-    ([pickerRect, inputRect] = getRectsOf(picker, input));
+    ([pickerRect, inputRect] = await getRectsOf(picker, input));
     expect(pickerRect.left, 'to be', inputRect.right - pickerRect.width);
     expect(picker.classList.contains('datepicker-orient-right'), 'to be true');
 
     dp.destroy();
+
+    return Promise.resolve();
   });
 
-  it('"top left" makes the picker always show on top left of the input', function () {
-    const {dp, picker} = createDP(input, {orientation: 'top left'});
+  it('"top left" makes the picker always show on top left of the input', async function () {
+    let {dp, picker} = createDP(input, {orientation: 'top left'});
     // bottom-left when auto
     wrapper.style.marginTop = '300px';
     dp.show();
 
-    let [pickerRect, inputRect] = getRectsOf(picker, input);
+    let [pickerRect, inputRect] = await getRectsOf(picker, input);
     expect(pickerRect.left, 'to be', inputRect.left);
     expect(pickerRect.top, 'to be', inputRect.top - pickerRect.height);
 
     dp.hide();
+
     // bottom-right when auto
     wrapper.setAttribute('dir', 'rtl');
     dp.show();
 
-    ([pickerRect, inputRect] = getRectsOf(picker, input));
-    expect(pickerRect.left, 'to be', inputRect.left);
-    expect(pickerRect.top, 'to be', inputRect.top - pickerRect.height);
-
-    dp.hide();
-    // top-right when auto
-    wrapper.style.marginBottom = '';
-    pushToBottom(outer);
-    scrollToElem(outer);
-    dp.show();
-
-    ([pickerRect, inputRect] = getRectsOf(picker, input));
-    expect(pickerRect.left, 'to be', inputRect.left);
-    expect(pickerRect.top, 'to be', inputRect.top - pickerRect.height);
-
-    dp.hide();
-    // top-left when auto
-    wrapper.setAttribute('dir', 'ltr');
-    dp.show();
-
-    ([pickerRect, inputRect] = getRectsOf(picker, input));
+    ([pickerRect, inputRect] = await getRectsOf(picker, input));
     expect(pickerRect.left, 'to be', inputRect.left);
     expect(pickerRect.top, 'to be', inputRect.top - pickerRect.height);
 
     dp.destroy();
+    resetPositioning();
+
+    // top-left when auto
+    ({dp, picker} = createDP(input, {orientation: 'top left'}));
+    wrapper.style.paddingBottom = '';
+    pushToBottom(outer);
+    scrollToElem(outer, true);
+    dp.show();
+
+    ([pickerRect, inputRect] = await getRectsOf(picker, input));
+    expect(pickerRect.left, 'to be', inputRect.left);
+    expect(pickerRect.top, 'to be', inputRect.top - pickerRect.height);
+
+    dp.hide();
+
+    // top-right when auto
+    wrapper.setAttribute('dir', 'rtl');
+    dp.show();
+
+    ([pickerRect, inputRect] = await getRectsOf(picker, input));
+    expect(pickerRect.left, 'to be', inputRect.left);
+    expect(pickerRect.top, 'to be', inputRect.top - pickerRect.height);
+
+    dp.destroy();
+
+    return Promise.resolve();
   });
 
-  it('"top right" makes the picker always show on top right of the input', function () {
+  it('"top right" makes the picker always show on top right of the input', async function () {
     const {dp, picker} = createDP(input, {orientation: 'top right'});
     // bottom-left when auto
     scrollToElem(outer);
     dp.show();
 
-    let [pickerRect, inputRect] = getRectsOf(picker, input);
+    let [pickerRect, inputRect] = await getRectsOf(picker, input);
     expect(pickerRect.left, 'to be', inputRect.right - pickerRect.width);
     expect(pickerRect.top, 'to be', inputRect.top - pickerRect.height);
 
     dp.hide();
+
     // bottom-right when auto
     wrapper.setAttribute('dir', 'rtl');
     dp.show();
 
-    ([pickerRect, inputRect] = getRectsOf(picker, input));
-    expect(pickerRect.left, 'to be', inputRect.right - pickerRect.width);
-    expect(pickerRect.top, 'to be', inputRect.top - pickerRect.height);
-
-    dp.hide();
-    // top-right when auto
-    wrapper.style.marginBottom = '';
-    pushToBottom(outer);
-    scrollToElem(outer);
-    dp.show();
-
-    ([pickerRect, inputRect] = getRectsOf(picker, input));
+    ([pickerRect, inputRect] = await getRectsOf(picker, input));
     expect(pickerRect.left, 'to be', inputRect.right - pickerRect.width);
     expect(pickerRect.top, 'to be', inputRect.top - pickerRect.height);
 
     dp.hide();
     // top-left when auto
-    wrapper.setAttribute('dir', 'ltr');
+    wrapper.style.paddingBottom = '';
+    pushToBottom(outer);
+    scrollToElem(outer, true);
     dp.show();
 
-    ([pickerRect, inputRect] = getRectsOf(picker, input));
+    ([pickerRect, inputRect] = await getRectsOf(picker, input));
+    expect(pickerRect.left, 'to be', inputRect.right - pickerRect.width);
+    expect(pickerRect.top, 'to be', inputRect.top - pickerRect.height);
+
+    dp.hide();
+
+    // top-right when auto
+    wrapper.setAttribute('dir', 'rtl');
+    dp.show();
+
+    ([pickerRect, inputRect] = await getRectsOf(picker, input));
     expect(pickerRect.left, 'to be', inputRect.right - pickerRect.width);
     expect(pickerRect.top, 'to be', inputRect.top - pickerRect.height);
 
     dp.destroy();
+
+    return Promise.resolve();
   });
 
-  it('"bottom left" makes the picker always show on bottom left of the input', function () {
-    const {dp, picker} = createDP(input, {orientation: 'bottom left'});
+  it('"bottom left" makes the picker always show on bottom left of the input', async function () {
+    let {dp, picker} = createDP(input, {orientation: 'bottom left'});
     // bottom-left when auto
     scrollToElem(outer);
     dp.show();
 
-    let [pickerRect, inputRect] = getRectsOf(picker, input);
+    let [pickerRect, inputRect] = await getRectsOf(picker, input);
     expect(pickerRect.left, 'to be', inputRect.left);
     expect(pickerRect.top, 'to be', inputRect.bottom);
 
     dp.hide();
+
     // bottom-right when auto
     wrapper.setAttribute('dir', 'rtl');
     dp.show();
 
-    ([pickerRect, inputRect] = getRectsOf(picker, input));
-    expect(pickerRect.left, 'to be', inputRect.left);
-    expect(pickerRect.top, 'to be', inputRect.bottom);
-
-    dp.hide();
-    // top-right when auto
-    wrapper.style.marginBottom = '';
-    pushToBottom(outer);
-    scrollToElem(outer);
-    dp.show();
-
-    ([pickerRect, inputRect] = getRectsOf(picker, input));
-    expect(pickerRect.left, 'to be', inputRect.left);
-    expect(pickerRect.top, 'to be', inputRect.bottom);
-
-    dp.hide();
-    // top-left when auto
-    wrapper.setAttribute('dir', 'ltr');
-    dp.show();
-
-    ([pickerRect, inputRect] = getRectsOf(picker, input));
+    ([pickerRect, inputRect] = await getRectsOf(picker, input));
     expect(pickerRect.left, 'to be', inputRect.left);
     expect(pickerRect.top, 'to be', inputRect.bottom);
 
     dp.destroy();
+    resetPositioning();
+
+    // top-left when auto
+    ({dp, picker} = createDP(input, {orientation: 'bottom left'}));
+    wrapper.style.paddingBottom = '';
+    pushToBottom(outer);
+    scrollToElem(outer, true);
+    dp.show();
+
+    ([pickerRect, inputRect] = await getRectsOf(picker, input));
+    expect(pickerRect.left, 'to be', inputRect.left);
+    expect(pickerRect.top, 'to be', inputRect.bottom);
+
+    dp.hide();
+
+    // top-right when auto
+    wrapper.setAttribute('dir', 'rtl');
+    dp.show();
+
+    ([pickerRect, inputRect] = await getRectsOf(picker, input));
+    expect(pickerRect.left, 'to be', inputRect.left);
+    expect(pickerRect.top, 'to be', inputRect.bottom);
+
+    dp.destroy();
+
+    return Promise.resolve();
   });
 
-  it('"bottom right" makes the picker always show on bottom right of the input', function () {
-    const {dp, picker} = createDP(input, {orientation: 'bottom right'});
+  it('"bottom right" makes the picker always show on bottom right of the input', async function () {
+    let {dp, picker} = createDP(input, {orientation: 'bottom right'});
     // top-left when auto
     scrollToElem(outer);
     dp.show();
 
-    let [pickerRect, inputRect] = getRectsOf(picker, input);
+    let [pickerRect, inputRect] = await getRectsOf(picker, input);
     expect(pickerRect.left, 'to be', inputRect.right - pickerRect.width);
     expect(pickerRect.top, 'to be', inputRect.bottom);
 
     dp.hide();
+
     // bottom-right when auto
     wrapper.setAttribute('dir', 'rtl');
     dp.show();
 
-    ([pickerRect, inputRect] = getRectsOf(picker, input));
-    expect(pickerRect.left, 'to be', inputRect.right - pickerRect.width);
-    expect(pickerRect.top, 'to be', inputRect.bottom);
-
-    dp.hide();
-    // top-right when auto
-    wrapper.style.marginBottom = '';
-    pushToBottom(outer);
-    scrollToElem(outer);
-    dp.show();
-
-    ([pickerRect, inputRect] = getRectsOf(picker, input));
-    expect(pickerRect.left, 'to be', inputRect.right - pickerRect.width);
-    expect(pickerRect.top, 'to be', inputRect.bottom);
-
-    dp.hide();
-    // top-left when auto
-    wrapper.setAttribute('dir', 'ltr');
-    dp.show();
-
-    ([pickerRect, inputRect] = getRectsOf(picker, input));
+    ([pickerRect, inputRect] = await getRectsOf(picker, input));
     expect(pickerRect.left, 'to be', inputRect.right - pickerRect.width);
     expect(pickerRect.top, 'to be', inputRect.bottom);
 
     dp.destroy();
+    resetPositioning();
+
+    // top-left when auto
+    ({dp, picker} = createDP(input, {orientation: 'bottom right'}));
+    wrapper.style.paddingBottom = '';
+    pushToBottom(outer);
+    scrollToElem(outer, true);
+    dp.show();
+
+    ([pickerRect, inputRect] = await getRectsOf(picker, input));
+    expect(pickerRect.left, 'to be', inputRect.right - pickerRect.width);
+    expect(pickerRect.top, 'to be', inputRect.bottom);
+
+    dp.hide();
+
+    // top-right when auto
+    wrapper.setAttribute('dir', 'rtl');
+    dp.show();
+
+    ([pickerRect, inputRect] = await getRectsOf(picker, input));
+    expect(pickerRect.left, 'to be', inputRect.right - pickerRect.width);
+    expect(pickerRect.top, 'to be', inputRect.bottom);
+
+    dp.destroy();
+
+    return Promise.resolve();
   });
 
-  it('can be updated with setOptions()', function () {
+  it('can be updated with setOptions()', async function () {
     const {dp, picker} = createDP(input);
     scrollToElem(outer);
     dp.setOptions({orientation: 'right bottom'});
     dp.show();
 
-    let [pickerRect, inputRect] = getRectsOf(picker, input);
+    let [pickerRect, inputRect] = await getRectsOf(picker, input);
     expect(pickerRect.left, 'to be', inputRect.right - pickerRect.width);
     expect(pickerRect.top, 'to be', inputRect.bottom);
     expect(picker.classList.contains('datepicker-orient-right'), 'to be true');
@@ -1140,7 +1201,7 @@ describe('options - orientation', function () {
     dp.setOptions({orientation: 'bottom auto'});
     dp.show();
 
-    ([pickerRect, inputRect] = getRectsOf(picker, input));
+    ([pickerRect, inputRect] = await getRectsOf(picker, input));
     expect(pickerRect.left, 'to be', inputRect.left);
     expect(pickerRect.top, 'to be', inputRect.bottom);
     expect(picker.classList.contains('datepicker-orient-left'), 'to be true');
@@ -1150,7 +1211,7 @@ describe('options - orientation', function () {
     dp.setOptions({orientation: 'auto right'});
     dp.show();
 
-    ([pickerRect, inputRect] = getRectsOf(picker, input));
+    ([pickerRect, inputRect] = await getRectsOf(picker, input));
     expect(pickerRect.left, 'to be', inputRect.right - pickerRect.width);
     expect(pickerRect.top, 'to be', inputRect.bottom);
     expect(picker.classList.contains('datepicker-orient-right'), 'to be true');
@@ -1160,33 +1221,37 @@ describe('options - orientation', function () {
     dp.setOptions({orientation: 'auto'});
     dp.show();
 
-    ([pickerRect, inputRect] = getRectsOf(picker, input));
+    ([pickerRect, inputRect] = await getRectsOf(picker, input));
     expect(pickerRect.left, 'to be', inputRect.left);
     expect(pickerRect.top, 'to be', inputRect.bottom);
     expect(picker.classList.contains('datepicker-orient-left'), 'to be true');
     expect(picker.classList.contains('datepicker-orient-bottom'), 'to be true');
+
+    return Promise.resolve();
   });
 
-  const doCommonTests = (container = undefined) => {
+  const doCommonTests = async (container = undefined) => {
       options = container ? {container} : {};
 
-      testAutoDefault();
-      testAutoRtl();
-      testAutoNoBottomSpace();
-      testAutoAlsoNoTopSpace();
-      testAutoNoRighSpace();
-      testAutoNoLeftSpaneWhenRtl();
-      testAutoInputExceedsLeftEdge();
-      testAutoInputExceedsRightEdge();
+      await testAutoDefault();
+      await testAutoRtl();
+      await testAutoNoBottomSpace();
+      await testAutoAlsoNoTopSpace();
+      await testAutoNoRighSpace();
+      await testAutoNoLeftSpaneWhenRtl();
+      await testAutoInputExceedsLeftEdge();
+      await testAutoInputExceedsRightEdge();
+
+      return Promise.resolve();
   };
 
   describe('with container option', function () {
     it('works the same when input and container are in the same scrolling area', function () {
-      doCommonTests(wrapper);
+      return doCommonTests(wrapper);
     });
 
     it('works the same when container is the scroll parent of input', function () {
-      doCommonTests('#outer');
+      return doCommonTests('#outer');
     });
   });
 
@@ -1210,66 +1275,66 @@ describe('options - orientation', function () {
     describe('and default container', function () {
       it('works the same when input is inside custom element\'s shadow DOM', function () {
         prepareCustomWrapper();
-        doCommonTests();
+        return doCommonTests();
       });
 
       it('works the same when input is slotted into custom element', function () {
         prepareCustomWrapper(true);
-        doCommonTests();
+        return doCommonTests();
       });
 
       it('works the same when custom element is scroll parent and input is inside its shadow DOM', function () {
         prepareCustomOuter();
-        doCommonTests();
+        return doCommonTests();
       });
 
       it('works the same when custom element is scroll parent and input is inside its slot', function () {
         prepareCustomOuter(true);
-        doCommonTests();
+        return doCommonTests();
       });
     });
 
     describe('and container inside the scrolling area', function () {
       it('works the same when input is inside custom element\'s shadow DOM', function () {
         prepareCustomWrapper();
-        doCommonTests(wrapper);
+        return doCommonTests(wrapper);
       });
 
       it('works the same when input is slotted into custom element', function () {
         prepareCustomWrapper(true);
-        doCommonTests(wrapper);
+        return doCommonTests(wrapper);
       });
 
       it('works the same when custom element is scroll parent and input is inside its shadow DOM', function () {
         prepareCustomOuter();
-        doCommonTests(wrapper);
+        return doCommonTests(wrapper);
       });
 
       it('works the same when custom element is scroll parent and input is inside its slot', function () {
         prepareCustomOuter(true);
-        doCommonTests(wrapper);
+        return doCommonTests(wrapper);
       });
     });
 
     describe('and container that is also scroll parent', function () {
       it('works the same when input is inside custom element\'s shadow DOM', function () {
         prepareCustomWrapper();
-        doCommonTests(outer);
+        return doCommonTests(outer);
       });
 
       it('works the same when input is slotted into custom element', function () {
         prepareCustomWrapper(true);
-        doCommonTests(outer);
+        return doCommonTests(outer);
       });
 
       it('works the same when custom element is scroll parent and input is inside its shadow DOM', function () {
         prepareCustomOuter();
-        doCommonTests(outer);
+        return doCommonTests(outer);
       });
 
       it('works the same when custom element is scroll parent and input is inside its slot', function () {
         prepareCustomOuter(true);
-        doCommonTests(outer);
+        return doCommonTests(outer);
       });
     });
   });

@@ -86,7 +86,7 @@ describe('lib/date', function () {
 
     it('uses format: "m", "mm", "M" or "MM" as month to parse date string', function () {
       const fakeToday = new Date(thisYear, 2, 31);
-      const clock = sinon.useFakeTimers({now: fakeToday});
+      const clock = sinon.useFakeTimers({now: fakeToday, shouldAdvanceTime: true});
 
       // month number
       expect(parseDate('2012-3-5', 'yyyy-m-d'), 'to be', new Date(2012, 2, 5).getTime());
@@ -136,7 +136,7 @@ describe('lib/date', function () {
 
     it('accepts 0 and number larger than 12 for "m", "mm"', function () {
       const fakeToday = new Date(thisYear, 2, 31);
-      const clock = sinon.useFakeTimers({now: fakeToday});
+      const clock = sinon.useFakeTimers({now: fakeToday, shouldAdvanceTime: true});
 
       expect(parseDate('2012-0-05', 'yyyy-m-dd'), 'to be', new Date(2011, 11, 5).getTime());
       expect(parseDate('2012-16-30', 'yyyy-m-d'), 'to be', new Date(2013, 3, 30).getTime());
@@ -147,7 +147,7 @@ describe('lib/date', function () {
 
     it('evaluates month name with case-insensible begin-with match', function () {
       const fakeToday = new Date(thisYear, 2, 31);
-      const clock = sinon.useFakeTimers({now: fakeToday});
+      const clock = sinon.useFakeTimers({now: fakeToday, shouldAdvanceTime: true});
 
       expect(parseDate('march 5, 2012', 'M d, yyyy', locales.en), 'to be', new Date(2012, 2, 5).getTime());
       expect(parseDate('DEC 15, 2012', 'MM d, yyyy', locales.en), 'to be', new Date(2012, 11, 15).getTime());
@@ -193,7 +193,7 @@ describe('lib/date', function () {
 
     it('uses current date\'s year/month/day to complement undefined, missing or unparsable parts', function () {
       const fakeToday = new Date(thisYear, 2, 31);
-      const clock = sinon.useFakeTimers({now: fakeToday});
+      const clock = sinon.useFakeTimers({now: fakeToday, shouldAdvanceTime: true});
 
       expect(parseDate('03-05', 'mm-dd'), 'to be', new Date(thisYear, 2, 5).getTime());
       expect(parseDate('2012-06', 'yyyy-mm'), 'to be', new Date(2012, 5, 30).getTime());

@@ -18,7 +18,7 @@ describe('options - date restrictions', function () {
     let clock;
 
     beforeEach(function () {
-      clock = sinon.useFakeTimers({now: new Date(2020, 1, 14)});
+      clock = sinon.useFakeTimers({now: new Date(2020, 1, 14), shouldAdvanceTime: true});
     });
 
     afterEach(function () {
@@ -307,7 +307,7 @@ describe('options - date restrictions', function () {
     let clock;
 
     beforeEach(function () {
-      clock = sinon.useFakeTimers({now: new Date(2020, 1, 14)});
+      clock = sinon.useFakeTimers({now: new Date(2020, 1, 14), shouldAdvanceTime: true});
     });
 
     afterEach(function () {
@@ -468,7 +468,7 @@ describe('options - date restrictions', function () {
     let clock;
 
     beforeEach(function () {
-      clock = sinon.useFakeTimers({now: new Date(2020, 1, 14)});
+      clock = sinon.useFakeTimers({now: new Date(2020, 1, 14), shouldAdvanceTime: true});
     });
 
     afterEach(function () {
@@ -758,7 +758,7 @@ describe('options - date restrictions', function () {
     let clock;
 
     beforeEach(function () {
-      clock = sinon.useFakeTimers({now: new Date(2022, 6, 14)});
+      clock = sinon.useFakeTimers({now: new Date(2022, 6, 14), shouldAdvanceTime: true});
     });
 
     afterEach(function () {
