@@ -1,9 +1,7 @@
 describe('mouse operation', function () {
-  let clock;
   let input;
 
   before(function () {
-    clock = sinon.useFakeTimers({now: new Date(2020, 1, 14)});
     input = document.createElement('input');
     testContainer.appendChild(input);
   });
@@ -13,10 +11,9 @@ describe('mouse operation', function () {
       input.datepicker.destroy();
     }
     testContainer.removeChild(input);
-    clock.restore();
   });
 
-  it('picker hides if mouse is pressed outside the picker or the input', function () {
+  it('picker hides if mouse is pressed outside the picker or the input', async function () {
     const outsider = document.createElement('p');
     testContainer.appendChild(outsider);
 
@@ -82,21 +79,29 @@ describe('mouse operation', function () {
     ({dp, picker} = createDP(input));
     input.focus();
 
+    const isPickerVisible = () => new Promise((resolve) => {
+      window.requestAnimationFrame(() => {
+        resolve(isVisible(picker));
+      });
+    });
     simulant.fire(picker.querySelector('.dow'), 'mousedown');
-    expect(isVisible(picker), 'to be true');
+    expect(await isPickerVisible(), 'to be true');
 
     simulant.fire(input, 'mousedown');
-    expect(isVisible(picker), 'to be true');
+    expect(await isPickerVisible(), 'to be true');
 
     simulant.fire(outsider, 'mousedown');
-    expect(isVisible(picker), 'to be false');
+    expect(await isPickerVisible(), 'to be false');
 
     dp.destroy();
     testContainer.replaceChild(input, testWrapper);
     testContainer.removeChild(outsider);
+
+    return Promise.resolve();
   });
 
   it('selection is updated with input\'s value if mouse is pressed outside the input', function () {
+    const clock = sinon.useFakeTimers({now: new Date(2020, 1, 14), shouldAdvanceTime: true});
     const outsider = document.createElement('p');
     testContainer.appendChild(outsider);
 
@@ -132,6 +137,7 @@ describe('mouse operation', function () {
 
     dp.destroy();
     testContainer.removeChild(outsider);
+    clock.restore();
   });
 
   it('picker shows up if input field is clicked wheh picker is hidden', function () {
@@ -560,16 +566,19 @@ describe('mouse operation', function () {
   });
 
   describe('datepicker-cell', function () {
+    let clock;
     let dp;
     let picker;
 
     beforeEach(function () {
+      clock = sinon.useFakeTimers({now: new Date(2020, 1, 14), shouldAdvanceTime: true});
       ({dp, picker} = createDP(input));
       dp.show();
     });
 
     afterEach(function () {
       dp.destroy();
+      clock.restore();
     });
 
     it('changes the selection to the clicked date if the current view = days', function () {

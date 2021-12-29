@@ -5,7 +5,7 @@ describe('Datepicker - API methods', function () {
   let picker;
 
   beforeEach(function () {
-    clock = sinon.useFakeTimers({now: new Date(2020, 2, 14)});
+    clock = sinon.useFakeTimers({now: new Date(2020, 2, 14), shouldAdvanceTime: true});
     input = parseHTML('<input type="text" value="04/22/2020">').firstChild;
     testContainer.appendChild(input);
     dp = new Datepicker(input);

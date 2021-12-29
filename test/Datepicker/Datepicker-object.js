@@ -130,7 +130,7 @@ describe('Datepicker', function () {
 
   describe('picker', function () {
     it('displays current month with current date as focued date if no initial date is provided', function () {
-      let clock = sinon.useFakeTimers({now: new Date(2020, 1, 14)});
+      let clock = sinon.useFakeTimers({now: new Date(2020, 1, 14), shouldAdvanceTime: true});
 
       const {dp, picker} = createDP(input);
       const days = Array.from(picker.querySelector('.datepicker-grid').children);

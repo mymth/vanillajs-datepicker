@@ -14,7 +14,7 @@ describe('keyboard operation - arrow-right', function () {
   });
 
   it('moves the view date/month/year/decade to 1 step right side', function () {
-    const clock = sinon.useFakeTimers({now: new Date(2024, 5, 12)});
+    const clock = sinon.useFakeTimers({now: new Date(2024, 5, 12), shouldAdvanceTime: true});
     const {dp, picker} = createDP(input);
     const viewSwitch = getViewSwitch(picker);
     input.focus();
@@ -54,7 +54,7 @@ describe('keyboard operation - arrow-right', function () {
   });
 
   it('also changes month of the days view if the current view date is the last day', function () {
-    const clock = sinon.useFakeTimers({now: new Date(2020, 1, 29)});
+    const clock = sinon.useFakeTimers({now: new Date(2020, 1, 29), shouldAdvanceTime: true});
     const {dp, picker} = createDP(input);
     const viewSwitch = getViewSwitch(picker);
     input.focus();
@@ -71,7 +71,7 @@ describe('keyboard operation - arrow-right', function () {
   });
 
   it('also changes year of the months view if the current view month is December', function () {
-    const clock = sinon.useFakeTimers({now: new Date(2020, 11, 1)});
+    const clock = sinon.useFakeTimers({now: new Date(2020, 11, 1), shouldAdvanceTime: true});
     const {dp, picker} = createDP(input);
     const viewSwitch = getViewSwitch(picker);
     input.focus();
@@ -88,7 +88,7 @@ describe('keyboard operation - arrow-right', function () {
   });
 
   it('also changes decade of the years view if the current view year is the end of the decade', function () {
-    const clock = sinon.useFakeTimers({now: new Date(2019, 1, 1)});
+    const clock = sinon.useFakeTimers({now: new Date(2019, 1, 1), shouldAdvanceTime: true});
     const {dp, picker} = createDP(input);
     const viewSwitch = getViewSwitch(picker);
     input.focus();
@@ -107,7 +107,7 @@ describe('keyboard operation - arrow-right', function () {
   });
 
   it('also changes century of the decades view if the current view decade is the end of the century', function () {
-    const clock = sinon.useFakeTimers({now: new Date(1990, 1, 1)});
+    const clock = sinon.useFakeTimers({now: new Date(1990, 1, 1), shouldAdvanceTime: true});
     const {dp, picker} = createDP(input);
     const viewSwitch = getViewSwitch(picker);
     input.focus();
@@ -128,7 +128,7 @@ describe('keyboard operation - arrow-right', function () {
 
   describe('with control', function () {
     it('functions as the shortcut key of the next button', function () {
-      const clock = sinon.useFakeTimers({now: new Date(2020, 3, 22)});
+      const clock = sinon.useFakeTimers({now: new Date(2020, 3, 22), shouldAdvanceTime: true});
       const {dp, picker} = createDP(input);
       const viewSwitch = getViewSwitch(picker);
       input.focus();
@@ -173,7 +173,7 @@ describe('keyboard operation - arrow-right', function () {
 
   describe('with meta', function () {
     it('functions as a substitute for the "+ctrl" key combination', function () {
-      let clock = sinon.useFakeTimers({now: new Date(2020, 3, 22)});
+      let clock = sinon.useFakeTimers({now: new Date(2020, 3, 22), shouldAdvanceTime: true});
       let {dp, picker} = createDP(input);
       let viewSwitch = getViewSwitch(picker);
       input.focus();

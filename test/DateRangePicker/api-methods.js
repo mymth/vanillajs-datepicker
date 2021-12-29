@@ -5,7 +5,7 @@ describe('DateRangePicker - API methods', function () {
   let input1;
 
   before(function () {
-    clock = sinon.useFakeTimers({now: new Date(2020, 1, 14)});
+    clock = sinon.useFakeTimers({now: new Date(2020, 1, 14), shouldAdvanceTime: true});
   });
 
   after(function () {
