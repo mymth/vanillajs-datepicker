@@ -79,6 +79,8 @@ Function to customize the year cells in the years view. The function is called w
 
 CSS class for `<button>` elements. (view switch, prev/next buttons, clear and today buttons)
 
+> This option should be changed to match the button element class of the CSS framework. (e.g. 'btn' for Bootstrap)
+>
 > For constructor only. Cannot be used with `setOptions()`.  
 
 #### calendarWeeks
@@ -97,9 +99,9 @@ Whether to show the clear button.
 - Type: `String | HTMLElement`
 - Default: `null`
 
-CSS selector for the container element or the container element itself to append the date picker.
+The element or CSS selector for the element to append the date picker.  
 
-> When container is not used, the date picker is inserted after the associated input field.  
+> By default, date picker is inserted after the associated input field. This option is for changing where to add the date picker. (e.g. to prevent date picker from being clipped when the input field is inside an element styled with overflow: hidden)    
 > On inline picker, this option is ignored and overwritten to the associated element.
 >
 > For constructor only. Cannot be used with `setOptions()`.  
@@ -165,6 +167,8 @@ Whether to prevent on-screen keyboard on mobile devices from showing up when the
 [Date format](date-string+format?id=date-format) string.
 
 > The format string must not include the [dateDelimiter](options?id=datedelimiter) string.
+>
+> This option is used to override the one set in the locale specified by [`language`](#language)
 
 Alternatively, object that contains custom parser and formatter functions can be used.
 
@@ -358,6 +362,8 @@ Whether to update the selected date(s) with the input field's value when the inp
 - Default: `0`
 
 Start day of the week. `0`:_Sunday_ – `6`:_Saturday_.
+
+> This option is used to override the one set in the locale specified by [`language`](#language)
 
 
 ### DateRangePicker Options
