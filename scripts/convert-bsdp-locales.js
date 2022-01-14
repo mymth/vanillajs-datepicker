@@ -1,5 +1,6 @@
-const fs = require('fs');
-const path = require('path');
+import fs from 'fs';
+import path from 'path';
+import rootDir from './lib/rootDir.js';
 
 const usage = `USAGE:
 
@@ -29,7 +30,7 @@ if (files.length < 2 || !reFilename.test(files[1])) {
   process.exit(1);
 }
 
-const destDir = path.resolve(__dirname, '../js/i18n/locales');
+const destDir = `${rootDir}/js/i18n/locales`;
 if (!fs.existsSync(destDir)) {
   fs.mkdirSync(destDir, {recursive: true});
 }

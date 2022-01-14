@@ -7,6 +7,9 @@ describe('keyboard operation - edit mode', function () {
   });
 
   afterEach(function () {
+    if (input.datepicker) {
+      input.datepicker.destroy();
+    }
     testContainer.removeChild(input);
   });
 
@@ -254,7 +257,7 @@ describe('keyboard operation - edit mode', function () {
   });
 
   it('disables the arrow-key operation of the picker', function () {
-    const clock = sinon.useFakeTimers({now: new Date(2020, 1, 14)});
+    const clock = sinon.useFakeTimers({now: new Date(2020, 1, 14), shouldAdvanceTime: true});
     const {dp, picker} = createDP(input);
     const viewSwitch = getViewSwitch(picker);
     input.focus();

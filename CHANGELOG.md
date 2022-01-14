@@ -1,5 +1,47 @@
 # changelog
 
+## 1.2.0
+
+### Potentially breaking changes
+
+- __Edge Legacy (non-Chromium Edge) is no longer supported.__
+  - Since Microsoft no longer supports it already and its market share is lower than IE, I decided not to add fallback code for Shadow DOM API.
+  - If your program needs to support Edge Legacy, please use [Web Components polyfill](https://www.npmjs.com/package/@webcomponents/webcomponentsjs).
+- __Date picker element is now inserted after the associated input element by default.__
+  - The default value of the `container` option is changed to `null`.
+  - If your program has the input element inside an element styled with `overflow` other than `visible` and the element doesn't have enough space, the picker will be clipped.
+  - If you need the previous version's behavior to avoid it, please set `'body'` to the container option,
+  - The purpose of this change is to make z-index adjustment in cases like #50 basically unneeded.
+  - This change doesn't apply for inline picker.
+
+### New features
+
+- Add Bootstrap 5 support (#37, #73)
+- Add Web Components support (#83)
+  - `container` option now accepts HTMLElement instance.
+
+### Bug fix
+
+- Fix #56 — `minDate`/`maxDate` aren't set to the start/end of month/year when pickLevel > 0 and either format or passed date string doesn't contain the date part.
+  - The same fix is applied to `datesDisabled` as well
+- Fix — picker doesn't hide on unfocus if a date outside the minDate/maxDate range is entered to the input field.
+- Fix — `disableTouchKeyboard` doesn't work
+- Fix — picker doesn't hide on click outside after input is unfocused by closing mobile keyboard (maybe related to #72?)
+- Fix — picker is placed incorrectly when container is user-specified element. (related to #81)
+
+### Changes
+
+- Change the default placement of `orientation: 'auto'` to bottom-left (#54, #82)
+- Replace out-of-date dev dependencies: node-sass, uglyfy-es → dart-sass, terser (#76)
+- Deprecate `disableTouchKeyboard` option. (#78)
+- Change the way to Keep input element focused when clicking picker in order to prevent flicker (#85)
+  - The change also adds capability for users to extend the picker (see #4 in [this comment](https://github.com/mymth/vanillajs-datepicker/issues/85#issuecomment-966604223) - Thank you, @xdev1)  
+- Remove keydown event cancellation except arrow keys' preventDefault (#88)
+- Apply the bootstrap-datepicker's locale updates
+- Revise container's functionality
+  - Not used internally for position calculation, only for users to control stacking context.
+  - No changes for inline picker
+
 ## 1.1.4
 
 ### Changes

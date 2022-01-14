@@ -1,23 +1,23 @@
 describe('mouse operation', function () {
-  let clock;
   let input;
 
   before(function () {
-    clock = sinon.useFakeTimers({now: new Date(2020, 1, 14)});
     input = document.createElement('input');
     testContainer.appendChild(input);
   });
 
   after(function () {
-    clock.restore();
+    if (input.datepicker) {
+      input.datepicker.destroy();
+    }
     testContainer.removeChild(input);
   });
 
-  it('picker hides if mouse is pressed outside the picker or the input', function () {
+  it('picker hides if mouse is pressed outside the picker or the input', async function () {
     const outsider = document.createElement('p');
     testContainer.appendChild(outsider);
 
-    const {dp, picker} = createDP(input);
+    let {dp, picker} = createDP(input);
     input.focus();
 
     simulant.fire(picker.querySelector('.dow'), 'mousedown');
@@ -46,11 +46,62 @@ describe('mouse operation', function () {
     simulant.fire(outsider, 'mousedown');
     expect(isVisible(picker), 'to be false');
 
+    // picker hides even when input is already unfocused
+    dp.show();
+    input.blur();
+
+    simulant.fire(outsider, 'mousedown');
+    expect(isVisible(picker), 'to be false');
+
+    // picker hides reverting the input when invalid date is in the input (bugfix)
+    dp.show();
+    input.value = '0/0/0';
+
+    simulant.fire(outsider, 'mousedown');
+    expect(isVisible(picker), 'to be false');
+    expect(input.value, 'to be', '');
+
+    // reverting the input also works when picker is already hidden
+    dp.show();
+    input.value = '0/0/0';
+    dp.hide();
+
+    simulant.fire(outsider, 'mousedown');
+    expect(input.value, 'to be', '');
+
     dp.destroy();
+
+    // works with shadow dom
+    const testWrapper = document.createElement('test-wrapper');
+    testContainer.replaceChild(testWrapper, input);
+    testWrapper.shadowRoot.appendChild(input);
+
+    ({dp, picker} = createDP(input));
+    input.focus();
+
+    const isPickerVisible = () => new Promise((resolve) => {
+      window.requestAnimationFrame(() => {
+        resolve(isVisible(picker));
+      });
+    });
+    simulant.fire(picker.querySelector('.dow'), 'mousedown');
+    expect(await isPickerVisible(), 'to be true');
+
+    simulant.fire(input, 'mousedown');
+    expect(await isPickerVisible(), 'to be true');
+
+    simulant.fire(outsider, 'mousedown');
+    expect(await isPickerVisible(), 'to be false');
+
+    dp.destroy();
+    testContainer.replaceChild(input, testWrapper);
     testContainer.removeChild(outsider);
+
+    return Promise.resolve();
   });
 
   it('selection is updated with input\'s value if mouse is pressed outside the input', function () {
+    const clock = sinon.useFakeTimers({now: new Date(2020, 1, 14), shouldAdvanceTime: true});
     const outsider = document.createElement('p');
     testContainer.appendChild(outsider);
 
@@ -86,6 +137,7 @@ describe('mouse operation', function () {
 
     dp.destroy();
     testContainer.removeChild(outsider);
+    clock.restore();
   });
 
   it('picker shows up if input field is clicked wheh picker is hidden', function () {
@@ -101,6 +153,36 @@ describe('mouse operation', function () {
     simulant.fire(input, 'mousedown');
     input.click();
     expect(isVisible(picker), 'to be true');
+
+    dp.destroy();
+  });
+
+  it('move of focus from input by clicking on picker is prevented by canceling mousedown event', function () {
+    const {dp, picker} = createDP(input);
+    const [viewSwitch, prevBtn] = getParts(picker, ['.view-switch', '.prev-btn']);
+    const cells = getCells(picker);
+    let event;
+
+    const listener = ev => {
+      event = ev;
+    };
+    picker.addEventListener('mousedown', listener);
+
+    input.focus();
+    simulant.fire(picker, 'mousedown');
+    expect(event.defaultPrevented, 'to be true');
+
+    event = undefined;
+    simulant.fire(viewSwitch, 'mousedown');
+    expect(event.defaultPrevented, 'to be true');
+
+    event = undefined;
+    simulant.fire(prevBtn, 'mousedown');
+    expect(event.defaultPrevented, 'to be true');
+
+    event = undefined;
+    simulant.fire(cells[11], 'mousedown');
+    expect(event.defaultPrevented, 'to be true');
 
     dp.destroy();
   });
@@ -484,16 +566,19 @@ describe('mouse operation', function () {
   });
 
   describe('datepicker-cell', function () {
+    let clock;
     let dp;
     let picker;
 
     beforeEach(function () {
+      clock = sinon.useFakeTimers({now: new Date(2020, 1, 14), shouldAdvanceTime: true});
       ({dp, picker} = createDP(input));
       dp.show();
     });
 
     afterEach(function () {
       dp.destroy();
+      clock.restore();
     });
 
     it('changes the selection to the clicked date if the current view = days', function () {

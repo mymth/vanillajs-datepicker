@@ -7,6 +7,9 @@ describe('Datepicker', function () {
   });
 
   after(function () {
+    if (input.datepicker) {
+      input.datepicker.destroy();
+    }
     testContainer.removeChild(input);
   });
 
@@ -76,25 +79,31 @@ describe('Datepicker', function () {
     });
 
     it('adds or removes dir attribute to/from the picker if picker\'s text direction != input\'s', function (done) {
-      testContainer.dir = 'rtl';
+      // input's direction differs from the parent's
+      input.dir = 'rtl';
 
       const {dp, picker} = createDP(input);
       dp.show();
       expect(picker.dir, 'to be', 'rtl');
 
       dp.hide();
-      testContainer.removeAttribute('dir');
+      // parent's direction becomes the same as the input's
+      testContainer.dir = 'rtl';
 
       dp.show();
       expect(picker.hasAttribute('dir'), 'to be false');
 
       dp.hide();
+      input.removeAttribute('dir');
+      testContainer.removeAttribute('dir');
 
+      // input's direction differs from the document's
       const htmlElem = document.querySelector('html');
       htmlElem.dir = 'rtl';
       input.style.direction = 'ltr';
 
       dp.show();
+      // input's direction becomes the same as the document's
       expect(picker.dir, 'to be', 'ltr');
 
       dp.hide();
@@ -121,7 +130,7 @@ describe('Datepicker', function () {
 
   describe('picker', function () {
     it('displays current month with current date as focued date if no initial date is provided', function () {
-      let clock = sinon.useFakeTimers({now: new Date(2020, 1, 14)});
+      let clock = sinon.useFakeTimers({now: new Date(2020, 1, 14), shouldAdvanceTime: true});
 
       const {dp, picker} = createDP(input);
       const days = Array.from(picker.querySelector('.datepicker-grid').children);

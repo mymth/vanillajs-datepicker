@@ -63,8 +63,6 @@ export function onClickView(datepicker, ev) {
   }
 }
 
-export function onClickPicker(datepicker) {
-  if (!datepicker.inline && !datepicker.config.disableTouchKeyboard) {
-    datepicker.inputField.focus();
-  }
+export function onMousedownPicker(ev) {
+  ev.preventDefault();
 }

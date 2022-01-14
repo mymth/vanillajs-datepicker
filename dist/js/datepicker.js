@@ -146,6 +146,24 @@ var Datepicker = (function () {
     return Math.floor(year / years) * years;
   }
 
+  // Convert date to the first/last date of the month/year of the date
+  function regularizeDate(date, timeSpan, useLastDate) {
+    if (timeSpan !== 1 && timeSpan !== 2) {
+      return date;
+    }
+    const newDate = new Date(date);
+    if (timeSpan === 1) {
+      useLastDate
+        ? newDate.setMonth(newDate.getMonth() + 1, 0)
+        : newDate.setDate(1);
+    } else {
+      useLastDate
+        ? newDate.setFullYear(newDate.getFullYear() + 1, 0, 0)
+        : newDate.setMonth(0, 1);
+    }
+    return newDate.setHours(0, 0, 0, 0);
+  }
+
   // pattern for format parts
   const reFormatTokens = /dd?|DD?|mm?|MM?|yy?(?:yy)?/;
   // pattern for non date parts
@@ -329,6 +347,65 @@ var Datepicker = (function () {
     return parseFormatString(format).formatter(dateObj, locale);
   }
 
+  const range = document.createRange();
+
+  function parseHTML(html) {
+    return range.createContextualFragment(html);
+  }
+
+  function getParent(el) {
+    return el.parentElement
+      || (el.parentNode instanceof ShadowRoot ? el.parentNode.host : undefined);
+  }
+
+  function isActiveElement(el) {
+    return el.getRootNode().activeElement === el;
+  }
+
+  function hideElement(el) {
+    if (el.style.display === 'none') {
+      return;
+    }
+    // back up the existing display setting in data-style-display
+    if (el.style.display) {
+      el.dataset.styleDisplay = el.style.display;
+    }
+    el.style.display = 'none';
+  }
+
+  function showElement(el) {
+    if (el.style.display !== 'none') {
+      return;
+    }
+    if (el.dataset.styleDisplay) {
+      // restore backed-up dispay property
+      el.style.display = el.dataset.styleDisplay;
+      delete el.dataset.styleDisplay;
+    } else {
+      el.style.display = '';
+    }
+  }
+
+  function emptyChildNodes(el) {
+    if (el.firstChild) {
+      el.removeChild(el.firstChild);
+      emptyChildNodes(el);
+    }
+  }
+
+  function replaceChildNodes(el, newChildNodes) {
+    emptyChildNodes(el);
+    if (newChildNodes instanceof DocumentFragment) {
+      el.appendChild(newChildNodes);
+    } else if (typeof newChildNodes === 'string') {
+      el.appendChild(parseHTML(newChildNodes));
+    } else if (typeof newChildNodes.forEach === 'function') {
+      newChildNodes.forEach((node) => {
+        el.appendChild(node);
+      });
+    }
+  }
+
   const listenerRegistry = new WeakMap();
   const {addEventListener, removeEventListener} = EventTarget.prototype;
 
@@ -381,20 +458,23 @@ var Datepicker = (function () {
     };
   }
 
-  function findFromPath(path, criteria, currentTarget, index = 0) {
-    const el = path[index];
-    if (criteria(el)) {
-      return el;
-    } else if (el === currentTarget || !el.parentElement) {
+  function findFromPath(path, criteria, currentTarget) {
+    const [node, ...rest] = path;
+    if (criteria(node)) {
+      return node;
+    }
+    if (node === currentTarget || node.tagName === 'HTML' || rest.length === 0) {
       // stop when reaching currentTarget or <html>
       return;
     }
-    return findFromPath(path, criteria, currentTarget, index + 1);
+    return findFromPath(rest, criteria, currentTarget);
   }
 
   // Search for the actual target of a delegated event
   function findElementInEventPath(ev, selector) {
-    const criteria = typeof selector === 'function' ? selector : el => el.matches(selector);
+    const criteria = typeof selector === 'function'
+      ? selector
+      : el => el instanceof Element && el.matches(selector);
     return findFromPath(ev.composedPath(), criteria, ev.currentTarget);
   }
 
@@ -450,56 +530,6 @@ var Datepicker = (function () {
     weekStart: 0,
   };
 
-  const range = document.createRange();
-
-  function parseHTML(html) {
-    return range.createContextualFragment(html);
-  }
-
-  function hideElement(el) {
-    if (el.style.display === 'none') {
-      return;
-    }
-    // back up the existing display setting in data-style-display
-    if (el.style.display) {
-      el.dataset.styleDisplay = el.style.display;
-    }
-    el.style.display = 'none';
-  }
-
-  function showElement(el) {
-    if (el.style.display !== 'none') {
-      return;
-    }
-    if (el.dataset.styleDisplay) {
-      // restore backed-up dispay property
-      el.style.display = el.dataset.styleDisplay;
-      delete el.dataset.styleDisplay;
-    } else {
-      el.style.display = '';
-    }
-  }
-
-  function emptyChildNodes(el) {
-    if (el.firstChild) {
-      el.removeChild(el.firstChild);
-      emptyChildNodes(el);
-    }
-  }
-
-  function replaceChildNodes(el, newChildNodes) {
-    emptyChildNodes(el);
-    if (newChildNodes instanceof DocumentFragment) {
-      el.appendChild(newChildNodes);
-    } else if (typeof newChildNodes === 'string') {
-      el.appendChild(parseHTML(newChildNodes));
-    } else if (typeof newChildNodes.forEach === 'function') {
-      newChildNodes.forEach((node) => {
-        el.appendChild(node);
-      });
-    }
-  }
-
   const {
     language: defaultLang,
     format: defaultFormat,
@@ -534,6 +564,7 @@ var Datepicker = (function () {
     const inOpts = Object.assign({}, options);
     const config = {};
     const locales = datepicker.constructor.locales;
+    const rangeSideIndex = datepicker.rangeSideIndex;
     let {
       format,
       getCalendarWeek,
@@ -598,6 +629,30 @@ var Datepicker = (function () {
       delete inOpts.format;
     }
 
+    //*** pick level ***//
+    let newPickLevel = pickLevel;
+    if (inOpts.pickLevel !== undefined) {
+      newPickLevel = validateViewId(inOpts.pickLevel, 2);
+      delete inOpts.pickLevel;
+    }
+    if (newPickLevel !== pickLevel) {
+      if (newPickLevel > pickLevel) {
+        // complement current minDate/madDate so that the existing range will be
+        // expanded to fit the new level later
+        if (inOpts.minDate === undefined) {
+          inOpts.minDate = minDate;
+        }
+        if (inOpts.maxDate === undefined) {
+          inOpts.maxDate = maxDate;
+        }
+      }
+      // complement datesDisabled so that it will be reset later
+      if (!inOpts.datesDisabled) {
+        inOpts.datesDisabled = [];
+      }
+      pickLevel = config.pickLevel = newPickLevel;
+    }
+
     //*** dates ***//
     // while min and maxDate for "no limit" in the options are better to be null
     // (especially when updating), the ones in the config have to be undefined
@@ -605,15 +660,22 @@ var Datepicker = (function () {
     let minDt = minDate;
     let maxDt = maxDate;
     if (inOpts.minDate !== undefined) {
+      const defaultMinDt = dateValue(0, 0, 1);
       minDt = inOpts.minDate === null
-        ? dateValue(0, 0, 1)  // set 0000-01-01 to prevent negative values for year
+        ? defaultMinDt  // set 0000-01-01 to prevent negative values for year
         : validateDate(inOpts.minDate, format, locale, minDt);
+      if (minDt !== defaultMinDt) {
+        minDt = regularizeDate(minDt, pickLevel, false);
+      }
       delete inOpts.minDate;
     }
     if (inOpts.maxDate !== undefined) {
       maxDt = inOpts.maxDate === null
         ? undefined
         : validateDate(inOpts.maxDate, format, locale, maxDt);
+      if (maxDt !== undefined) {
+        maxDt = regularizeDate(maxDt, pickLevel, true);
+      }
       delete inOpts.maxDate;
     }
     if (maxDt < minDt) {
@@ -631,7 +693,9 @@ var Datepicker = (function () {
     if (inOpts.datesDisabled) {
       config.datesDisabled = inOpts.datesDisabled.reduce((dates, dt) => {
         const date = parseDate(dt, format, locale);
-        return date !== undefined ? pushUnique(dates, date) : dates;
+        return date !== undefined
+          ? pushUnique(dates, regularizeDate(date, pickLevel, rangeSideIndex))
+          : dates;
       }, []);
       delete inOpts.datesDisabled;
     }
@@ -675,16 +739,7 @@ var Datepicker = (function () {
       delete inOpts.dateDelimiter;
     }
 
-    //*** pick level & view ***//
-    let newPickLevel = pickLevel;
-    if (inOpts.pickLevel !== undefined) {
-      newPickLevel = validateViewId(inOpts.pickLevel, 2);
-      delete inOpts.pickLevel;
-    }
-    if (newPickLevel !== pickLevel) {
-      pickLevel = config.pickLevel = newPickLevel;
-    }
-
+    //*** view ***//
     let newMaxView = maxView;
     if (inOpts.maxView !== undefined) {
       newMaxView = validateViewId(inOpts.maxView, maxView);
@@ -1150,6 +1205,13 @@ var Datepicker = (function () {
           this.maxDate = dateValue(this.maxYear, this.maxMonth + 1, 0);
         }
       }
+      if (this.isMinView) {
+        if (options.datesDisabled) {
+          this.datesDisabled = options.datesDisabled;
+        }
+      } else {
+        this.datesDisabled = [];
+      }
       if (options.beforeShowMonth !== undefined) {
         this.beforeShow = typeof options.beforeShowMonth === 'function'
           ? options.beforeShowMonth
@@ -1190,7 +1252,14 @@ var Datepicker = (function () {
     render() {
       // refresh disabled months on every render in order to clear the ones added
       // by beforeShow hook at previous render
-      this.disabled = [];
+      // this.disabled = [...this.datesDisabled];
+      this.disabled = this.datesDisabled.reduce((arr, disabled) => {
+        const dt = new Date(disabled);
+        if (this.year === dt.getFullYear()) {
+          arr.push(dt.getMonth());
+        }
+        return arr;
+      }, []);
 
       this.picker.setViewSwitchLabel(this.year);
       this.picker.setPrevBtnDisabled(this.year <= this.minYear);
@@ -1218,6 +1287,7 @@ var Datepicker = (function () {
           yrOutOfRange
           || isMinYear && index < this.minMonth
           || isMaxYear && index > this.maxMonth
+          || this.disabled.includes(index)
         ) {
           classList.add('disabled');
         }
@@ -1322,6 +1392,13 @@ var Datepicker = (function () {
           this.maxDate = dateValue(this.maxYear, 11, 31);
         }
       }
+      if (this.isMinView) {
+        if (options.datesDisabled) {
+          this.datesDisabled = options.datesDisabled;
+        }
+      } else {
+        this.datesDisabled = [];
+      }
       if (options[this.beforeShowOption] !== undefined) {
         const beforeShow = options[this.beforeShowOption];
         this.beforeShow = typeof beforeShow === 'function' ? beforeShow : undefined;
@@ -1359,7 +1436,8 @@ var Datepicker = (function () {
     render() {
       // refresh disabled years on every render in order to clear the ones added
       // by beforeShow hook at previous render
-      this.disabled = [];
+      // this.disabled = [...this.datesDisabled];
+      this.disabled = this.datesDisabled.map(disabled => new Date(disabled).getFullYear());
 
       this.picker.setViewSwitchLabel(`${this.first}-${this.last}`);
       this.picker.setPrevBtnDisabled(this.first <= this.minYear);
@@ -1381,7 +1459,7 @@ var Datepicker = (function () {
         } else if (index === 11) {
           classList.add('next');
         }
-        if (current < this.minYear || current > this.maxYear) {
+        if (current < this.minYear || current > this.maxYear || this.disabled.includes(current)) {
           classList.add('disabled');
         }
         if (this.range) {
@@ -1487,11 +1565,11 @@ var Datepicker = (function () {
 
   function unfocus(datepicker) {
     if (datepicker.config.updateOnBlur) {
-      datepicker.update({autohide: true});
+      datepicker.update({revert: true});
     } else {
       datepicker.refresh('input');
-      datepicker.hide();
     }
+    datepicker.hide();
   }
 
   function goToSelectedMonthOrYear(datepicker, selection) {
@@ -1555,11 +1633,15 @@ var Datepicker = (function () {
     }
   }
 
-  function onClickPicker(datepicker) {
-    if (!datepicker.inline && !datepicker.config.disableTouchKeyboard) {
-      datepicker.inputField.focus();
-    }
+  function onMousedownPicker(ev) {
+    ev.preventDefault();
   }
+
+  const orientClasses = ['left', 'top', 'right', 'bottom'].reduce((obj, key) => {
+    obj[key] = `datepicker-orient-${key}`;
+    return obj;
+  }, {});
+  const toPx = num => num ? `${num}px` : num;
 
   function processPickerOptions(picker, options) {
     if (options.title !== undefined) {
@@ -1650,12 +1732,29 @@ var Datepicker = (function () {
     return window.getComputedStyle(el).direction;
   }
 
+  // find the closet scrollable ancestor elemnt under the body
+  function findScrollParents(el) {
+    const parent = getParent(el);
+    if (parent === document.body || !parent) {
+      return;
+    }
+
+    // checking overflow only is enough because computed overflow cannot be
+    // visible or a combination of visible and other when either axis is set
+    // to other than visible.
+    // (Setting one axis to other than 'visible' while the other is 'visible'
+    // results in the other axis turning to 'auto')
+    return window.getComputedStyle(parent).overflow !== 'visible'
+      ? parent
+      : findScrollParents(parent);
+  }
+
   // Class representing the picker UI
   class Picker {
     constructor(datepicker) {
-      this.datepicker = datepicker;
+      const {config} = this.datepicker = datepicker;
 
-      const template = pickerTemplate.replace(/%buttonClass%/g, datepicker.config.buttonClass);
+      const template = pickerTemplate.replace(/%buttonClass%/g, config.buttonClass);
       const element = this.element = parseHTML(template).firstChild;
       const [header, main, footer] = element.firstChild.children;
       const title = header.firstElementChild;
@@ -1675,12 +1774,12 @@ var Datepicker = (function () {
       const elementClass = datepicker.inline ? 'inline' : 'dropdown';
       element.classList.add(`datepicker-${elementClass}`);
 
-      processPickerOptions(this, datepicker.config);
+      processPickerOptions(this, config);
       this.viewDate = computeResetViewDate(datepicker);
 
       // set up event listeners
       registerListeners(datepicker, [
-        [element, 'click', onClickPicker.bind(null, datepicker), {capture: true}],
+        [element, 'mousedown', onMousedownPicker],
         [main, 'click', onClickView.bind(null, datepicker)],
         [controls.viewSwitch, 'click', onClickViewSwitch.bind(null, datepicker)],
         [controls.prevBtn, 'click', onClickPrevBtn.bind(null, datepicker)],
@@ -1696,11 +1795,15 @@ var Datepicker = (function () {
         new YearsView(this, {id: 2, name: 'years', cellClass: 'year', step: 1}),
         new YearsView(this, {id: 3, name: 'decades', cellClass: 'decade', step: 10}),
       ];
-      this.currentView = this.views[datepicker.config.startView];
+      this.currentView = this.views[config.startView];
 
       this.currentView.render();
       this.main.appendChild(this.currentView.element);
-      datepicker.config.container.appendChild(this.element);
+      if (config.container) {
+        config.container.appendChild(this.element);
+      } else {
+        datepicker.inputField.after(this.element);
+      }
     }
 
     setOptions(options) {
@@ -1712,31 +1815,36 @@ var Datepicker = (function () {
     }
 
     detach() {
-      this.datepicker.config.container.removeChild(this.element);
+      this.element.remove();
     }
 
     show() {
       if (this.active) {
         return;
       }
-      this.element.classList.add('active');
-      this.active = true;
 
-      const datepicker = this.datepicker;
-      if (!datepicker.inline) {
+      const {datepicker, element} = this;
+      if (datepicker.inline) {
+        element.classList.add('active');
+      } else {
         // ensure picker's direction matches input's
         const inputDirection = getTextDirection(datepicker.inputField);
-        if (inputDirection !== getTextDirection(datepicker.config.container)) {
-          this.element.dir = inputDirection;
-        } else if (this.element.dir) {
-          this.element.removeAttribute('dir');
+        if (inputDirection !== getTextDirection(getParent(element))) {
+          element.dir = inputDirection;
+        } else if (element.dir) {
+          element.removeAttribute('dir');
         }
 
+        element.style.visiblity = 'hidden';
+        element.classList.add('active');
         this.place();
+        element.style.visiblity = '';
+
         if (datepicker.config.disableTouchKeyboard) {
           datepicker.inputField.blur();
         }
       }
+      this.active = true;
       triggerDatepickerEvent(datepicker, 'show');
     }
 
@@ -1751,57 +1859,88 @@ var Datepicker = (function () {
     }
 
     place() {
-      const {classList, style} = this.element;
+      const {classList, offsetParent, style} = this.element;
       const {config, inputField} = this.datepicker;
-      const container = config.container;
       const {
         width: calendarWidth,
         height: calendarHeight,
       } = this.element.getBoundingClientRect();
       const {
-        left: containerLeft,
-        top: containerTop,
-        width: containerWidth,
-      } = container.getBoundingClientRect();
-      const {
         left: inputLeft,
         top: inputTop,
+        right: inputRight,
+        bottom: inputBottom,
         width: inputWidth,
         height: inputHeight
       } = inputField.getBoundingClientRect();
       let {x: orientX, y: orientY} = config.orientation;
-      let scrollTop;
-      let left;
-      let top;
+      let left = inputLeft;
+      let top = inputTop;
 
-      if (container === document.body) {
-        scrollTop = window.scrollY;
-        left = inputLeft + window.scrollX;
-        top = inputTop + scrollTop;
+      // caliculate offsetLeft/Top of inputField
+      if (offsetParent === document.body || !offsetParent) {
+        left += window.scrollX;
+        top += window.scrollY;
       } else {
-        scrollTop = container.scrollTop;
-        left = inputLeft - containerLeft;
-        top = inputTop - containerTop + scrollTop;
+        const offsetParentRect = offsetParent.getBoundingClientRect();
+        left -= offsetParentRect.left - offsetParent.scrollLeft;
+        top -= offsetParentRect.top - offsetParent.scrollTop;
       }
 
+      // caliculate the boundaries of the visible area that contains inputField
+      const scrollParent = findScrollParents(inputField);
+      let scrollAreaLeft = 0;
+      let scrollAreaTop = 0;
+      let {
+        clientWidth: scrollAreaRight,
+        clientHeight: scrollAreaBottom,
+      } = document.documentElement;
+
+      if (scrollParent) {
+        const scrollParentRect = scrollParent.getBoundingClientRect();
+        if (scrollParentRect.top > 0) {
+          scrollAreaTop = scrollParentRect.top;
+        }
+        if (scrollParentRect.left > 0) {
+          scrollAreaLeft = scrollParentRect.left;
+        }
+        if (scrollParentRect.right < scrollAreaRight) {
+          scrollAreaRight = scrollParentRect.right;
+        }
+        if (scrollParentRect.bottom < scrollAreaBottom) {
+          scrollAreaBottom = scrollParentRect.bottom;
+        }
+      }
+
+      // determine the horizontal orientation and left position
+      let adjustment = 0;
       if (orientX === 'auto') {
-        if (left < 0) {
-          // align to the left and move into visible area if input's left edge < window's
+        if (inputLeft < scrollAreaLeft) {
           orientX = 'left';
-          left = 10;
-        } else if (left + calendarWidth > containerWidth) {
-          // align to the right if canlendar's right edge > container's
+          adjustment = scrollAreaLeft - inputLeft;
+        } else if (inputLeft + calendarWidth > scrollAreaRight) {
           orientX = 'right';
+          if (scrollAreaRight < inputRight) {
+            adjustment = scrollAreaRight - inputRight;
+          }
+        } else if (getTextDirection(inputField) === 'rtl') {
+          orientX = inputRight - calendarWidth < scrollAreaLeft ? 'left' : 'right';
         } else {
-          orientX = getTextDirection(inputField) === 'rtl' ? 'right' : 'left';
+          orientX = 'left';
         }
       }
       if (orientX === 'right') {
-        left -= calendarWidth - inputWidth;
+        left += inputWidth - calendarWidth;
       }
+      left += adjustment;
 
+      // determine the vertical orientation and top position
       if (orientY === 'auto') {
-        orientY = top - calendarHeight < scrollTop ? 'bottom' : 'top';
+        if (inputTop - calendarHeight > scrollAreaTop) {
+          orientY = inputBottom + calendarHeight > scrollAreaBottom ? 'top' : 'bottom';
+        } else {
+          orientY = 'bottom';
+        }
       }
       if (orientY === 'top') {
         top -= calendarHeight;
@@ -1809,16 +1948,11 @@ var Datepicker = (function () {
         top += inputHeight;
       }
 
-      classList.remove(
-        'datepicker-orient-top',
-        'datepicker-orient-bottom',
-        'datepicker-orient-right',
-        'datepicker-orient-left'
-      );
-      classList.add(`datepicker-orient-${orientY}`, `datepicker-orient-${orientX}`);
+      classList.remove(...Object.values(orientClasses));
+      classList.add(orientClasses[orientX], orientClasses[orientY]);
 
-      style.top = top ? `${top}px` : top;
-      style.left = left ? `${left}px` : left;
+      style.left = toPx(left);
+      style.top = toPx(top);
     }
 
     setViewSwitchLabel(labelText) {
@@ -1941,7 +2075,8 @@ var Datepicker = (function () {
   }
 
   function onKeydown(datepicker, ev) {
-    if (ev.key === 'Tab') {
+    const key = ev.key;
+    if (key === 'Tab') {
       unfocus(datepicker);
       return;
     }
@@ -1949,90 +2084,77 @@ var Datepicker = (function () {
     const picker = datepicker.picker;
     const {id, isMinView} = picker.currentView;
     if (!picker.active) {
-      switch (ev.key) {
-        case 'ArrowDown':
-        case 'Escape':
-          picker.show();
-          break;
-        case 'Enter':
+      if (key === 'ArrowDown') {
+        picker.show();
+      } else {
+        if (key === 'Enter') {
           datepicker.update();
-          break;
-        default:
-          return;
+        } else if (key === 'Escape') {
+          picker.show();
+        }
+        return;
       }
     } else if (datepicker.editMode) {
-      switch (ev.key) {
-        case 'Escape':
-          picker.hide();
-          break;
-        case 'Enter':
-          datepicker.exitEditMode({update: true, autohide: datepicker.config.autohide});
-          break;
-        default:
-          return;
+      if (key === 'Enter') {
+        datepicker.exitEditMode({update: true, autohide: datepicker.config.autohide});
+      } else if (key === 'Escape') {
+        picker.hide();
       }
+      return;
     } else {
-      switch (ev.key) {
-        case 'Escape':
-          picker.hide();
-          break;
-        case 'ArrowLeft':
-          if (ev.ctrlKey || ev.metaKey) {
-            goToPrevOrNext(datepicker, -1);
-          } else if (ev.shiftKey) {
-            datepicker.enterEditMode();
-            return;
-          } else {
-            moveByArrowKey(datepicker, ev, -1, false);
-          }
-          break;
-        case 'ArrowRight':
-          if (ev.ctrlKey || ev.metaKey) {
-            goToPrevOrNext(datepicker, 1);
-          } else if (ev.shiftKey) {
-            datepicker.enterEditMode();
-            return;
-          } else {
-            moveByArrowKey(datepicker, ev, 1, false);
-          }
-          break;
-        case 'ArrowUp':
-          if (ev.ctrlKey || ev.metaKey) {
-            switchView(datepicker);
-          } else if (ev.shiftKey) {
-            datepicker.enterEditMode();
-            return;
-          } else {
-            moveByArrowKey(datepicker, ev, -1, true);
-          }
-          break;
-        case 'ArrowDown':
-          if (ev.shiftKey && !ev.ctrlKey && !ev.metaKey) {
-            datepicker.enterEditMode();
-            return;
-          }
-          moveByArrowKey(datepicker, ev, 1, true);
-          break;
-        case 'Enter':
-          if (isMinView) {
-            datepicker.setDate(picker.viewDate);
-          } else {
-            picker.changeView(id - 1).render();
-          }
-          break;
-        case 'Backspace':
-        case 'Delete':
+      if (key === 'ArrowLeft') {
+        if (ev.ctrlKey || ev.metaKey) {
+          goToPrevOrNext(datepicker, -1);
+        } else if (ev.shiftKey) {
           datepicker.enterEditMode();
           return;
-        default:
-          if (ev.key.length === 1 && !ev.ctrlKey && !ev.metaKey) {
-            datepicker.enterEditMode();
-          }
+        } else {
+          moveByArrowKey(datepicker, ev, -1, false);
+        }
+      } else if (key === 'ArrowRight') {
+        if (ev.ctrlKey || ev.metaKey) {
+          goToPrevOrNext(datepicker, 1);
+        } else if (ev.shiftKey) {
+          datepicker.enterEditMode();
           return;
+        } else {
+          moveByArrowKey(datepicker, ev, 1, false);
+        }
+      } else if (key === 'ArrowUp') {
+        if (ev.ctrlKey || ev.metaKey) {
+          switchView(datepicker);
+        } else if (ev.shiftKey) {
+          datepicker.enterEditMode();
+          return;
+        } else {
+          moveByArrowKey(datepicker, ev, -1, true);
+        }
+      } else if (key === 'ArrowDown') {
+        if (ev.shiftKey && !ev.ctrlKey && !ev.metaKey) {
+          datepicker.enterEditMode();
+          return;
+        }
+        moveByArrowKey(datepicker, ev, 1, true);
+      } else if (key === 'Enter') {
+        if (isMinView) {
+          datepicker.setDate(picker.viewDate);
+          return;
+        }
+        picker.changeView(id - 1).render();
+      } else {
+        if (key === 'Escape') {
+          picker.hide();
+        } else if (
+          key === 'Backspace'
+          || key === 'Delete'
+          || (key.length === 1 && !ev.ctrlKey && !ev.metaKey)
+        ) {
+          datepicker.enterEditMode();
+        }
+        return;
       }
     }
     ev.preventDefault();
-    ev.stopPropagation();
   }
 
   function onFocus(datepicker) {
@@ -2045,7 +2167,7 @@ var Datepicker = (function () {
   function onMousedown(datepicker, ev) {
     const el = ev.target;
     if (datepicker.picker.active || datepicker.config.showOnClick) {
-      el._active = el === document.activeElement;
+      el._active = isActiveElement(el);
       el._clicking = setTimeout(() => {
         delete el._active;
         delete el._clicking;
@@ -2079,11 +2201,15 @@ var Datepicker = (function () {
 
   // for the `document` to delegate the events from outside the picker/input field
   function onClickOutside(datepicker, ev) {
-    if (!datepicker.active) {
+    const {element, picker} = datepicker;
+    // check both picker's and input's activeness to make updateOnBlur work in
+    // the cases where...
+    // - picker is hidden by ESC key press → input stays focused
+    // - input is unfocused by closing mobile keyboard → piker is kept shown
+    if (!picker.active && !isActiveElement(element)) {
       return;
     }
-    const element = datepicker.element;
-    const pickerElem = datepicker.picker.element;
+    const pickerElem = picker.element;
     if (findElementInEventPath(ev, el => el === element || el === pickerElem)) {
       return;
     }
@@ -2101,38 +2227,28 @@ var Datepicker = (function () {
   // when origDates (current selection) is passed, the function works to mix
   // the input dates into the current selection
   function processInputDates(datepicker, inputDates, clear = false) {
-    const {config, dates: origDates, rangepicker} = datepicker;
+    // const {config, dates: origDates, rangepicker} = datepicker;
+    const {config, dates: origDates, rangeSideIndex} = datepicker;
     if (inputDates.length === 0) {
       // empty input is considered valid unless origiDates is passed
       return clear ? [] : undefined;
     }
 
-    const rangeEnd = rangepicker && datepicker === rangepicker.datepickers[1];
+    // const rangeEnd = rangepicker && datepicker === rangepicker.datepickers[1];
     let newDates = inputDates.reduce((dates, dt) => {
       let date = parseDate(dt, config.format, config.locale);
       if (date === undefined) {
         return dates;
       }
-      if (config.pickLevel > 0) {
-        // adjust to 1st of the month/Jan 1st of the year
-        // or to the last day of the monh/Dec 31st of the year if the datepicker
-        // is the range-end picker of a rangepicker
-        const dt = new Date(date);
-        if (config.pickLevel === 1) {
-          date = rangeEnd
-            ? dt.setMonth(dt.getMonth() + 1, 0)
-            : dt.setDate(1);
-        } else {
-          date = rangeEnd
-            ? dt.setFullYear(dt.getFullYear() + 1, 0, 0)
-            : dt.setMonth(0, 1);
-        }
-      }
+      // adjust to 1st of the month/Jan 1st of the year
+      // or to the last day of the monh/Dec 31st of the year if the datepicker
+      // is the range-end picker of a rangepicker
+      date = regularizeDate(date, config.pickLevel, rangeSideIndex);
       if (
         isInRange(date, config.minDate, config.maxDate)
         && !dates.includes(date)
         && !config.datesDisabled.includes(date)
-        && !config.daysOfWeekDisabled.includes(new Date(date).getDay())
+        && (config.pickLevel > 0 || !config.daysOfWeekDisabled.includes(new Date(date).getDay()))
       ) {
         dates.push(date);
       }
@@ -2170,7 +2286,7 @@ var Datepicker = (function () {
   }
 
   function setDate(datepicker, inputDates, options) {
-    let {clear, render, autohide} = options;
+    let {clear, render, autohide, revert} = options;
     if (render === undefined) {
       render = true;
     }
@@ -2181,16 +2297,17 @@ var Datepicker = (function () {
     }
 
     const newDates = processInputDates(datepicker, inputDates, clear);
-    if (!newDates) {
+    if (!newDates && !revert) {
       return;
     }
-    if (newDates.toString() !== datepicker.dates.toString()) {
+    if (newDates && newDates.toString() !== datepicker.dates.toString()) {
       datepicker.dates = newDates;
       refreshUI(datepicker, render ? 3 : 1);
       triggerDatepickerEvent(datepicker, 'changeDate');
     } else {
       refreshUI(datepicker, 1);
     }
+
     if (autohide) {
       datepicker.hide();
     }
@@ -2212,40 +2329,28 @@ var Datepicker = (function () {
       element.datepicker = this;
       this.element = element;
 
-      // set up config
       const config = this.config = Object.assign({
         buttonClass: (options.buttonClass && String(options.buttonClass)) || 'button',
-        container: document.body,
+        container: null,
         defaultViewDate: today(),
         maxDate: undefined,
         minDate: undefined,
       }, processOptions(defaultOptions, this));
-      this._options = options;
-      Object.assign(config, processOptions(options, this));
-
       // configure by type
       const inline = this.inline = element.tagName !== 'INPUT';
       let inputField;
-      let initialDates;
-
       if (inline) {
         config.container = element;
-        initialDates = stringToArray(element.dataset.date, config.dateDelimiter);
-        delete element.dataset.date;
       } else {
-        const container =
-          options.container instanceof window.HTMLElement
+        if (options.container) {
+          // omit string type check because it doesn't guarantee to avoid errors
+          // (invalid selector string causes abend with sytax error)
+          config.container = options.container instanceof HTMLElement
             ? options.container
-            : typeof options.container === 'string'
-            ? document.querySelector(options.container)
-            : null;
-
-        if (container) {
-          config.container = container;
+            : document.querySelector(options.container);
         }
         inputField = this.inputField = element;
         inputField.classList.add('datepicker-input');
-        initialDates = stringToArray(inputField.value, config.dateDelimiter);
       }
       if (rangepicker) {
         // check validiry
@@ -2264,9 +2369,25 @@ var Datepicker = (function () {
             return rangepicker;
           },
         });
+        Object.defineProperty(this, 'rangeSideIndex', {
+          get() {
+            return index;
+          },
+        });
       }
 
+      // set up config
+      this._options = options;
+      Object.assign(config, processOptions(options, this));
+
       // set initial dates
+      let initialDates;
+      if (inline) {
+        initialDates = stringToArray(element.dataset.date, config.dateDelimiter);
+        delete element.dataset.date;
+      } else {
+        initialDates = stringToArray(inputField.value, config.dateDelimiter);
+      }
       this.dates = [];
       // process initial value
       const inputDateValues = processInputDates(this, initialDates);
@@ -2379,7 +2500,7 @@ var Datepicker = (function () {
         if (this.inputField.disabled) {
           return;
         }
-        if (this.inputField !== document.activeElement) {
+        if (!isActiveElement(this.inputField) && !this.config.disableTouchKeyboard) {
           this._showing = true;
           this.inputField.focus();
           delete this._showing;
@@ -2465,7 +2586,8 @@ var Datepicker = (function () {
      * passed, the method ignores them and applies only valid ones. In the case
      * that all the given dates are invalid, which is distinguished from passing
      * no dates, the method considers it as an error and leaves the selection
-     * untouched.
+     * untouched. (The input field also remains untouched unless revert: true
+     * option is used.)
      *
      * @param {...(Date|Number|String)|Array} [dates] - Date strings, Date
      * objects, time values or mix of those for new selection
@@ -2477,6 +2599,9 @@ var Datepicker = (function () {
      * - autohide: {boolean} - Whether to hide the picker element after re-render
      *     Ignored when used with render: false
      *     default: config.autohide
+     * - revert: {boolean} - Whether to refresh the input field when all the
+     *     passed dates are invalid
+     *     default: false
      */
     setDate(...args) {
       const dates = [...args];
@@ -2501,8 +2626,17 @@ var Datepicker = (function () {
      *
      * The input field will be refreshed with properly formatted date string.
      *
+     * In the case that all the entered dates are invalid (unparsable, repeated,
+     * disabled or out-of-range), whixh is distinguished from empty input field,
+     * the method leaves the input field untouched as well as the selection by
+     * default. If revert: true option is used in this case, the input field is
+     * refreshed with the existing selection.
+     *
      * @param  {Object} [options] - function options
      * - autohide: {boolean} - whether to hide the picker element after refresh
+     *     default: false
+     * - revert: {boolean} - Whether to refresh the input field when all the
+     *     passed dates are invalid
      *     default: false
      */
     update(options = undefined) {
@@ -2510,7 +2644,7 @@ var Datepicker = (function () {
         return;
       }
 
-      const opts = {clear: true, autohide: !!(options && options.autohide)};
+      const opts = Object.assign(options || {}, {clear: true, render: true});
       const inputDates = stringToArray(this.inputField.value, this.config.dateDelimiter);
       setDate(this, inputDates, opts);
     }
@@ -2574,4 +2708,4 @@ var Datepicker = (function () {
 
   return Datepicker;
 
-}());
+})();

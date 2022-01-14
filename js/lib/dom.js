@@ -4,6 +4,15 @@ export function parseHTML(html) {
   return range.createContextualFragment(html);
 }
 
+export function getParent(el) {
+  return el.parentElement
+    || (el.parentNode instanceof ShadowRoot ? el.parentNode.host : undefined);
+}
+
+export function isActiveElement(el) {
+  return el.getRootNode().activeElement === el;
+}
+
 // equivalent to jQuery's :visble
 export function isVisible(el) {
   return !!(el.offsetWidth || el.offsetHeight || el.getClientRects().length);

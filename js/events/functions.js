@@ -40,9 +40,9 @@ export function switchView(datepicker) {
 
 export function unfocus(datepicker) {
   if (datepicker.config.updateOnBlur) {
-    datepicker.update({autohide: true});
+    datepicker.update({revert: true});
   } else {
     datepicker.refresh('input');
-    datepicker.hide();
   }
+  datepicker.hide();
 }

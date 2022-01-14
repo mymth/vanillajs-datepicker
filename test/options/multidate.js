@@ -3,12 +3,15 @@ describe('options - multi date', function () {
   let input;
 
   beforeEach(function () {
-    clock = sinon.useFakeTimers({now: new Date(2020, 1, 14)});
+    clock = sinon.useFakeTimers({now: new Date(2020, 1, 14), shouldAdvanceTime: true});
     input = document.createElement('input');
     testContainer.appendChild(input);
   });
 
   afterEach(function () {
+    if (input.datepicker) {
+      input.datepicker.destroy();
+    }
     testContainer.removeChild(input);
     clock.restore();
   });

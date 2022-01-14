@@ -4,7 +4,7 @@ const plugins = [
   resolve(),
 ];
 
-module.exports = [
+export default [
   {
     input: 'js/Datepicker.js',
     output: {

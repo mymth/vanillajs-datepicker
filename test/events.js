@@ -6,7 +6,7 @@ describe('events', function () {
   let viewSwitch;
 
   before(function () {
-    clock = sinon.useFakeTimers({now: new Date(2020, 1, 14)});
+    clock = sinon.useFakeTimers({now: new Date(2020, 1, 14), shouldAdvanceTime: true});
     input = document.createElement('input');
     testContainer.appendChild(input);
     ({dp, picker} = createDP(input));

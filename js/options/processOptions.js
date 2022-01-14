@@ -1,5 +1,5 @@
 import {hasProperty, pushUnique} from '../lib/utils.js';
-import {dateValue} from '../lib/date.js';
+import {dateValue, regularizeDate} from '../lib/date.js';
 import {reFormatTokens, parseDate} from '../lib/date-format.js';
 import {parseHTML} from '../lib/dom.js';
 import defaultOptions from './defaultOptions.js';
@@ -38,6 +38,7 @@ export default function processOptions(options, datepicker) {
   const inOpts = Object.assign({}, options);
   const config = {};
   const locales = datepicker.constructor.locales;
+  const rangeSideIndex = datepicker.rangeSideIndex;
   let {
     format,
     getCalendarWeek,
@@ -102,6 +103,30 @@ export default function processOptions(options, datepicker) {
     delete inOpts.format;
   }
 
+  //*** pick level ***//
+  let newPickLevel = pickLevel;
+  if (inOpts.pickLevel !== undefined) {
+    newPickLevel = validateViewId(inOpts.pickLevel, 2);
+    delete inOpts.pickLevel;
+  }
+  if (newPickLevel !== pickLevel) {
+    if (newPickLevel > pickLevel) {
+      // complement current minDate/madDate so that the existing range will be
+      // expanded to fit the new level later
+      if (inOpts.minDate === undefined) {
+        inOpts.minDate = minDate;
+      }
+      if (inOpts.maxDate === undefined) {
+        inOpts.maxDate = maxDate;
+      }
+    }
+    // complement datesDisabled so that it will be reset later
+    if (!inOpts.datesDisabled) {
+      inOpts.datesDisabled = [];
+    }
+    pickLevel = config.pickLevel = newPickLevel;
+  }
+
   //*** dates ***//
   // while min and maxDate for "no limit" in the options are better to be null
   // (especially when updating), the ones in the config have to be undefined
@@ -109,15 +134,22 @@ export default function processOptions(options, datepicker) {
   let minDt = minDate;
   let maxDt = maxDate;
   if (inOpts.minDate !== undefined) {
+    const defaultMinDt = dateValue(0, 0, 1);
     minDt = inOpts.minDate === null
-      ? dateValue(0, 0, 1)  // set 0000-01-01 to prevent negative values for year
+      ? defaultMinDt  // set 0000-01-01 to prevent negative values for year
       : validateDate(inOpts.minDate, format, locale, minDt);
+    if (minDt !== defaultMinDt) {
+      minDt = regularizeDate(minDt, pickLevel, false);
+    }
     delete inOpts.minDate;
   }
   if (inOpts.maxDate !== undefined) {
     maxDt = inOpts.maxDate === null
       ? undefined
       : validateDate(inOpts.maxDate, format, locale, maxDt);
+    if (maxDt !== undefined) {
+      maxDt = regularizeDate(maxDt, pickLevel, true);
+    }
     delete inOpts.maxDate;
   }
   if (maxDt < minDt) {
@@ -135,7 +167,9 @@ export default function processOptions(options, datepicker) {
   if (inOpts.datesDisabled) {
     config.datesDisabled = inOpts.datesDisabled.reduce((dates, dt) => {
       const date = parseDate(dt, format, locale);
-      return date !== undefined ? pushUnique(dates, date) : dates;
+      return date !== undefined
+        ? pushUnique(dates, regularizeDate(date, pickLevel, rangeSideIndex))
+        : dates;
     }, []);
     delete inOpts.datesDisabled;
   }
@@ -179,16 +213,7 @@ export default function processOptions(options, datepicker) {
     delete inOpts.dateDelimiter;
   }
 
-  //*** pick level & view ***//
-  let newPickLevel = pickLevel;
-  if (inOpts.pickLevel !== undefined) {
-    newPickLevel = validateViewId(inOpts.pickLevel, 2);
-    delete inOpts.pickLevel;
-  }
-  if (newPickLevel !== pickLevel) {
-    pickLevel = config.pickLevel = newPickLevel;
-  }
-
+  //*** view ***//
   let newMaxView = maxView;
   if (inOpts.maxView !== undefined) {
     newMaxView = validateViewId(inOpts.maxView, maxView);

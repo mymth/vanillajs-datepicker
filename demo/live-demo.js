@@ -82,7 +82,6 @@ const defaultOptions = {
   daysOfWeekDisabled: [],
   daysOfWeekHighlighted: [],
   defaultViewDate: today,
-  disableTouchKeyboard: false,
   format: 'mm/dd/yyyy',
   language: 'en',
   maxDate: null,
@@ -104,6 +103,7 @@ const defaultOptions = {
   weekStart: 0,
 };
 const languages = {
+  'ar-DZ': 'Arabic-Algeria',
   'ar-tn': 'Arabic-Tunisia',
   ar: 'Arabic',
   az: 'Azerbaijani',

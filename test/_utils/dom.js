@@ -7,6 +7,15 @@ var domUtils = (function (exports) {
     return range.createContextualFragment(html);
   }
 
+  function getParent(el) {
+    return el.parentElement
+      || (el.parentNode instanceof ShadowRoot ? el.parentNode.host : undefined);
+  }
+
+  function isActiveElement(el) {
+    return el.getRootNode().activeElement === el;
+  }
+
   // equivalent to jQuery's :visble
   function isVisible(el) {
     return !!(el.offsetWidth || el.offsetHeight || el.getClientRects().length);
@@ -57,7 +66,9 @@ var domUtils = (function (exports) {
   }
 
   exports.emptyChildNodes = emptyChildNodes;
+  exports.getParent = getParent;
   exports.hideElement = hideElement;
+  exports.isActiveElement = isActiveElement;
   exports.isVisible = isVisible;
   exports.parseHTML = parseHTML;
   exports.replaceChildNodes = replaceChildNodes;
@@ -67,4 +78,4 @@ var domUtils = (function (exports) {
 
   return exports;
 
-}({}));
+})({});

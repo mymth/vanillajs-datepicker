@@ -15,7 +15,7 @@ describe('DateRangePicker - date selection', function () {
   let cells1;
 
   before(function () {
-    clock = sinon.useFakeTimers({now: new Date(2020, 1, 14)});
+    clock = sinon.useFakeTimers({now: new Date(2020, 1, 14), shouldAdvanceTime: true});
   });
 
   after(function () {
@@ -29,6 +29,9 @@ describe('DateRangePicker - date selection', function () {
   });
 
   afterEach(function () {
+    if (elem.rangepicker) {
+      elem.rangepicker.destroy();
+    }
     testContainer.removeChild(elem);
   });
 

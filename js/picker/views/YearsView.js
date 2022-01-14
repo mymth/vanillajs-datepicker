@@ -41,6 +41,13 @@ export default class YearsView extends View {
         this.maxDate = dateValue(this.maxYear, 11, 31);
       }
     }
+    if (this.isMinView) {
+      if (options.datesDisabled) {
+        this.datesDisabled = options.datesDisabled;
+      }
+    } else {
+      this.datesDisabled = [];
+    }
     if (options[this.beforeShowOption] !== undefined) {
       const beforeShow = options[this.beforeShowOption];
       this.beforeShow = typeof beforeShow === 'function' ? beforeShow : undefined;
@@ -78,7 +85,8 @@ export default class YearsView extends View {
   render() {
     // refresh disabled years on every render in order to clear the ones added
     // by beforeShow hook at previous render
-    this.disabled = [];
+    // this.disabled = [...this.datesDisabled];
+    this.disabled = this.datesDisabled.map(disabled => new Date(disabled).getFullYear());
 
     this.picker.setViewSwitchLabel(`${this.first}-${this.last}`);
     this.picker.setPrevBtnDisabled(this.first <= this.minYear);
@@ -100,7 +108,7 @@ export default class YearsView extends View {
       } else if (index === 11) {
         classList.add('next');
       }
-      if (current < this.minYear || current > this.maxYear) {
+      if (current < this.minYear || current > this.maxYear || this.disabled.includes(current)) {
         classList.add('disabled');
       }
       if (this.range) {

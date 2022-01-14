@@ -23,7 +23,7 @@ describe('Datepicker', function () {
       testContainer.appendChild(input);
     });
 
-    after(function () {
+    afterEach(function () {
       document.querySelectorAll('.datepicker').forEach((el) => {
         el.parentElement.removeChild(el);
       });
@@ -55,7 +55,7 @@ describe('Datepicker', function () {
       expect(dp.config.buttonClass, 'to be', 'button');
       expect(dp.config.calendarWeeks, 'to be false');
       expect(dp.config.clearBtn, 'to be false');
-      expect(dp.config.container, 'to be', document.body);
+      expect(dp.config.container, 'to be null');
       expect(dp.config.dateDelimiter, 'to be', ',');
       expect(dp.config.datesDisabled, 'to equal', []);
       expect(dp.config.daysOfWeekDisabled, 'to equal', []);
@@ -96,29 +96,12 @@ describe('Datepicker', function () {
       expect(dp.config.weekEnd, 'to be', 6);
     });
 
-    it('append datepicker element to the container', function () {
+    it('inserts datepicker element after the input element', function () {
       new Datepicker(input);
 
-      const dpElem = Array.from(document.body.children).find(el => el.matches('.datepicker'));
-      expect(dpElem, 'not to be undefined');
-    });
-
-    it('append datepicker element to the container configured by CSS selector', function () {
-      new Datepicker(input, {
-        container: '#test-container'
-      });
-
-      const dpElem = testContainer.querySelector('.datepicker');
-      expect(dpElem, 'not to be null');
-    });
-
-    it('append datepicker element to the container configured by HTML element', function () {
-      new Datepicker(input, {
-        container: testContainer
-      });
-
-      const dpElem = testContainer.querySelector('.datepicker');
-      expect(dpElem, 'not to be null');
+      const dpElems = document.querySelectorAll('.datepicker');
+      expect(dpElems.length, 'to be', 1);
+      expect(dpElems[0].previousElementSibling, 'to be', input);
     });
 
     it('allows customizing of `getCalendarWeek` function', function () {
@@ -153,7 +136,7 @@ describe('Datepicker', function () {
       expect(dpElem.classList.contains('active'), 'to be false');
     });
 
-    it('sets rangepicker properties if DateRangePicker to link is passed', function () {
+    it('sets rangepicker property if DateRangePicker to link is passed', function () {
       const fakeRangepicker = {
         inputs: [input],
         datepickers: [],
@@ -161,6 +144,23 @@ describe('Datepicker', function () {
       const dp = new Datepicker(input, {}, fakeRangepicker);
 
       expect(dp.rangepicker, 'to be', fakeRangepicker);
+    });
+
+    it('sets the index of the datepicker of the range to rangeSideIndex property if DateRangePicker to link is passed', function () {
+      const fakeRangepicker = {
+        inputs: [input],
+        datepickers: [],
+      };
+      let dp = new Datepicker(input, {}, fakeRangepicker);
+
+      expect(dp.rangeSideIndex, 'to be', 0);
+
+      dp.destroy();
+
+      fakeRangepicker.inputs = [undefined, input];
+      dp = new Datepicker(input, {}, fakeRangepicker);
+
+      expect(dp.rangeSideIndex, 'to be', 1);
     });
 
     it('adds itself to rangepicker.datepickers if DateRangePicker to link is passed', function () {

@@ -12,6 +12,9 @@ describe('keyboard operation - arrow-down', function () {
   });
 
   afterEach(function () {
+    if (input.datepicker) {
+      input.datepicker.destroy();
+    }
     testContainer.removeChild(input);
   });
 
@@ -25,7 +28,7 @@ describe('keyboard operation - arrow-down', function () {
   });
 
   it('moves the view date/month/year/decade to 1 step down side', function () {
-    const clock = sinon.useFakeTimers({now: new Date(2044, 5, 15)});
+    const clock = sinon.useFakeTimers({now: new Date(2044, 5, 15), shouldAdvanceTime: true});
     const {dp, picker} = createDP(input);
     const viewSwitch = getViewSwitch(picker);
     input.focus();
@@ -65,7 +68,7 @@ describe('keyboard operation - arrow-down', function () {
   });
 
   it('also changes month of the days view if the current view date >= last 7 days of month', function () {
-    let clock = sinon.useFakeTimers({now: new Date(2020, 1, 23)});
+    let clock = sinon.useFakeTimers({now: new Date(2020, 1, 23), shouldAdvanceTime: true});
     let {dp, picker} = createDP(input);
     let viewSwitch = getViewSwitch(picker);
     input.focus();
@@ -81,7 +84,7 @@ describe('keyboard operation - arrow-down', function () {
     clock.restore();
     input = replaceInput();
 
-    clock = sinon.useFakeTimers({now: new Date(2020, 1, 26)});
+    clock = sinon.useFakeTimers({now: new Date(2020, 1, 26), shouldAdvanceTime: true});
     ({dp, picker} = createDP(input));
     viewSwitch = getViewSwitch(picker);
     input.focus();
@@ -97,7 +100,7 @@ describe('keyboard operation - arrow-down', function () {
     clock.restore();
     input = replaceInput();
 
-    clock = sinon.useFakeTimers({now: new Date(2020, 1, 29)});
+    clock = sinon.useFakeTimers({now: new Date(2020, 1, 29), shouldAdvanceTime: true});
     ({dp, picker} = createDP(input));
     viewSwitch = getViewSwitch(picker);
     input.focus();
@@ -114,7 +117,7 @@ describe('keyboard operation - arrow-down', function () {
   });
 
   it('also changes year of the months view if the current view month is Sep/Oct/Npv/Dec', function () {
-    let clock = sinon.useFakeTimers({now: new Date(2020, 8, 1)});
+    let clock = sinon.useFakeTimers({now: new Date(2020, 8, 1), shouldAdvanceTime: true});
     let {dp, picker} = createDP(input);
     let viewSwitch = getViewSwitch(picker);
     input.focus();
@@ -130,7 +133,7 @@ describe('keyboard operation - arrow-down', function () {
     clock.restore();
     input = replaceInput();
 
-    clock = sinon.useFakeTimers({now: new Date(2020, 9, 1)});
+    clock = sinon.useFakeTimers({now: new Date(2020, 9, 1), shouldAdvanceTime: true});
     ({dp, picker} = createDP(input));
     viewSwitch = getViewSwitch(picker);
     input.focus();
@@ -146,7 +149,7 @@ describe('keyboard operation - arrow-down', function () {
     clock.restore();
     input = replaceInput();
 
-    clock = sinon.useFakeTimers({now: new Date(2020, 10, 1)});
+    clock = sinon.useFakeTimers({now: new Date(2020, 10, 1), shouldAdvanceTime: true});
     ({dp, picker} = createDP(input));
     viewSwitch = getViewSwitch(picker);
     input.focus();
@@ -162,7 +165,7 @@ describe('keyboard operation - arrow-down', function () {
     clock.restore();
     input = replaceInput();
 
-    clock = sinon.useFakeTimers({now: new Date(2020, 11, 1)});
+    clock = sinon.useFakeTimers({now: new Date(2020, 11, 1), shouldAdvanceTime: true});
     ({dp, picker} = createDP(input));
     viewSwitch = getViewSwitch(picker);
     input.focus();
@@ -179,7 +182,7 @@ describe('keyboard operation - arrow-down', function () {
   });
 
   it('also changes decade of the years view if the current view year is the first 4 of the decade', function () {
-    let clock = sinon.useFakeTimers({now: new Date(2016, 1, 1)});
+    let clock = sinon.useFakeTimers({now: new Date(2016, 1, 1), shouldAdvanceTime: true});
     let {dp, picker} = createDP(input);
     let viewSwitch = getViewSwitch(picker);
     input.focus();
@@ -197,7 +200,7 @@ describe('keyboard operation - arrow-down', function () {
     clock.restore();
     input = replaceInput();
 
-    clock = sinon.useFakeTimers({now: new Date(2018, 1, 1)});
+    clock = sinon.useFakeTimers({now: new Date(2018, 1, 1), shouldAdvanceTime: true});
     ({dp, picker} = createDP(input));
     viewSwitch = getViewSwitch(picker);
     input.focus();
@@ -215,7 +218,7 @@ describe('keyboard operation - arrow-down', function () {
     clock.restore();
     input = replaceInput();
 
-    clock = sinon.useFakeTimers({now: new Date(2019, 1, 1)});
+    clock = sinon.useFakeTimers({now: new Date(2019, 1, 1), shouldAdvanceTime: true});
     ({dp, picker} = createDP(input));
     viewSwitch = getViewSwitch(picker);
     input.focus();
@@ -234,7 +237,7 @@ describe('keyboard operation - arrow-down', function () {
   });
 
   it('also changes century of the decades view if the current view decade is the first 4 of the century', function () {
-    let clock = sinon.useFakeTimers({now: new Date(1960, 1, 1)});
+    let clock = sinon.useFakeTimers({now: new Date(1960, 1, 1), shouldAdvanceTime: true});
     let {dp, picker} = createDP(input);
     let viewSwitch = getViewSwitch(picker);
     input.focus();
@@ -253,7 +256,7 @@ describe('keyboard operation - arrow-down', function () {
     clock.restore();
     input = replaceInput();
 
-    clock = sinon.useFakeTimers({now: new Date(1980, 1, 1)});
+    clock = sinon.useFakeTimers({now: new Date(1980, 1, 1), shouldAdvanceTime: true});
     ({dp, picker} = createDP(input));
     viewSwitch = getViewSwitch(picker);
     input.focus();
@@ -272,7 +275,7 @@ describe('keyboard operation - arrow-down', function () {
     clock.restore();
     input = replaceInput();
 
-    clock = sinon.useFakeTimers({now: new Date(1990, 1, 1)});
+    clock = sinon.useFakeTimers({now: new Date(1990, 1, 1), shouldAdvanceTime: true});
     ({dp, picker} = createDP(input));
     viewSwitch = getViewSwitch(picker);
     input.focus();

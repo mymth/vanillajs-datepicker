@@ -1,7 +1,6 @@
-const fs = require('fs');
-const path = require('path');
+import fs from 'fs';
+import rootDir from './lib/rootDir.js';
 
-const rootDir = path.dirname(__dirname);
 const srcDir = `${rootDir}/js/i18n/locales`;
 const distDir = `${rootDir}/dist/js/locales`;
 

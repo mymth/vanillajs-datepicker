@@ -1,17 +1,23 @@
-const fs = require('fs');
-const path = require('path');
-const {minify} = require('uglify-es');
+import fs from 'fs';
+import {minify} from 'terser';
+import rootDir from './lib/rootDir.js';
 
-const distDir = `${path.dirname(__dirname)}/dist/js`;
+const distDir = `${rootDir}/dist/js`;
 const files = ['datepicker', 'datepicker-full'];
 
-files.forEach((basename) => {
-  const fileNameBase = `${distDir}/${basename}`;
-  const file = fs.readFileSync(`${fileNameBase}.js`, 'utf8');
-  const {code, error} = minify(file);
+Promise.all(files.map((basename) => {
+  return new Promise((resolve) => {
+    const fileNameBase = `${distDir}/${basename}`;
+    const file = fs.readFileSync(`${fileNameBase}.js`, 'utf8');
 
-  if (error) {
-    throw error;
-  }
-  fs.writeFileSync(`${fileNameBase}.min.js`, code);
-});
+    minify(file)
+      .then((result) => {
+        fs.writeFileSync(`${fileNameBase}.min.js`, result.code);
+        resolve();
+      });
+  })
+  .catch((err) => {
+    console.error(err);
+    return err;
+  });
+}));

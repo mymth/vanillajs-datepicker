@@ -14,12 +14,13 @@ The package also includes pre-built js/css files for those who like to use it di
 - i18n support (locales, CSS-based text direction detection)
 - Easily customizable to adapt stylesheet for various CSS frameworks
 - Dependency free
-- Made for modern browsers — no IE support
-- Lightweight (well, relatively…) — 33kB (minified, uncompressed)
+- Made for modern browsers — no support for IE and Edge Legacy (aka non-Chromium Edge)  
+  _** If you need to support Edge Legacy, [Web Components polyfill](https://www.npmjs.com/package/@webcomponents/webcomponentsjs) will allow this library to run on it._
+- Lightweight (well, relatively…) — 34kB (minified, uncompressed)
 
 ### Demo
 
-[Live Online Demo](https://raw.githack.com/mymth/vanillajs-datepicker/v1.1.4/demo/)
+[Live Online Demo](https://raw.githack.com/mymth/vanillajs-datepicker/v1.2.0/demo/)
 
 ### Documentation
 

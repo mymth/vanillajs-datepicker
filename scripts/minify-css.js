@@ -1,9 +1,9 @@
-const fs = require('fs');
-const path = require('path');
-const postcss = require('postcss');
-const cssnano = require('cssnano');
+import fs from 'fs';
+import postcss from 'postcss';
+import cssnano from 'cssnano';
+import rootDir from './lib/rootDir.js';
 
-const distDir = `${path.dirname(__dirname)}/dist/css`;
+const distDir = `${rootDir}/dist/css`;
 const files = [
   'datepicker',
   'datepicker-bulma',
@@ -23,9 +23,10 @@ Promise.all(files.map((basename) => {
       .then((result) => {
         fs.writeFileSync(`${fileNameBase}.min.css`, result.css);
         resolve();
-      })
-      .catch((err) => {
-        console.error(err);
       });
+  })
+  .catch((err) => {
+    console.error(err);
+    return err;
   });
 }));

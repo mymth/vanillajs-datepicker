@@ -39,30 +39,25 @@ describe('DateRangePicker', function () {
     });
 
     it('creates datepicker for the inputs passing rangepicker and given options expect', function () {
-      const spyDPConstructor = sinon.spy(DP, 'default');
-
       let drp = new DateRangePicker(elem);
-      expect(spyDPConstructor.args, 'to equal', [
-        [input0, {}, drp],
-        [input1, {}, drp],
-      ]);
+
       expect(input0.datepicker, 'to be a', Datepicker);
       expect(input1.datepicker, 'to be a', Datepicker);
       expect([input0.datepicker, input1.datepicker], 'to equal', drp.datepickers);
+      expect(input0.datepicker._options, 'to equal', {});
+      expect(input1.datepicker._options, 'to equal', {});
+      expect(input0.datepicker.rangepicker, 'to be', drp);
+      expect(input1.datepicker.rangepicker, 'to be', drp);
 
-      spyDPConstructor.resetHistory();
       delete input0.datepicker;
       delete input1.datepicker;
       delete elem.rangepicker;
 
       const fakeOptions = {foo: 123, bar: 456};
       drp = new DateRangePicker(elem, fakeOptions);
-      expect(spyDPConstructor.args, 'to equal', [
-        [input0, fakeOptions, drp],
-        [input1, fakeOptions, drp],
-      ]);
 
-      spyDPConstructor.restore();
+      expect(input0.datepicker._options, 'to equal', fakeOptions);
+      expect(input1.datepicker._options, 'to equal', fakeOptions);
     });
 
     it('makes datepickers property read-only/immutable', function () {
@@ -74,7 +69,6 @@ describe('DateRangePicker', function () {
     });
 
     it('excludes inputs, allowOneSidedRange and maxNumberOfDates from options to pass Datepicker container', function () {
-      const spyDPConstructor = sinon.spy(DP, 'default');
       new DateRangePicker(elem, {
         inputs: [input0, input1],
         allowOneSidedRange: false,
@@ -82,9 +76,7 @@ describe('DateRangePicker', function () {
         foo: 123,
       });
 
-      expect(spyDPConstructor.args[0][1], 'to equal', {foo: 123});
-
-      spyDPConstructor.restore();
+      expect(input0.datepicker._options, 'to equal', {foo: 123});
     });
 
     it('works with arbitrary input elements if they are provided in the inputs option', function () {
@@ -97,11 +89,15 @@ describe('DateRangePicker', function () {
       expect([input0.datepicker, input1.datepicker], 'to equal', drp.datepickers);
     });
 
-    it('append datepicker elements to the container)', function () {
+    it('inserts datepicker elements after the associated input elements)', function () {
       new DateRangePicker(elem);
 
-      const dpElems = Array.from(document.body.children).filter(el => el.matches('.datepicker'));
-      expect(dpElems, 'to have length', 2);
+      const dpElems = document.querySelectorAll('.datepicker');
+      expect(dpElems.length, 'to be', 2);
+
+      const index = [input0, input1].indexOf(dpElems[0].previousElementSibling);
+      expect(index, 'to be one of', [0, 1]);
+      expect(dpElems[1].previousElementSibling, 'to be', index === 1 ? input0 : input1);
     });
 
     it('does not add the active class to the picker elements', function () {

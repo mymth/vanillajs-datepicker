@@ -79,6 +79,8 @@ Function to customize the year cells in the years view. The function is called w
 
 CSS class for `<button>` elements. (view switch, prev/next buttons, clear and today buttons)
 
+> This option should be changed to match the button element class of the CSS framework. (e.g. 'btn' for Bootstrap)
+>
 > For constructor only. Cannot be used with `setOptions()`.  
 
 #### calendarWeeks
@@ -95,12 +97,14 @@ Whether to show the clear button.
 
 #### container
 - Type: `String | HTMLElement`
-- Default: `body`
+- Default: `null`
 
-CSS selector for the container element or the container element itself to append the date picker.
+The element or CSS selector for the element to append the date picker.  
 
-> For constructor only. Cannot be used with `setOptions()`.  
+> By default, date picker is inserted after the associated input field. This option is for changing where to add the date picker. (e.g. to prevent date picker from being clipped when the input field is inside an element styled with overflow: hidden)    
 > On inline picker, this option is ignored and overwritten to the associated element.
+>
+> For constructor only. Cannot be used with `setOptions()`.  
 
 #### dateDelimiter
 - Type: `String`
@@ -116,13 +120,19 @@ Delimiter string to separate the dates in a multi-date string.
 
 Dates to disable. Array of date strings, Date objects, time values or mix of those.
 
-> Multi-date string cannot be used. Use multiple single-date strings instead.
+> Multi-date string cannot be used. Use multiple single-date strings instead.  
+>
+> Given dates are processed to match the [`pickLevel`](#pickLevel) at the time.    
+> If [`pickLevel`](#pickLevel) is changed dynamically and independently, this option will be reset.  
+> This option should be changed together when changing [`pickLevel`](#pickLevel) dynamically.
 
 #### daysOfWeekDisabled
 - Type: `Number[]`
 - Default: `[]`
 
 Days of the week to disable. `0`:_Sunday_ – `6`:_Saturday_, up to 6 items.
+
+> ignored when [`pickLevel`](#pickLevel) is not `0`:_date_
 
 #### daysOfWeekHighlighted
 - Type: `Number[]`
@@ -136,13 +146,19 @@ Days of the week to highlight. `0`:_Sunday_ – `6`:_Saturday_, up to 6 items.
 
 The date to be focused when the date picker opens with no selected date(s).
 
-#### disableTouchKeyboard
-- Type: `Boolean`
-- Default: `false`
+#### <span style="color: #999;">disableTouchKeyboard (deprecated)</span>
+This option will be removed. Use the attribute: `inputmode="none"` on the `<input>` element instead.
+
+<div style="color: #999;">
+<ul>
+  <li>Type: <code style="color: #999;">Boolean</code></li>
+  <li>Default: <code style="color: #999;">false</code></li>
+</ul>
 
 Whether to prevent on-screen keyboard on mobile devices from showing up when the associated input field receives focus.
 
-> Not available on inline picker.
+<blockquote style="border-left-color: #bbb;">Not available on inline picker.</blockquote>
+</div>
 
 #### format
 - Type: `String`|`Object`
@@ -151,6 +167,8 @@ Whether to prevent on-screen keyboard on mobile devices from showing up when the
 [Date format](date-string+format?id=date-format) string.
 
 > The format string must not include the [dateDelimiter](options?id=datedelimiter) string.
+>
+> This option is used to override the one set in the locale specified by [`language`](#language)
 
 Alternatively, object that contains custom parser and formatter functions can be used.
 
@@ -211,6 +229,10 @@ The language code of the language used by the date picker.
 
 Maximum limit to selectable date. No limit is applied if `null` is set.
 
+> Given date is processed to match the [`pickLevel`](#pickLevel) at the time.  
+> If [`pickLevel`](#pickLevel) is changed dynamically to higher level independently, this option will be adjusted automatically to the last day of the month or December 31st of the year.  
+> This option should be changed together when changing [`pickLevel`](#pickLevel) to lower level dynamically.
+
 #### maxNumberOfDates
 - Type: `Number`
 - Default: `1`
@@ -231,6 +253,10 @@ Maximum limit to the view that the date picker displays. `0`:_days_ – `3`:_dec
 
 Minimum limit to selectable date. No limit is applied if `null` is set.
 
+> Given date is processed to match the [`pickLevel`](#pickLevel) at the time.  
+> If [`pickLevel`](#pickLevel) is changed dynamically to higher level independently, this option will be adjusted automatically to the 1st of the month or January 1st of the year.  
+> This option should be changed together when changing [`pickLevel`](#pickLevel) to lower level dynamically.
+
 #### nextArrow
 - Type: `String`
 - Default: `'»'`
@@ -245,6 +271,8 @@ HTML (or plain text) for the button label of the "Next" button.
 
 Space-separated string for date picker's horizontal and vertical placement to the associated input field. `left`|`right`|`auto` for horizontal and `top`|`bottom`|`auto` for vertical.
 
+> The default picker placement of `auto` is the start of the input field's text direction for horizontal and bottom for vertical.  
+>   
 > The order can be random.  
 > If one direction is omitted, it falls back to `auto`. (e.g. `'top'` == `'top auto'`)  
 > Not available on inline picker.
@@ -257,6 +285,8 @@ The level that the date picker allows to pick. `0`:_date_,`1`: _month_ &nbsp;or 
 
 > When this option is `1`, the selected date becomes the 1st of the month or, if the date picker is the end-date picker of date range picker, the last day of the month.  
 > When this option is `2`, the selected date becomes January 1st of the year or, if the date picker is the end-date picker of date range picker, December 31st of the year.
+>
+> Changing this option dynamically affects existing [`datesDisabled`](#datesDisabled), [`maxDate`](#maxdate) and [`minDate`](#minDate). This options should be updated together with those options when they are customized.
 
 #### prevArrow
 - Type: `String`
@@ -340,6 +370,8 @@ Whether to update the selected date(s) with the input field's value when the inp
 - Default: `0`
 
 Start day of the week. `0`:_Sunday_ – `6`:_Saturday_.
+
+> This option is used to override the one set in the locale specified by [`language`](#language)
 
 
 ### DateRangePicker Options

@@ -3,6 +3,9 @@
     "stylelint-config-sass-guidelines",
     "stylelint-config-concentric-order"
   ],
+  "plugins": [
+    "stylelint-scss"
+  ],
   "rules": {
     "max-nesting-depth": 5,
     "selector-no-qualifying-type": [true, {"ignore": ["attribute", "class"]}],

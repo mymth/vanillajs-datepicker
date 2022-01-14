@@ -7,6 +7,9 @@ describe('keyboard operation', function () {
   });
 
   afterEach(function () {
+    if (input.datepicker) {
+      input.datepicker.destroy();
+    }
     testContainer.removeChild(input);
   });
 
@@ -22,7 +25,7 @@ describe('keyboard operation', function () {
     });
 
     it('updates the selected date with the input\'s value', function () {
-      const clock = sinon.useFakeTimers({now: new Date(2020, 1, 14)});
+      const clock = sinon.useFakeTimers({now: new Date(2020, 1, 14), shouldAdvanceTime: true});
 
       const dp = new Datepicker(input);
       // when picker is shown
@@ -48,6 +51,15 @@ describe('keyboard operation', function () {
       expect(input.value, 'to be', '');
       expect(dp.getDate(), 'to be undefined');
 
+      // picker hides reverting the input when invalid date is in the input (bugfix)
+      input.focus();
+      input.value = '0/0/0';
+
+      simulant.fire(input, 'keydown', {key: 'Tab'});
+      expect(isVisible(dp.picker.element), 'to be false');
+      expect(input.value, 'to be', '');
+      expect(dp.getDate(), 'to be undefined');
+
       dp.destroy();
       clock.restore();
     });
@@ -69,7 +81,7 @@ describe('keyboard operation', function () {
 
   describe('enter', function () {
     it('sets the view date to the selection if the current view is days', function () {
-      const clock = sinon.useFakeTimers({now: new Date(2020, 1, 14)});
+      const clock = sinon.useFakeTimers({now: new Date(2020, 1, 14), shouldAdvanceTime: true});
       const {dp, picker} = createDP(input);
       input.focus();
 
@@ -87,7 +99,7 @@ describe('keyboard operation', function () {
     });
 
     it('changes the view to the next minor one if the current view is not days', function () {
-      const clock = sinon.useFakeTimers({now: new Date(2020, 3, 22)});
+      const clock = sinon.useFakeTimers({now: new Date(2020, 3, 22), shouldAdvanceTime: true});
       const {dp, picker} = createDP(input);
       const viewSwitch = getViewSwitch(picker);
       input.focus();
