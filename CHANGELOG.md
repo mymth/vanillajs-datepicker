@@ -2,6 +2,12 @@
 
 ## 1.2.0
 
+### Breaking changes
+
+- __node-sass is no longer supported.__
+  - Since the use of `/` as a division operator is deprecated and warned by dart sass, all divide operations in sass stylesheets were rewritten with dart sass's `math.div()` function. As a result, the .scss files are no longer able to be compiled with node-sass.
+  - Please replace your project's node-sass dependency with [sass](https://www.npmjs.com/package/sass).
+
 ### Potentially breaking changes
 
 - __Edge Legacy (non-Chromium Edge) is no longer supported.__
@@ -41,6 +47,7 @@
 - Revise container's functionality
   - Not used internally for position calculation, only for users to control stacking context.
   - No changes for inline picker
+
 
 ## 1.1.4
 
