@@ -14,6 +14,7 @@ const defaultOptions = {
   defaultViewDate: undefined, // placeholder, defaults to today() by the program
   disableTouchKeyboard: false,
   format: 'mm/dd/yyyy',
+  getCalendarWeek: null,
   language: 'en',
   maxDate: null,
   maxNumberOfDates: 1,

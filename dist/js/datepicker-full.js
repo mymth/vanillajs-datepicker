@@ -508,6 +508,7 @@
     defaultViewDate: undefined, // placeholder, defaults to today() by the program
     disableTouchKeyboard: false,
     format: 'mm/dd/yyyy',
+    getCalendarWeek: null,
     language: 'en',
     maxDate: null,
     maxNumberOfDates: 1,
@@ -566,6 +567,7 @@
     const rangeSideIndex = datepicker.rangeSideIndex;
     let {
       format,
+      getCalendarWeek,
       language,
       locale,
       maxDate,
@@ -802,6 +804,13 @@
       delete inOpts.todayBtnMode;
     }
 
+    config.getCalendarWeek =
+      typeof inOpts.getCalendarWeek === 'function'
+        ? inOpts.getCalendarWeek
+        : getCalendarWeek || null;
+
+    delete inOpts.getCalendarWeek;
+
     //*** copy the rest ***//
     Object.keys(inOpts).forEach((key) => {
       if (inOpts[key] !== undefined && hasProperty(defaultOptions, key)) {
@@ -967,6 +976,11 @@
           this.calendarWeeks = null;
         }
       }
+
+      if (typeof options.getCalendarWeek === 'function') {
+        this.getCalendarWeek = options.getCalendarWeek;
+      }
+
       if (options.showDaysOfWeek !== undefined) {
         if (options.showDaysOfWeek) {
           showElement(this.dow);
@@ -1028,10 +1042,18 @@
       this.picker.setNextBtnDisabled(this.last >= this.maxDate);
 
       if (this.calendarWeeks) {
-        // start of the UTC week (Monday) of the 1st of the month
-        const startOfWeek = dayOfTheWeekOf(this.first, 1, 1);
+        const startOfWeek = dayOfTheWeekOf(this.first, 1, this.weekStart);
+
+        const calcWeek = (timestamp, weekStart) => {
+          if (this.getCalendarWeek) {
+            return this.getCalendarWeek(new Date(timestamp), weekStart);
+          }
+
+          return getWeek(timestamp);
+        };
+
         Array.from(this.calendarWeeks.weeks.children).forEach((el, index) => {
-          el.textContent = getWeek(addWeeks(startOfWeek, index));
+          el.textContent = calcWeek(addWeeks(startOfWeek, index), this.weekStart);
         });
       }
       Array.from(this.grid.children).forEach((el, index) => {

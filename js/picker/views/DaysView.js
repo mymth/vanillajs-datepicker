@@ -78,6 +78,11 @@ export default class DaysView extends View {
         this.calendarWeeks = null;
       }
     }
+
+    if (typeof options.getCalendarWeek === 'function') {
+      this.getCalendarWeek = options.getCalendarWeek;
+    }
+
     if (options.showDaysOfWeek !== undefined) {
       if (options.showDaysOfWeek) {
         showElement(this.dow);
@@ -139,10 +144,18 @@ export default class DaysView extends View {
     this.picker.setNextBtnDisabled(this.last >= this.maxDate);
 
     if (this.calendarWeeks) {
-      // start of the UTC week (Monday) of the 1st of the month
-      const startOfWeek = dayOfTheWeekOf(this.first, 1, 1);
+      const startOfWeek = dayOfTheWeekOf(this.first, 1, this.weekStart);
+
+      const calcWeek = (timestamp, weekStart) => {
+        if (this.getCalendarWeek) {
+          return this.getCalendarWeek(new Date(timestamp), weekStart);
+        }
+
+        return getWeek(timestamp, weekStart);
+      };
+
       Array.from(this.calendarWeeks.weeks.children).forEach((el, index) => {
-        el.textContent = getWeek(addWeeks(startOfWeek, index));
+        el.textContent = calcWeek(addWeeks(startOfWeek, index), this.weekStart);
       });
     }
     Array.from(this.grid.children).forEach((el, index) => {
