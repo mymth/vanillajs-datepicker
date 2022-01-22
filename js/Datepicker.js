@@ -292,7 +292,7 @@ export default class Datepicker {
    */
   show() {
     if (this.inputField) {
-      if (this.inputField.disabled) {
+      if (this.inputField.disabled || this.inputField.hasAttribute('readonly')) {
         return;
       }
       if (!isActiveElement(this.inputField) && !this.config.disableTouchKeyboard) {

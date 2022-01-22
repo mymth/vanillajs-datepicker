@@ -274,6 +274,12 @@ describe('Datepicker', function () {
     it('sets true to the picker.active property', function () {
       expect(dp.picker.active, 'to be true');
     });
+
+    it('do not show when input field is readonly', function () {
+        dp.hide();
+        input.setAttribute('readonly', '');
+        expect(dp.picker.active, 'not to be true');
+    });
   });
 
   describe('hide()', function () {
