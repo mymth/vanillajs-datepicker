@@ -4,6 +4,7 @@ const pickerTemplate = optimizeTemplateHTML(`<div class="datepicker">
   <div class="datepicker-picker">
     <div class="datepicker-header">
       <div class="datepicker-title"></div>
+      <div class="datepicker-quick-controls"></div>
       <div class="datepicker-controls">
         <button type="button" class="%buttonClass% prev-btn"></button>
         <button type="button" class="%buttonClass% view-switch"></button>

@@ -312,6 +312,43 @@ describe('Datepicker', function () {
     });
   });
 
+  describe('quick Controls', function (){
+    let input;
+
+    before(function () {
+      input = document.createElement('input');
+      testContainer.appendChild(input);
+    });
+
+    after(function () {
+      document.querySelectorAll('.datepicker').forEach((el) => {
+        el.parentElement.removeChild(el);
+      });
+      delete input.datepicker;
+      testContainer.removeChild(input);
+    });
+
+    it('adds and then removes a quick control button', function () {
+      let dp = new Datepicker(input);
+      let btnLabel = 'Test';
+      dp.addQuickControl(btnLabel, () => new Date());
+      let ele = document.querySelector('.quick-control-btn');
+
+      expect(ele, 'not to be null');
+      expect(ele.textContent, 'to be', btnLabel);
+
+      dp.removeQuickControl(btnLabel);
+      ele = document.querySelector('.quick-control-btn');
+      expect(ele, 'to be null');
+    });
+
+    it('throws an error if date function is not passed', function () {
+      let dp = new Datepicker(input);
+      expect(() => dp.addQuickControl('Test', () => new Date('not a date format')), 'to throw',
+      'onClickQuickControl does not return Date');
+    });
+  });
+
   describe('static formatDate()', function () {
     it('formats a date or time value', function () {
       Datepicker.locales.es = esLocale;

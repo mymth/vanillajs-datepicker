@@ -219,6 +219,12 @@ function switchPicker(type) {
   window.demoPicker = type === 'range'
     ? new DateRangePicker(el, options)
     : new Datepicker(el, options);
+
+  const formElemByName = name => optsForm.querySelector(`[name="${name}"]`);
+  let addQuickAction = formElemByName('addQuickActionQuarter');
+  updateQuickAction('addQuickActionQuarter', addQuickAction.checked);
+  addQuickAction = formElemByName('addQuickActionYesterday');
+  updateQuickAction('addQuickActionYesterday', addQuickAction.checked);
 }
 
 const setOptions = function setOptions(name, value) {
@@ -242,6 +248,15 @@ const refreshOptionForm = function refreshOptionForm() {
     const allowOneSided = formElemByName('allowOneSidedRange');
     if (allowOneSided.checked) {
       allowOneSided.checked = false;
+    }
+    const addQuickActionQuarter = formElemByName('addQuickActionQuarter');
+    if (addQuickActionQuarter.checked) {
+      addQuickActionQuarter.checked = false;
+    }
+  } else {
+    const addQuickActionYesterday = formElemByName('addQuickActionYesterday');
+    if (addQuickActionYesterday.checked) {
+        addQuickActionYesterday.checked = false;
     }
   }
   Object.entries(datepicker.config).forEach(entry => {
@@ -325,6 +340,44 @@ const handleArrayOption = function handleArrayOption(name) {
   const checkedInputs = options.querySelectorAll(`input[name=${name}]:checked`);
   setOptions(name, Array.from(checkedInputs).map(el => Number(el.value)));
 };
+
+function updateQuickAction(name, value) {
+    // add some quick action buttons
+  const rangePicker = window.demoPicker instanceof DateRangePicker;
+  if (rangePicker && name === 'addQuickActionQuarter') {
+    if (value === true) {
+      var startOfQuarter = function () {
+        var now = new Date();
+        var quarter = Math.floor((now.getMonth() / 3));
+        return new Date(now.getFullYear(), quarter * 3, 1);
+      };
+      window.demoPicker.addQuickControlToRangeStart("Start of Quarter", startOfQuarter);
+
+      var endOfQuarter = function () {
+        var now = new Date();
+        var quarter = Math.floor((now.getMonth() / 3));
+        const firstDate = new Date(now.getFullYear(), quarter * 3, 1);
+        return new Date(firstDate.getFullYear(), firstDate.getMonth() + 3, 0);
+      };
+      window.demoPicker.addQuickControlToRangeEnd("End of Quarter", endOfQuarter);
+    } else {
+      window.demoPicker.removeQuickControlFromRangeStart("Start of Quarter");
+      window.demoPicker.removeQuickControlFromRangeEnd("End of Quarter");
+    }
+  } else if (!rangePicker && name === 'addQuickActionYesterday') {
+    if (value === true) {
+      var dateFunction = function () {
+        const d = new Date();
+        d.setHours(0, 0, 0, 0);
+        d.setDate(d.getDate() - 1);
+        return d;
+      };
+      window.demoPicker.addQuickControl("Yesterday", dateFunction);
+    } else {
+      window.demoPicker.removeQuickControl("Yesterday");
+    }
+  }
+}
 
 function updateOption(name, value) {
   switch (name) {
@@ -439,7 +492,11 @@ function onClickCheckboxOptions(ev) {
   }
 
   const value = checkbox.value === 'true' ? checked : checkbox.value;
-  updateOption(checkbox.name, value);
+  if (checkbox.name === 'addQuickActionQuarter' || checkbox.name === 'addQuickActionYesterday') {
+    updateQuickAction(checkbox.name, value);
+  } else {
+    updateOption(checkbox.name, value);
+  }
 }
 
 function initialize() {

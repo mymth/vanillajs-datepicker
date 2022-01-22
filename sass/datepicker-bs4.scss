@@ -85,6 +85,12 @@ $dp-input-in-edit-focus-box-shadow-size: 0 0 0.25em 0.25em !default;
     .datepicker-footer & {
       @include dp-footer-button-common;
     }
+
+    .datepicker-quick-controls & {
+      .datepicker-header & {
+        @include dp-quick-actions-button-common;
+      }
+    }
   }
 }
 

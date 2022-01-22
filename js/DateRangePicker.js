@@ -207,4 +207,42 @@ export default class DateRangePicker  {
       onChangeDate(this, {target: this.inputs[0]});
     }
   }
+
+  /**
+   * Adds a quick action button at the header of range start picker.
+   * @param {String} btnLabel label for quick action button
+   * @param {Function} onClickQuickControl gets the date on click of this quick action button
+   */
+  addQuickControlToRangeStart(btnLabel, onClickQuickControl) {
+    const datepicker = this.datepickers[0];
+    datepicker.addQuickControl(btnLabel, onClickQuickControl);
+  }
+
+  /**
+   * Removes the quick action button with name, when found from the header of range start picker.
+   * @param {String} btnLabel button's label, the text is case-sensitive to match
+   */
+  removeQuickControlFromRangeStart(btnLabel) {
+    const datepicker = this.datepickers[0];
+    datepicker.removeQuickControl(btnLabel);
+  }
+
+  /**
+   * Adds a quick action button at the header of range end picker.
+   * @param {String} btnLabel label for quick action button
+   * @param {Function} onClickQuickControl gets the date on click of this quick action button
+   */
+  addQuickControlToRangeEnd(btnLabel, onClickQuickControl) {
+    const datepicker = this.datepickers[1];
+    datepicker.addQuickControl(btnLabel, onClickQuickControl);
+  }
+
+  /**
+   * Removes the quick action button with name, when found from the header of range end picker.
+   * @param {String} btnLabel button's label, the text is case-sensitive to match
+   */
+  removeQuickControlFromRangeEnd(btnLabel) {
+    const datepicker = this.datepickers[1];
+    datepicker.removeQuickControl(btnLabel);
+  }
 }

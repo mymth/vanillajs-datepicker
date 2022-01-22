@@ -10,3 +10,8 @@
   width: 100%;
   font-size: $dp-font-size-small;
 }
+
+@mixin dp-quick-actions-button-common {
+  @include dp-footer-button-common;
+  font-weight: normal;
+}

@@ -499,4 +499,32 @@ export default class Datepicker {
       this.update(opts);
     }
   }
+
+  /**
+   * Adds a quick action button at the header of the picker.
+   * @param {String} btnLabel label for quick action button
+   * @param {Function} onClickQuickControl gets the date on click of this quick action button
+   */
+  addQuickControl(btnLabel, onClickQuickControl) {
+    // do nothing when required arguments missing
+    if (btnLabel === undefined || onClickQuickControl === undefined || !(onClickQuickControl instanceof Function)) {
+      throw new Error('Button Label or onClickQuickControl is undefined or not a function.');
+    }
+    const quickControlDate = onClickQuickControl();
+    // test and validate that function returns a Date, otherwise don't add to picker
+    if (!(quickControlDate instanceof Date) || isNaN(quickControlDate)) {
+      throw new Error('onClickQuickControl does not return Date');
+    }
+
+    this.picker.addQuickControlButton(this, btnLabel, onClickQuickControl);
+  }
+
+  /**
+   * Removes the button with the label, if any was added as a quick control button.
+   *
+   * @param {String} btnLabel button's label, the text is case-sensitive to match
+   */
+  removeQuickControl(btnLabel) {
+    this.picker.removeQuickControlButton(btnLabel);
+  }
 }

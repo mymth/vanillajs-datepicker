@@ -30,6 +30,24 @@ export function onClickTodayBtn(datepicker) {
   picker.changeView(0).render();
 }
 
+export function onClickQuickControl(datepicker, controlDate) {
+  const quickControlDate = controlDate();
+
+  const picker = datepicker.picker;
+  if (datepicker.config.autohide) {
+    datepicker.setDate(quickControlDate);
+    return;
+  } else {
+    datepicker.setDate(quickControlDate, { render: true });
+    picker.update();
+  }
+
+  if (picker.viewDate !== quickControlDate) {
+    picker.changeFocus(quickControlDate);
+  }
+  picker.changeView(0).render();
+}
+
 export function onClickClearBtn(datepicker) {
   datepicker.setDate({clear: true});
 }

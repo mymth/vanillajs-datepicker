@@ -3,6 +3,7 @@ import {today} from '../lib/date.js';
 import {parseHTML, getParent, showElement, hideElement, emptyChildNodes} from '../lib/dom.js';
 import {registerListeners} from '../lib/event.js';
 import pickerTemplate from './templates/pickerTemplate.js';
+import quickControlTemplate from './templates/quickControlTemplate.js';
 import DaysView from './views/DaysView.js';
 import MonthsView from './views/MonthsView.js';
 import YearsView from './views/YearsView.js';
@@ -15,6 +16,7 @@ import {
   onClickNextBtn,
   onClickView,
   onMousedownPicker,
+  onClickQuickControl,
 } from '../events/pickerListeners.js';
 
 const orientClasses = ['left', 'top', 'right', 'bottom'].reduce((obj, key) => {
@@ -150,6 +152,7 @@ export default class Picker {
     };
     this.main = main;
     this.controls = controls;
+    this.quickControls = title.nextElementSibling;
 
     const elementClass = datepicker.inline ? 'inline' : 'dropdown';
     element.classList.add(`datepicker-${elementClass}`);
@@ -184,6 +187,37 @@ export default class Picker {
     } else {
       datepicker.inputField.after(this.element);
     }
+  }
+
+  /**
+   * Adds a quick action button at the header of the picker.
+   * @param {Datepicker} datepicker parent picker object to get configuration
+   * @param {String} btnLabel label for the button
+   * @param {Function} controlDate a function that returns the Date to be selected
+   */
+   addQuickControlButton(datepicker, btnLabel, controlDate) {
+    // construct control element from template
+    const template = quickControlTemplate.replace(/%buttonClass%/g, datepicker.config.buttonClass);
+    const quickControlElement = parseHTML(template).firstElementChild;
+    const controlBtn = quickControlElement.firstElementChild;
+    controlBtn.textContent = btnLabel;
+    // add to quick controls placeholder
+    this.quickControls.appendChild(quickControlElement);
+    // register with picker listeners
+    registerListeners(datepicker, [[controlBtn, 'click', onClickQuickControl.bind(null, datepicker, controlDate)]]);
+  }
+
+  /**
+   * Removes the button with the label, if any was added as a quick control button.
+   * @param {String} btnLabel label of button, the text is case-sensitive to match
+   */
+  removeQuickControlButton(btnLabel) {
+    const qcButtons = this.quickControls.querySelectorAll('.quick-control-btn');
+    qcButtons.forEach(function(b) {
+      if (b.textContent === btnLabel) {
+        b.parentElement.remove();
+      }
+    });
   }
 
   setOptions(options) {
