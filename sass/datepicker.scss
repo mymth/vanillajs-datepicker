@@ -48,9 +48,30 @@ $dp-footer-background-color: $light !default;
 $dp-input-in-edit-border-color: darken($link, 5%) !default;
 $dp-input-in-edit-focus-box-shadow-size: 0 0 0.25em 0.25em !default;
 
-//== non-configurable variables ==//
-$dp-cell-shrink-threshold: $dp-cell-size-base * 10;  // = 8 * 1.25
-$dp-cell-shrinked-width: $dp-cell-size-base * math.div(7, 8);
+//== calculated variables ==//
+$dp-cell-shrink-threshold: $dp-cell-size-base * 10 !default; // = 8 * 1.25
+$dp-cell-shrinked-width: $dp-cell-size-base * math.div(7, 8) !default;
+$dp-dow-height: $dp-font-size-normal * $dp-line-height-base !default;
+$dp-dow-font-size: math.div($dp-font-size-small + $dp-font-size-normal, 2) !default;
+$dp-grid-width: $dp-cell-size-base * 7 !default;
+$dp-grid-shrinked-width: $dp-cell-shrinked-width * 7 !default;
+$dp-month-year-height: $dp-cell-size-base * 2 !default;
+
+$dp-header-hover-background-color: darken($white, 2.5%) !default;
+$dp-header-active-background-color: darken($white, 5%) !default;
+$dp-cell-hover-background-color: darken($dp-background-color, 2.5%) !default;
+$dp-cell-today-focus-background-color: darken($dp-cell-today-background-color, 2.5%) !default;
+$dp-cell-highlighted-hover-background-color: darken($dp-cell-highlighted-background-color, 2.5%) !default;
+$dp-cell-prevnext-selected-color: darken($dp-cell-selected-color, 10%) !default;
+$dp-range-start-end-focus-background-color: darken($dp-range-start-end-background-color, 2.5%) !default;
+$dp-range-hover-background-color: darken($dp-range-background-color, 2.5%) !default;
+$dp-range-focus-background-color: darken($dp-range-background-color, 5%) !default;
+$dp-range-disabled-background-color: darken($dp-range-background-color, 10%) !default;
+
+$dp-header-focus-box-shadow: 0 0 0 0.125em rgba($white, 0.25) !default;
+$dp-title-box-shadow: inset 0 -1px 1px rgba($black, 0.1) !default;
+$dp-footer-box-shadow: inset 0 1px 1px rgba($black, 0.1) !default;
+$dp-input-in-edit-box-shadow: $dp-input-in-edit-focus-box-shadow-size rgba($dp-input-in-edit-border-color, 0.2) !default;
 
 //== mixins ==//
 @import 'mixins';
@@ -103,7 +124,7 @@ $dp-cell-shrinked-width: $dp-cell-size-base * math.div(7, 8);
 }
 
 .datepicker-footer {
-  box-shadow: inset 0 1px 1px rgba($black, 0.1);
+  box-shadow: $dp-footer-box-shadow;
   background-color: $dp-footer-background-color;
 }
 
@@ -129,7 +150,7 @@ $dp-cell-shrinked-width: $dp-cell-size-base * math.div(7, 8);
 }
 
 .datepicker-title {
-  box-shadow: inset 0 -1px 1px rgba($black, 0.1);
+  box-shadow: $dp-title-box-shadow;
   background-color: $dp-title-background-color;
   padding: 0.375rem 0.75rem;
   text-align: center;
@@ -218,17 +239,17 @@ $dp-cell-shrinked-width: $dp-cell-size-base * math.div(7, 8);
         @include dp-header-button-common;
 
         &:hover {
-          background-color: darken($white, 2.5%);
+          background-color: $dp-header-hover-background-color;
         }
 
         &:focus {
           &:not(:active) {
-            box-shadow: 0 0 0 0.125em rgba($white, 0.25);
+            box-shadow: $dp-header-focus-box-shadow; 
           }
         }
 
         &:active {
-          background-color: darken($white, 5%);
+          background-color: $dp-header-active-background-color;
         }
 
         &[disabled] {
@@ -267,9 +288,9 @@ $dp-cell-shrinked-width: $dp-cell-size-base * math.div(7, 8);
 
   .dow {
     @extend %flex-basis-day;
-    height: $dp-font-size-normal * $dp-line-height-base;
-    line-height: $dp-font-size-normal * $dp-line-height-base;
-    font-size: math.div(($dp-font-size-small + $dp-font-size-normal), 2);
+    height: $dp-dow-height;
+    line-height: $dp-dow-height;
+    font-size: $dp-dow-font-size;
     font-weight: $dp-font-weight-bold;
   }
 
@@ -289,11 +310,11 @@ $dp-cell-shrinked-width: $dp-cell-size-base * math.div(7, 8);
   @extend %flex-container;
   @extend %flex-wrap;
 
-  width: $dp-cell-size-base * 7;
+  width: $dp-grid-width;
 
   @media (max-width: $dp-cell-shrink-threshold) {
     .calendar-weeks + .days & {
-      width: $dp-cell-shrinked-width * 7;
+      width: $dp-grid-shrinked-width;
     }
   }
 }
@@ -302,7 +323,7 @@ $dp-cell-shrinked-width: $dp-cell-size-base * math.div(7, 8);
   @extend %datepicker-cell-height;
 
   &:not(.disabled):hover {
-    background-color: darken($dp-background-color, 2.5%);
+    background-color: $dp-cell-hover-background-color;
     cursor: pointer;
   }
 
@@ -330,7 +351,7 @@ $dp-cell-shrinked-width: $dp-cell-size-base * math.div(7, 8);
     }
 
     &.selected {
-      color: darken($dp-cell-selected-color, 10%);
+      color: $dp-cell-prevnext-selected-color;
     }
   }
 
@@ -339,7 +360,7 @@ $dp-cell-shrinked-width: $dp-cell-size-base * math.div(7, 8);
     background-color: $dp-cell-highlighted-background-color;
 
     &:not(.disabled):hover {
-      background-color: darken($dp-cell-highlighted-background-color, 2.5%);
+      background-color: $dp-cell-highlighted-hover-background-color;
     }
 
     &.focused {
@@ -357,7 +378,7 @@ $dp-cell-shrinked-width: $dp-cell-size-base * math.div(7, 8);
     }
 
     &.focused:not(.selected) {
-      background-color: darken($dp-cell-today-background-color, 2.5%);
+      background-color: $dp-cell-today-focus-background-color;
     }
   }
 
@@ -367,7 +388,7 @@ $dp-cell-shrinked-width: $dp-cell-size-base * math.div(7, 8);
   }
 
   &%range-start-end-focused-common {
-    background-color: darken($dp-range-start-end-background-color, 2.5%);
+    background-color: $dp-range-start-end-focus-background-color;
   }
 
   &.range-start {
@@ -399,15 +420,15 @@ $dp-cell-shrinked-width: $dp-cell-size-base * math.div(7, 8);
     background-color: $dp-range-background-color;
 
     &:not(.disabled):not(.focused):not(.today):hover {
-      background-color: darken($dp-range-background-color, 2.5%);
+      background-color: $dp-range-hover-background-color;
     }
 
     &.disabled {
-      color: darken($dp-range-background-color, 10%);
+      color: $dp-range-disabled-background-color;
     }
 
     &.focused {
-      background-color: darken($dp-range-background-color, 5%);
+      background-color: $dp-range-focus-background-color;
     }
 
     @if $dp-range-today-background-color != $dp-cell-today-background-color {
@@ -423,8 +444,8 @@ $dp-cell-shrinked-width: $dp-cell-size-base * math.div(7, 8);
 
   .datepicker-view.datepicker-grid & {
     @extend %flex-basis-month-year;
-    height: $dp-cell-size-base * 2;
-    line-height: $dp-cell-size-base * 2;
+    height: $dp-month-year-height;
+    line-height: $dp-month-year-height;
   }
 }
 
@@ -433,6 +454,6 @@ $dp-cell-shrinked-width: $dp-cell-size-base * math.div(7, 8);
 
   &:focus,
   &:active {
-    box-shadow: $dp-input-in-edit-focus-box-shadow-size rgba($dp-input-in-edit-border-color, 0.2);
+    box-shadow: $dp-input-in-edit-box-shadow;
   }
 }
