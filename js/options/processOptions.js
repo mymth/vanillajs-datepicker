@@ -41,6 +41,7 @@ export default function processOptions(options, datepicker) {
   const rangeSideIndex = datepicker.rangeSideIndex;
   let {
     format,
+    getCalendarWeek,
     language,
     locale,
     maxDate,
@@ -276,6 +277,13 @@ export default function processOptions(options, datepicker) {
     }
     delete inOpts.todayBtnMode;
   }
+
+  config.getCalendarWeek =
+    typeof inOpts.getCalendarWeek === 'function'
+      ? inOpts.getCalendarWeek
+      : getCalendarWeek || null;
+
+  delete inOpts.getCalendarWeek;
 
   //*** copy the rest ***//
   Object.keys(inOpts).forEach((key) => {
