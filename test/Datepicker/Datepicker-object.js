@@ -139,7 +139,7 @@ describe('Datepicker', function () {
       expect(getViewSwitch(picker).textContent, 'to be', 'February 2020');
 
       expect(days, 'to have length', 42);
-      expect(filterCells(days, '.datepicker-cell'), 'to have length', 42);
+      expect(getCellIndices(days, '.datepicker-cell'), 'to have length', 42);
       expect(days[0].textContent, 'to be', '26');
       expect(days[0].classList.contains('prev'), 'to be true');
       expect(days[0].classList.contains('next'), 'to be false');
@@ -159,8 +159,8 @@ describe('Datepicker', function () {
       expect(days[41].classList.contains('prev'), 'to be false');
       expect(days[41].classList.contains('next'), 'to be true');
 
-      expect(filterCells(days, '.focused'), 'to equal', [days[19]]);
-      expect(filterCells(days, '.selected'), 'to be empty');
+      expect(getCellIndices(days, '.focused'), 'to equal', [19]);
+      expect(getCellIndices(days, '.selected'), 'to be empty');
       expect(days[19].textContent, 'to be', '14');
 
       dp.destroy();
@@ -177,7 +177,7 @@ describe('Datepicker', function () {
       expect(getViewSwitch(picker).textContent, 'to be', 'April 2020');
 
       expect(days, 'to have length', 42);
-      expect(filterCells(days, '.datepicker-cell'), 'to have length', 42);
+      expect(getCellIndices(days, '.datepicker-cell'), 'to have length', 42);
       expect(days[0].textContent, 'to be', '29');
       expect(days[0].classList.contains('prev'), 'to be true');
       expect(days[0].classList.contains('next'), 'to be false');
@@ -197,8 +197,8 @@ describe('Datepicker', function () {
       expect(days[41].classList.contains('prev'), 'to be false');
       expect(days[41].classList.contains('next'), 'to be true');
 
-      expect(filterCells(days, '.focused'), 'to equal', [days[24]]);
-      expect(filterCells(days, '.selected'), 'to equal', [days[24]]);
+      expect(getCellIndices(days, '.focused'), 'to equal', [24]);
+      expect(getCellIndices(days, '.selected'), 'to equal', [24]);
       expect(days[24].textContent, 'to be', '22');
 
       dp.destroy();

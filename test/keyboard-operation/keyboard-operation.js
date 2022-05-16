@@ -90,8 +90,8 @@ describe('keyboard operation', function () {
       expect(input.value, 'to be', '02/14/2020');
 
       let cells = getCells(picker);
-      expect(filterCells(cells, '.selected'), 'to equal', [cells[19]]);
-      expect(filterCells(cells, '.focused'), 'to equal', [cells[19]]);
+      expect(getCellIndices(cells, '.selected'), 'to equal', [19]);
+      expect(getCellIndices(cells, '.focused'), 'to equal', [19]);
       expect(cells[19].textContent, 'to be', '14');
 
       dp.destroy();
@@ -111,20 +111,20 @@ describe('keyboard operation', function () {
       expect(viewSwitch.textContent, 'to be', '2020-2029');
 
       let cells = getCells(picker);
-      expect(filterCells(cells, '.focused'), 'to equal', [cells[1]]);
+      expect(getCellIndices(cells, '.focused'), 'to equal', [1]);
       expect(cells[1].textContent, 'to be', '2020');
 
       simulant.fire(input, 'keydown', {key: 'Enter'});
       expect(viewSwitch.textContent, 'to be', '2020');
 
       cells = getCells(picker);
-      expect(filterCells(cells, '.focused'), 'to equal', [cells[3]]);
+      expect(getCellIndices(cells, '.focused'), 'to equal', [3]);
 
       simulant.fire(input, 'keydown', {key: 'Enter'});
       expect(viewSwitch.textContent, 'to be', 'April 2020');
 
       cells = getCells(picker);
-      expect(filterCells(cells, '.focused'), 'to equal', [cells[24]]);
+      expect(getCellIndices(cells, '.focused'), 'to equal', [24]);
       expect(cells[24].textContent, 'to be', '22');
 
       // does nothig if the view has reached to the min view
@@ -148,8 +148,8 @@ describe('keyboard operation', function () {
       expect(viewSwitch.textContent, 'to be', 'July 2020');
 
       let cells = getCells(picker);
-      expect(filterCells(cells, '.selected'), 'to equal', [cells[6]]);
-      expect(filterCells(cells, '.focused'), 'to equal', [cells[6]]);
+      expect(getCellIndices(cells, '.selected'), 'to equal', [6]);
+      expect(getCellIndices(cells, '.focused'), 'to equal', [6]);
       expect(cells[6].textContent, 'to be', '4');
 
       dp.destroy();

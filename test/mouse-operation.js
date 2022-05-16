@@ -223,8 +223,8 @@ describe('mouse operation', function () {
       expect(cells[11].classList.contains('prev'), 'to be false');
       expect(cells[11].classList.contains('next'), 'to be true');
 
-      expect(filterCells(cells, '.selected'), 'to equal', [cells[1]]);
-      expect(filterCells(cells, '.focused'), 'to equal', [cells[1]]);
+      expect(getCellIndices(cells, '.selected'), 'to equal', [1]);
+      expect(getCellIndices(cells, '.focused'), 'to equal', [1]);
 
       viewSwitch.click();
       expect(viewSwitch.textContent, 'to be', '2000-2090');
@@ -245,8 +245,8 @@ describe('mouse operation', function () {
       expect(cells[11].classList.contains('prev'), 'to be false');
       expect(cells[11].classList.contains('next'), 'to be true');
 
-      expect(filterCells(cells, '.selected'), 'to equal', [cells[3]]);
-      expect(filterCells(cells, '.focused'), 'to equal', [cells[3]]);
+      expect(getCellIndices(cells, '.selected'), 'to equal', [3]);
+      expect(getCellIndices(cells, '.focused'), 'to equal', [3]);
       expect(cells[3].textContent, 'to be', '2020');
 
       // does nothig if the view has reached to the max view
@@ -286,15 +286,15 @@ describe('mouse operation', function () {
       expect(cells[41].classList.contains('prev'), 'to be false');
       expect(cells[41].classList.contains('next'), 'to be true');
 
-      expect(filterCells(cells, '.selected'), 'to equal', []);
-      expect(filterCells(cells, '.focused'), 'to equal', [cells[21]]);
+      expect(getCellIndices(cells, '.selected'), 'to equal', []);
+      expect(getCellIndices(cells, '.focused'), 'to equal', [21]);
       expect(cells[21].textContent, 'to be', '22');
 
       viewSwitch.click();
       expect(viewSwitch.textContent, 'to be', '2020');
       cells = getCells(picker);
-      expect(filterCells(cells, '.selected'), 'to equal', [cells[3]]);
-      expect(filterCells(cells, '.focused'), 'to equal', [cells[2]]);
+      expect(getCellIndices(cells, '.selected'), 'to equal', [3]);
+      expect(getCellIndices(cells, '.focused'), 'to equal', [2]);
 
       prevBtn.click();
       expect(viewSwitch.textContent, 'to be', '2019');
@@ -303,15 +303,15 @@ describe('mouse operation', function () {
       // view date is changed to the same month of the previous year
       cells = getCells(picker);
       expect(cells.map(el => el.textContent), 'to equal', Datepicker.locales.en.monthsShort);
-      expect(filterCells(cells, '.selected'), 'to equal', []);
-      expect(filterCells(cells, '.focused'), 'to equal', [cells[2]]);
+      expect(getCellIndices(cells, '.selected'), 'to equal', []);
+      expect(getCellIndices(cells, '.focused'), 'to equal', [2]);
 
       viewSwitch.click();
       expect(viewSwitch.textContent, 'to be', '2010-2019');
       cells = getCells(picker);
-      expect(filterCells(cells, '.selected'), 'to equal', [cells[11]]);
+      expect(getCellIndices(cells, '.selected'), 'to equal', [11]);
       expect(cells[11].textContent, 'to be', '2020');
-      expect(filterCells(cells, '.focused'), 'to equal', [cells[10]]);
+      expect(getCellIndices(cells, '.focused'), 'to equal', [10]);
       expect(cells[10].textContent, 'to be', '2019');
 
       prevBtn.click();
@@ -325,15 +325,15 @@ describe('mouse operation', function () {
       expect(cells[10].textContent, 'to be', '2009');
       expect(cells[11].textContent, 'to be', '2010');
 
-      expect(filterCells(cells, '.selected'), 'to equal', []);
-      expect(filterCells(cells, '.focused'), 'to equal', [cells[10]]);
+      expect(getCellIndices(cells, '.selected'), 'to equal', []);
+      expect(getCellIndices(cells, '.focused'), 'to equal', [10]);
 
       viewSwitch.click();
       expect(viewSwitch.textContent, 'to be', '2000-2090');
       cells = getCells(picker);
-      expect(filterCells(cells, '.selected'), 'to equal', [cells[3]]);
+      expect(getCellIndices(cells, '.selected'), 'to equal', [3]);
       expect(cells[3].textContent, 'to be', '2020');
-      expect(filterCells(cells, '.focused'), 'to equal', [cells[1]]);
+      expect(getCellIndices(cells, '.focused'), 'to equal', [1]);
       expect(cells[1].textContent, 'to be', '2000');
 
       prevBtn.click();
@@ -347,8 +347,8 @@ describe('mouse operation', function () {
       expect(cells[10].textContent, 'to be', '1990');
       expect(cells[11].textContent, 'to be', '2000');
 
-      expect(filterCells(cells, '.selected'), 'to equal', []);
-      expect(filterCells(cells, '.focused'), 'to equal', [cells[1]]);
+      expect(getCellIndices(cells, '.selected'), 'to equal', []);
+      expect(getCellIndices(cells, '.focused'), 'to equal', [1]);
 
       dp.destroy();
       input.value = '';
@@ -365,7 +365,7 @@ describe('mouse operation', function () {
       expect(viewSwitch.textContent, 'to be', 'February 2019');
 
       let cells = getCells(picker);
-      expect(filterCells(cells, '.focused'), 'to equal', [cells[32]]);
+      expect(getCellIndices(cells, '.focused'), 'to equal', [32]);
       expect(cells[32].textContent, 'to be', '28');
 
       input.value = '03/31/2020';
@@ -374,7 +374,7 @@ describe('mouse operation', function () {
       expect(viewSwitch.textContent, 'to be', 'February 2020');
 
       cells = getCells(picker);
-      expect(filterCells(cells, '.focused'), 'to equal', [cells[34]]);
+      expect(getCellIndices(cells, '.focused'), 'to equal', [34]);
       expect(cells[34].textContent, 'to be', '29');
 
       input.value = '10/31/2020';
@@ -383,7 +383,7 @@ describe('mouse operation', function () {
       expect(viewSwitch.textContent, 'to be', 'September 2020');
 
       cells = getCells(picker);
-      expect(filterCells(cells, '.focused'), 'to equal', [cells[31]]);
+      expect(getCellIndices(cells, '.focused'), 'to equal', [31]);
       expect(cells[31].textContent, 'to be', '30');
 
       dp.destroy();
@@ -458,15 +458,15 @@ describe('mouse operation', function () {
       expect(cells[41].classList.contains('prev'), 'to be false');
       expect(cells[41].classList.contains('next'), 'to be true');
 
-      expect(filterCells(cells, '.selected'), 'to equal', []);
-      expect(filterCells(cells, '.focused'), 'to equal', [cells[26]]);
+      expect(getCellIndices(cells, '.selected'), 'to equal', []);
+      expect(getCellIndices(cells, '.focused'), 'to equal', [26]);
       expect(cells[26].textContent, 'to be', '22');
 
       viewSwitch.click();
       expect(viewSwitch.textContent, 'to be', '2020');
       cells = getCells(picker);
-      expect(filterCells(cells, '.selected'), 'to equal', [cells[3]]);
-      expect(filterCells(cells, '.focused'), 'to equal', [cells[4]]);
+      expect(getCellIndices(cells, '.selected'), 'to equal', [3]);
+      expect(getCellIndices(cells, '.focused'), 'to equal', [4]);
 
       nextBtn.click();
       expect(viewSwitch.textContent, 'to be', '2021');
@@ -475,14 +475,14 @@ describe('mouse operation', function () {
       // view date is changed to the same month of the previous year
       cells = getCells(picker);
       expect(cells.map(el => el.textContent), 'to equal', Datepicker.locales.en.monthsShort);
-      expect(filterCells(cells, '.selected'), 'to equal', []);
-      expect(filterCells(cells, '.focused'), 'to equal', [cells[4]]);
+      expect(getCellIndices(cells, '.selected'), 'to equal', []);
+      expect(getCellIndices(cells, '.focused'), 'to equal', [4]);
 
       viewSwitch.click();
       expect(viewSwitch.textContent, 'to be', '2020-2029');
       cells = getCells(picker);
-      expect(filterCells(cells, '.selected'), 'to equal', [cells[1]]);
-      expect(filterCells(cells, '.focused'), 'to equal', [cells[2]]);
+      expect(getCellIndices(cells, '.selected'), 'to equal', [1]);
+      expect(getCellIndices(cells, '.focused'), 'to equal', [2]);
       expect(cells[1].textContent, 'to be', '2020');
       expect(cells[2].textContent, 'to be', '2021');
 
@@ -497,15 +497,15 @@ describe('mouse operation', function () {
       expect(cells[10].textContent, 'to be', '2039');
       expect(cells[11].textContent, 'to be', '2040');
 
-      expect(filterCells(cells, '.selected'), 'to equal', []);
-      expect(filterCells(cells, '.focused'), 'to equal', [cells[2]]);
+      expect(getCellIndices(cells, '.selected'), 'to equal', []);
+      expect(getCellIndices(cells, '.focused'), 'to equal', [2]);
       expect(cells[2].textContent, 'to be', '2031');
 
       viewSwitch.click();
       expect(viewSwitch.textContent, 'to be', '2000-2090');
       cells = getCells(picker);
-      expect(filterCells(cells, '.selected'), 'to equal', [cells[3]]);
-      expect(filterCells(cells, '.focused'), 'to equal', [cells[4]]);
+      expect(getCellIndices(cells, '.selected'), 'to equal', [3]);
+      expect(getCellIndices(cells, '.focused'), 'to equal', [4]);
       expect(cells[3].textContent, 'to be', '2020');
       expect(cells[4].textContent, 'to be', '2030');
 
@@ -520,8 +520,8 @@ describe('mouse operation', function () {
       expect(cells[10].textContent, 'to be', '2190');
       expect(cells[11].textContent, 'to be', '2200');
 
-      expect(filterCells(cells, '.selected'), 'to equal', []);
-      expect(filterCells(cells, '.focused'), 'to equal', [cells[4]]);
+      expect(getCellIndices(cells, '.selected'), 'to equal', []);
+      expect(getCellIndices(cells, '.focused'), 'to equal', [4]);
       expect(cells[4].textContent, 'to be', '2130');
 
       dp.destroy();
@@ -539,7 +539,7 @@ describe('mouse operation', function () {
       expect(viewSwitch.textContent, 'to be', 'February 2019');
 
       let cells = getCells(picker);
-      expect(filterCells(cells, '.focused'), 'to equal', [cells[32]]);
+      expect(getCellIndices(cells, '.focused'), 'to equal', [32]);
       expect(cells[32].textContent, 'to be', '28');
 
       input.value = '01/31/2020';
@@ -548,7 +548,7 @@ describe('mouse operation', function () {
       expect(viewSwitch.textContent, 'to be', 'February 2020');
 
       cells = getCells(picker);
-      expect(filterCells(cells, '.focused'), 'to equal', [cells[34]]);
+      expect(getCellIndices(cells, '.focused'), 'to equal', [34]);
       expect(cells[34].textContent, 'to be', '29');
 
       input.value = '08/31/2020';
@@ -557,7 +557,7 @@ describe('mouse operation', function () {
       expect(viewSwitch.textContent, 'to be', 'September 2020');
 
       cells = getCells(picker);
-      expect(filterCells(cells, '.focused'), 'to equal', [cells[31]]);
+      expect(getCellIndices(cells, '.focused'), 'to equal', [31]);
       expect(cells[31].textContent, 'to be', '30');
 
       dp.destroy();
@@ -603,8 +603,8 @@ describe('mouse operation', function () {
       expect(viewSwitch.textContent, 'to be', 'January 2020');
 
       let cells = getCells(picker);
-      expect(filterCells(cells, '.selected'), 'to equal', [cells[29]]);
-      expect(filterCells(cells, '.focused'), 'to equal', [cells[29]]);
+      expect(getCellIndices(cells, '.selected'), 'to equal', [29]);
+      expect(getCellIndices(cells, '.focused'), 'to equal', [29]);
       expect(cells[29].textContent, 'to be', '27');
 
       expect(cells[40].textContent, 'to be', '7');
@@ -615,8 +615,8 @@ describe('mouse operation', function () {
       expect(viewSwitch.textContent, 'to be', 'February 2020');
 
       cells = getCells(picker);
-      expect(filterCells(cells, '.selected'), 'to equal', [cells[12]]);
-      expect(filterCells(cells, '.focused'), 'to equal', [cells[12]]);
+      expect(getCellIndices(cells, '.selected'), 'to equal', [12]);
+      expect(getCellIndices(cells, '.focused'), 'to equal', [12]);
       expect(cells[12].textContent, 'to be', '7');
 
       dp.setDate({clear: true});
@@ -638,7 +638,7 @@ describe('mouse operation', function () {
       expect(getViewSwitch(picker).textContent, 'to be', '2010-2019');
 
       cells = getCells(picker);
-      expect(filterCells(cells, '.focused'), 'to equal', [cells[1]]);
+      expect(getCellIndices(cells, '.focused'), 'to equal', [1]);
       expect(cells[1].textContent, 'to be', '2010');
 
       // click "2017"
@@ -648,7 +648,7 @@ describe('mouse operation', function () {
       expect(getViewSwitch(picker).textContent, 'to be', '2017');
 
       cells = getCells(picker);
-      expect(filterCells(cells, '.focused'), 'to equal', [cells[1]]);
+      expect(getCellIndices(cells, '.focused'), 'to equal', [1]);
       expect(cells[1].textContent, 'to be', 'Feb');
 
       // click "Oct"
@@ -658,8 +658,8 @@ describe('mouse operation', function () {
       expect(getViewSwitch(picker).textContent, 'to be', 'October 2017');
 
       cells = getCells(picker);
-      expect(filterCells(cells, '.focused'), 'to equal', [cells[1]]);
-      expect(cells[10].textContent, 'to be', '11');
+      expect(getCellIndices(cells, '.focused'), 'to equal', [13]);
+      expect(cells[13].textContent, 'to be', '14');
     });
   });
 });

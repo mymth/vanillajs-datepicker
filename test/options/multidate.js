@@ -44,17 +44,17 @@ describe('options - multi date', function () {
       cells[9].click();
       expect(dp.dates, 'to equal', [dateValue(2020, 1, 14), dateValue(2020, 1, 4)]);
       expect(input.value, 'to be', '02/14/2020,02/04/2020');
-      expect(filterCells(cells, '.selected'), 'to equal', [cells[19], cells[9]]);
+      expect(getCellIndices(cells, '.selected'), 'to equal', [9, 19]);
       // view date is changed co the last selected item
-      expect(filterCells(cells, '.focused'), 'to equal', [cells[9]]);
+      expect(getCellIndices(cells, '.focused'), 'to equal', [9]);
 
       input.value = '2/3/2020,2/22/2020';
       dp.update();
       expect(dp.dates, 'to equal', [dateValue(2020, 1, 3), dateValue(2020, 1, 22)]);
       expect(input.value, 'to be', '02/03/2020,02/22/2020');
-      expect(filterCells(cells, '.selected'), 'to equal', [cells[8], cells[27]]);
+      expect(getCellIndices(cells, '.selected'), 'to equal', [8, 27]);
       // view date is changed co the last item of the selection
-      expect(filterCells(cells, '.focused'), 'to equal', [cells[27]]);
+      expect(getCellIndices(cells, '.focused'), 'to equal', [27]);
 
       dp.destroy();
       input.value = '';
@@ -83,15 +83,15 @@ describe('options - multi date', function () {
         dateValue(2020, 1, 14),
       ]);
       expect(input.value, 'to be', '01/27/2020,02/07/2020,02/14/2020');
-      expect(filterCells(cells, '.selected'), 'to equal', [cells[1], cells[12], cells[19]]);
-      expect(filterCells(cells, '.focused'), 'to equal', [cells[19]]);
+      expect(getCellIndices(cells, '.selected'), 'to equal', [1, 12, 19]);
+      expect(getCellIndices(cells, '.focused'), 'to equal', [19]);
 
       input.value = '2/3/2020,2/22/2020';
       dp.update();
       expect(dp.dates, 'to equal', [dateValue(2020, 1, 3), dateValue(2020, 1, 22)]);
       expect(input.value, 'to be', '02/03/2020,02/22/2020');
-      expect(filterCells(cells, '.selected'), 'to equal', [cells[8], cells[27]]);
-      expect(filterCells(cells, '.focused'), 'to equal', [cells[27]]);
+      expect(getCellIndices(cells, '.selected'), 'to equal', [8, 27]);
+      expect(getCellIndices(cells, '.focused'), 'to equal', [27]);
 
       // setting initial dates does not cuase error
       // (issue #51)
@@ -120,15 +120,15 @@ describe('options - multi date', function () {
       cells[19].click();
       expect(dp.dates, 'to equal', [dateValue(2020, 1, 7)]);
       expect(input.value, 'to be', '02/07/2020');
-      expect(filterCells(cells, '.selected'), 'to equal', [cells[12]]);
-      expect(filterCells(cells, '.focused'), 'to equal', [cells[12]]);
+      expect(getCellIndices(cells, '.selected'), 'to equal', [12]);
+      expect(getCellIndices(cells, '.focused'), 'to equal', [12]);
 
       cells[12].click();
       expect(dp.dates, 'to equal', []);
       expect(input.value, 'to be', '');
-      expect(filterCells(cells, '.selected'), 'to equal', []);
+      expect(getCellIndices(cells, '.selected'), 'to equal', []);
       // view date is changed to the default view date
-      expect(filterCells(cells, '.focused'), 'to equal', [cells[19]]);
+      expect(getCellIndices(cells, '.focused'), 'to equal', [19]);
 
       dp.destroy();
       input.value = '';
@@ -143,14 +143,14 @@ describe('options - multi date', function () {
       dp.setDate('2/14/2020');
       expect(dp.dates, 'to equal', [dateValue(2020, 1, 7)]);
       expect(input.value, 'to be', '02/07/2020');
-      expect(filterCells(cells, '.selected'), 'to equal', [cells[12]]);
-      expect(filterCells(cells, '.focused'), 'to equal', [cells[12]]);
+      expect(getCellIndices(cells, '.selected'), 'to equal', [12]);
+      expect(getCellIndices(cells, '.focused'), 'to equal', [12]);
 
       dp.setDate('2/11/2020', '2/7/2020', '2/14/2020');
       expect(dp.dates, 'to equal', [dateValue(2020, 1, 11), dateValue(2020, 1, 14)]);
       expect(input.value, 'to be', '02/11/2020,02/14/2020');
-      expect(filterCells(cells, '.selected'), 'to equal', [cells[16], cells[19]]);
-      expect(filterCells(cells, '.focused'), 'to equal', [cells[19]]);
+      expect(getCellIndices(cells, '.selected'), 'to equal', [16, 19]);
+      expect(getCellIndices(cells, '.focused'), 'to equal', [19]);
 
       dp.destroy();
       input.value = '';
@@ -165,8 +165,8 @@ describe('options - multi date', function () {
       dp.setDate('2/14/2020', {clear: true});
       expect(dp.dates, 'to equal', [dateValue(2020, 1, 14)]);
       expect(input.value, 'to be', '02/14/2020');
-      expect(filterCells(cells, '.selected'), 'to equal', [cells[19]]);
-      expect(filterCells(cells, '.focused'), 'to equal', [cells[19]]);
+      expect(getCellIndices(cells, '.selected'), 'to equal', [19]);
+      expect(getCellIndices(cells, '.focused'), 'to equal', [19]);
 
       dp.setDate('2/11/2020', '2/7/2020', '2/14/2020', {clear: true});
       expect(dp.dates, 'to equal', [
@@ -175,8 +175,8 @@ describe('options - multi date', function () {
         dateValue(2020, 1, 14),
       ]);
       expect(input.value, 'to be', '02/11/2020,02/07/2020,02/14/2020');
-      expect(filterCells(cells, '.selected'), 'to equal', [cells[16], cells[12], cells[19]]);
-      expect(filterCells(cells, '.focused'), 'to equal', [cells[19]]);
+      expect(getCellIndices(cells, '.selected'), 'to equal', [12, 16, 19]);
+      expect(getCellIndices(cells, '.focused'), 'to equal', [19]);
 
       dp.destroy();
       input.value = '';
@@ -252,8 +252,8 @@ describe('options - multi date', function () {
       dp.update();
       expect(dp.dates, 'to equal', [dateValue(2020, 1, 14)]);
       expect(input.value, 'to be', '02/14/2020');
-      expect(filterCells(cells, '.selected'), 'to equal', [cells[19]]);
-      expect(filterCells(cells, '.focused'), 'to equal', [cells[19]]);
+      expect(getCellIndices(cells, '.selected'), 'to equal', [19]);
+      expect(getCellIndices(cells, '.focused'), 'to equal', [19]);
 
       input.value = '2/11/2020,2/7/2020,2/14/2020';
       dp.update();
@@ -263,8 +263,8 @@ describe('options - multi date', function () {
         dateValue(2020, 1, 14),
       ]);
       expect(input.value, 'to be', '02/11/2020,02/07/2020,02/14/2020');
-      expect(filterCells(cells, '.selected'), 'to equal', [cells[16], cells[12], cells[19]]);
-      expect(filterCells(cells, '.focused'), 'to equal', [cells[19]]);
+      expect(getCellIndices(cells, '.selected'), 'to equal', [12, 16, 19]);
+      expect(getCellIndices(cells, '.focused'), 'to equal', [19]);
 
       dp.destroy();
       input.value = '';

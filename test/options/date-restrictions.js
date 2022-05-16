@@ -45,18 +45,18 @@ describe('options - date restrictions', function () {
       cells[17].click();
       expect(dp.dates, 'to equal', []);
       expect(input.value, 'to be', '');
-      expect(filterCells(cells, '.selected'), 'to equal', []);
+      expect(getCellIndices(cells, '.selected'), 'to equal', []);
 
       dp.setDate(new Date(2020, 1, 12));
       expect(dp.dates, 'to equal', []);
       expect(input.value, 'to be', '');
-      expect(filterCells(cells, '.selected'), 'to equal', []);
+      expect(getCellIndices(cells, '.selected'), 'to equal', []);
 
       input.value = '2/12/2020';
       dp.update();
       expect(dp.dates, 'to equal', []);
       expect(input.value, 'to be', '2/12/2020');
-      expect(filterCells(cells, '.selected'), 'to equal', []);
+      expect(getCellIndices(cells, '.selected'), 'to equal', []);
 
       cells[16].click();
       expect(dp.dates, 'to equal', [dateValue(2020, 1, 11)]);
@@ -340,18 +340,18 @@ describe('options - date restrictions', function () {
       cells[14].click();
       expect(dp.dates, 'to equal', []);
       expect(input.value, 'to be', '');
-      expect(filterCells(cells, '.selected'), 'to equal', []);
+      expect(getCellIndices(cells, '.selected'), 'to equal', []);
 
       dp.setDate(new Date(2020, 1, 9));
       expect(dp.dates, 'to equal', []);
       expect(input.value, 'to be', '');
-      expect(filterCells(cells, '.selected'), 'to equal', []);
+      expect(getCellIndices(cells, '.selected'), 'to equal', []);
 
       input.value = '2/9/2020';
       dp.update();
       expect(dp.dates, 'to equal', []);
       expect(input.value, 'to be', '2/9/2020');
-      expect(filterCells(cells, '.selected'), 'to equal', []);
+      expect(getCellIndices(cells, '.selected'), 'to equal', []);
 
       cells[15].click();
       expect(dp.dates, 'to equal', [dateValue(2020, 1, 10)]);
@@ -545,18 +545,18 @@ describe('options - date restrictions', function () {
       cells[31].click();
       expect(dp.dates, 'to equal', []);
       expect(input.value, 'to be', '');
-      expect(filterCells(cells, '.selected'), 'to equal', []);
+      expect(getCellIndices(cells, '.selected'), 'to equal', []);
 
       dp.setDate(new Date(2020, 1, 26));
       expect(dp.dates, 'to equal', []);
       expect(input.value, 'to be', '');
-      expect(filterCells(cells, '.selected'), 'to equal', []);
+      expect(getCellIndices(cells, '.selected'), 'to equal', []);
 
       input.value = '2/26/2020';
       dp.update();
       expect(dp.dates, 'to equal', []);
       expect(input.value, 'to be', '2/26/2020');
-      expect(filterCells(cells, '.selected'), 'to equal', []);
+      expect(getCellIndices(cells, '.selected'), 'to equal', []);
 
       cells[30].click();
       expect(dp.dates, 'to equal', [dateValue(2020, 1, 25)]);
@@ -816,18 +816,18 @@ describe('options - date restrictions', function () {
       cells[7].click();
       expect(dp.dates, 'to equal', []);
       expect(input.value, 'to be', '');
-      expect(filterCells(cells, '.selected'), 'to equal', []);
+      expect(getCellIndices(cells, '.selected'), 'to equal', []);
 
       dp.setDate(new Date(2022, 6, 3));
       expect(dp.dates, 'to equal', []);
       expect(input.value, 'to be', '');
-      expect(filterCells(cells, '.selected'), 'to equal', []);
+      expect(getCellIndices(cells, '.selected'), 'to equal', []);
 
       input.value = '7/3/2022';
       dp.update();
       expect(dp.dates, 'to equal', []);
       expect(input.value, 'to be', '7/3/2022');
-      expect(filterCells(cells, '.selected'), 'to equal', []);
+      expect(getCellIndices(cells, '.selected'), 'to equal', []);
 
       cells[8].click();
       expect(dp.dates, 'to equal', [dateValue(2022, 6, 4)]);

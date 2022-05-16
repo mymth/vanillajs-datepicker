@@ -120,8 +120,8 @@ describe('options - format & language', function () {
       expect(cells[33].textContent, 'to be', '29');
       expect(cells[41].textContent, 'to be', '8');
 
-      expect(filterCells(cells, '.selected'), 'to equal', [cells[18]]);
-      expect(filterCells(cells, '.focused'), 'to equal', [cells[18]]);
+      expect(getCellIndices(cells, '.selected'), 'to equal', [18]);
+      expect(getCellIndices(cells, '.focused'), 'to equal', [18]);
       expect(cells[18].textContent, 'to be', '14');
 
       viewSwitch.click();
@@ -137,8 +137,8 @@ describe('options - format & language', function () {
       expect(input.value, 'to be', '2020-04-22');
 
       cells = getCells(picker);
-      expect(filterCells(cells, '.selected'), 'to equal', [cells[23]]);
-      expect(filterCells(cells, '.focused'), 'to equal', [cells[23]]);
+      expect(getCellIndices(cells, '.selected'), 'to equal', [23]);
+      expect(getCellIndices(cells, '.focused'), 'to equal', [23]);
       expect(cells[23].textContent, 'to be', '22');
 
       dp.destroy();
@@ -157,8 +157,8 @@ describe('options - format & language', function () {
       expect(getDayNames(picker), 'to equal', locale.daysMin);
 
       let cells = getCells(picker);
-      expect(filterCells(cells, '.selected'), 'to equal', [cells[19]]);
-      expect(filterCells(cells, '.focused'), 'to equal', [cells[19]]);
+      expect(getCellIndices(cells, '.selected'), 'to equal', [19]);
+      expect(getCellIndices(cells, '.focused'), 'to equal', [19]);
       expect(cells[19].textContent, 'to be', '14');
 
       dp.destroy();
@@ -221,8 +221,8 @@ describe('options - format & language', function () {
       expect(getDayNames(picker), 'to equal', dayNames);
 
       let cells = getCells(picker);
-      expect(filterCells(cells, '.selected'), 'to equal', [cells[18]]);
-      expect(filterCells(cells, '.focused'), 'to equal', [cells[18]]);
+      expect(getCellIndices(cells, '.selected'), 'to equal', [18]);
+      expect(getCellIndices(cells, '.focused'), 'to equal', [18]);
       expect(cells[18].textContent, 'to be', '14');
 
       locale = Datepicker.locales.fr;
@@ -238,8 +238,8 @@ describe('options - format & language', function () {
       expect(getDayNames(picker), 'to equal', dayNames);
 
       cells = getCells(picker);
-      expect(filterCells(cells, '.selected'), 'to equal', [cells[18]]);
-      expect(filterCells(cells, '.focused'), 'to equal', [cells[18]]);
+      expect(getCellIndices(cells, '.selected'), 'to equal', [18]);
+      expect(getCellIndices(cells, '.focused'), 'to equal', [18]);
       expect(cells[18].textContent, 'to be', '14');
 
       locale = Datepicker.locales.en;
@@ -253,8 +253,8 @@ describe('options - format & language', function () {
       expect(getDayNames(picker), 'to equal', locale.daysMin);
 
       cells = getCells(picker);
-      expect(filterCells(cells, '.selected'), 'to equal', [cells[19]]);
-      expect(filterCells(cells, '.focused'), 'to equal', [cells[19]]);
+      expect(getCellIndices(cells, '.selected'), 'to equal', [19]);
+      expect(getCellIndices(cells, '.focused'), 'to equal', [19]);
       expect(cells[19].textContent, 'to be', '14');
 
       dp.destroy();
@@ -273,8 +273,8 @@ describe('options - format & language', function () {
       expect(getDayNames(picker), 'to equal', locale.daysMin);
 
       let cells = getCells(picker);
-      expect(filterCells(cells, '.selected'), 'to equal', [cells[19]]);
-      expect(filterCells(cells, '.focused'), 'to equal', [cells[19]]);
+      expect(getCellIndices(cells, '.selected'), 'to equal', [19]);
+      expect(getCellIndices(cells, '.focused'), 'to equal', [19]);
       expect(cells[19].textContent, 'to be', '14');
 
       dp.destroy();

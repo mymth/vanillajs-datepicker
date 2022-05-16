@@ -45,8 +45,8 @@ describe('options - pick level & view', function () {
       expect(dp.dates, 'to equal', [dateValue(2020, 1, 1)]);
       expect(input.value, 'to be', '02/01/2020');
       expect(viewSwitch.textContent, 'to be', '2020');
-      expect(filterCells(cells, '.selected'), 'to equal', [cells[1]]);
-      expect(filterCells(cells, '.focused'), 'to equal', [cells[1]]);
+      expect(getCellIndices(cells, '.selected'), 'to equal', [1]);
+      expect(getCellIndices(cells, '.focused'), 'to equal', [1]);
 
       // mouse operation
       cells[0].click();
@@ -55,8 +55,8 @@ describe('options - pick level & view', function () {
       expect(dp.dates, 'to equal', [dateValue(2020, 0, 1)]);
       expect(input.value, 'to be', '01/01/2020');
       expect(viewSwitch.textContent, 'to be', '2020');
-      expect(filterCells(cells, '.selected'), 'to equal', [cells[0]]);
-      expect(filterCells(cells, '.focused'), 'to equal', [cells[0]]);
+      expect(getCellIndices(cells, '.selected'), 'to equal', [0]);
+      expect(getCellIndices(cells, '.focused'), 'to equal', [0]);
 
       nextBtn.click();
       getCells(picker)[7].click();
@@ -65,8 +65,8 @@ describe('options - pick level & view', function () {
       expect(dp.dates, 'to equal', [dateValue(2021, 7, 1)]);
       expect(input.value, 'to be', '08/01/2021');
       expect(viewSwitch.textContent, 'to be', '2021');
-      expect(filterCells(cells, '.selected'), 'to equal', [cells[7]]);
-      expect(filterCells(cells, '.focused'), 'to equal', [cells[7]]);
+      expect(getCellIndices(cells, '.selected'), 'to equal', [7]);
+      expect(getCellIndices(cells, '.focused'), 'to equal', [7]);
 
       // keyboard operation
       simulant.fire(input, 'keydown', {key: 'ArrowLeft', ctrlKey: true});
@@ -77,7 +77,7 @@ describe('options - pick level & view', function () {
       expect(dp.dates, 'to equal', [dateValue(2020, 6, 1)]);
       expect(input.value, 'to be', '07/01/2020');
       expect(viewSwitch.textContent, 'to be', '2020');
-      expect(filterCells(cells, '.selected'), 'to equal', [cells[6]]);
+      expect(getCellIndices(cells, '.selected'), 'to equal', [6]);
 
       dp.enterEditMode();
       input.value = '4/20/2021';
@@ -87,7 +87,7 @@ describe('options - pick level & view', function () {
       expect(dp.dates, 'to equal', [dateValue(2021, 3, 1)]);
       expect(input.value, 'to be', '04/01/2021');
       expect(viewSwitch.textContent, 'to be', '2021');
-      expect(filterCells(cells, '.selected'), 'to equal', [cells[3]]);
+      expect(getCellIndices(cells, '.selected'), 'to equal', [3]);
 
       // api call
       viewSwitch.click();
@@ -98,7 +98,7 @@ describe('options - pick level & view', function () {
       expect(dp.dates, 'to equal', [dateValue(2022, 1, 1)]);
       expect(input.value, 'to be', '02/01/2022');
       expect(viewSwitch.textContent, 'to be', '2022');
-      expect(filterCells(cells, '.selected'), 'to equal', [cells[1]]);
+      expect(getCellIndices(cells, '.selected'), 'to equal', [1]);
 
       viewSwitch.click();
       dp.hide();
@@ -111,7 +111,7 @@ describe('options - pick level & view', function () {
       expect(dp.dates, 'to equal', [dateValue(2020, 2, 1)]);
       expect(input.value, 'to be', '03/01/2020');
       expect(viewSwitch.textContent, 'to be', '2020');
-      expect(filterCells(cells, '.selected'), 'to equal', [cells[2]]);
+      expect(getCellIndices(cells, '.selected'), 'to equal', [2]);
 
       dp.destroy();
     });
@@ -127,8 +127,8 @@ describe('options - pick level & view', function () {
       expect(dp.dates, 'to equal', [dateValue(2020, 0, 1)]);
       expect(input.value, 'to be', '01/01/2020');
       expect(viewSwitch.textContent, 'to be', '2020-2029');
-      expect(filterCells(cells, '.selected'), 'to equal', [cells[1]]);
-      expect(filterCells(cells, '.focused'), 'to equal', [cells[1]]);
+      expect(getCellIndices(cells, '.selected'), 'to equal', [1]);
+      expect(getCellIndices(cells, '.focused'), 'to equal', [1]);
 
       // mouse operation
       cells[2].click();
@@ -137,8 +137,8 @@ describe('options - pick level & view', function () {
       expect(dp.dates, 'to equal', [dateValue(2021, 0, 1)]);
       expect(input.value, 'to be', '01/01/2021');
       expect(viewSwitch.textContent, 'to be', '2020-2029');
-      expect(filterCells(cells, '.selected'), 'to equal', [cells[2]]);
-      expect(filterCells(cells, '.focused'), 'to equal', [cells[2]]);
+      expect(getCellIndices(cells, '.selected'), 'to equal', [2]);
+      expect(getCellIndices(cells, '.focused'), 'to equal', [2]);
 
       nextBtn.click();
       getCells(picker)[7].click();
@@ -147,8 +147,8 @@ describe('options - pick level & view', function () {
       expect(dp.dates, 'to equal', [dateValue(2036, 0, 1)]);
       expect(input.value, 'to be', '01/01/2036');
       expect(viewSwitch.textContent, 'to be', '2030-2039');
-      expect(filterCells(cells, '.selected'), 'to equal', [cells[7]]);
-      expect(filterCells(cells, '.focused'), 'to equal', [cells[7]]);
+      expect(getCellIndices(cells, '.selected'), 'to equal', [7]);
+      expect(getCellIndices(cells, '.focused'), 'to equal', [7]);
 
       // keyboard operation
       simulant.fire(input, 'keydown', {key: 'ArrowLeft', ctrlKey: true});
@@ -159,7 +159,7 @@ describe('options - pick level & view', function () {
       expect(dp.dates, 'to equal', [dateValue(2025, 0, 1)]);
       expect(input.value, 'to be', '01/01/2025');
       expect(viewSwitch.textContent, 'to be', '2020-2029');
-      expect(filterCells(cells, '.selected'), 'to equal', [cells[6]]);
+      expect(getCellIndices(cells, '.selected'), 'to equal', [6]);
 
       dp.enterEditMode();
       input.value = '4/20/2021';
@@ -169,7 +169,7 @@ describe('options - pick level & view', function () {
       expect(dp.dates, 'to equal', [dateValue(2021, 0, 1)]);
       expect(input.value, 'to be', '01/01/2021');
       expect(viewSwitch.textContent, 'to be', '2020-2029');
-      expect(filterCells(cells, '.selected'), 'to equal', [cells[2]]);
+      expect(getCellIndices(cells, '.selected'), 'to equal', [2]);
 
       // api call
       viewSwitch.click();
@@ -180,7 +180,7 @@ describe('options - pick level & view', function () {
       expect(dp.dates, 'to equal', [dateValue(2032, 0, 1)]);
       expect(input.value, 'to be', '01/01/2032');
       expect(viewSwitch.textContent, 'to be', '2030-2039');
-      expect(filterCells(cells, '.selected'), 'to equal', [cells[3]]);
+      expect(getCellIndices(cells, '.selected'), 'to equal', [3]);
 
       viewSwitch.click();
       dp.hide();
@@ -193,7 +193,7 @@ describe('options - pick level & view', function () {
       expect(dp.dates, 'to equal', [dateValue(2020, 0, 1)]);
       expect(input.value, 'to be', '01/01/2020');
       expect(viewSwitch.textContent, 'to be', '2020-2029');
-      expect(filterCells(cells, '.selected'), 'to equal', [cells[1]]);
+      expect(getCellIndices(cells, '.selected'), 'to equal', [1]);
 
       dp.destroy();
     });
@@ -214,22 +214,22 @@ describe('options - pick level & view', function () {
       expect(dp.dates, 'to equal', [dateValue(2020, 1, 1)]);
       expect(input.value, 'to be', '02/01/2020');
       expect(viewSwitch.textContent, 'to be', '2020');
-      expect(filterCells(cells, '.selected'), 'to equal', [cells[0]]);
+      expect(getCellIndices(cells, '.selected'), 'to equal', [1]);
 
       dp.setOptions({pickLevel: 0});
 
       cells = getCells(picker);
       expect(viewSwitch.textContent, 'to be', 'February 2020');
-      expect(filterCells(cells, '.selected'), 'to equal', [cells[6]]);
-      expect(filterCells(cells, '.focused'), 'to equal', [cells[6]]);
+      expect(getCellIndices(cells, '.selected'), 'to equal', [6]);
+      expect(getCellIndices(cells, '.focused'), 'to equal', [6]);
 
       viewSwitch.click();
       getCells(picker)[3].click();
 
       cells = getCells(picker);
       expect(viewSwitch.textContent, 'to be', 'April 2020');
-      expect(filterCells(cells, '.selected'), 'to equal', []);
-      expect(filterCells(cells, '.focused'), 'to equal', [cells[3]]);
+      expect(getCellIndices(cells, '.selected'), 'to equal', []);
+      expect(getCellIndices(cells, '.focused'), 'to equal', [3]);
 
       dp.destroy();
     });
@@ -482,7 +482,7 @@ describe('options - pick level & view', function () {
       expect(viewSwitch.textContent, 'to be', '2000-2090');
 
       let cells = getCells(picker);
-      expect(filterCells(cells, '.focused'), 'to equal', [cells[3]]);
+      expect(getCellIndices(cells, '.focused'), 'to equal', [3]);
       expect(cells[3].textContent, 'to be', '2020');
 
       dp.destroy();
@@ -496,7 +496,7 @@ describe('options - pick level & view', function () {
       expect(viewSwitch.textContent, 'to be', '2020-2029');
 
       let cells = getCells(picker);
-      expect(filterCells(cells, '.focused'), 'to equal', [cells[1]]);
+      expect(getCellIndices(cells, '.focused'), 'to equal', [1]);
       expect(cells[1].textContent, 'to be', '2020');
 
       dp.destroy();
@@ -510,7 +510,7 @@ describe('options - pick level & view', function () {
       expect(viewSwitch.textContent, 'to be', '2020-2029');
 
       let cells = getCells(picker);
-      expect(filterCells(cells, '.focused'), 'to equal', [cells[1]]);
+      expect(getCellIndices(cells, '.focused'), 'to equal', [1]);
       expect(cells[1].textContent, 'to be', '2020');
 
       dp.destroy();
@@ -525,7 +525,7 @@ describe('options - pick level & view', function () {
       expect(viewSwitch.textContent, 'to be', '2020-2029');
 
       let cells = getCells(picker);
-      expect(filterCells(cells, '.focused'), 'to equal', [cells[1]]);
+      expect(getCellIndices(cells, '.focused'), 'to equal', [1]);
       expect(cells[1].textContent, 'to be', '2020');
 
       dp.hide();
@@ -535,7 +535,7 @@ describe('options - pick level & view', function () {
       expect(viewSwitch.textContent, 'to be', 'February 2020');
 
       cells = getCells(picker);
-      expect(filterCells(cells, '.focused'), 'to equal', [cells[19]]);
+      expect(getCellIndices(cells, '.focused'), 'to equal', [19]);
       expect(cells[19].textContent, 'to be', '14');
 
       dp.destroy();

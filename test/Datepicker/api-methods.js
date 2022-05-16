@@ -56,8 +56,8 @@ describe('Datepicker - API methods', function () {
       expect(viewSwitdh.textContent, 'to be', 'December 2019');
 
       let cells = getCells(picker);
-      expect(filterCells(cells, '.selected'), 'to equal', [cells[22]]);
-      expect(filterCells(cells, '.focused'), 'to equal', [cells[22]]);
+      expect(getCellIndices(cells, '.selected'), 'to equal', [22]);
+      expect(getCellIndices(cells, '.focused'), 'to equal', [22]);
       expect(cells[22].textContent, 'to be', '23');
 
       dp.setDate('04/22/2020');
@@ -67,8 +67,8 @@ describe('Datepicker - API methods', function () {
       expect(viewSwitdh.textContent, 'to be', 'April 2020');
 
       cells = getCells(picker);
-      expect(filterCells(cells, '.selected'), 'to equal', [cells[24]]);
-      expect(filterCells(cells, '.focused'), 'to equal', [cells[24]]);
+      expect(getCellIndices(cells, '.selected'), 'to equal', [24]);
+      expect(getCellIndices(cells, '.focused'), 'to equal', [24]);
       expect(cells[24].textContent, 'to be', '22');
 
       // change by api call should not be a trigger of change event
@@ -86,8 +86,8 @@ describe('Datepicker - API methods', function () {
       expect(viewSwitdh.textContent, 'to be', 'February 2020');
 
       cells = getCells(picker);
-      expect(filterCells(cells, '.selected'), 'to equal', [cells[19]]);
-      expect(filterCells(cells, '.focused'), 'to equal', [cells[19]]);
+      expect(getCellIndices(cells, '.selected'), 'to equal', [19]);
+      expect(getCellIndices(cells, '.focused'), 'to equal', [19]);
       expect(cells[19].textContent, 'to be', '14');
     });
 
@@ -101,8 +101,8 @@ describe('Datepicker - API methods', function () {
       expect(viewSwitdh.textContent, 'to be', 'April 2020');
 
       const cells = getCells(picker);
-      expect(filterCells(cells, '.selected'), 'to equal', [cells[24]]);
-      expect(filterCells(cells, '.focused'), 'to equal', [cells[24]]);
+      expect(getCellIndices(cells, '.selected'), 'to equal', [24]);
+      expect(getCellIndices(cells, '.focused'), 'to equal', [24]);
       expect(cells[24].textContent, 'to be', '22');
 
       dp.setDate('');
@@ -124,10 +124,10 @@ describe('Datepicker - API methods', function () {
 
       // view date is changed to the default view date (current date)
       const cells = getCells(picker);
-      const todayCell = filterCells(cells, el => el.dataset.date == today)[0];
-      expect(todayCell.textContent, 'to be', Datepicker.formatDate(today, 'd'));
-      expect(filterCells(cells, '.selected'), 'to equal', []);
-      expect(filterCells(cells, '.focused'), 'to equal', [todayCell]);
+      const [todayCellIndex] = getCellIndices(cells, el => el.dataset.date == today);
+      expect(cells[todayCellIndex].textContent, 'to be', Datepicker.formatDate(today, 'd'));
+      expect(getCellIndices(cells, '.selected'), 'to equal', []);
+      expect(getCellIndices(cells, '.focused'), 'to equal', [todayCellIndex]);
 
       // change by api call should not be a trigger of change event
       // (issue #24)
@@ -143,8 +143,8 @@ describe('Datepicker - API methods', function () {
       expect(input.value, 'to be', '12/23/2019');
 
       const cells = getCells(picker);
-      expect(filterCells(cells, '.selected'), 'to equal', [cells[24]]);
-      expect(filterCells(cells, '.focused'), 'to equal', [cells[24]]);
+      expect(getCellIndices(cells, '.selected'), 'to equal', [24]);
+      expect(getCellIndices(cells, '.focused'), 'to equal', [24]);
       expect(cells[24].textContent, 'to be', '22');
     });
 
@@ -155,7 +155,10 @@ describe('Datepicker - API methods', function () {
       expect(dp.dates, 'to equal', [date.getTime()]);
       expect(input.value, 'to be', '12/23/2019');
       expect(getViewSwitch(picker).textContent, 'to be', 'April 2020');
-      expect(filterCells(getCells(picker), '.selected')[0].textContent, 'to be', '22');
+
+      let cells = getCells(picker);
+      let [selectedCellIndex] = getCellIndices(cells, '.selected');
+      expect(cells[selectedCellIndex].textContent, 'to be', '22');
       expect(isVisible(picker), 'to be true');
 
       date = new Date(2018, 6, 14);
@@ -164,7 +167,10 @@ describe('Datepicker - API methods', function () {
       expect(dp.dates, 'to equal', [date.getTime()]);
       expect(input.value, 'to be', '07/14/2018');
       expect(getViewSwitch(picker).textContent, 'to be', 'July 2018');
-      expect(filterCells(getCells(picker), '.selected')[0].textContent, 'to be', '14');
+
+      cells = getCells(picker);
+      ([selectedCellIndex] = getCellIndices(cells, '.selected'));
+      expect(cells[selectedCellIndex].textContent, 'to be', '14');
       expect(isVisible(picker), 'to be false');
     });
 
@@ -205,8 +211,8 @@ describe('Datepicker - API methods', function () {
       expect(viewSwitdh.textContent, 'to be', 'December 2019');
 
       let cells = getCells(picker);
-      expect(filterCells(cells, '.selected'), 'to equal', [cells[22]]);
-      expect(filterCells(cells, '.focused'), 'to equal', [cells[22]]);
+      expect(getCellIndices(cells, '.selected'), 'to equal', [22]);
+      expect(getCellIndices(cells, '.focused'), 'to equal', [22]);
       expect(cells[22].textContent, 'to be', '23');
 
       // change the view to the selected daye's days view
@@ -220,8 +226,8 @@ describe('Datepicker - API methods', function () {
       expect(viewSwitdh.textContent, 'to be', 'February 2020');
 
       cells = getCells(picker);
-      expect(filterCells(cells, '.selected'), 'to equal', [cells[19]]);
-      expect(filterCells(cells, '.focused'), 'to equal', [cells[19]]);
+      expect(getCellIndices(cells, '.selected'), 'to equal', [19]);
+      expect(getCellIndices(cells, '.focused'), 'to equal', [19]);
       expect(cells[19].textContent, 'to be', '14');
     });
 
@@ -233,7 +239,10 @@ describe('Datepicker - API methods', function () {
       expect(dp.dates, 'to equal', [date.getTime()]);
       expect(input.value, 'to be', '07/04/2020');
       expect(getViewSwitch(picker).textContent, 'to be', 'July 2020');
-      expect(filterCells(getCells(picker), '.selected')[0].textContent, 'to be', '4');
+
+      const cells = getCells(picker);
+      const [selectedCellIndex] = getCellIndices(cells, '.selected');
+      expect(cells[selectedCellIndex].textContent, 'to be', '4');
     });
 
     it('hides the picker if autohide options = true', function () {
@@ -282,8 +291,8 @@ describe('Datepicker - API methods', function () {
       expect(getViewSwitch(picker).textContent, 'to be', 'February 2020');
 
       const cells = getCells(picker);
-      expect(filterCells(cells, '.selected'), 'to equal', [cells[19]]);
-      expect(filterCells(cells, '.focused'), 'to equal', [cells[19]]);
+      expect(getCellIndices(cells, '.selected'), 'to equal', [19]);
+      expect(getCellIndices(cells, '.focused'), 'to equal', [19]);
       expect(cells[19].textContent, 'to be', '14');
 
       // change by api call should not be a trigger of change event
@@ -301,8 +310,8 @@ describe('Datepicker - API methods', function () {
       expect(getViewSwitch(picker).textContent, 'to be', 'February 2020');
 
       let cells = getCells(picker);
-      expect(filterCells(cells, '.selected'), 'to equal', [cells[19]]);
-      expect(filterCells(cells, '.focused'), 'to equal', [cells[19]]);
+      expect(getCellIndices(cells, '.selected'), 'to equal', [19]);
+      expect(getCellIndices(cells, '.focused'), 'to equal', [19]);
       expect(cells[19].textContent, 'to be', '14');
 
       // go back to the current date's days view if no date is selected
@@ -314,8 +323,8 @@ describe('Datepicker - API methods', function () {
       expect(getViewSwitch(picker).textContent, 'to be', 'March 2020');
 
       cells = getCells(picker);
-      expect(filterCells(cells, '.selected'), 'to equal', []);
-      expect(filterCells(cells, '.focused'), 'to equal', [cells[13]]);
+      expect(getCellIndices(cells, '.selected'), 'to equal', []);
+      expect(getCellIndices(cells, '.focused'), 'to equal', [13]);
       expect(cells[13].textContent, 'to be', '14');
 
       clock.restore();
@@ -329,8 +338,8 @@ describe('Datepicker - API methods', function () {
       expect(getViewSwitch(picker).textContent, 'to be', 'February 2020');
 
       const cells = getCells(picker);
-      expect(filterCells(cells, '.selected'), 'to equal', [cells[19]]);
-      expect(filterCells(cells, '.focused'), 'to equal', [cells[19]]);
+      expect(getCellIndices(cells, '.selected'), 'to equal', [19]);
+      expect(getCellIndices(cells, '.focused'), 'to equal', [19]);
       expect(cells[19].textContent, 'to be', '14');
     });
 
@@ -342,8 +351,8 @@ describe('Datepicker - API methods', function () {
       expect(getViewSwitch(picker).textContent, 'to be', 'April 2020');
 
       const cells = getCells(picker);
-      expect(filterCells(cells, '.selected'), 'to equal', [cells[24]]);
-      expect(filterCells(cells, '.focused'), 'to equal', [cells[24]]);
+      expect(getCellIndices(cells, '.selected'), 'to equal', [24]);
+      expect(getCellIndices(cells, '.focused'), 'to equal', [24]);
       expect(cells[24].textContent, 'to be', '22');
     });
 
@@ -357,8 +366,8 @@ describe('Datepicker - API methods', function () {
       cells = getCells(picker);
       expect(input.value, 'to be', '04/22/2020');
       expect(getViewSwitch(picker).textContent, 'to be', 'April 2020');
-      expect(filterCells(cells, '.selected'), 'to equal', [cells[12]]);
-      expect(filterCells(cells, '.foo'), 'to equal', [cells[16]]);
+      expect(getCellIndices(cells, '.selected'), 'to equal', [12]);
+      expect(getCellIndices(cells, '.foo'), 'to equal', [16]);
       expect(cells[12].textContent, 'to be', '♥︎');
 
       dp.refresh('picker', true);
@@ -366,8 +375,8 @@ describe('Datepicker - API methods', function () {
       cells = getCells(picker);
       expect(input.value, 'to be', '04/22/2020');
       expect(getViewSwitch(picker).textContent, 'to be', 'April 2020');
-      expect(filterCells(cells, '.selected'), 'to equal', [cells[12]]);
-      expect(filterCells(cells, '.foo'), 'to equal', []);
+      expect(getCellIndices(cells, '.selected'), 'to equal', [12]);
+      expect(getCellIndices(cells, '.foo'), 'to equal', []);
       expect(cells[12].textContent, 'to be', '10');
 
       cells[16].classList.add('foo');
@@ -377,8 +386,8 @@ describe('Datepicker - API methods', function () {
       cells = getCells(picker);
       expect(input.value, 'to be', '04/10/2020');
       expect(getViewSwitch(picker).textContent, 'to be', 'April 2020');
-      expect(filterCells(cells, '.selected'), 'to equal', [cells[12]]);
-      expect(filterCells(cells, '.foo'), 'to equal', []);
+      expect(getCellIndices(cells, '.selected'), 'to equal', [12]);
+      expect(getCellIndices(cells, '.foo'), 'to equal', []);
       expect(cells[12].textContent, 'to be', '10');
     });
   });

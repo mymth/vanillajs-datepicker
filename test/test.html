@@ -52,16 +52,13 @@
       var getParts = (picker, selectors) => selectors.map(sel => picker.querySelector(sel));
       var getViewSwitch = picker => picker.querySelector('.view-switch');
       var getCells = picker => Array.from(picker.querySelectorAll('.datepicker-cell'));
-      var filterCells = (cells, criteria) => {
-        const fn = typeof criteria === 'string' ? el => el.matches(criteria) : criteria;
-        return cells.filter(fn);
-      };
       var getCellIndices = (cells, criteria) => cells.reduce((indices, cell, idx) => {
-        if (cell.matches(criteria)) {
+        if (typeof criteria === 'function' ? criteria(cell) : cell.matches(criteria)) {
           indices.push(idx);
         }
         return indices;
       }, []);
+      var mapIndices = arr => arr.map((item, index) => index);
       var cellInfo = (cells, criteria) => cells.reduce((res, cell, idx) => {
         if (cell.matches(criteria)) {
           res.push([idx, cell.textContent]);

@@ -267,41 +267,41 @@ describe('keyboard operation - edit mode', function () {
     expect(viewSwitch.textContent, 'to be', 'February 2020');
 
     let cells = getCells(picker);
-    expect(filterCells(cells, '.focused'), 'to equal', [cells[19]]);
+    expect(getCellIndices(cells, '.focused'), 'to equal', [19]);
     expect(cells[19].textContent, 'to be', '14');
 
     simulant.fire(input, 'keydown', {key: 'ArrowRight'});
     expect(viewSwitch.textContent, 'to be', 'February 2020');
     cells = getCells(picker);
-    expect(filterCells(cells, '.focused'), 'to equal', [cells[19]]);
+    expect(getCellIndices(cells, '.focused'), 'to equal', [19]);
 
     simulant.fire(input, 'keydown', {key: 'ArrowUp'});
     expect(viewSwitch.textContent, 'to be', 'February 2020');
     cells = getCells(picker);
-    expect(filterCells(cells, '.focused'), 'to equal', [cells[19]]);
+    expect(getCellIndices(cells, '.focused'), 'to equal', [19]);
 
     simulant.fire(input, 'keydown', {key: 'ArrowDownt'});
     expect(viewSwitch.textContent, 'to be', 'February 2020');
     cells = getCells(picker);
-    expect(filterCells(cells, '.focused'), 'to equal', [cells[19]]);
+    expect(getCellIndices(cells, '.focused'), 'to equal', [19]);
 
     viewSwitch.click();
     simulant.fire(input, 'keydown', {key: 'ArrowLeft'});
     expect(viewSwitch.textContent, 'to be', '2020');
     cells = getCells(picker);
-    expect(filterCells(cells, '.focused'), 'to equal', [cells[1]]);
+    expect(getCellIndices(cells, '.focused'), 'to equal', [1]);
 
     viewSwitch.click();
     simulant.fire(input, 'keydown', {key: 'ArrowRight'});
     expect(viewSwitch.textContent, 'to be', '2020-2029');
     cells = getCells(picker);
-    expect(filterCells(cells, '.focused'), 'to equal', [cells[1]]);
+    expect(getCellIndices(cells, '.focused'), 'to equal', [1]);
 
     viewSwitch.click();
     simulant.fire(input, 'keydown', {key: 'ArrowDown'});
     expect(viewSwitch.textContent, 'to be', '2000-2090');
     cells = getCells(picker);
-    expect(filterCells(cells, '.focused'), 'to equal', [cells[3]]);
+    expect(getCellIndices(cells, '.focused'), 'to equal', [3]);
 
     dp.destroy();
     clock.restore();

@@ -23,7 +23,7 @@ describe('keyboard operation - arrow-right', function () {
     expect(viewSwitch.textContent, 'to be', 'June 2024');
 
     let cells = getCells(picker);
-    expect(filterCells(cells, '.focused'), 'to equal', [cells[10]]);
+    expect(getCellIndices(cells, '.focused'), 'to equal', [18]);
     expect(cells[18].textContent, 'to be', '13');
 
     viewSwitch.click();
@@ -31,14 +31,14 @@ describe('keyboard operation - arrow-right', function () {
     expect(viewSwitch.textContent, 'to be', '2024');
 
     cells = getCells(picker);
-    expect(filterCells(cells, '.focused'), 'to equal', [cells[6]]);
+    expect(getCellIndices(cells, '.focused'), 'to equal', [6]);
 
     viewSwitch.click();
     simulant.fire(input, 'keydown', {key: 'ArrowRight'});
     expect(viewSwitch.textContent, 'to be', '2020-2029');
 
     cells = getCells(picker);
-    expect(filterCells(cells, '.focused'), 'to equal', [cells[6]]);
+    expect(getCellIndices(cells, '.focused'), 'to equal', [6]);
     expect(cells[6].textContent, 'to be', '2025');
 
     viewSwitch.click();
@@ -46,7 +46,7 @@ describe('keyboard operation - arrow-right', function () {
     expect(viewSwitch.textContent, 'to be', '2000-2090');
 
     cells = getCells(picker);
-    expect(filterCells(cells, '.focused'), 'to equal', [cells[4]]);
+    expect(getCellIndices(cells, '.focused'), 'to equal', [4]);
     expect(cells[4].textContent, 'to be', '2030');
 
     dp.destroy();
@@ -63,7 +63,7 @@ describe('keyboard operation - arrow-right', function () {
     expect(viewSwitch.textContent, 'to be', 'March 2020');
 
     let cells = getCells(picker);
-    expect(filterCells(cells, '.focused'), 'to equal', [cells[0]]);
+    expect(getCellIndices(cells, '.focused'), 'to equal', [0]);
     expect(cells[0].textContent, 'to be', '1');
 
     dp.destroy();
@@ -81,7 +81,7 @@ describe('keyboard operation - arrow-right', function () {
     expect(viewSwitch.textContent, 'to be', '2021');
 
     let cells = getCells(picker);
-    expect(filterCells(cells, '.focused'), 'to equal', [cells[0]]);
+    expect(getCellIndices(cells, '.focused'), 'to equal', [0]);
 
     dp.destroy();
     clock.restore();
@@ -99,7 +99,7 @@ describe('keyboard operation - arrow-right', function () {
     expect(viewSwitch.textContent, 'to be', '2020-2029');
 
     let cells = getCells(picker);
-    expect(filterCells(cells, '.focused'), 'to equal', [cells[1]]);
+    expect(getCellIndices(cells, '.focused'), 'to equal', [1]);
     expect(cells[1].textContent, 'to be', '2020');
 
     dp.destroy();
@@ -119,7 +119,7 @@ describe('keyboard operation - arrow-right', function () {
     expect(viewSwitch.textContent, 'to be', '2000-2090');
 
     let cells = getCells(picker);
-    expect(filterCells(cells, '.focused'), 'to equal', [cells[1]]);
+    expect(getCellIndices(cells, '.focused'), 'to equal', [1]);
     expect(cells[1].textContent, 'to be', '2000');
 
     dp.destroy();
@@ -138,7 +138,7 @@ describe('keyboard operation - arrow-right', function () {
 
       // view date is changed to the same day of the next month
       let cells = getCells(picker);
-      expect(filterCells(cells, '.focused'), 'to equal', [cells[26]]);
+      expect(getCellIndices(cells, '.focused'), 'to equal', [26]);
       expect(cells[26].textContent, 'to be', '22');
 
       viewSwitch.click();
@@ -147,15 +147,15 @@ describe('keyboard operation - arrow-right', function () {
 
       // view date is changed to the same month of the previous year
       cells = getCells(picker);
-      expect(filterCells(cells, '.focused'), 'to equal', [cells[4]]);
-      expect(filterCells(cells, '.selected'), 'to equal', []);
+      expect(getCellIndices(cells, '.focused'), 'to equal', [4]);
+      expect(getCellIndices(cells, '.selected'), 'to equal', []);
 
       viewSwitch.click();
       simulant.fire(input, 'keydown', {key: 'ArrowRight', ctrlKey: true});
       expect(viewSwitch.textContent, 'to be', '2030-2039');
 
       cells = getCells(picker);
-      expect(filterCells(cells, '.focused'), 'to equal', [cells[2]]);
+      expect(getCellIndices(cells, '.focused'), 'to equal', [2]);
       expect(cells[2].textContent, 'to be', '2031');
 
       viewSwitch.click();
@@ -163,7 +163,7 @@ describe('keyboard operation - arrow-right', function () {
       expect(viewSwitch.textContent, 'to be', '2100-2190');
 
       cells = getCells(picker);
-      expect(filterCells(cells, '.focused'), 'to equal', [cells[2]]);
+      expect(getCellIndices(cells, '.focused'), 'to equal', [4]);
       expect(cells[4].textContent, 'to be', '2130');
 
       dp.destroy();
@@ -183,7 +183,7 @@ describe('keyboard operation - arrow-right', function () {
 
       // view date is changed to the same day of the next month
       let cells = getCells(picker);
-      expect(filterCells(cells, '.focused'), 'to equal', [cells[26]]);
+      expect(getCellIndices(cells, '.focused'), 'to equal', [26]);
       expect(cells[26].textContent, 'to be', '22');
 
       viewSwitch.click();
@@ -192,15 +192,15 @@ describe('keyboard operation - arrow-right', function () {
 
       // view date is changed to the same month of the previous year
       cells = getCells(picker);
-      expect(filterCells(cells, '.focused'), 'to equal', [cells[4]]);
-      expect(filterCells(cells, '.selected'), 'to equal', []);
+      expect(getCellIndices(cells, '.focused'), 'to equal', [4]);
+      expect(getCellIndices(cells, '.selected'), 'to equal', []);
 
       viewSwitch.click();
       simulant.fire(input, 'keydown', {key: 'ArrowRight', metaKey: true});
       expect(viewSwitch.textContent, 'to be', '2030-2039');
 
       cells = getCells(picker);
-      expect(filterCells(cells, '.focused'), 'to equal', [cells[2]]);
+      expect(getCellIndices(cells, '.focused'), 'to equal', [2]);
       expect(cells[2].textContent, 'to be', '2031');
 
       viewSwitch.click();
@@ -208,7 +208,7 @@ describe('keyboard operation - arrow-right', function () {
       expect(viewSwitch.textContent, 'to be', '2100-2190');
 
       cells = getCells(picker);
-      expect(filterCells(cells, '.focused'), 'to equal', [cells[2]]);
+      expect(getCellIndices(cells, '.focused'), 'to equal', [4]);
       expect(cells[4].textContent, 'to be', '2130');
 
       dp.destroy();

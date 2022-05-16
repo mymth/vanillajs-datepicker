@@ -274,7 +274,7 @@ describe('options', function () {
   describe('daysOfWeekHighlighted', function () {
     const highlightedCellIndices = (picker) => {
       const cells = getCells(picker);
-      return filterCells(cells, '.highlighted').map(el => cells.indexOf(el));
+      return getCellIndices(cells, '.highlighted');
     };
     const highlighted1stWeekIndices = picker => highlightedCellIndices(picker).filter(val => val < 7);
 
@@ -332,7 +332,7 @@ describe('options', function () {
       expect(getViewSwitch(picker).textContent, 'to be', 'January 1984');
 
       let cells = getCells(picker);
-      expect(filterCells(cells, '.focused'), 'to equal', [cells[23]]);
+      expect(getCellIndices(cells, '.focused'), 'to equal', [23]);
       expect(cells[23].textContent, 'to be', '24');
 
       dp.setDate('7/4/2020');
@@ -341,7 +341,7 @@ describe('options', function () {
       expect(getViewSwitch(picker).textContent, 'to be', 'January 1984');
 
       cells = getCells(picker);
-      expect(filterCells(cells, '.focused'), 'to equal', [cells[23]]);
+      expect(getCellIndices(cells, '.focused'), 'to equal', [23]);
       expect(cells[23].textContent, 'to be', '24');
 
       picker.querySelector('.prev-btn').click();
@@ -351,7 +351,7 @@ describe('options', function () {
       expect(getViewSwitch(picker).textContent, 'to be', 'January 1984');
 
       cells = getCells(picker);
-      expect(filterCells(cells, '.focused'), 'to equal', [cells[23]]);
+      expect(getCellIndices(cells, '.focused'), 'to equal', [23]);
       expect(cells[23].textContent, 'to be', '24');
 
       dp.destroy();
@@ -368,7 +368,7 @@ describe('options', function () {
       expect(getViewSwitch(picker).textContent, 'to be', 'January 1984');
 
       let cells = getCells(picker);
-      expect(filterCells(cells, '.focused'), 'to equal', [cells[23]]);
+      expect(getCellIndices(cells, '.focused'), 'to equal', [23]);
       expect(cells[23].textContent, 'to be', '24');
 
       dp.setOptions({defaultViewDate: new Date(2007, 5, 29)});
@@ -378,7 +378,7 @@ describe('options', function () {
       expect(getViewSwitch(picker).textContent, 'to be', 'June 2007');
 
       cells = getCells(picker);
-      expect(filterCells(cells, '.focused'), 'to equal', [cells[33]]);
+      expect(getCellIndices(cells, '.focused'), 'to equal', [33]);
       expect(cells[33].textContent, 'to be', '29');
 
       dp.destroy();
@@ -667,20 +667,20 @@ describe('options', function () {
       dp.show();
 
       let cells = getCells(picker);
-      expect(filterCells(cells, '.today'), 'to equal', [cells[19]]);
+      expect(getCellIndices(cells, '.today'), 'to equal', [19]);
 
       picker.querySelector('.prev-btn').click();
-      expect(filterCells(getCells(picker), '.today'), 'to equal', []);
+      expect(getCellIndices(getCells(picker), '.today'), 'to equal', []);
 
       picker.querySelector('.next-btn').click();
       viewSwitch.click();
-      expect(filterCells(getCells(picker), '.today'), 'to equal', []);
+      expect(getCellIndices(getCells(picker), '.today'), 'to equal', []);
 
       viewSwitch.click();
-      expect(filterCells(getCells(picker), '.today'), 'to equal', []);
+      expect(getCellIndices(getCells(picker), '.today'), 'to equal', []);
 
       viewSwitch.click();
-      expect(filterCells(getCells(picker), '.today'), 'to equal', []);
+      expect(getCellIndices(getCells(picker), '.today'), 'to equal', []);
 
       dp.destroy();
     });
@@ -691,12 +691,12 @@ describe('options', function () {
       dp.show();
 
       let cells = getCells(picker);
-      expect(filterCells(cells, '.today'), 'to equal', [cells[19]]);
+      expect(getCellIndices(cells, '.today'), 'to equal', [19]);
 
       dp.setOptions({todayHighlight: false});
 
       cells = getCells(picker);
-      expect(filterCells(cells, '.today'), 'to equal', []);
+      expect(getCellIndices(cells, '.today'), 'to equal', []);
 
       dp.destroy();
     });

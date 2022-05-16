@@ -23,7 +23,7 @@ describe('keyboard operation - arrow-left', function () {
     expect(viewSwitch.textContent, 'to be', 'June 2024');
 
     let cells = getCells(picker);
-    expect(filterCells(cells, '.focused'), 'to equal', [cells[16]]);
+    expect(getCellIndices(cells, '.focused'), 'to equal', [16]);
     expect(cells[16].textContent, 'to be', '11');
 
     viewSwitch.click();
@@ -31,14 +31,14 @@ describe('keyboard operation - arrow-left', function () {
     expect(viewSwitch.textContent, 'to be', '2024');
 
     cells = getCells(picker);
-    expect(filterCells(cells, '.focused'), 'to equal', [cells[4]]);
+    expect(getCellIndices(cells, '.focused'), 'to equal', [4]);
 
     viewSwitch.click();
     simulant.fire(input, 'keydown', {key: 'ArrowLeft'});
     expect(viewSwitch.textContent, 'to be', '2020-2029');
 
     cells = getCells(picker);
-    expect(filterCells(cells, '.focused'), 'to equal', [cells[4]]);
+    expect(getCellIndices(cells, '.focused'), 'to equal', [4]);
     expect(cells[4].textContent, 'to be', '2023');
 
     viewSwitch.click();
@@ -46,7 +46,7 @@ describe('keyboard operation - arrow-left', function () {
     expect(viewSwitch.textContent, 'to be', '2000-2090');
 
     cells = getCells(picker);
-    expect(filterCells(cells, '.focused'), 'to equal', [cells[2]]);
+    expect(getCellIndices(cells, '.focused'), 'to equal', [2]);
     expect(cells[2].textContent, 'to be', '2010');
 
     clock.restore();
@@ -63,7 +63,7 @@ describe('keyboard operation - arrow-left', function () {
     expect(viewSwitch.textContent, 'to be', 'February 2020');
 
     let cells = getCells(picker);
-    expect(filterCells(cells, '.focused'), 'to equal', [cells[34]]);
+    expect(getCellIndices(cells, '.focused'), 'to equal', [34]);
     expect(cells[34].textContent, 'to be', '29');
 
     dp.destroy();
@@ -81,7 +81,7 @@ describe('keyboard operation - arrow-left', function () {
     expect(viewSwitch.textContent, 'to be', '2019');
 
     let cells = getCells(picker);
-    expect(filterCells(cells, '.focused'), 'to equal', [cells[11]]);
+    expect(getCellIndices(cells, '.focused'), 'to equal', [11]);
 
     dp.destroy();
     clock.restore();
@@ -99,7 +99,7 @@ describe('keyboard operation - arrow-left', function () {
     expect(viewSwitch.textContent, 'to be', '2010-2019');
 
     let cells = getCells(picker);
-    expect(filterCells(cells, '.focused'), 'to equal', [cells[10]]);
+    expect(getCellIndices(cells, '.focused'), 'to equal', [10]);
     expect(cells[10].textContent, 'to be', '2019');
 
     dp.destroy();
@@ -119,7 +119,7 @@ describe('keyboard operation - arrow-left', function () {
     expect(viewSwitch.textContent, 'to be', '1900-1990');
 
     let cells = getCells(picker);
-    expect(filterCells(cells, '.focused'), 'to equal', [cells[10]]);
+    expect(getCellIndices(cells, '.focused'), 'to equal', [10]);
     expect(cells[10].textContent, 'to be', '1990');
 
     dp.destroy();
@@ -137,7 +137,7 @@ describe('keyboard operation - arrow-left', function () {
     expect(viewSwitch.textContent, 'to be', 'January 0');
 
     let cells = getCells(picker);
-    expect(filterCells(cells, '.focused'), 'to equal', [cells[6]]);
+    expect(getCellIndices(cells, '.focused'), 'to equal', [6]);
     expect(cells[6].textContent, 'to be', '1');
 
     viewSwitch.click();
@@ -145,14 +145,14 @@ describe('keyboard operation - arrow-left', function () {
     simulant.fire(input, 'keydown', {key: 'ArrowLeft'});
     expect(viewSwitch.textContent, 'to be', '0');
     cells = getCells(picker);
-    expect(filterCells(cells, '.focused'), 'to equal', [cells[0]]);
+    expect(getCellIndices(cells, '.focused'), 'to equal', [0]);
 
     viewSwitch.click();
 
     simulant.fire(input, 'keydown', {key: 'ArrowLeft'});
     expect(viewSwitch.textContent, 'to be', '0-9');
     cells = getCells(picker);
-    expect(filterCells(cells, '.focused'), 'to equal', [cells[1]]);
+    expect(getCellIndices(cells, '.focused'), 'to equal', [1]);
     expect(cells[1].textContent, 'to be', '0');
 
     viewSwitch.click();
@@ -160,7 +160,7 @@ describe('keyboard operation - arrow-left', function () {
     simulant.fire(input, 'keydown', {key: 'ArrowLeft'});
     expect(viewSwitch.textContent, 'to be', '0-90');
     cells = getCells(picker);
-    expect(filterCells(cells, '.focused'), 'to equal', [cells[1]]);
+    expect(getCellIndices(cells, '.focused'), 'to equal', [1]);
     expect(cells[1].textContent, 'to be', '0');
 
     dp.destroy();
@@ -178,7 +178,7 @@ describe('keyboard operation - arrow-left', function () {
 
       // view date is changed to the same day of the previous month
       let cells = getCells(picker);
-      expect(filterCells(cells, '.focused'), 'to equal', [cells[21]]);
+      expect(getCellIndices(cells, '.focused'), 'to equal', [21]);
       expect(cells[21].textContent, 'to be', '22');
 
       viewSwitch.click();
@@ -187,15 +187,15 @@ describe('keyboard operation - arrow-left', function () {
 
       // view date is changed to the same month of the previous year
       cells = getCells(picker);
-      expect(filterCells(cells, '.focused'), 'to equal', [cells[2]]);
-      expect(filterCells(cells, '.selected'), 'to equal', []);
+      expect(getCellIndices(cells, '.focused'), 'to equal', [2]);
+      expect(getCellIndices(cells, '.selected'), 'to equal', []);
 
       viewSwitch.click();
       simulant.fire(input, 'keydown', {key: 'ArrowLeft', ctrlKey: true});
       expect(viewSwitch.textContent, 'to be', '2000-2009');
 
       cells = getCells(picker);
-      expect(filterCells(cells, '.focused'), 'to equal', [cells[10]]);
+      expect(getCellIndices(cells, '.focused'), 'to equal', [10]);
       expect(cells[10].textContent, 'to be', '2009');
 
       viewSwitch.click();
@@ -203,7 +203,7 @@ describe('keyboard operation - arrow-left', function () {
       expect(viewSwitch.textContent, 'to be', '1900-1990');
 
       cells = getCells(picker);
-      expect(filterCells(cells, '.focused'), 'to equal', [cells[1]]);
+      expect(getCellIndices(cells, '.focused'), 'to equal', [1]);
       expect(cells[1].textContent, 'to be', '1900');
 
       dp.destroy();
@@ -223,7 +223,7 @@ describe('keyboard operation - arrow-left', function () {
 
       // view date is changed to the same day of the previous month
       let cells = getCells(picker);
-      expect(filterCells(cells, '.focused'), 'to equal', [cells[21]]);
+      expect(getCellIndices(cells, '.focused'), 'to equal', [21]);
       expect(cells[21].textContent, 'to be', '22');
 
       viewSwitch.click();
@@ -232,15 +232,15 @@ describe('keyboard operation - arrow-left', function () {
 
       // view date is changed to the same month of the previous year
       cells = getCells(picker);
-      expect(filterCells(cells, '.focused'), 'to equal', [cells[2]]);
-      expect(filterCells(cells, '.selected'), 'to equal', []);
+      expect(getCellIndices(cells, '.focused'), 'to equal', [2]);
+      expect(getCellIndices(cells, '.selected'), 'to equal', []);
 
       viewSwitch.click();
       simulant.fire(input, 'keydown', {key: 'ArrowLeft', metaKey: true});
       expect(viewSwitch.textContent, 'to be', '2000-2009');
 
       cells = getCells(picker);
-      expect(filterCells(cells, '.focused'), 'to equal', [cells[10]]);
+      expect(getCellIndices(cells, '.focused'), 'to equal', [10]);
       expect(cells[10].textContent, 'to be', '2009');
 
       viewSwitch.click();
@@ -248,7 +248,7 @@ describe('keyboard operation - arrow-left', function () {
       expect(viewSwitch.textContent, 'to be', '1900-1990');
 
       cells = getCells(picker);
-      expect(filterCells(cells, '.focused'), 'to equal', [cells[1]]);
+      expect(getCellIndices(cells, '.focused'), 'to equal', [1]);
       expect(cells[1].textContent, 'to be', '1900');
 
       dp.destroy();

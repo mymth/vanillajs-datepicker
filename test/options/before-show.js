@@ -21,18 +21,18 @@ describe('options - beforeShow hooks', function () {
       const beforeShowDay = date => !!(date.getDate() % 10);
       const {dp, picker} = createDP(input, {beforeShowDay});
       let cells = getCells(picker);
-      let disabledCells = filterCells(cells, '.disabled');
+      let disabledCellIndices = getCellIndices(cells, '.disabled');
 
-      expect(disabledCells, 'to equal', [cells[4], cells[15], cells[25]]);
-      expect(disabledCells.map(el => el.textContent), 'to equal', ['30', '10', '20']);
+      expect(disabledCellIndices, 'to equal', [4, 15, 25]);
+      expect(disabledCellIndices.map(idx => cells[idx].textContent), 'to equal', ['30', '10', '20']);
 
       picker.querySelector('.next-btn').click();
 
       cells = getCells(picker);
-      disabledCells = filterCells(cells, '.disabled');
+      disabledCellIndices = getCellIndices(cells, '.disabled');
 
-      expect(disabledCells, 'to equal', [cells[9], cells[19], cells[29], cells[40]]);
-      expect(disabledCells.map(el => el.textContent), 'to equal', ['10', '20', '30', '10']);
+      expect(disabledCellIndices, 'to equal', [9, 19, 29, 40]);
+      expect(disabledCellIndices.map(idx => cells[idx].textContent), 'to equal', ['10', '20', '30', '10']);
 
       dp.destroy();
     });
@@ -41,22 +41,22 @@ describe('options - beforeShow hooks', function () {
       const beforeShowDay = date => date.getDate() % 10 ? undefined : 'foo bar';
       const {dp, picker} = createDP(input, {beforeShowDay});
       let cells = getCells(picker);
-      let fooCells = filterCells(cells, '.foo');
-      let barCells = filterCells(cells, '.bar');
+      let fooCellIndices = getCellIndices(cells, '.foo');
+      let barCellIndices = getCellIndices(cells, '.bar');
 
-      expect(fooCells, 'to equal', [cells[4], cells[15], cells[25]]);
-      expect(barCells, 'to equal', fooCells);
-      expect(fooCells.map(el => el.textContent), 'to equal', ['30', '10', '20']);
+      expect(fooCellIndices, 'to equal', [4, 15, 25]);
+      expect(barCellIndices, 'to equal', fooCellIndices);
+      expect(fooCellIndices.map(idx => cells[idx].textContent), 'to equal', ['30', '10', '20']);
 
       picker.querySelector('.next-btn').click();
 
       cells = getCells(picker);
-      fooCells = filterCells(cells, '.foo');
-      barCells = filterCells(cells, '.bar');
+      fooCellIndices = getCellIndices(cells, '.foo');
+      barCellIndices = getCellIndices(cells, '.bar');
 
-      expect(fooCells, 'to equal', [cells[9], cells[19], cells[29], cells[40]]);
-      expect(barCells, 'to equal', fooCells);
-      expect(fooCells.map(el => el.textContent), 'to equal', ['10', '20', '30', '10']);
+      expect(fooCellIndices, 'to equal', [9, 19, 29, 40]);
+      expect(barCellIndices, 'to equal', fooCellIndices);
+      expect(fooCellIndices.map(idx => cells[idx].textContent), 'to equal', ['10', '20', '30', '10']);
 
       dp.destroy();
     });
@@ -65,16 +65,16 @@ describe('options - beforeShow hooks', function () {
       const beforeShowDay = date => ({enabled: !!(date.getDate() % 10)});
       const {dp, picker} = createDP(input, {beforeShowDay});
       let cells = getCells(picker);
-      let disabledCells = filterCells(cells, '.disabled');
+      let disabledCellIndices = getCellIndices(cells, '.disabled');
 
-      expect(disabledCells, 'to equal', [cells[4], cells[15], cells[25]]);
+      expect(disabledCellIndices, 'to equal', [4, 15, 25]);
 
       picker.querySelector('.next-btn').click();
 
       cells = getCells(picker);
-      disabledCells = filterCells(cells, '.disabled');
+      disabledCellIndices = getCellIndices(cells, '.disabled');
 
-      expect(disabledCells, 'to equal', [cells[9], cells[19], cells[29], cells[40]]);
+      expect(disabledCellIndices, 'to equal', [9, 19, 29, 40]);
 
       dp.destroy();
     });
@@ -83,20 +83,20 @@ describe('options - beforeShow hooks', function () {
       const beforeShowDay = date => date.getDate() % 10 ? undefined : {classes: 'foo bar'};
       const {dp, picker} = createDP(input, {beforeShowDay});
       let cells = getCells(picker);
-      let fooCells = filterCells(cells, '.foo');
-      let barCells = filterCells(cells, '.bar');
+      let fooCellIndices = getCellIndices(cells, '.foo');
+      let barCellIndices = getCellIndices(cells, '.bar');
 
-      expect(fooCells, 'to equal', [cells[4], cells[15], cells[25]]);
-      expect(barCells, 'to equal', fooCells);
+      expect(fooCellIndices, 'to equal', [4, 15, 25]);
+      expect(barCellIndices, 'to equal', fooCellIndices);
 
       picker.querySelector('.next-btn').click();
 
       cells = getCells(picker);
-      fooCells = filterCells(cells, '.foo');
-      barCells = filterCells(cells, '.bar');
+      fooCellIndices = getCellIndices(cells, '.foo');
+      barCellIndices = getCellIndices(cells, '.bar');
 
-      expect(fooCells, 'to equal', [cells[9], cells[19], cells[29], cells[40]]);
-      expect(barCells, 'to equal', fooCells);
+      expect(fooCellIndices, 'to equal', [9, 19, 29, 40]);
+      expect(barCellIndices, 'to equal', fooCellIndices);
 
       dp.destroy();
     });
@@ -105,21 +105,21 @@ describe('options - beforeShow hooks', function () {
       const beforeShowDay = (date) => date.getDate() % 10 === 4 ? {content: '<em>❤️</em>'} : undefined;
       const {dp, picker} = createDP(input, {beforeShowDay});
       let cells = getCells(picker);
-      let ccCells = cells.filter(el => el.children.length > 0);
+      let ccCellIndices = getCellIndices(cells, el => el.children.length > 0);
 
-      expect(ccCells, 'to equal', [cells[9], cells[19], cells[29], cells[38]]);
-      ccCells.forEach((cell) => {
-        expect(cell.innerHTML, 'to be', '<em>❤️</em>');
+      expect(ccCellIndices, 'to equal', [9, 19, 29, 38]);
+      ccCellIndices.forEach((idx) => {
+        expect(cells[idx].innerHTML, 'to be', '<em>❤️</em>');
       });
 
       picker.querySelector('.next-btn').click();
 
       cells = getCells(picker);
-      ccCells = cells.filter(el => el.children.length > 0);
+      ccCellIndices = getCellIndices(cells, el => el.children.length > 0);
 
-      expect(ccCells, 'to equal', [cells[3], cells[13], cells[23], cells[34]]);
-      ccCells.forEach((cell) => {
-        expect(cell.innerHTML, 'to be', '<em>❤️</em>');
+      expect(ccCellIndices, 'to equal', [3, 13, 23, 34]);
+      ccCellIndices.forEach((idx) => {
+        expect(cells[idx].innerHTML, 'to be', '<em>❤️</em>');
       });
 
       dp.destroy();
@@ -131,17 +131,17 @@ describe('options - beforeShow hooks', function () {
       dp.show();
 
       let cells = getCells(picker);
-      let disabledCells = filterCells(cells, '.disabled');
+      let disabledCellIndices = getCellIndices(cells, '.disabled');
 
-      expect(disabledCells, 'to equal', [cells[4], cells[15], cells[25]]);
+      expect(disabledCellIndices, 'to equal', [4, 15, 25]);
 
       dp.hide();
       dp.setOptions({beforeShowDay: null});
       dp.show();
 
       cells = getCells(picker);
-      disabledCells = filterCells(cells, '.disabled');
-      expect(disabledCells, 'to equal', []);
+      disabledCellIndices = getCellIndices(cells, '.disabled');
+      expect(disabledCellIndices, 'to equal', []);
 
       dp.destroy();
     });
@@ -156,18 +156,18 @@ describe('options - beforeShow hooks', function () {
       viewSwitch.click();
 
       let cells = getCells(picker);
-      let disabledCells = filterCells(cells, '.disabled');
+      let disabledCellIndices = getCellIndices(cells, '.disabled');
 
-      expect(disabledCells, 'to equal', [cells[0], cells[5], cells[10]]);
-      expect(disabledCells.map(el => el.textContent), 'to equal', ['Jan', 'Jun', 'Nov']);
+      expect(disabledCellIndices, 'to equal', [0, 5, 10]);
+      expect(disabledCellIndices.map(idx => cells[idx].textContent), 'to equal', ['Jan', 'Jun', 'Nov']);
 
       picker.querySelector('.next-btn').click();
 
       cells = getCells(picker);
-      disabledCells = filterCells(cells, '.disabled');
+      disabledCellIndices = getCellIndices(cells, '.disabled');
 
-      expect(disabledCells, 'to equal', [cells[0], cells[5], cells[10]]);
-      expect(disabledCells.map(el => el.textContent), 'to equal', ['Jan', 'Jun', 'Nov']);
+      expect(disabledCellIndices, 'to equal', [0, 5, 10]);
+      expect(disabledCellIndices.map(idx => cells[idx].textContent), 'to equal', ['Jan', 'Jun', 'Nov']);
 
       dp.destroy();
     });
@@ -180,22 +180,22 @@ describe('options - beforeShow hooks', function () {
       viewSwitch.click();
 
       let cells = getCells(picker);
-      let fooCells = filterCells(cells, '.foo');
-      let barCells = filterCells(cells, '.bar');
+      let fooCellIndices = getCellIndices(cells, '.foo');
+      let barCellIndices = getCellIndices(cells, '.bar');
 
-      expect(fooCells, 'to equal', [cells[0], cells[5], cells[10]]);
-      expect(barCells, 'to equal', fooCells);
-      expect(fooCells.map(el => el.textContent), 'to equal', ['Jan', 'Jun', 'Nov']);
+      expect(fooCellIndices, 'to equal', [0, 5, 10]);
+      expect(barCellIndices, 'to equal', fooCellIndices);
+      expect(fooCellIndices.map(idx => cells[idx].textContent), 'to equal', ['Jan', 'Jun', 'Nov']);
 
       picker.querySelector('.next-btn').click();
 
       cells = getCells(picker);
-      fooCells = filterCells(cells, '.foo');
-      barCells = filterCells(cells, '.bar');
+      fooCellIndices = getCellIndices(cells, '.foo');
+      barCellIndices = getCellIndices(cells, '.bar');
 
-      expect(fooCells, 'to equal', [cells[0], cells[5], cells[10]]);
-      expect(barCells, 'to equal', fooCells);
-      expect(fooCells.map(el => el.textContent), 'to equal', ['Jan', 'Jun', 'Nov']);
+      expect(fooCellIndices, 'to equal', [0, 5, 10]);
+      expect(barCellIndices, 'to equal', fooCellIndices);
+      expect(fooCellIndices.map(idx => cells[idx].textContent), 'to equal', ['Jan', 'Jun', 'Nov']);
 
       dp.destroy();
     });
@@ -208,16 +208,16 @@ describe('options - beforeShow hooks', function () {
       viewSwitch.click();
 
       let cells = getCells(picker);
-      let disabledCells = filterCells(cells, '.disabled');
+      let disabledCellIndices = getCellIndices(cells, '.disabled');
 
-      expect(disabledCells, 'to equal', [cells[0], cells[5], cells[10]]);
+      expect(disabledCellIndices, 'to equal', [0, 5, 10]);
 
       picker.querySelector('.next-btn').click();
 
       cells = getCells(picker);
-      disabledCells = filterCells(cells, '.disabled');
+      disabledCellIndices = getCellIndices(cells, '.disabled');
 
-      expect(disabledCells, 'to equal', [cells[0], cells[5], cells[10]]);
+      expect(disabledCellIndices, 'to equal', [0, 5, 10]);
 
       dp.destroy();
     });
@@ -230,20 +230,20 @@ describe('options - beforeShow hooks', function () {
       viewSwitch.click();
 
       let cells = getCells(picker);
-      let fooCells = filterCells(cells, '.foo');
-      let barCells = filterCells(cells, '.bar');
+      let fooCellIndices = getCellIndices(cells, '.foo');
+      let barCellIndices = getCellIndices(cells, '.bar');
 
-      expect(fooCells, 'to equal', [cells[0], cells[5], cells[10]]);
-      expect(barCells, 'to equal', fooCells);
+      expect(fooCellIndices, 'to equal', [0, 5, 10]);
+      expect(barCellIndices, 'to equal', fooCellIndices);
 
       picker.querySelector('.next-btn').click();
 
       cells = getCells(picker);
-      fooCells = filterCells(cells, '.foo');
-      barCells = filterCells(cells, '.bar');
+      fooCellIndices = getCellIndices(cells, '.foo');
+      barCellIndices = getCellIndices(cells, '.bar');
 
-      expect(fooCells, 'to equal', [cells[0], cells[5], cells[10]]);
-      expect(barCells, 'to equal', fooCells);
+      expect(fooCellIndices, 'to equal', [0, 5, 10]);
+      expect(barCellIndices, 'to equal', fooCellIndices);
 
       dp.destroy();
     });
@@ -256,21 +256,21 @@ describe('options - beforeShow hooks', function () {
       viewSwitch.click();
 
       let cells = getCells(picker);
-      let ccCells = cells.filter(el => el.textContent.length < 3);
+      let ccCellIndices = getCellIndices(cells, el => el.textContent.length < 3);
 
-      expect(ccCells, 'to equal', [cells[0], cells[10]]);
-      ccCells.forEach((cell) => {
-        expect(cell.textContent, 'to be', '🍀');
+      expect(ccCellIndices, 'to equal', [0, 10]);
+      ccCellIndices.forEach((idx) => {
+        expect(cells[idx].textContent, 'to be', '🍀');
       });
 
       picker.querySelector('.next-btn').click();
 
       cells = getCells(picker);
-      ccCells = cells.filter(el => el.textContent.length  < 3);
+      ccCellIndices = getCellIndices(cells, el => el.textContent.length  < 3);
 
-      expect(ccCells, 'to equal', [cells[9]]);
-      ccCells.forEach((cell) => {
-        expect(cell.textContent, 'to be', '🍀');
+      expect(ccCellIndices, 'to equal', [9]);
+      ccCellIndices.forEach((idx) => {
+        expect(cells[idx].textContent, 'to be', '🍀');
       });
 
       dp.destroy();
@@ -284,9 +284,9 @@ describe('options - beforeShow hooks', function () {
       viewSwitch.click();
 
       let cells = getCells(picker);
-      let disabledCells = filterCells(cells, '.disabled');
+      let disabledCellIndices = getCellIndices(cells, '.disabled');
 
-      expect(disabledCells, 'to equal', [cells[0], cells[5], cells[10]]);
+      expect(disabledCellIndices, 'to equal', [0, 5, 10]);
 
       dp.hide();
       dp.setOptions({beforeShowMonth: null});
@@ -294,8 +294,8 @@ describe('options - beforeShow hooks', function () {
       viewSwitch.click();
 
       cells = getCells(picker);
-      disabledCells = filterCells(cells, '.disabled');
-      expect(disabledCells, 'to equal', []);
+      disabledCellIndices = getCellIndices(cells, '.disabled');
+      expect(disabledCellIndices, 'to equal', []);
 
       dp.destroy();
     });
@@ -311,18 +311,18 @@ describe('options - beforeShow hooks', function () {
       viewSwitch.click();
 
       let cells = getCells(picker);
-      let disabledCells = filterCells(cells, '.disabled');
+      let disabledCellIndices = getCellIndices(cells, '.disabled');
 
-      expect(disabledCells, 'to equal', [cells[1], cells[5], cells[9]]);
-      expect(disabledCells.map(el => el.textContent), 'to equal', ['2020', '2024', '2028',]);
+      expect(disabledCellIndices, 'to equal', [1, 5, 9]);
+      expect(disabledCellIndices.map(idx => cells[idx].textContent), 'to equal', ['2020', '2024', '2028',]);
 
       picker.querySelector('.next-btn').click();
 
       cells = getCells(picker);
-      disabledCells = filterCells(cells, '.disabled');
+      disabledCellIndices = getCellIndices(cells, '.disabled');
 
-      expect(disabledCells, 'to equal', [cells[3], cells[7], cells[11]]);
-      expect(disabledCells.map(el => el.textContent), 'to equal', ['2032', '2036', '2040']);
+      expect(disabledCellIndices, 'to equal', [3, 7, 11]);
+      expect(disabledCellIndices.map(idx => cells[idx].textContent), 'to equal', ['2032', '2036', '2040']);
 
       dp.destroy();
     });
@@ -336,22 +336,22 @@ describe('options - beforeShow hooks', function () {
       viewSwitch.click();
 
       let cells = getCells(picker);
-      let fooCells = filterCells(cells, '.foo');
-      let barCells = filterCells(cells, '.bar');
+      let fooCellIndices = getCellIndices(cells, '.foo');
+      let barCellIndices = getCellIndices(cells, '.bar');
 
-      expect(fooCells, 'to equal', [cells[1], cells[5], cells[9]]);
-      expect(barCells, 'to equal', fooCells);
-      expect(fooCells.map(el => el.textContent), 'to equal', ['2020', '2024', '2028']);
+      expect(fooCellIndices, 'to equal', [1, 5, 9]);
+      expect(barCellIndices, 'to equal', fooCellIndices);
+      expect(fooCellIndices.map(idx => cells[idx].textContent), 'to equal', ['2020', '2024', '2028']);
 
       picker.querySelector('.next-btn').click();
 
       cells = getCells(picker);
-      fooCells = filterCells(cells, '.foo');
-      barCells = filterCells(cells, '.bar');
+      fooCellIndices = getCellIndices(cells, '.foo');
+      barCellIndices = getCellIndices(cells, '.bar');
 
-      expect(fooCells, 'to equal', [cells[3], cells[7], cells[11]]);
-      expect(barCells, 'to equal', fooCells);
-      expect(fooCells.map(el => el.textContent), 'to equal', ['2032', '2036', '2040']);
+      expect(fooCellIndices, 'to equal', [3, 7, 11]);
+      expect(barCellIndices, 'to equal', fooCellIndices);
+      expect(fooCellIndices.map(idx => cells[idx].textContent), 'to equal', ['2032', '2036', '2040']);
 
       dp.destroy();
     });
@@ -365,16 +365,16 @@ describe('options - beforeShow hooks', function () {
       viewSwitch.click();
 
       let cells = getCells(picker);
-      let disabledCells = filterCells(cells, '.disabled');
+      let disabledCellIndices = getCellIndices(cells, '.disabled');
 
-      expect(disabledCells, 'to equal', [cells[1], cells[5], cells[9]]);
+      expect(disabledCellIndices, 'to equal', [1, 5, 9]);
 
       picker.querySelector('.next-btn').click();
 
       cells = getCells(picker);
-      disabledCells = filterCells(cells, '.disabled');
+      disabledCellIndices = getCellIndices(cells, '.disabled');
 
-      expect(disabledCells, 'to equal', [cells[3], cells[7], cells[11]]);
+      expect(disabledCellIndices, 'to equal', [3, 7, 11]);
 
       dp.destroy();
     });
@@ -388,20 +388,20 @@ describe('options - beforeShow hooks', function () {
       viewSwitch.click();
 
       let cells = getCells(picker);
-      let fooCells = filterCells(cells, '.foo');
-      let barCells = filterCells(cells, '.bar');
+      let fooCellIndices = getCellIndices(cells, '.foo');
+      let barCellIndices = getCellIndices(cells, '.bar');
 
-      expect(fooCells, 'to equal', [cells[1], cells[5], cells[9]]);
-      expect(barCells, 'to equal', fooCells);
+      expect(fooCellIndices, 'to equal', [1, 5, 9]);
+      expect(barCellIndices, 'to equal', fooCellIndices);
 
       picker.querySelector('.next-btn').click();
 
       cells = getCells(picker);
-      fooCells = filterCells(cells, '.foo');
-      barCells = filterCells(cells, '.bar');
+      fooCellIndices = getCellIndices(cells, '.foo');
+      barCellIndices = getCellIndices(cells, '.bar');
 
-      expect(fooCells, 'to equal', [cells[3], cells[7], cells[11]]);
-      expect(barCells, 'to equal', fooCells);
+      expect(fooCellIndices, 'to equal', [3, 7, 11]);
+      expect(barCellIndices, 'to equal', fooCellIndices);
 
       dp.destroy();
     });
@@ -409,7 +409,7 @@ describe('options - beforeShow hooks', function () {
     it('uses custom content to the year cell when the return contains text/html in the content property', function () {
       const beforeShowYear = (date) => {
         const year = date.getFullYear();
-        return (year + Math.floor(year / 10) % 10) % 4 ? undefined : {content: '<i class="icn-x"></i>'};
+        return year % 4 || !(year % 40) ? undefined : {content: '<i class="icn-x"></i>'};
       };
       const {dp, picker} = createDP(input, {beforeShowYear});
       const viewSwitch = getViewSwitch(picker);
@@ -418,21 +418,21 @@ describe('options - beforeShow hooks', function () {
       viewSwitch.click();
 
       let cells = getCells(picker);
-      let ccCells = cells.filter(el => el.children.length > 0);
+      let ccCellIndices = getCellIndices(cells, el => el.children.length > 0);
 
-      expect(ccCells, 'to equal', [cells[1], cells[5], cells[9]]);
-      ccCells.forEach((cell) => {
-        expect(cell.innerHTML, 'to be', '<i class="icn-x"></i>');
+      expect(ccCellIndices, 'to equal', [1, 5, 9]);
+      ccCellIndices.forEach((idx) => {
+        expect(cells[idx].innerHTML, 'to be', '<i class="icn-x"></i>');
       });
 
       picker.querySelector('.next-btn').click();
 
       cells = getCells(picker);
-      ccCells = cells.filter(el => el.children.length > 0);
+      ccCellIndices = getCellIndices(cells, el => el.children.length > 0);
 
-      expect(ccCells, 'to equal', [cells[2], cells[6], cells[10]]);
-      ccCells.forEach((cell) => {
-        expect(cell.innerHTML, 'to be', '<i class="icn-x"></i>');
+      expect(ccCellIndices, 'to equal', [3, 7]);
+      ccCellIndices.forEach((idx) => {
+        expect(cells[idx].innerHTML, 'to be', '<i class="icn-x"></i>');
       });
 
       dp.destroy();
@@ -447,9 +447,9 @@ describe('options - beforeShow hooks', function () {
       viewSwitch.click();
 
       let cells = getCells(picker);
-      let disabledCells = filterCells(cells, '.disabled');
+      let disabledCellIndices = getCellIndices(cells, '.disabled');
 
-      expect(disabledCells, 'to equal', [cells[1], cells[5], cells[9]]);
+      expect(disabledCellIndices, 'to equal', [1, 5, 9]);
 
       dp.hide();
       dp.setOptions({beforeShowYear: null});
@@ -458,8 +458,8 @@ describe('options - beforeShow hooks', function () {
       viewSwitch.click();
 
       cells = getCells(picker);
-      disabledCells = filterCells(cells, '.disabled');
-      expect(disabledCells, 'to equal', []);
+      disabledCellIndices = getCellIndices(cells, '.disabled');
+      expect(disabledCellIndices, 'to equal', []);
 
       dp.destroy();
     });
@@ -476,18 +476,18 @@ describe('options - beforeShow hooks', function () {
       viewSwitch.click();
 
       let cells = getCells(picker);
-      let disabledCells = filterCells(cells, '.disabled');
+      let disabledCellIndices = getCellIndices(cells, '.disabled');
 
-      expect(disabledCells, 'to equal', [cells[1], cells[5], cells[9]]);
-      expect(disabledCells.map(el => el.textContent), 'to equal', ['2000', '2040', '2080',]);
+      expect(disabledCellIndices, 'to equal', [1, 5, 9]);
+      expect(disabledCellIndices.map(idx => cells[idx].textContent), 'to equal', ['2000', '2040', '2080',]);
 
       picker.querySelector('.next-btn').click();
 
       cells = getCells(picker);
-      disabledCells = filterCells(cells, '.disabled');
+      disabledCellIndices = getCellIndices(cells, '.disabled');
 
-      expect(disabledCells, 'to equal', [cells[3], cells[7], cells[11]]);
-      expect(disabledCells.map(el => el.textContent), 'to equal', ['2120', '2160', '2200']);
+      expect(disabledCellIndices, 'to equal', [3, 7, 11]);
+      expect(disabledCellIndices.map(idx => cells[idx].textContent), 'to equal', ['2120', '2160', '2200']);
 
       dp.destroy();
     });
@@ -502,22 +502,22 @@ describe('options - beforeShow hooks', function () {
       viewSwitch.click();
 
       let cells = getCells(picker);
-      let fooCells = filterCells(cells, '.foo');
-      let barCells = filterCells(cells, '.bar');
+      let fooCellIndices = getCellIndices(cells, '.foo');
+      let barCellIndices = getCellIndices(cells, '.bar');
 
-      expect(fooCells, 'to equal', [cells[1], cells[5], cells[9]]);
-      expect(barCells, 'to equal', fooCells);
-      expect(fooCells.map(el => el.textContent), 'to equal', ['2000', '2040', '2080']);
+      expect(fooCellIndices, 'to equal', [1, 5, 9]);
+      expect(barCellIndices, 'to equal', fooCellIndices);
+      expect(fooCellIndices.map(idx => cells[idx].textContent), 'to equal', ['2000', '2040', '2080']);
 
       picker.querySelector('.next-btn').click();
 
       cells = getCells(picker);
-      fooCells = filterCells(cells, '.foo');
-      barCells = filterCells(cells, '.bar');
+      fooCellIndices = getCellIndices(cells, '.foo');
+      barCellIndices = getCellIndices(cells, '.bar');
 
-      expect(fooCells, 'to equal', [cells[3], cells[7], cells[11]]);
-      expect(barCells, 'to equal', fooCells);
-      expect(fooCells.map(el => el.textContent), 'to equal', ['2120', '2160', '2200']);
+      expect(fooCellIndices, 'to equal', [3, 7, 11]);
+      expect(barCellIndices, 'to equal', fooCellIndices);
+      expect(fooCellIndices.map(idx => cells[idx].textContent), 'to equal', ['2120', '2160', '2200']);
 
       dp.destroy();
     });
@@ -532,16 +532,16 @@ describe('options - beforeShow hooks', function () {
       viewSwitch.click();
 
       let cells = getCells(picker);
-      let disabledCells = filterCells(cells, '.disabled');
+      let disabledCellIndices = getCellIndices(cells, '.disabled');
 
-      expect(disabledCells, 'to equal', [cells[1], cells[5], cells[9]]);
+      expect(disabledCellIndices, 'to equal', [1, 5, 9]);
 
       picker.querySelector('.next-btn').click();
 
       cells = getCells(picker);
-      disabledCells = filterCells(cells, '.disabled');
+      disabledCellIndices = getCellIndices(cells, '.disabled');
 
-      expect(disabledCells, 'to equal', [cells[3], cells[7], cells[11]]);
+      expect(disabledCellIndices, 'to equal', [3, 7, 11]);
 
       dp.destroy();
     });
@@ -556,20 +556,20 @@ describe('options - beforeShow hooks', function () {
       viewSwitch.click();
 
       let cells = getCells(picker);
-      let fooCells = filterCells(cells, '.foo');
-      let barCells = filterCells(cells, '.bar');
+      let fooCellIndices = getCellIndices(cells, '.foo');
+      let barCellIndices = getCellIndices(cells, '.bar');
 
-      expect(fooCells, 'to equal', [cells[1], cells[5], cells[9]]);
-      expect(barCells, 'to equal', fooCells);
+      expect(fooCellIndices, 'to equal', [1, 5, 9]);
+      expect(barCellIndices, 'to equal', fooCellIndices);
 
       picker.querySelector('.next-btn').click();
 
       cells = getCells(picker);
-      fooCells = filterCells(cells, '.foo');
-      barCells = filterCells(cells, '.bar');
+      fooCellIndices = getCellIndices(cells, '.foo');
+      barCellIndices = getCellIndices(cells, '.bar');
 
-      expect(fooCells, 'to equal', [cells[3], cells[7], cells[11]]);
-      expect(barCells, 'to equal', fooCells);
+      expect(fooCellIndices, 'to equal', [3, 7, 11]);
+      expect(barCellIndices, 'to equal', fooCellIndices);
 
       dp.destroy();
     });
@@ -587,21 +587,21 @@ describe('options - beforeShow hooks', function () {
       viewSwitch.click();
 
       let cells = getCells(picker);
-      let ccCells = cells.filter(el => el.children.length > 0);
+      let ccCellIndices = getCellIndices(cells, el => el.children.length > 0);
 
-      expect(ccCells, 'to equal', [cells[1], cells[6]]);
-      ccCells.forEach((cell) => {
-        expect(cell.innerHTML, 'to be', '<strong>X</strong>');
+      expect(ccCellIndices, 'to equal', [1, 6]);
+      ccCellIndices.forEach((idx) => {
+        expect(cells[idx].innerHTML, 'to be', '<strong>X</strong>');
       });
 
       picker.querySelector('.next-btn').click();
 
       cells = getCells(picker);
-      ccCells = cells.filter(el => el.children.length > 0);
+      ccCellIndices = getCellIndices(cells, el => el.children.length > 0);
 
-      expect(ccCells, 'to equal', [cells[5], cells[10]]);
-      ccCells.forEach((cell) => {
-        expect(cell.innerHTML, 'to be', '<strong>X</strong>');
+      expect(ccCellIndices, 'to equal', [5, 10]);
+      ccCellIndices.forEach((idx) => {
+        expect(cells[idx].innerHTML, 'to be', '<strong>X</strong>');
       });
 
       dp.destroy();
@@ -617,9 +617,9 @@ describe('options - beforeShow hooks', function () {
       viewSwitch.click();
 
       let cells = getCells(picker);
-      let disabledCells = filterCells(cells, '.disabled');
+      let disabledCellIndices = getCellIndices(cells, '.disabled');
 
-      expect(disabledCells, 'to equal', [cells[1], cells[5], cells[9]]);
+      expect(disabledCellIndices, 'to equal', [1, 5, 9]);
 
       dp.hide();
       dp.setOptions({beforeShowDecade: null});
@@ -629,8 +629,8 @@ describe('options - beforeShow hooks', function () {
       viewSwitch.click();
 
       cells = getCells(picker);
-      disabledCells = filterCells(cells, '.disabled');
-      expect(disabledCells, 'to equal', []);
+      disabledCellIndices = getCellIndices(cells, '.disabled');
+      expect(disabledCellIndices, 'to equal', []);
 
       dp.destroy();
     });

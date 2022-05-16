@@ -37,18 +37,18 @@ describe('DateRangePicker - options', function () {
       expect(drp.dates, 'to equal', [dateValue(2020, 1, 11), undefined]);
       expect(drp.getDates(), 'to equal', [new Date(drp.dates[0]), undefined]);
       expect(input0.value, 'to be', '02/11/2020');
-      expect(filterCells(cells0, '.selected'), 'to equal', [cells0[16]]);
-      expect(filterCells(cells0, '.range-start'), 'to equal', [cells0[16]]);
-      expect(filterCells(cells0, '.range-end'), 'to equal', []);
-      expect(filterCells(cells0, '.range'), 'to equal', []);
-      expect(filterCells(cells0, '.focused'), 'to equal', [cells0[16]]);
+      expect(getCellIndices(cells0, '.selected'), 'to equal', [16]);
+      expect(getCellIndices(cells0, '.range-start'), 'to equal', [16]);
+      expect(getCellIndices(cells0, '.range-end'), 'to equal', []);
+      expect(getCellIndices(cells0, '.range'), 'to equal', []);
+      expect(getCellIndices(cells0, '.focused'), 'to equal', [16]);
 
       expect(input1.value, 'to be', '');
-      expect(filterCells(cells1, '.selected'), 'to equal', []);
-      expect(filterCells(cells1, '.range-start'), 'to equal', [cells1[16]]);
-      expect(filterCells(cells1, '.range-end'), 'to equal', []);
-      expect(filterCells(cells1, '.range'), 'to equal', []);
-      expect(filterCells(cells1, '.focused'), 'to equal', [cells1[19]]);
+      expect(getCellIndices(cells1, '.selected'), 'to equal', []);
+      expect(getCellIndices(cells1, '.range-start'), 'to equal', [16]);
+      expect(getCellIndices(cells1, '.range-end'), 'to equal', []);
+      expect(getCellIndices(cells1, '.range'), 'to equal', []);
+      expect(getCellIndices(cells1, '.focused'), 'to equal', [19]);
 
       drp.datepickers[1].show();
       cells1[25].click();
@@ -56,18 +56,18 @@ describe('DateRangePicker - options', function () {
       expect(drp.dates, 'to equal', [dateValue(2020, 1, 11), dateValue(2020, 1, 20)]);
       expect(drp.getDates(), 'to equal', drp.dates.map(date => new Date(date)));
       expect(input0.value, 'to be', '02/11/2020');
-      expect(filterCells(cells0, '.selected'), 'to equal', [cells0[16]]);
-      expect(filterCells(cells0, '.range-start'), 'to equal', [cells0[16]]);
-      expect(filterCells(cells0, '.range-end'), 'to equal', [cells0[25]]);
-      expect(filterCells(cells0, '.range'), 'to equal', cells0.slice(17, 25));
-      expect(filterCells(cells0, '.focused'), 'to equal', [cells0[16]]);
+      expect(getCellIndices(cells0, '.selected'), 'to equal', [16]);
+      expect(getCellIndices(cells0, '.range-start'), 'to equal', [16]);
+      expect(getCellIndices(cells0, '.range-end'), 'to equal', [25]);
+      expect(getCellIndices(cells0, '.range'), 'to equal', mapIndices(cells0).slice(17, 25));
+      expect(getCellIndices(cells0, '.focused'), 'to equal', [16]);
 
       expect(input1.value, 'to be', '02/20/2020');
-      expect(filterCells(cells1, '.selected'), 'to equal', [cells1[25]]);
-      expect(filterCells(cells1, '.range-start'), 'to equal', [cells1[16]]);
-      expect(filterCells(cells1, '.range-end'), 'to equal', [cells1[25]]);
-      expect(filterCells(cells1, '.range'), 'to equal', cells1.slice(17, 25));
-      expect(filterCells(cells1, '.focused'), 'to equal', [cells1[25]]);
+      expect(getCellIndices(cells1, '.selected'), 'to equal', [25]);
+      expect(getCellIndices(cells1, '.range-start'), 'to equal', [16]);
+      expect(getCellIndices(cells1, '.range-end'), 'to equal', [25]);
+      expect(getCellIndices(cells1, '.range'), 'to equal', mapIndices(cells1).slice(17, 25));
+      expect(getCellIndices(cells1, '.focused'), 'to equal', [25]);
 
       simulant.fire(input0, 'keydown', {key: 'Escape'});
       input0.value = '';
@@ -76,18 +76,18 @@ describe('DateRangePicker - options', function () {
       expect(drp.dates, 'to equal', [undefined, dateValue(2020, 1, 20)]);
       expect(drp.getDates(), 'to equal', [undefined, new Date(drp.dates[1])]);
       expect(input0.value, 'to be', '');
-      expect(filterCells(cells0, '.selected'), 'to equal', []);
-      expect(filterCells(cells0, '.range-start'), 'to equal', []);
-      expect(filterCells(cells0, '.range-end'), 'to equal', [cells0[25]]);
-      expect(filterCells(cells0, '.range'), 'to equal', []);
-      expect(filterCells(cells0, '.focused'), 'to equal', [cells0[19]]);
+      expect(getCellIndices(cells0, '.selected'), 'to equal', []);
+      expect(getCellIndices(cells0, '.range-start'), 'to equal', []);
+      expect(getCellIndices(cells0, '.range-end'), 'to equal', [25]);
+      expect(getCellIndices(cells0, '.range'), 'to equal', []);
+      expect(getCellIndices(cells0, '.focused'), 'to equal', [19]);
 
       expect(input1.value, 'to be', '02/20/2020');
-      expect(filterCells(cells1, '.selected'), 'to equal', [cells1[25]]);
-      expect(filterCells(cells1, '.range-start'), 'to equal', []);
-      expect(filterCells(cells1, '.range-end'), 'to equal', [cells1[25]]);
-      expect(filterCells(cells1, '.range'), 'to equal', []);
-      expect(filterCells(cells1, '.focused'), 'to equal', [cells1[25]]);
+      expect(getCellIndices(cells1, '.selected'), 'to equal', [25]);
+      expect(getCellIndices(cells1, '.range-start'), 'to equal', []);
+      expect(getCellIndices(cells1, '.range-end'), 'to equal', [25]);
+      expect(getCellIndices(cells1, '.range'), 'to equal', []);
+      expect(getCellIndices(cells1, '.focused'), 'to equal', [25]);
 
       drp.destroy();
       input0.value = '';
@@ -102,49 +102,49 @@ describe('DateRangePicker - options', function () {
 
       expect(drp.dates, 'to equal', [dateValue(2020, 1, 11), undefined]);
       expect(input0.value, 'to be', '02/11/2020');
-      expect(filterCells(cells0, '.selected'), 'to equal', [cells0[16]]);
+      expect(getCellIndices(cells0, '.selected'), 'to equal', [16]);
       expect(input1.value, 'to be', '');
-      expect(filterCells(cells1, '.selected'), 'to equal', []);
+      expect(getCellIndices(cells1, '.selected'), 'to equal', []);
 
       drp.setDates(undefined, '02/20/2020');
 
       expect(drp.dates, 'to equal', [dateValue(2020, 1, 11), dateValue(2020, 1, 20)]);
       expect(input0.value, 'to be', '02/11/2020');
-      expect(filterCells(cells0, '.selected'), 'to equal', [cells0[16]]);
+      expect(getCellIndices(cells0, '.selected'), 'to equal', [16]);
       expect(input1.value, 'to be', '02/20/2020');
-      expect(filterCells(cells1, '.selected'), 'to equal', [cells1[25]]);
+      expect(getCellIndices(cells1, '.selected'), 'to equal', [25]);
 
       drp.setDates({clear: true});
 
       expect(drp.dates, 'to equal', [undefined, dateValue(2020, 1, 20)]);
       expect(input0.value, 'to be', '');
-      expect(filterCells(cells0, '.selected'), 'to equal', []);
+      expect(getCellIndices(cells0, '.selected'), 'to equal', []);
       expect(input1.value, 'to be', '02/20/2020');
-      expect(filterCells(cells1, '.selected'), 'to equal', [cells1[25]]);
+      expect(getCellIndices(cells1, '.selected'), 'to equal', [25]);
 
       drp.setDates('02/11/2020', {clear: true});
 
       expect(drp.dates, 'to equal', [dateValue(2020, 1, 11), undefined]);
       expect(input0.value, 'to be', '02/11/2020');
-      expect(filterCells(cells0, '.selected'), 'to equal', [cells0[16]]);
+      expect(getCellIndices(cells0, '.selected'), 'to equal', [16]);
       expect(input1.value, 'to be', '');
-      expect(filterCells(cells1, '.selected'), 'to equal', []);
+      expect(getCellIndices(cells1, '.selected'), 'to equal', []);
 
       drp.setDates({clear: true}, '02/20/2020');
 
       expect(drp.dates, 'to equal', [undefined, dateValue(2020, 1, 20)]);
       expect(input0.value, 'to be', '');
-      expect(filterCells(cells0, '.selected'), 'to equal', []);
+      expect(getCellIndices(cells0, '.selected'), 'to equal', []);
       expect(input1.value, 'to be', '02/20/2020');
-      expect(filterCells(cells1, '.selected'), 'to equal', [cells1[25]]);
+      expect(getCellIndices(cells1, '.selected'), 'to equal', [25]);
 
       drp.setDates(undefined, {clear: true});
 
       expect(drp.dates, 'to equal', [undefined, undefined]);
       expect(input0.value, 'to be', '');
-      expect(filterCells(cells0, '.selected'), 'to equal', []);
+      expect(getCellIndices(cells0, '.selected'), 'to equal', []);
       expect(input1.value, 'to be', '');
-      expect(filterCells(cells1, '.selected'), 'to equal', []);
+      expect(getCellIndices(cells1, '.selected'), 'to equal', []);
 
       drp.destroy();
     });
