@@ -5,7 +5,6 @@ const defaultOptions = {
   beforeShowDecade: null,
   beforeShowMonth: null,
   beforeShowYear: null,
-  calendarWeeks: false,
   clearBtn: false,
   dateDelimiter: ',',
   datesDisabled: [],
@@ -14,7 +13,6 @@ const defaultOptions = {
   defaultViewDate: undefined, // placeholder, defaults to today() by the program
   disableTouchKeyboard: false,
   format: 'mm/dd/yyyy',
-  getCalendarWeek: null,
   language: 'en',
   maxDate: null,
   maxNumberOfDates: 1,
@@ -33,6 +31,7 @@ const defaultOptions = {
   todayBtnMode: 0,
   todayHighlight: false,
   updateOnBlur: true,
+  weekNumbers: 0,
   weekStart: 0,
 };
 

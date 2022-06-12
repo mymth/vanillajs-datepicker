@@ -110,65 +110,6 @@ describe('options', function () {
     });
   });
 
-  describe('calendarWeeks', function () {
-    const getDisplayedWeeks = (picker) => {
-      const calendarWeeks = picker.querySelector('.calendar-weeks');
-      return Array.from(calendarWeeks.querySelectorAll('.week')).map(el => el.textContent);
-    };
-
-    it('enables display ISO weeks in days view when true', function () {
-      const {dp, picker} = createDP(input, {calendarWeeks: true});
-      const [viewSwitch, prevBtn] = getParts(picker, ['.view-switch', '.prev-btn']);
-      dp.show();
-
-      let calendarWeeks = picker.querySelector('.calendar-weeks');
-      expect(isVisible(calendarWeeks), 'to be true');
-      expect(getDisplayedWeeks(picker), 'to equal', ['5', '6', '7', '8', '9', '10']);
-
-      prevBtn.click();
-      expect(getDisplayedWeeks(picker), 'to equal', ['1', '2', '3', '4', '5', '6']);
-
-      prevBtn.click();
-      expect(getDisplayedWeeks(picker), 'to equal', ['48', '49', '50', '51', '52', '1']);
-
-      prevBtn.click();
-      expect(getDisplayedWeeks(picker), 'to equal', ['44', '45', '46', '47', '48', '49']);
-
-      dp.setDate('01/01/2021');
-      expect(getDisplayedWeeks(picker), 'to equal', ['53', '1', '2', '3', '4', '5']);
-
-      prevBtn.click();
-      expect(getDisplayedWeeks(picker), 'to equal', ['49', '50', '51', '52', '53', '1']);
-
-      // months view
-      viewSwitch.click();
-      expect(picker.querySelector('.calendar-weeks'), 'to be null');
-
-      // years view
-      viewSwitch.click();
-      expect(picker.querySelector('.calendar-weeks'), 'to be null');
-
-      // decades view
-      viewSwitch.click();
-      expect(picker.querySelector('.calendar-weeks'), 'to be null');
-
-      dp.destroy();
-    });
-
-    it('can be updated with setOptions()', function () {
-      const {dp, picker} = createDP(input);
-      dp.setOptions({calendarWeeks: true});
-      dp.show();
-
-      expect(isVisible(picker.querySelector('.calendar-weeks')), 'to be true');
-
-      dp.setOptions({calendarWeeks: false});
-      expect(picker.querySelector('.calendar-weeks'), 'to be null');
-
-      dp.destroy();
-    });
-  });
-
   describe('container', function () {
     let foo;
 

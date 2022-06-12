@@ -43,9 +43,9 @@ describe('Datepicker', function () {
 
     it('configures the instance with the default options', function () {
       const dp = new Datepicker(input);
-      // config items should be options + container, locale, multidate and weekEnd
+      // config items should be options + buttonClass, container, locale, getWeekNumber, multidate and weekEnd
       const numOfOptions = Object.keys(defaultOptions).length;
-      expect(Object.keys(dp.config), 'to have length', numOfOptions + 5);
+      expect(Object.keys(dp.config), 'to have length', numOfOptions + 6);
 
       expect(dp.config.autohide, 'to be false');
       expect(dp.config.beforeShowDay, 'to be null');
@@ -53,7 +53,6 @@ describe('Datepicker', function () {
       expect(dp.config.beforeShowMonth, 'to be null');
       expect(dp.config.beforeShowYear, 'to be null');
       expect(dp.config.buttonClass, 'to be', 'button');
-      expect(dp.config.calendarWeeks, 'to be false');
       expect(dp.config.clearBtn, 'to be false');
       expect(dp.config.container, 'to be null');
       expect(dp.config.dateDelimiter, 'to be', ',');
@@ -63,6 +62,7 @@ describe('Datepicker', function () {
       expect(dp.config.defaultViewDate, 'to be', today());
       expect(dp.config.disableTouchKeyboard, 'to be false');
       expect(dp.config.format, 'to be', 'mm/dd/yyyy');
+      expect(dp.config.getWeekNumber, 'to be null');
       expect(dp.config.language, 'to be', 'en');
       expect(dp.config.locale, 'to equal', Object.assign({
         format: defaultOptions.format,
@@ -92,6 +92,7 @@ describe('Datepicker', function () {
       expect(dp.config.todayBtn, 'to be false');
       expect(dp.config.todayHighlight, 'to be false');
       expect(dp.config.updateOnBlur, 'to be true');
+      expect(dp.config.weekNumbers, 'to be', 0);
       expect(dp.config.weekStart, 'to be', 0);
       expect(dp.config.weekEnd, 'to be', 6);
     });
@@ -102,31 +103,6 @@ describe('Datepicker', function () {
       const dpElems = document.querySelectorAll('.datepicker');
       expect(dpElems.length, 'to be', 1);
       expect(dpElems[0].previousElementSibling, 'to be', input);
-    });
-
-    it('allows customizing of `getCalendarWeek` function', function () {
-      const clock = sinon.useFakeTimers({now: new Date(2017, 0, 1)});
-
-      const dp = new Datepicker(input, {
-        calendarWeeks: true,
-
-        // customized (artificial) calendar week calculation
-        getCalendarWeek(date, weekStart) {
-          expect(date.getFullYear(), 'to be', 2017)
-          expect(weekStart, 'to be', 0);
-          const timestamp = date.getTime();
-          const firstDayOfYear = new Date(date.getFullYear(), 0, 1);
-          return Math.floor((timestamp - firstDayOfYear.getTime()) / 86400000 / 7) + 1;
-        }
-      });
-
-      const weekNumbers = Array.from(dp.picker.element.querySelectorAll('.week'))
-        .map(weekElem => parseInt(weekElem.textContent));
-
-      expect(weekNumbers, 'to equal', [1, 2, 3, 4, 5, 6]);
-
-      dp.destroy();
-      clock.restore();
     });
 
     it('does not add the active class to the picker element', function () {

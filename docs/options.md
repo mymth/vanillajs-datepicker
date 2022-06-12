@@ -83,11 +83,17 @@ CSS class for `<button>` elements. (view switch, prev/next buttons, clear and to
 >
 > For constructor only. Cannot be used with `setOptions()`.  
 
-#### calendarWeeks
-- Type: `Boolean`
-- Default: `false`
+#### <span style="color: #999;">calendarWeeks (deprecated)</span>
+This option will be removed in favor of [`weekNumbers`](#weekNumbers) option.
 
-Whether to show the week number ([ISO week](https://en.wikipedia.org/wiki/ISO_week_date)) on week rows.
+<div style="color: #999;">
+<ul>
+  <li>Type: <code style="color: #999;">Boolean</code></li>
+  <li>Default: <code style="color: #999;">false</code></li>
+</ul>
+
+Whether to show the week number (<a href="https://en.wikipedia.org/wiki/ISO_week_date" target="_blank" rel="noopener" style="color: #999;">ISO week</a>) on week rows.
+</div>
 
 #### clearBtn
 - Type: `Boolean`
@@ -205,14 +211,6 @@ Alternatively, object that contains custom parser and formatter functions can be
     },
 }
 ```
-
-#### getCalendarWeek
-- Type: `Function`
-- Default: `null`
-
-Allows to customize the algorithm how calendar week numbers are calculated.<br>
-The type of the `getCalendarWeek` function has to be `(date: Date, weekStart: number) => number`, where `date` is the date for which the calendar week number shall be calculated and `weekStart` is the first day of the week represented by a number between `0` and `6` (`0` means Sunday, `1` means Monday, ..., `6` means Saturday).<br>
-The return value is the calendar week number (`1` to `53`).
 
 #### language
 - Type: `String`
@@ -364,6 +362,88 @@ Whether to update the selected date(s) with the input field's value when the inp
 > When this option is `false`, if the user edits the date string in input field, it will be parsed and applied only when the user presses the <kbd>Enter</kbd> key. If the edit is left unparsed, it will be discarded when input field becomes unfocused (by <kbd>Tab</kbd> key press or click outside the picker element/input field).
 >
 > Not available on inline picker.
+
+#### weekNumbers
+- Type: `Number`|`Function`
+- Default: `0`
+
+Week numbers to display
+
+<table>
+  <tr>
+    <th>Option</th>
+    <th>Week numbers to display</th>
+    <th>Description</th>
+  </tr>
+  <tr>
+    <td><code>0</code></td>
+    <td>None</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td><code>1</code></td>
+    <td>ISO 8601</td>
+    <td>First day of week is Monday<br>
+      First week of year is the week that contains the 4th of January</td>
+  </tr>
+  <tr>
+    <td><code>2</code></td>
+    <td>Western traditional</td>
+    <td>First day of week is Sunday<br>
+      First week of year is the week that contains the 1st of January</td>
+  </tr>
+  <tr>
+    <td><code>3</code></td>
+    <td>Middle Eastern</td>
+    <td>First day of week is Saturday<br>
+      First week of year is the week that contains the 1st of January</td>
+  </tr>
+  <tr>
+    <td><code>4</code></td>
+    <td>Guess from <code>weekStart</code></td>
+    <td>
+      If the start of the week determined by the chosen <a href="#/options?id=language"><code>language</code></a>'s locale or the <a href="#/options?id=weekStart"><code>weekStart</code></a> option is:<br>
+      &bull; <code>0</code>:<em>Sunday</em>, Western traditional week numbers are shown<br>
+      &bull; <code>6</code>:<em>Saturday</em>, Middle Eastern week numbers are shown<br>
+      Otherwise, ISO 8601 week numbers are shown
+    </td>
+  </tr>
+  <tr>
+    <td>function</td>
+    <td>User-defined week numbers</td>
+    <td>
+      Week numbers calculated by the given function are shown
+      <ul>
+        <li>Function
+          <ul>
+            <li>Arguments
+              <ul>
+                <li><code>date</code> : [<code>Date</code>] - Date to calcurate the week number</li>
+                <li><code>weekStart</code> ; [<code>Number</code>] - The first day of the week<br>
+                  <em>(see <a href="#/options?id=weekStart"><code>weekStart</code></a>)</em></li>
+              </ul>
+            </li>
+            <li>Retuen
+              <ul>
+                <li>[<code>Number</code>] - The week number of the date</li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+      </ul>
+      <pre data-lang="javascript" style="margin-bottom: 0;"><code class="lang-javascript"><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">date</span>, <span class="token parameter">weekStart</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">let</span> weekNumber<span class="token punctuation">;</span>
+    <span class="token comment">//...your calculation< algorithm</span>
+    <span class="token keyword">return</span> weekNumber<span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+> Date picker displays the week number of the leftmost (if the direction is RTL, rightmost) date of each week. To prevent confusing week numbers from being shown, be sure to use the week numbering system whose first day of the week matches the start day of the week determined by the chosen [`language`](#language)'s locale or the [`weekStart`](#weekStart) option.
+>
+> See [https://en.wikipedia.org/wiki/Week#Numbering](https://en.wikipedia.org/wiki/Week#Numbering) for more about week numbering systems.
+
 
 #### weekStart
 - Type: `Number`

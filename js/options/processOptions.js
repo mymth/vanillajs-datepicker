@@ -1,5 +1,11 @@
 import {hasProperty, pushUnique} from '../lib/utils.js';
-import {dateValue, regularizeDate} from '../lib/date.js';
+import {
+  dateValue,
+  regularizeDate,
+  getIsoWeek,
+  getWesternTradWeek,
+  getMidEasternWeek,
+} from '../lib/date.js';
 import {reFormatTokens, parseDate} from '../lib/date-format.js';
 import {parseHTML} from '../lib/dom.js';
 import defaultOptions from './defaultOptions.js';
@@ -17,8 +23,27 @@ function sanitizeDOW(dow, day) {
     : dow;
 }
 
-function calcEndOfWeek(startOfWeek) {
-  return (startOfWeek + 6) % 7;
+function determineGetWeekMethod(numberingMode, weekStart) {
+  const methodId = numberingMode === 4
+    ? (weekStart === 6 ? 3 : !weekStart + 1)
+    : numberingMode;
+  switch (methodId) {
+    case 1:
+      return getIsoWeek;
+    case 2:
+      return getWesternTradWeek;
+    case 3:
+      return getMidEasternWeek;
+  }
+}
+
+function updateWeekStart(newValue, config, weekNumbers) {
+  config.weekStart = newValue;
+  config.weekEnd = (newValue + 6) % 7;
+  if (weekNumbers === 4) {
+    config.getWeekNumber = determineGetWeekMethod(4, newValue);
+  }
+  return newValue;
 }
 
 // validate input date. if invalid, fallback to the original value
@@ -41,7 +66,6 @@ export default function processOptions(options, datepicker) {
   const rangeSideIndex = datepicker.rangeSideIndex;
   let {
     format,
-    getCalendarWeek,
     language,
     locale,
     maxDate,
@@ -49,6 +73,7 @@ export default function processOptions(options, datepicker) {
     minDate,
     pickLevel,
     startView,
+    weekNumbers,
     weekStart,
   } = datepicker.config || {};
 
@@ -87,8 +112,7 @@ export default function processOptions(options, datepicker) {
         format = config.format = locale.format;
       }
       if (weekStart === origLocale.weekStart) {
-        weekStart = config.weekStart = locale.weekStart;
-        config.weekEnd = calcEndOfWeek(locale.weekStart);
+        weekStart = updateWeekStart(locale.weekStart, config, weekNumbers);
       }
     }
   }
@@ -185,8 +209,7 @@ export default function processOptions(options, datepicker) {
   if (inOpts.weekStart !== undefined) {
     const wkStart = Number(inOpts.weekStart) % 7;
     if (!isNaN(wkStart)) {
-      weekStart = config.weekStart = wkStart;
-      config.weekEnd = calcEndOfWeek(wkStart);
+      weekStart = updateWeekStart(wkStart, config, weekNumbers);
     }
     delete inOpts.weekStart;
   }
@@ -197,6 +220,30 @@ export default function processOptions(options, datepicker) {
   if (inOpts.daysOfWeekHighlighted) {
     config.daysOfWeekHighlighted = inOpts.daysOfWeekHighlighted.reduce(sanitizeDOW, []);
     delete inOpts.daysOfWeekHighlighted;
+  }
+
+  //*** week numbers ***//
+  if (inOpts.calendarWeeks !== undefined) {
+    const calendarWeeks = !!inOpts.calendarWeeks;
+    weekNumbers = config.weekNumbers = calendarWeeks + 0;
+    config.getWeekNumber = calendarWeeks ? getIsoWeek : null;
+    delete inOpts.calendarWeeks;
+  }
+  if (inOpts.weekNumbers !== undefined) {
+    let method = inOpts.weekNumbers;
+    if (method) {
+      const getWeekNumber = typeof method === 'function'
+        ? (timeValue, startOfWeek) => method(new Date(timeValue), startOfWeek)
+        : determineGetWeekMethod((method = parseInt(method, 10)), weekStart);
+      if (getWeekNumber) {
+        weekNumbers = config.weekNumbers = method;
+        config.getWeekNumber = getWeekNumber;
+      }
+    } else {
+      weekNumbers = config.weekNumbers = 0;
+      config.getWeekNumber = null;
+    }
+    delete inOpts.weekNumbers;
   }
 
   //*** multi date ***//
@@ -277,13 +324,6 @@ export default function processOptions(options, datepicker) {
     }
     delete inOpts.todayBtnMode;
   }
-
-  config.getCalendarWeek =
-    typeof inOpts.getCalendarWeek === 'function'
-      ? inOpts.getCalendarWeek
-      : getCalendarWeek || null;
-
-  delete inOpts.getCalendarWeek;
 
   //*** copy the rest ***//
   Object.keys(inOpts).forEach((key) => {

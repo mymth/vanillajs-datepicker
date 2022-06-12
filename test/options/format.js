@@ -96,7 +96,7 @@ describe('options - format & language', function () {
   });
 
   describe('language', function () {
-    const getDayNames = picker => Array.from(picker.querySelectorAll('.dow')).map(el => el.textContent);
+    const getDayNames = picker => Array.from(picker.querySelectorAll('.days .dow')).map(el => el.textContent);
 
     it('specifies the language used for the month/day names, today/clear buttons and the default format/weekStart', function () {
       const locale = Datepicker.locales['zh-CN'];
@@ -242,6 +242,16 @@ describe('options - format & language', function () {
       expect(getCellIndices(cells, '.focused'), 'to equal', [18]);
       expect(cells[18].textContent, 'to be', '14');
 
+      const getDisplayedWeeks = () => {
+        return Array.from(picker.querySelectorAll('.week')).map(el => el.textContent);
+      };
+      dp.setOptions({weekNumbers: 4});
+      dp.setDate('01/01/2021');
+      // ISO week numbers should be displayed
+      expect(getDisplayedWeeks(picker), 'to equal', ['53', '1', '2', '3', '4', '5']);
+
+      dp.setDate('14/02/2020');
+
       locale = Datepicker.locales.en;
       dp.setOptions({language: 'en'});
 
@@ -256,6 +266,10 @@ describe('options - format & language', function () {
       expect(getCellIndices(cells, '.selected'), 'to equal', [19]);
       expect(getCellIndices(cells, '.focused'), 'to equal', [19]);
       expect(cells[19].textContent, 'to be', '14');
+
+      dp.setDate('01/01/2021');
+      // Week numbers should be changed to Western trad. numbers
+      expect(getDisplayedWeeks(picker), 'to equal', ['1', '2', '3', '4', '5', '6']);
 
       dp.destroy();
       input.value = '';

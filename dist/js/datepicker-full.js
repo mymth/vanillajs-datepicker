@@ -129,13 +129,51 @@
     return addDays(baseDate, dayDiff(dayOfWeek, weekStart) - dayDiff(baseDay, weekStart));
   }
 
-  // Get the ISO week of a date
-  function getWeek(date) {
-    // start of ISO week is Monday
+  function calcWeekNum(dayOfTheWeek, sameDayOfFirstWeek) {
+    return Math.round((dayOfTheWeek - sameDayOfFirstWeek) / 604800000) + 1;
+  }
+
+  // Get the ISO week number of a date
+  function getIsoWeek(date) {
+    // - Start of ISO week is Monday
+    // - Use Thursday for culculation because the first Thursday of ISO week is
+    //   always in January
     const thuOfTheWeek = dayOfTheWeekOf(date, 4, 1);
-    // 1st week == the week where the 4th of January is in
+    // - Week 1 in ISO week is the week including Jan 04
+    // - Use the Thu of given date's week (instead of given date itself) to
+    //   calculate week 1 of the year so that Jan 01 - 03 won't be miscalculated
+    //   as week 0 when Jan 04 is Mon - Wed
     const firstThu = dayOfTheWeekOf(new Date(thuOfTheWeek).setMonth(0, 4), 4, 1);
-    return Math.round((thuOfTheWeek - firstThu) / 604800000) + 1;
+    // return Math.round((thuOfTheWeek - firstThu) / 604800000) + 1;
+    return calcWeekNum(thuOfTheWeek, firstThu);
+  }
+
+  // Calculate week number in traditional week number system
+  // @see https://en.wikipedia.org/wiki/Week#Other_week_numbering_systems
+  function calcTraditionalWeekNumber(date, weekStart) {
+    // - Week 1 of traditional week is the week including the Jan 01
+    // - Use Jan 01 of given date's year to calculate the start of week 1
+    const startOfFirstWeek = dayOfTheWeekOf(new Date(date).setMonth(0, 1), weekStart, weekStart);
+    const startOfTheWeek = dayOfTheWeekOf(date, weekStart, weekStart);
+    const weekNum = calcWeekNum(startOfTheWeek, startOfFirstWeek);
+    if (weekNum < 53) {
+      return weekNum;
+    }
+    // If the 53rd week includes Jan 01, it's actually next year's week 1
+    const weekOneOfNextYear = dayOfTheWeekOf(new Date(date).setDate(32), weekStart, weekStart);
+    return startOfTheWeek === weekOneOfNextYear ? 1 : weekNum;
+  }
+
+  // Get the Western traditional week number of a date
+  function getWesternTradWeek(date) {
+    // Start of Western traditionl week is Sunday
+    return calcTraditionalWeekNumber(date, 0);
+  }
+
+  // Get the Middle Eastern week number of a date
+  function getMidEasternWeek(date) {
+    // Start of Middle Eastern week is Saturday
+    return calcTraditionalWeekNumber(date, 6);
   }
 
   // Get the start year of the period of years that includes given date
@@ -499,7 +537,6 @@
     beforeShowDecade: null,
     beforeShowMonth: null,
     beforeShowYear: null,
-    calendarWeeks: false,
     clearBtn: false,
     dateDelimiter: ',',
     datesDisabled: [],
@@ -508,7 +545,6 @@
     defaultViewDate: undefined, // placeholder, defaults to today() by the program
     disableTouchKeyboard: false,
     format: 'mm/dd/yyyy',
-    getCalendarWeek: null,
     language: 'en',
     maxDate: null,
     maxNumberOfDates: 1,
@@ -527,6 +563,7 @@
     todayBtnMode: 0,
     todayHighlight: false,
     updateOnBlur: true,
+    weekNumbers: 0,
     weekStart: 0,
   };
 
@@ -543,8 +580,27 @@
       : dow;
   }
 
-  function calcEndOfWeek(startOfWeek) {
-    return (startOfWeek + 6) % 7;
+  function determineGetWeekMethod(numberingMode, weekStart) {
+    const methodId = numberingMode === 4
+      ? (weekStart === 6 ? 3 : !weekStart + 1)
+      : numberingMode;
+    switch (methodId) {
+      case 1:
+        return getIsoWeek;
+      case 2:
+        return getWesternTradWeek;
+      case 3:
+        return getMidEasternWeek;
+    }
+  }
+
+  function updateWeekStart(newValue, config, weekNumbers) {
+    config.weekStart = newValue;
+    config.weekEnd = (newValue + 6) % 7;
+    if (weekNumbers === 4) {
+      config.getWeekNumber = determineGetWeekMethod(4, newValue);
+    }
+    return newValue;
   }
 
   // validate input date. if invalid, fallback to the original value
@@ -567,7 +623,6 @@
     const rangeSideIndex = datepicker.rangeSideIndex;
     let {
       format,
-      getCalendarWeek,
       language,
       locale,
       maxDate,
@@ -575,6 +630,7 @@
       minDate,
       pickLevel,
       startView,
+      weekNumbers,
       weekStart,
     } = datepicker.config || {};
 
@@ -613,8 +669,7 @@
           format = config.format = locale.format;
         }
         if (weekStart === origLocale.weekStart) {
-          weekStart = config.weekStart = locale.weekStart;
-          config.weekEnd = calcEndOfWeek(locale.weekStart);
+          weekStart = updateWeekStart(locale.weekStart, config, weekNumbers);
         }
       }
     }
@@ -711,8 +766,7 @@
     if (inOpts.weekStart !== undefined) {
       const wkStart = Number(inOpts.weekStart) % 7;
       if (!isNaN(wkStart)) {
-        weekStart = config.weekStart = wkStart;
-        config.weekEnd = calcEndOfWeek(wkStart);
+        weekStart = updateWeekStart(wkStart, config, weekNumbers);
       }
       delete inOpts.weekStart;
     }
@@ -723,6 +777,30 @@
     if (inOpts.daysOfWeekHighlighted) {
       config.daysOfWeekHighlighted = inOpts.daysOfWeekHighlighted.reduce(sanitizeDOW, []);
       delete inOpts.daysOfWeekHighlighted;
+    }
+
+    //*** week numbers ***//
+    if (inOpts.calendarWeeks !== undefined) {
+      const calendarWeeks = !!inOpts.calendarWeeks;
+      weekNumbers = config.weekNumbers = calendarWeeks + 0;
+      config.getWeekNumber = calendarWeeks ? getIsoWeek : null;
+      delete inOpts.calendarWeeks;
+    }
+    if (inOpts.weekNumbers !== undefined) {
+      let method = inOpts.weekNumbers;
+      if (method) {
+        const getWeekNumber = typeof method === 'function'
+          ? (timeValue, startOfWeek) => method(new Date(timeValue), startOfWeek)
+          : determineGetWeekMethod((method = parseInt(method, 10)), weekStart);
+        if (getWeekNumber) {
+          weekNumbers = config.weekNumbers = method;
+          config.getWeekNumber = getWeekNumber;
+        }
+      } else {
+        weekNumbers = config.weekNumbers = 0;
+        config.getWeekNumber = null;
+      }
+      delete inOpts.weekNumbers;
     }
 
     //*** multi date ***//
@@ -804,13 +882,6 @@
       delete inOpts.todayBtnMode;
     }
 
-    config.getCalendarWeek =
-      typeof inOpts.getCalendarWeek === 'function'
-        ? inOpts.getCalendarWeek
-        : getCalendarWeek || null;
-
-    delete inOpts.getCalendarWeek;
-
     //*** copy the rest ***//
     Object.keys(inOpts).forEach((key) => {
       if (inOpts[key] !== undefined && hasProperty(defaultOptions, key)) {
@@ -846,7 +917,7 @@
   <div class="datepicker-grid">${createTagRepeat('span', 42)}</div>
 </div>`);
 
-  const calendarWeeksTemplate = optimizeTemplateHTML(`<div class="calendar-weeks">
+  const weekNumbersTemplate = optimizeTemplateHTML(`<div class="week-numbers calendar-weeks">
   <div class="days-of-week"><span class="dow"></span></div>
   <div class="weeks">${createTagRepeat('span', 6, {class: 'week'})}</div>
 </div>`);
@@ -962,35 +1033,35 @@
           : undefined;
       }
 
-      if (options.calendarWeeks !== undefined) {
-        if (options.calendarWeeks && !this.calendarWeeks) {
-          const weeksElem = parseHTML(calendarWeeksTemplate).firstChild;
-          this.calendarWeeks = {
+      if (options.weekNumbers !== undefined) {
+        if (options.weekNumbers && !this.weekNumbers) {
+          const weeksElem = parseHTML(weekNumbersTemplate).firstChild;
+          this.weekNumbers = {
             element: weeksElem,
             dow: weeksElem.firstChild,
             weeks: weeksElem.lastChild,
           };
           this.element.insertBefore(weeksElem, this.element.firstChild);
-        } else if (this.calendarWeeks && !options.calendarWeeks) {
-          this.element.removeChild(this.calendarWeeks.element);
-          this.calendarWeeks = null;
+        } else if (this.weekNumbers && !options.weekNumbers) {
+          this.element.removeChild(this.weekNumbers.element);
+          this.weekNumbers = null;
         }
       }
 
-      if (typeof options.getCalendarWeek === 'function') {
-        this.getCalendarWeek = options.getCalendarWeek;
+      if (options.getWeekNumber !== undefined) {
+        this.getWeekNumber = options.getWeekNumber;
       }
 
       if (options.showDaysOfWeek !== undefined) {
         if (options.showDaysOfWeek) {
           showElement(this.dow);
-          if (this.calendarWeeks) {
-            showElement(this.calendarWeeks.dow);
+          if (this.weekNumbers) {
+            showElement(this.weekNumbers.dow);
           }
         } else {
           hideElement(this.dow);
-          if (this.calendarWeeks) {
-            hideElement(this.calendarWeeks.dow);
+          if (this.weekNumbers) {
+            hideElement(this.weekNumbers.dow);
           }
         }
       }
@@ -1041,19 +1112,10 @@
       this.picker.setPrevBtnDisabled(this.first <= this.minDate);
       this.picker.setNextBtnDisabled(this.last >= this.maxDate);
 
-      if (this.calendarWeeks) {
-        const startOfWeek = dayOfTheWeekOf(this.first, 1, this.weekStart);
-
-        const calcWeek = (timestamp, weekStart) => {
-          if (this.getCalendarWeek) {
-            return this.getCalendarWeek(new Date(timestamp), weekStart);
-          }
-
-          return getWeek(timestamp);
-        };
-
-        Array.from(this.calendarWeeks.weeks.children).forEach((el, index) => {
-          el.textContent = calcWeek(addWeeks(startOfWeek, index), this.weekStart);
+      if (this.weekNumbers) {
+        const startOfWeek = dayOfTheWeekOf(this.first, this.weekStart, this.weekStart);
+        Array.from(this.weekNumbers.weeks.children).forEach((el, index) => {
+          el.textContent = this.getWeekNumber(addWeeks(startOfWeek, index), this.weekStart);
         });
       }
       Array.from(this.grid.children).forEach((el, index) => {

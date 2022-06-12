@@ -64,13 +64,51 @@ export function dayOfTheWeekOf(baseDate, dayOfWeek, weekStart = 0) {
   return addDays(baseDate, dayDiff(dayOfWeek, weekStart) - dayDiff(baseDay, weekStart));
 }
 
-// Get the ISO week of a date
-export function getWeek(date) {
-  // start of ISO week is Monday
+function calcWeekNum(dayOfTheWeek, sameDayOfFirstWeek) {
+  return Math.round((dayOfTheWeek - sameDayOfFirstWeek) / 604800000) + 1;
+}
+
+// Get the ISO week number of a date
+export function getIsoWeek(date) {
+  // - Start of ISO week is Monday
+  // - Use Thursday for culculation because the first Thursday of ISO week is
+  //   always in January
   const thuOfTheWeek = dayOfTheWeekOf(date, 4, 1);
-  // 1st week == the week where the 4th of January is in
+  // - Week 1 in ISO week is the week including Jan 04
+  // - Use the Thu of given date's week (instead of given date itself) to
+  //   calculate week 1 of the year so that Jan 01 - 03 won't be miscalculated
+  //   as week 0 when Jan 04 is Mon - Wed
   const firstThu = dayOfTheWeekOf(new Date(thuOfTheWeek).setMonth(0, 4), 4, 1);
-  return Math.round((thuOfTheWeek - firstThu) / 604800000) + 1;
+  // return Math.round((thuOfTheWeek - firstThu) / 604800000) + 1;
+  return calcWeekNum(thuOfTheWeek, firstThu);
+}
+
+// Calculate week number in traditional week number system
+// @see https://en.wikipedia.org/wiki/Week#Other_week_numbering_systems
+function calcTraditionalWeekNumber(date, weekStart) {
+  // - Week 1 of traditional week is the week including the Jan 01
+  // - Use Jan 01 of given date's year to calculate the start of week 1
+  const startOfFirstWeek = dayOfTheWeekOf(new Date(date).setMonth(0, 1), weekStart, weekStart);
+  const startOfTheWeek = dayOfTheWeekOf(date, weekStart, weekStart);
+  const weekNum = calcWeekNum(startOfTheWeek, startOfFirstWeek);
+  if (weekNum < 53) {
+    return weekNum;
+  }
+  // If the 53rd week includes Jan 01, it's actually next year's week 1
+  const weekOneOfNextYear = dayOfTheWeekOf(new Date(date).setDate(32), weekStart, weekStart);
+  return startOfTheWeek === weekOneOfNextYear ? 1 : weekNum;
+}
+
+// Get the Western traditional week number of a date
+export function getWesternTradWeek(date) {
+  // Start of Western traditionl week is Sunday
+  return calcTraditionalWeekNumber(date, 0);
+}
+
+// Get the Middle Eastern week number of a date
+export function getMidEasternWeek(date) {
+  // Start of Middle Eastern week is Saturday
+  return calcTraditionalWeekNumber(date, 6);
 }
 
 // Get the start year of the period of years that includes given date

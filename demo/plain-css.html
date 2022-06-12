@@ -236,15 +236,6 @@
               <div class="field">
                 <div class="control">
                   <label class="label checkbox">
-                    <input type="checkbox" name="calendarWeeks" value="true">
-                    calendarWeeks
-                  </label>
-                </div>
-              </div>
-
-              <div class="field">
-                <div class="control">
-                  <label class="label checkbox">
                     <input type="checkbox" name="clearBtn" value="true">
                     clearBtn
                   </label>
@@ -509,6 +500,21 @@
                     <input type="checkbox" name="updateOnBlur" value="true" checked>
                     updateOnBlur
                   </label>
+                </div>
+              </div>
+
+              <div class="field">
+                <label class="label">weekNumbers</label>
+                <div class="control">
+                  <div class="select">
+                    <select name="weekNumbers">
+                      <option value="0">0 – None</option>
+                      <option value="1">1 – ISO 8601</option>
+                      <option value="2">2 – Western traditional</option>
+                      <option value="3">3 – Middle Eastern</option>
+                      <option value="4">4 – Guess from weekStart</option>
+                    </select>
+                  </div>
                 </div>
               </div>
 

@@ -8,7 +8,9 @@ import {
   addMonths,
   addYears,
   dayOfTheWeekOf,
-  getWeek,
+  getIsoWeek,
+  getWesternTradWeek,
+  getMidEasternWeek,
   startOfYearPeriod,
   regularizeDate
 } from '../../../js/lib/date.js';
@@ -178,18 +180,54 @@ describe('lib/date', function () {
     });
   });
 
-  describe('getWeek()', function () {
+  describe('getIsoWeek()', function () {
     it('returns ISO week number of given date', function () {
-      expect(getWeek(new Date(2015, 0, 1)), 'to be', 1);
-      expect(getWeek(new Date(2015, 3, 26)), 'to be', 17);
-      expect(getWeek(new Date(2015, 8, 12)), 'to be', 37);
-      expect(getWeek(new Date(2015, 10, 15)), 'to be', 46);
-      expect(getWeek(new Date(2016, 0, 1)), 'to be', 53);
-      expect(getWeek(new Date(2016, 0, 7)), 'to be', 1);
-      expect(getWeek(new Date(2016, 6, 21)), 'to be', 29);
-      expect(getWeek(new Date(2016, 8, 6)), 'to be', 36);
-      expect(getWeek(new Date(2016, 11, 1)), 'to be', 48);
-      expect(getWeek(new Date(2017, 0, 1)), 'to be', 52);
+      expect(getIsoWeek(new Date(2015, 0, 1)), 'to be', 1);
+      expect(getIsoWeek(new Date(2015, 3, 26)), 'to be', 17);
+      expect(getIsoWeek(new Date(2015, 8, 12)), 'to be', 37);
+      expect(getIsoWeek(new Date(2015, 10, 15)), 'to be', 46);
+      expect(getIsoWeek(new Date(2015, 11, 29)), 'to be', 53);
+      expect(getIsoWeek(new Date(2016, 0, 1)), 'to be', 53);
+      expect(getIsoWeek(new Date(2016, 0, 7)), 'to be', 1);
+      expect(getIsoWeek(new Date(2016, 4, 14)), 'to be', 19);
+      expect(getIsoWeek(new Date(2016, 6, 21)), 'to be', 29);
+      expect(getIsoWeek(new Date(2016, 8, 6)), 'to be', 36);
+      expect(getIsoWeek(new Date(2016, 11, 28)), 'to be', 52);
+      expect(getIsoWeek(new Date(2017, 0, 1)), 'to be', 52);
+    });
+  });
+
+  describe('getWesternTradWeek()', function () {
+    it('returns Western traditional week number of given date', function () {
+      expect(getWesternTradWeek(new Date(2015, 0, 1)), 'to be', 1);
+      expect(getWesternTradWeek(new Date(2015, 3, 26)), 'to be', 18);
+      expect(getWesternTradWeek(new Date(2015, 8, 12)), 'to be', 37);
+      expect(getWesternTradWeek(new Date(2015, 10, 15)), 'to be', 47);
+      expect(getWesternTradWeek(new Date(2015, 11, 29)), 'to be', 1);
+      expect(getWesternTradWeek(new Date(2016, 0, 1)), 'to be', 1);
+      expect(getWesternTradWeek(new Date(2016, 0, 7)), 'to be', 2);
+      expect(getWesternTradWeek(new Date(2016, 4, 14)), 'to be', 20);
+      expect(getWesternTradWeek(new Date(2016, 6, 21)), 'to be', 30);
+      expect(getWesternTradWeek(new Date(2016, 8, 6)), 'to be', 37);
+      expect(getWesternTradWeek(new Date(2016, 11, 28)), 'to be', 53);
+      expect(getWesternTradWeek(new Date(2017, 0, 1)), 'to be', 1);
+    });
+  });
+
+  describe('getMidEasternWeek()', function () {
+    it('returns Middle Eastern week number of given date', function () {
+      expect(getMidEasternWeek(new Date(2015, 0, 1)), 'to be', 1);
+      expect(getMidEasternWeek(new Date(2015, 3, 26)), 'to be', 18);
+      expect(getMidEasternWeek(new Date(2015, 8, 12)), 'to be', 38);
+      expect(getMidEasternWeek(new Date(2015, 10, 15)), 'to be', 47);
+      expect(getMidEasternWeek(new Date(2015, 11, 29)), 'to be', 1);
+      expect(getMidEasternWeek(new Date(2016, 0, 1)), 'to be', 1);
+      expect(getMidEasternWeek(new Date(2016, 0, 7)), 'to be', 2);
+      expect(getMidEasternWeek(new Date(2016, 4, 14)), 'to be', 21);
+      expect(getMidEasternWeek(new Date(2016, 6, 21)), 'to be', 30);
+      expect(getMidEasternWeek(new Date(2016, 8, 6)), 'to be', 37);
+      expect(getMidEasternWeek(new Date(2016, 11, 28)), 'to be', 53);
+      expect(getMidEasternWeek(new Date(2017, 0, 1)), 'to be', 1);
     });
   });
 

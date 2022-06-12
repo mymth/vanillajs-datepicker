@@ -1,9 +1,9 @@
 import {hasProperty, pushUnique} from '../../lib/utils.js';
-import {today, dateValue, addDays, addWeeks, dayOfTheWeekOf, getWeek} from '../../lib/date.js';
+import {today, dateValue, addDays, addWeeks, dayOfTheWeekOf} from '../../lib/date.js';
 import {formatDate} from '../../lib/date-format.js';
 import {parseHTML, showElement, hideElement} from '../../lib/dom.js';
 import daysTemplate from '../templates/daysTemplate.js';
-import calendarWeeksTemplate from '../templates/calendarWeeksTemplate.js';
+import weekNumbersTemplate from '../templates/weekNumbersTemplate.js';
 import View from './View.js';
 
 export default class DaysView extends View {
@@ -64,35 +64,35 @@ export default class DaysView extends View {
         : undefined;
     }
 
-    if (options.calendarWeeks !== undefined) {
-      if (options.calendarWeeks && !this.calendarWeeks) {
-        const weeksElem = parseHTML(calendarWeeksTemplate).firstChild;
-        this.calendarWeeks = {
+    if (options.weekNumbers !== undefined) {
+      if (options.weekNumbers && !this.weekNumbers) {
+        const weeksElem = parseHTML(weekNumbersTemplate).firstChild;
+        this.weekNumbers = {
           element: weeksElem,
           dow: weeksElem.firstChild,
           weeks: weeksElem.lastChild,
         };
         this.element.insertBefore(weeksElem, this.element.firstChild);
-      } else if (this.calendarWeeks && !options.calendarWeeks) {
-        this.element.removeChild(this.calendarWeeks.element);
-        this.calendarWeeks = null;
+      } else if (this.weekNumbers && !options.weekNumbers) {
+        this.element.removeChild(this.weekNumbers.element);
+        this.weekNumbers = null;
       }
     }
 
-    if (typeof options.getCalendarWeek === 'function') {
-      this.getCalendarWeek = options.getCalendarWeek;
+    if (options.getWeekNumber !== undefined) {
+      this.getWeekNumber = options.getWeekNumber;
     }
 
     if (options.showDaysOfWeek !== undefined) {
       if (options.showDaysOfWeek) {
         showElement(this.dow);
-        if (this.calendarWeeks) {
-          showElement(this.calendarWeeks.dow);
+        if (this.weekNumbers) {
+          showElement(this.weekNumbers.dow);
         }
       } else {
         hideElement(this.dow);
-        if (this.calendarWeeks) {
-          hideElement(this.calendarWeeks.dow);
+        if (this.weekNumbers) {
+          hideElement(this.weekNumbers.dow);
         }
       }
     }
@@ -143,19 +143,10 @@ export default class DaysView extends View {
     this.picker.setPrevBtnDisabled(this.first <= this.minDate);
     this.picker.setNextBtnDisabled(this.last >= this.maxDate);
 
-    if (this.calendarWeeks) {
-      const startOfWeek = dayOfTheWeekOf(this.first, 1, this.weekStart);
-
-      const calcWeek = (timestamp, weekStart) => {
-        if (this.getCalendarWeek) {
-          return this.getCalendarWeek(new Date(timestamp), weekStart);
-        }
-
-        return getWeek(timestamp, weekStart);
-      };
-
-      Array.from(this.calendarWeeks.weeks.children).forEach((el, index) => {
-        el.textContent = calcWeek(addWeeks(startOfWeek, index), this.weekStart);
+    if (this.weekNumbers) {
+      const startOfWeek = dayOfTheWeekOf(this.first, this.weekStart, this.weekStart);
+      Array.from(this.weekNumbers.weeks.children).forEach((el, index) => {
+        el.textContent = this.getWeekNumber(addWeeks(startOfWeek, index), this.weekStart);
       });
     }
     Array.from(this.grid.children).forEach((el, index) => {
