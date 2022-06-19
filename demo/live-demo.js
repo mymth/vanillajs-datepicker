@@ -1,10 +1,5 @@
 /*eslint no-unused-vars: ["error", { "varsIgnorePattern": "initialize|on[A-Z]*" }]*/
 var templates = {
-  input: `<div class="field">
-  <div class="control">
-    <input type="text" class="input date">
-  </div>
-</div>`,
   inline: `<div class="date"></div>`,
   range: `<div class="field has-addons date">
   <div class="control">
@@ -188,6 +183,8 @@ const range = document.createRange();
 const sandbox = document.getElementById('sandbox');
 const options = document.getElementById('options');
 const jsonFields = ['datesDisabled'];
+const elemAttribSettings = document.querySelectorAll('#elem-attribs input');
+let elems;
 
 function parseHTML(html) {
   return range.createContextualFragment(html);
@@ -211,9 +208,14 @@ function switchPicker(type) {
     }, options);
 
     window.demoPicker.destroy();
-    sandbox.removeChild(sandbox.firstChild);
+    sandbox.replaceChild(elems[type], sandbox.firstElementChild);
   }
-  sandbox.appendChild(parseHTML(templates[type]));
+
+  const target = type === 'inline' ? '.date' : 'input';
+  elemAttribSettings.forEach((el) => {
+    el.parentElement.style.display = el.dataset.target === target ? '' : 'none';
+    onChangeElemAttribSetting({target: el});
+  });
 
   const el = sandbox.querySelector('.date');
   window.demoPicker = type === 'range'
@@ -442,7 +444,25 @@ function onClickCheckboxOptions(ev) {
   updateOption(checkbox.name, value);
 }
 
+function onChangeElemAttribSetting(ev) {
+  const {checked, dataset, name, value} = ev.target;
+  sandbox.querySelectorAll(dataset.target).forEach((el) => {
+    if (checked) {
+      el.setAttribute(name, value);
+    } else {
+      el.removeAttribute(name);
+    }
+  });
+}
+
 function initialize() {
+  // prepare sandbox content
+  elems = Object.entries(templates).reduce((obj, [key, template]) => {
+    obj[key] = parseHTML(template).firstChild;
+    return obj;
+  }, {});
+  elems.input = sandbox.firstElementChild;
+
   // load languages
   const selectElem = options.querySelector('select[name=language]');
   Object.keys(languages).forEach((lang) => {
@@ -465,5 +485,10 @@ function initialize() {
       el.classList.toggle('is-active');
       target.classList.toggle('is-active');
     });
+  });
+
+  // Elem attribute settings
+  elemAttribSettings.forEach((el) => {
+    el.addEventListener('change', onChangeElemAttribSetting);
   });
 }

@@ -91,7 +91,22 @@
           <div class="col">
             <p>Vanilla JS Datepicker</p>
             <h1 class="title">Demo</h1>
-            <div id="sandbox"></div>
+            <div id="sandbox">
+              <div class="form-group"><input type="text" class="form-control date"></div>
+            </div>
+            <div id="elem-attribs" class="d-flex flex-wrap mb-3">
+              <label>Attribute:</label>
+              <div class="px-1">
+                <div class="form-check form-check-inline mx-1">
+                  <input type="checkbox" class="form-check-input" data-target="input" name="readonly" value="">
+                  <label class="form-check-label">readonly</label>
+                </div>
+                <div class="form-check form-check-inline mx-1">
+                  <input type="checkbox" class="form-check-input" data-target="input" name="disabled" value="">
+                  <label class="form-check-label">disabled</label>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
         <div class="row">
@@ -262,6 +277,11 @@
               <div class="form-group">
                 <label class="label">defaultViewDate</label>
                 <input type="text" class="form-control" name="defaultViewDate" placeholder="today">
+              </div>
+
+              <div class="form-group form-check">
+                <input type="checkbox" class="form-check-input" id="enableOnReadonly" name="enableOnReadonly" value="true" checked>
+                <label for="enableOnReadonly" class="form-check-label">enableOnReadonly</label>
               </div>
 
               <div class="form-group">
@@ -435,7 +455,6 @@
     <script>
       /*global $ initialize onChangeType onChnageDirection onChangeInputOption onChangeInputOption onChangeTextareaOption onClickCheckboxOptions switchPicker */
       window.templates = {
-        input: `<div class="form-group"><input type="text" class="form-control date"></div>`,
         inline: `<div class="date"></div>`,
         range: `<div class="d-flex flex-row date input-daterange">
   <div class="form-group">

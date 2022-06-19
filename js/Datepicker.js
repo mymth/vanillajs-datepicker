@@ -292,12 +292,13 @@ export default class Datepicker {
    */
   show() {
     if (this.inputField) {
-      if (this.inputField.disabled) {
+      const {config, inputField} = this;
+      if (inputField.disabled || (inputField.readOnly && !config.enableOnReadonly)) {
         return;
       }
-      if (!isActiveElement(this.inputField) && !this.config.disableTouchKeyboard) {
+      if (!isActiveElement(inputField) && !config.disableTouchKeyboard) {
         this._showing = true;
-        this.inputField.focus();
+        inputField.focus();
         delete this._showing;
       }
     }
@@ -473,7 +474,7 @@ export default class Datepicker {
    * Not available on inline picker or when the picker element is hidden
    */
   enterEditMode() {
-    if (this.inline || !this.picker.active || this.editMode) {
+    if (this.inline || !this.picker.active || this.inputField.readOnly || this.editMode) {
       return;
     }
     this.editMode = true;

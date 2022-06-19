@@ -85,7 +85,24 @@
           <div class="column">
             <p>Vanilla JS Datepicker</p>
             <h1 class="title">Demo</h1>
-            <div id="sandbox"></div>
+            <div id="sandbox">
+              <div class="field">
+                <div class="control"><input type="text" class="input date"></div>
+              </div>
+            </div>
+            <div id="elem-attribs" class="is-flex is-flex-wrap-wrap mt-2">
+              <label>Attribute:</label>
+              <div class="px-1">
+                <label class="checkbox mx-1">
+                  <input type="checkbox" data-target="input" name="readonly" value="">
+                  readonly
+                </label>
+                <label class="checkbox mx-1">
+                  <input type="checkbox" data-target="input" name="disabled" value="">
+                  disabled
+                </label>
+              </div>
+            </div>
           </div>
         </div>
         <div class="columns">
@@ -277,6 +294,15 @@
                 <label class="label">defaultViewDate</label>
                 <div class="control">
                   <input type="text" class="input" name="defaultViewDate" placeholder="today">
+                </div>
+              </div>
+
+              <div class="field">
+                <div class="control">
+                  <label class="label checkbox">
+                    <input type="checkbox" name="enableOnReadonly" value="true" checked>
+                    enableOnReadonly
+                  </label>
                 </div>
               </div>
 

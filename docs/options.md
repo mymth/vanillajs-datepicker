@@ -84,7 +84,7 @@ CSS class for `<button>` elements. (view switch, prev/next buttons, clear and to
 > For constructor only. Cannot be used with `setOptions()`.  
 
 #### <span style="color: #999;">calendarWeeks (deprecated)</span>
-This option will be removed in favor of [`weekNumbers`](#weekNumbers) option.
+This option will be removed in favor of the [`weekNumbers`](#weekNumbers) option.
 
 <div style="color: #999;">
 <ul>
@@ -165,6 +165,12 @@ Whether to prevent on-screen keyboard on mobile devices from showing up when the
 
 <blockquote style="border-left-color: #bbb;">Not available on inline picker.</blockquote>
 </div>
+
+#### enableOnReadonly
+- Type: `Boolean`
+- Default: `true`
+
+Whether to show the date picker when the associated input filed has the `readonly` attribute.
 
 #### format
 - Type: `String`|`Object`

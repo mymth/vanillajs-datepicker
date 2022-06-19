@@ -30,6 +30,24 @@
         font-weight: 600;
       }
 
+      .is-flex {
+        display: flex;
+      }
+      .is-flex-wrap-wrap {
+        flex-wrap: wrap;
+      }
+      .mt-2 {
+        margin-top: 0.5rem;
+      }
+      .mx-1 {
+        margin-left: 0.25rem;
+        margin-right: 0.25rem;
+      }
+      .px-1 {
+        padding-left: 0.25rem;
+        padding-right: 0.25rem;
+      }
+
       aside {
         position: fixed;
         top: 0;
@@ -122,7 +140,22 @@
           <div class="column">
             <p>Vanilla JS Datepicker</p>
             <h1 class="title">Demo</h1>
-            <div id="sandbox"></div>
+            <div id="sandbox">
+              <div class="control"><input type="text" class="input date"></div>
+            </div>
+            <div id="elem-attribs" class="is-flex is-flex-wrap-wrap mt-2">
+              <label>Attribute:</label>
+              <div class="px-1">
+                <label class="checkbox mx-1">
+                  <input type="checkbox" data-target="input" name="readonly" value="">
+                  readonly
+                </label>
+                <label class="checkbox mx-1">
+                  <input type="checkbox" data-target="input" name="disabled" value="">
+                  disabled
+                </label>
+              </div>
+            </div>
           </div>
         </div>
         <div class="columns">
@@ -314,6 +347,15 @@
                 <label class="label">defaultViewDate</label>
                 <div class="control">
                   <input type="text" class="input" name="defaultViewDate" placeholder="today">
+                </div>
+              </div>
+
+              <div class="field">
+                <div class="control">
+                  <label class="label checkbox">
+                    <input type="checkbox" name="enableOnReadonly" value="true" checked>
+                    enableOnReadonly
+                  </label>
                 </div>
               </div>
 

@@ -434,6 +434,53 @@ describe('options', function () {
     });
   });
 
+  describe('enableOnReadonly', function () {
+    beforeEach(function () {
+      input.readOnly = true;
+    });
+
+    after(function () {
+      input.readOnly = false;
+    });
+
+    it('disables the picker of the input with readonly attribute to be shown when false', function () {
+      const {dp, picker} = createDP(input, {enableOnReadonly: false});
+
+      input.focus();
+      expect(isVisible(picker), 'to be false');
+
+      dp.show();
+      expect(isVisible(picker), 'to be false');
+
+      input.blur();
+      input.readOnly = false;
+
+      input.focus();
+      expect(isVisible(picker), 'to be true');
+
+      dp.hide();
+      dp.show();
+      expect(isVisible(picker), 'to be true');
+
+      dp.destroy();
+    });
+
+    it('can be updated with setOptions()', function () {
+      const {dp, picker} = createDP(input);
+      dp.show();
+
+      expect(isVisible(picker), 'to be true');
+
+      dp.hide();
+      dp.setOptions({enableOnReadonly: false});
+      dp.show();
+
+      expect(isVisible(picker), 'to be false');
+
+      dp.destroy();
+    });
+  });
+
   describe('nextArrow', function () {
     it('specifies the label of the next button in HTML (or plain text)', function () {
       const html = '<i class="icn icn-arrow-right"></i>';

@@ -61,6 +61,7 @@ describe('Datepicker', function () {
       expect(dp.config.daysOfWeekHighlighted, 'to equal', []);
       expect(dp.config.defaultViewDate, 'to be', today());
       expect(dp.config.disableTouchKeyboard, 'to be false');
+      expect(dp.config.enableOnReadonly, 'to be true');
       expect(dp.config.format, 'to be', 'mm/dd/yyyy');
       expect(dp.config.getWeekNumber, 'to be null');
       expect(dp.config.language, 'to be', 'en');

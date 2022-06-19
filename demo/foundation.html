@@ -111,6 +111,21 @@
       .background-alert {
         background-color: #cc4b37 !important;
       }
+
+      .flex-wrap {
+        flex-wrap: wrap;
+      }
+      #elem-attribs .check-group {
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
+      }
+      #elem-attribs .check-group-item {
+        margin-left: 0.5rem;
+        margin-right: 0.5rem;
+      }
+      #elem-attribs .check-group-item label {
+        margin-right: 0.5rem;
+      }
     </style>
   </head>
   <body>
@@ -120,7 +135,22 @@
           <div class="columns">
             <p>Vanilla JS Datepicker</p>
             <h1 class="title">Demo</h1>
-            <div id="sandbox"></div>
+            <div id="sandbox">
+              <div class="field"><input type="text" class="date"></div>
+            </div>
+            <div id="elem-attribs" class="flex-container flex-wrap">
+              <label>Attribute:</label>
+              <div class="check-group">
+                <div class="check-group-item">
+                  <input type="checkbox" data-target="input" name="readonly" value="">
+                  <label>readonly</label>
+                </div>
+                <div class="check-group-item">
+                  <input type="checkbox" data-target="input" name="disabled" value="">
+                  <label class="margin-horizontal-1">disabled</label>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
         <div class="row">
@@ -291,6 +321,11 @@
                   defaultViewDate
                   <input type="text" name="defaultViewDate" placeholder="today">
                 </label>
+              </div>
+
+              <div class="field">
+                <input type="checkbox" id="enableOnReadonly" name="enableOnReadonly" value="true" checked>
+                <label for="enableOnReadonly">enableOnReadonly</label>
               </div>
 
               <div class="field">
@@ -490,7 +525,6 @@
     <script>
       /*global $ initialize onChangeType onChnageDirection onChangeInputOption onChangeInputOption onChangeTextareaOption onClickcheckboxOptions switchPicker */
       window.templates = {
-        input: `<div class="field"><input type="text" class="date"></div>`,
         inline: `<div class="date"></div>`,
         range: `<div class="input-group date input-daterange">
   <input type="text" name="range-start" class="input-group-field">

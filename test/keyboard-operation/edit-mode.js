@@ -256,6 +256,28 @@ describe('keyboard operation - edit mode', function () {
     dp.destroy();
   });
 
+  it('does not turn on when the input has readonly attribute', function () {
+    const dp = new Datepicker(input);
+    input.readOnly = true;
+    input.focus();
+
+    dp.enterEditMode();
+    expect(dp.editMode, 'to be undefined');
+    expect(input.classList.contains('in-edit'), 'to be false');
+
+    simulant.fire(input, 'keydown', {key: '1'});
+    expect(dp.editMode, 'to be undefined');
+
+    simulant.fire(input, 'keydown', {key: 'J'});
+    expect(dp.editMode, 'to be undefined');
+
+    simulant.fire(input, 'mousedown');
+    input.click();
+    expect(dp.editMode, 'to be undefined');
+
+    dp.destroy();
+  });
+
   it('disables the arrow-key operation of the picker', function () {
     const clock = sinon.useFakeTimers({now: new Date(2020, 1, 14), shouldAdvanceTime: true});
     const {dp, picker} = createDP(input);
@@ -320,7 +342,7 @@ describe('keyboard operation - edit mode', function () {
   });
 
   it('turns off when the picker hides', function () {
-    const {dp, picker} = createDP(input);
+    const dp = new Datepicker(input);
     input.focus();
     dp.enterEditMode();
 
