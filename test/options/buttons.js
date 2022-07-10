@@ -130,7 +130,7 @@ describe('options - buttons', function () {
       dp.destroy();
     });
 
-    it('today will be disabled if the current date is out of the range of minDate/maxDate', function () {
+    it('is disabled if the current date is out of the range of minDate/maxDate', function () {
       const {dp, picker} = createDP(input, {todayBtn: true});
       const todayBtn = picker.querySelector('.today-btn');
       dp.show();
@@ -252,9 +252,43 @@ describe('options - buttons', function () {
         expect(input.value, 'to be', '04/22/2020');
 
         dp.setDate({clear: true});
+
+        // pickLevel = 1
+        dp.setOptions({pickLevel: 1});
+        dp.setDate('4/22/2020');
+        todayBtn.click();
+
+        expect(viewSwitch.textContent, 'to be', '2020');
+
+        cells = getCells(picker);
+        expect(cells[1].textContent, 'to be', 'Feb');
+        expect(cells[1].classList.contains('focused'), 'to be true');
+        expect(cells[3].classList.contains('selected'), 'to be true');
+
+        expect(dp.dates, 'to equal', [dateValue(2020, 3, 1)]);
+        expect(input.value, 'to be', '04/01/2020');
+
+        dp.setDate({clear: true});
+
+        // pickLevel = 2
+        dp.setOptions({pickLevel: 2});
+        dp.setDate('4/22/2022');
+        todayBtn.click();
+
+        expect(viewSwitch.textContent, 'to be', '2020-2029');
+
+        cells = getCells(picker);
+        expect(cells[1].textContent, 'to be', '2020');
+        expect(cells[1].classList.contains('focused'), 'to be true');
+        expect(cells[3].classList.contains('selected'), 'to be true');
+
+        expect(dp.dates, 'to equal', [dateValue(2022, 0, 1)]);
+        expect(input.value, 'to be', '01/01/2022');
+
+        dp.setDate({clear: true});
       });
 
-      it('also changes the view to days view when todayBtnMode = 0', function () {
+      it('also changes the view to pickLevel\'s view when todayBtnMode = 0', function () {
         // months view
         dp.setDate('4/22/2020');
         viewSwitch.click();
@@ -277,6 +311,25 @@ describe('options - buttons', function () {
         viewSwitch.click();
         todayBtn.click();
         expect(viewSwitch.textContent, 'to be', 'February 2020');
+
+        dp.setDate({clear: true});
+
+        // pickLevel = 1
+        dp.setOptions({pickLevel: 1});
+        dp.setDate('4/22/2020');
+        viewSwitch.click();
+        viewSwitch.click();
+        todayBtn.click();
+        expect(viewSwitch.textContent, 'to be', '2020');
+
+        dp.setDate({clear: true});
+
+        // pickLevel = 2
+        dp.setOptions({pickLevel: 2});
+        dp.setDate('4/22/2022');
+        viewSwitch.click();
+        todayBtn.click();
+        expect(viewSwitch.textContent, 'to be', '2020-2029');
 
         dp.setDate({clear: true});
       });
@@ -303,6 +356,40 @@ describe('options - buttons', function () {
         todayBtn.click();
         expect(viewSwitch.textContent, 'to be', 'February 2020');
         expect(dp.dates, 'to equal', [dateValue(2020, 1, 14)]);
+
+        dp.setDate({clear: true});
+
+        // pickLevel = 1
+        dp.setOptions({pickLevel: 1});
+        dp.setDate('4/22/2020');
+        todayBtn.click();
+
+        expect(viewSwitch.textContent, 'to be', '2020');
+
+        cells = getCells(picker);
+        expect(cells[1].textContent, 'to be', 'Feb');
+        expect(cells[1].classList.contains('focused'), 'to be true');
+        expect(cells[1].classList.contains('selected'), 'to be true');
+
+        expect(dp.dates, 'to equal', [dateValue(2020, 1, 1)]);
+        expect(input.value, 'to be', '02/01/2020');
+
+        dp.setDate({clear: true});
+
+        // pickLevel = 2
+        dp.setOptions({pickLevel: 2});
+        dp.setDate('4/22/2022');
+        todayBtn.click();
+
+        expect(viewSwitch.textContent, 'to be', '2020-2029');
+
+        cells = getCells(picker);
+        expect(cells[1].textContent, 'to be', '2020');
+        expect(cells[1].classList.contains('focused'), 'to be true');
+        expect(cells[1].classList.contains('selected'), 'to be true');
+
+        expect(dp.dates, 'to equal', [dateValue(2020, 0, 1)]);
+        expect(input.value, 'to be', '01/01/2020');
 
         dp.setDate({clear: true});
       });
