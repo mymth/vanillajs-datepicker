@@ -514,10 +514,10 @@ var Datepicker = (function () {
     maxNumberOfDates: 1,
     maxView: 3,
     minDate: null,
-    nextArrow: '»',
+    nextArrow: '<svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>',
     orientation: 'auto',
     pickLevel: 0,
-    prevArrow: '«',
+    prevArrow: '<svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd"></path></svg>',
     showDaysOfWeek: true,
     showOnClick: true,
     showOnFocus: true,
@@ -528,6 +528,7 @@ var Datepicker = (function () {
     todayHighlight: false,
     updateOnBlur: true,
     weekStart: 0,
+    theme: 'yellow'
   };
 
   const {
@@ -821,21 +822,21 @@ var Datepicker = (function () {
     return config;
   }
 
-  const pickerTemplate = optimizeTemplateHTML(`<div class="datepicker">
-  <div class="datepicker-picker">
+  const pickerTemplate = optimizeTemplateHTML(`<div class="datepicker hidden">
+  <div class="datepicker-picker inline-block rounded-lg bg-white shadow-lg w-full">
     <div class="datepicker-header">
-      <div class="datepicker-title"></div>
-      <div class="datepicker-controls">
-        <button type="button" class="%buttonClass% prev-btn"></button>
-        <button type="button" class="%buttonClass% view-switch"></button>
-        <button type="button" class="%buttonClass% next-btn"></button>
+      <div class="datepicker-title shadow-lg bg-white px-1.5 py-3 text-center"></div>
+      <div class="datepicker-controls rounded-lg border-none text-neutral-500 font-medium bg-white flex items-center justify-center text-sm py-5">
+        <button type="button" class="%buttonClass% border-none hover:bg-neutral-50 pr-1.5 pl-1.5 w-9 prev-btn"></button>
+        <button type="button" class="%buttonClass% border-none view-switch text-md"></button>
+        <button type="button" class="%buttonClass% border-none hover:bg-neutral-50 pr-1.5 pl-1.5 w-9 next-btn"></button>
       </div>
     </div>
     <div class="datepicker-main"></div>
     <div class="datepicker-footer">
-      <div class="datepicker-controls">
-        <button type="button" class="%buttonClass% today-btn"></button>
-        <button type="button" class="%buttonClass% clear-btn"></button>
+      <div class="datepicker-controls rounded-lg border-none text-neutral-500 font-medium bg-white flex items-center justify-center text-sm">
+        <button type="button" class="%buttonClass% today-btn rounded-lg font-body text-sm m-2 space-x-2 px-4 py-2 min-w-max font-medium text-neutral-700 hover:bg-neutral-50 tracking-wider cursor-pointer disabled:cursor-default"></button>
+        <button type="button" class="%buttonClass% clear-btn rounded-lg font-body text-sm m-2 space-x-2 px-4 py-2 min-w-max font-medium text-neutral-700 hover:bg-neutral-50 tracking-wider cursor-pointer disabled:cursor-default"></button>
       </div>
     </div>
   </div>
