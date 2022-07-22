@@ -822,20 +822,20 @@ var Datepicker = (function () {
     return config;
   }
 
-  const pickerTemplate = optimizeTemplateHTML(`<div class="datepicker hidden">
+  const pickerTemplate = optimizeTemplateHTML(`<div class="datepicker hidden font-body">
   <div class="datepicker-picker inline-block rounded-lg bg-white shadow-lg w-full">
     <div class="datepicker-header">
       <div class="datepicker-title shadow-lg bg-white px-1.5 py-3 text-center"></div>
       <div class="datepicker-controls rounded-lg border-none text-neutral-500 font-medium bg-white flex items-center justify-center text-sm py-5">
         <button type="button" class="%buttonClass% border-none hover:bg-neutral-50 pr-1.5 pl-1.5 w-9 prev-btn"></button>
-        <button type="button" class="%buttonClass% border-none view-switch text-md"></button>
+        <button type="button" class="%buttonClass% border-none view-switch text-md pointer-events-none"></button>
         <button type="button" class="%buttonClass% border-none hover:bg-neutral-50 pr-1.5 pl-1.5 w-9 next-btn"></button>
       </div>
     </div>
     <div class="datepicker-main"></div>
     <div class="datepicker-footer">
       <div class="datepicker-controls rounded-lg border-none text-neutral-500 font-medium bg-white flex items-center justify-center text-sm">
-        <button type="button" class="%buttonClass% today-btn rounded-lg font-body text-sm m-2 space-x-2 px-4 py-2 min-w-max font-medium text-neutral-700 hover:bg-neutral-50 tracking-wider cursor-pointer disabled:cursor-default"></button>
+        <button type="button" class="%buttonClass% today-btn bg-white border border-neutral-300 rounded-lg font-body text-sm m-2 space-x-2 px-4 py-2 min-w-max font-medium text-neutral-700 hover:bg-neutral-50 tracking-wider cursor-pointer disabled:cursor-default"></button>
         <button type="button" class="%buttonClass% clear-btn rounded-lg font-body text-sm m-2 space-x-2 px-4 py-2 min-w-max font-medium text-neutral-700 hover:bg-neutral-50 tracking-wider cursor-pointer disabled:cursor-default"></button>
       </div>
     </div>
@@ -843,12 +843,12 @@ var Datepicker = (function () {
 </div>`);
 
   const daysTemplate = optimizeTemplateHTML(`<div class="days">
-  <div class="days-of-week">${createTagRepeat('span', 7, {class: 'dow'})}</div>
+  <div class="days-of-week mb-2">${createTagRepeat('span', 7, {class: 'dow'})}</div>
   <div class="datepicker-grid">${createTagRepeat('span', 42)}</div>
 </div>`);
 
   const calendarWeeksTemplate = optimizeTemplateHTML(`<div class="calendar-weeks">
-  <div class="days-of-week"><span class="dow"></span></div>
+  <div class="days-of-week"><span class="dow text-neutral-500 font-medium bg-white"></span></div>
   <div class="weeks">${createTagRepeat('span', 6, {class: 'week'})}</div>
 </div>`);
 
@@ -857,7 +857,7 @@ var Datepicker = (function () {
     constructor(picker, config) {
       Object.assign(this, config, {
         picker,
-        element: parseHTML(`<div class="datepicker-view"></div>`).firstChild,
+        element: parseHTML(`<div class="datepicker-view pt-2"></div>`).firstChild,
         selected: [],
       });
       this.init(this.picker.datepicker.config);
@@ -1098,7 +1098,7 @@ var Datepicker = (function () {
           }
         }
         if (this.selected.includes(current)) {
-          classList.add('selected');
+          classList.add(`selected bg-${options.theme}-400 rounded-full`);
         }
         if (current === this.focused) {
           classList.add('focused');
@@ -1116,7 +1116,7 @@ var Datepicker = (function () {
       this.grid
         .querySelectorAll('.range, .range-start, .range-end, .selected, .focused')
         .forEach((el) => {
-          el.classList.remove('range', 'range-start', 'range-end', 'selected', 'focused');
+          el.classList.remove('range', 'range-start', 'range-end', 'selected', `bg-${options.theme}-400`, 'rounded-full', 'focused');
         });
       Array.from(this.grid.children).forEach((el) => {
         const current = Number(el.dataset.date);
@@ -1131,7 +1131,7 @@ var Datepicker = (function () {
           classList.add('range-end');
         }
         if (this.selected.includes(current)) {
-          classList.add('selected');
+          classList.add(`selected bg-${options.theme}-400 rounded-full`);
         }
         if (current === this.focused) {
           classList.add('focused');
@@ -1305,7 +1305,7 @@ var Datepicker = (function () {
           }
         }
         if (selected.includes(index)) {
-          classList.add('selected');
+          classList.add(`selected bg-${options.theme}-400 rounded-full`);
         }
         if (index === this.focused) {
           classList.add('focused');
@@ -1324,7 +1324,7 @@ var Datepicker = (function () {
       this.grid
         .querySelectorAll('.range, .range-start, .range-end, .selected, .focused')
         .forEach((el) => {
-          el.classList.remove('range', 'range-start', 'range-end', 'selected', 'focused');
+          el.classList.remove('range', 'range-start', 'range-end', 'selected', `bg-${options.theme}-400`, 'rounded-full', 'focused');
         });
       Array.from(this.grid.children).forEach((el, index) => {
         const classList = el.classList;
@@ -1338,7 +1338,7 @@ var Datepicker = (function () {
           classList.add('range-end');
         }
         if (selected.includes(index)) {
-          classList.add('selected');
+          classList.add(`selected bg-${options.theme}-400 rounded-full`);
         }
         if (index === this.focused) {
           classList.add('focused');
@@ -1476,7 +1476,7 @@ var Datepicker = (function () {
           }
         }
         if (this.selected.includes(current)) {
-          classList.add('selected');
+          classList.add(`selected bg-${options.theme}-400 rounded-full`);
         }
         if (current === this.focused) {
           classList.add('focused');
@@ -1494,7 +1494,7 @@ var Datepicker = (function () {
       this.grid
         .querySelectorAll('.range, .range-start, .range-end, .selected, .focused')
         .forEach((el) => {
-          el.classList.remove('range', 'range-start', 'range-end', 'selected', 'focused');
+          el.classList.remove('range', 'range-start', 'range-end', 'selected', `bg-${options.theme}-400`, 'rounded-full', 'focused');
         });
       Array.from(this.grid.children).forEach((el) => {
         const current = Number(el.textContent);
@@ -1509,7 +1509,7 @@ var Datepicker = (function () {
           classList.add('range-end');
         }
         if (this.selected.includes(current)) {
-          classList.add('selected');
+          classList.add(`selected bg-${options.theme}-400 rounded-full`);
         }
         if (current === this.focused) {
           classList.add('focused');
@@ -1826,7 +1826,8 @@ var Datepicker = (function () {
 
       const {datepicker, element} = this;
       if (datepicker.inline) {
-        element.classList.add('active');
+        element.classList.add('active', 'block');
+        element.classList.remove('hidden');
       } else {
         // ensure picker's direction matches input's
         const inputDirection = getTextDirection(datepicker.inputField);
@@ -1837,7 +1838,7 @@ var Datepicker = (function () {
         }
 
         element.style.visiblity = 'hidden';
-        element.classList.add('active');
+        element.classList.add('active', 'block');
         this.place();
         element.style.visiblity = '';
 
@@ -1854,7 +1855,8 @@ var Datepicker = (function () {
         return;
       }
       this.datepicker.exitEditMode();
-      this.element.classList.remove('active');
+      this.element.classList.remove('active', 'block');
+      this.element.classList.add('hidden');
       this.active = false;
       triggerDatepickerEvent(this.datepicker, 'hide');
     }
