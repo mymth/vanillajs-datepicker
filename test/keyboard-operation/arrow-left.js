@@ -166,6 +166,30 @@ describe('keyboard operation - arrow-left', function () {
     dp.destroy();
   });
 
+  it('keydown event is canceled but bubble', function () {
+    const outer = document.createElement('div');
+    testContainer.replaceChild(outer, input);
+    outer.appendChild(input);
+
+    const dp = new Datepicker(input);
+    const spyInputKeydown = sinon.spy();
+    const spyOuterKeydown = sinon.spy();
+    input.addEventListener('keydown', spyInputKeydown);
+    outer.addEventListener('keydown', spyOuterKeydown);
+    input.focus();
+
+    simulant.fire(input, 'keydown', {key: 'ArrowLeft'});
+    expect(spyInputKeydown.called, 'to be true');
+    expect(spyInputKeydown.args[0][0].defaultPrevented, 'to be true');
+    expect(spyOuterKeydown.called, 'to be true');
+
+    input.removeEventListener('keydown', spyInputKeydown);
+    outer.removeEventListener('keydown', spyOuterKeydown);
+    dp.destroy();
+    outer.removeChild(input);
+    testContainer.replaceChild(input, outer);
+  });
+
   describe('with control', function () {
     it('functions as the shortcut key of the prev button', function () {
       const clock = sinon.useFakeTimers({now: new Date(2020, 3, 22), shouldAdvanceTime: true});
@@ -208,6 +232,30 @@ describe('keyboard operation - arrow-left', function () {
 
       dp.destroy();
       clock.reset();
+    });
+
+    it('keydown event is canceled and does not bubble', function () {
+      const outer = document.createElement('div');
+      testContainer.replaceChild(outer, input);
+      outer.appendChild(input);
+
+      const dp = new Datepicker(input);
+      const spyInputKeydown = sinon.spy();
+      const spyOuterKeydown = sinon.spy();
+      input.addEventListener('keydown', spyInputKeydown);
+      outer.addEventListener('keydown', spyOuterKeydown);
+      input.focus();
+
+      simulant.fire(input, 'keydown', {key: 'ArrowLeft', ctrlKey: true});
+      expect(spyInputKeydown.called, 'to be true');
+      expect(spyInputKeydown.args[0][0].defaultPrevented, 'to be true');
+      expect(spyOuterKeydown.called, 'to be false');
+
+      input.removeEventListener('keydown', spyInputKeydown);
+      outer.removeEventListener('keydown', spyOuterKeydown);
+      dp.destroy();
+      outer.removeChild(input);
+      testContainer.replaceChild(input, outer);
     });
   });
 
@@ -253,6 +301,30 @@ describe('keyboard operation - arrow-left', function () {
 
       dp.destroy();
       clock.restore();
+    });
+
+    it('keydown event is canceled and does not bubble', function () {
+      const outer = document.createElement('div');
+      testContainer.replaceChild(outer, input);
+      outer.appendChild(input);
+
+      const dp = new Datepicker(input);
+      const spyInputKeydown = sinon.spy();
+      const spyOuterKeydown = sinon.spy();
+      input.addEventListener('keydown', spyInputKeydown);
+      outer.addEventListener('keydown', spyOuterKeydown);
+      input.focus();
+
+      simulant.fire(input, 'keydown', {key: 'ArrowLeft', metaKey: true});
+      expect(spyInputKeydown.called, 'to be true');
+      expect(spyInputKeydown.args[0][0].defaultPrevented, 'to be true');
+      expect(spyOuterKeydown.called, 'to be false');
+
+      input.removeEventListener('keydown', spyInputKeydown);
+      outer.removeEventListener('keydown', spyOuterKeydown);
+      dp.destroy();
+      outer.removeChild(input);
+      testContainer.replaceChild(input, outer);
     });
   });
 });

@@ -302,7 +302,7 @@ describe('keyboard operation - edit mode', function () {
     cells = getCells(picker);
     expect(getCellIndices(cells, '.focused'), 'to equal', [19]);
 
-    simulant.fire(input, 'keydown', {key: 'ArrowDownt'});
+    simulant.fire(input, 'keydown', {key: 'ArrowDown'});
     expect(viewSwitch.textContent, 'to be', 'February 2020');
     cells = getCells(picker);
     expect(getCellIndices(cells, '.focused'), 'to equal', [19]);
@@ -325,6 +325,20 @@ describe('keyboard operation - edit mode', function () {
     cells = getCells(picker);
     expect(getCellIndices(cells, '.focused'), 'to equal', [3]);
 
+    // keydown event is not canceled
+    const spyKeydown = sinon.spy();
+    input.addEventListener('keydown', spyKeydown);
+
+    simulant.fire(input, 'keydown', {key: 'ArrowLeft'});
+    expect(spyKeydown.args[0][0].defaultPrevented, 'to be false');
+    simulant.fire(input, 'keydown', {key: 'ArrowRight'});
+    expect(spyKeydown.args[1][0].defaultPrevented, 'to be false');
+    simulant.fire(input, 'keydown', {key: 'ArrowUp'});
+    expect(spyKeydown.args[2][0].defaultPrevented, 'to be false');
+    simulant.fire(input, 'keydown', {key: 'ArrowDown'});
+    expect(spyKeydown.args[3][0].defaultPrevented, 'to be false');
+
+    input.removeEventListener('keydown', spyKeydown);
     dp.destroy();
     clock.restore();
   });
@@ -363,6 +377,31 @@ describe('keyboard operation - edit mode', function () {
     expect(input.classList.contains('in-edit'), 'to be false');
 
     dp.destroy();
+  });
+
+  it('keydown event is canceled and does not bubble when turning off by escape key press', function () {
+    const outer = document.createElement('div');
+    testContainer.replaceChild(outer, input);
+    outer.appendChild(input);
+
+    const dp = new Datepicker(input);
+    const spyInputKeydown = sinon.spy();
+    const spyOuterKeydown = sinon.spy();
+    input.addEventListener('keydown', spyInputKeydown);
+    outer.addEventListener('keydown', spyOuterKeydown);
+    input.focus();
+    dp.enterEditMode();
+
+    simulant.fire(input, 'keydown', {key: 'Escape'});
+    expect(spyInputKeydown.called, 'to be true');
+    expect(spyInputKeydown.args[0][0].defaultPrevented, 'to be true');
+    expect(spyOuterKeydown.called, 'to be false');
+
+    input.removeEventListener('keydown', spyInputKeydown);
+    outer.removeEventListener('keydown', spyOuterKeydown);
+    dp.destroy();
+    outer.removeChild(input);
+    testContainer.replaceChild(input, outer);
   });
 
   it('leaves the edit on the input as-is by default when turning off', function () {

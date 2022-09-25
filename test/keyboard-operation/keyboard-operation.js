@@ -77,6 +77,35 @@ describe('keyboard operation', function () {
 
       dp.destroy();
     });
+
+    it('keydown event is canceled and does not bubble', function () {
+      const outer = document.createElement('div');
+      testContainer.replaceChild(outer, input);
+      outer.appendChild(input);
+
+      const dp = new Datepicker(input);
+      const spyInputKeydown = sinon.spy();
+      const spyOuterKeydown = sinon.spy();
+      input.addEventListener('keydown', spyInputKeydown);
+      outer.addEventListener('keydown', spyOuterKeydown);
+
+      // show the picker
+      simulant.fire(input, 'keydown', {key: 'Escape'});
+      expect(spyInputKeydown.called, 'to be true');
+      expect(spyInputKeydown.args[0][0].defaultPrevented, 'to be true');
+      expect(spyOuterKeydown.called, 'to be false');
+
+      // hide the picker
+      simulant.fire(input, 'keydown', {key: 'Escape'});
+      expect(spyInputKeydown.args[1][0].defaultPrevented, 'to be true');
+      expect(spyOuterKeydown.called, 'to be false');
+
+      input.removeEventListener('keydown', spyInputKeydown);
+      outer.removeEventListener('keydown', spyOuterKeydown);
+      dp.destroy();
+      outer.removeChild(input);
+      testContainer.replaceChild(input, outer);
+    });
   });
 
   describe('enter', function () {

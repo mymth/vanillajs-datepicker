@@ -23,7 +23,7 @@ function findNextAvailableOne(date, addFn, increase, testFn, min, max) {
 
 // direction: -1 (left/up), 1 (right/down)
 // vertical: true for up/down, false for left/right
-function moveByArrowKey(datepicker, ev, direction, vertical) {
+function moveByArrowKey(datepicker, direction, vertical) {
   const picker = datepicker.picker;
   const currentView = picker.currentView;
   const step = currentView.step || 1;
@@ -32,13 +32,7 @@ function moveByArrowKey(datepicker, ev, direction, vertical) {
   let testFn;
   switch (currentView.id) {
     case 0:
-      if (vertical) {
-        viewDate = addDays(viewDate, direction * 7);
-      } else if (ev.ctrlKey || ev.metaKey) {
-        viewDate = addYears(viewDate, direction);
-      } else {
-        viewDate = addDays(viewDate, direction);
-      }
+      viewDate = addDays(viewDate, vertical ? direction * 7 : direction);
       addFn = addDays;
       testFn = (date) => currentView.disabled.includes(date);
       break;
@@ -78,67 +72,71 @@ export function onKeydown(datepicker, ev) {
 
   const picker = datepicker.picker;
   const {id, isMinView} = picker.currentView;
+  const cancelEvent = () => {
+    ev.preventDefault();
+    ev.stopPropagation();
+  };
+  const handleArrowNav = (direction, vertical) => {
+    moveByArrowKey(datepicker, direction, vertical);
+    ev.preventDefault();
+  };
+
   if (!picker.active) {
-    if (key === 'ArrowDown') {
-      picker.show();
-    } else {
-      if (key === 'Enter') {
-        datepicker.update();
-      } else if (key === 'Escape') {
-        picker.show();
-      }
-      return;
-    }
-  } else if (datepicker.editMode) {
-    if (key === 'Enter') {
-      datepicker.exitEditMode({update: true, autohide: datepicker.config.autohide});
-    } else if (key === 'Escape') {
-      picker.hide();
-    }
-    return;
-  } else {
-    if (key === 'ArrowLeft') {
-      if (ev.ctrlKey || ev.metaKey) {
-        goToPrevOrNext(datepicker, -1);
-      } else if (ev.shiftKey) {
-        datepicker.enterEditMode();
-        return;
-      } else {
-        moveByArrowKey(datepicker, ev, -1, false);
-      }
-    } else if (key === 'ArrowRight') {
-      if (ev.ctrlKey || ev.metaKey) {
-        goToPrevOrNext(datepicker, 1);
-      } else if (ev.shiftKey) {
-        datepicker.enterEditMode();
-        return;
-      } else {
-        moveByArrowKey(datepicker, ev, 1, false);
-      }
-    } else if (key === 'ArrowUp') {
-      if (ev.ctrlKey || ev.metaKey) {
-        switchView(datepicker);
-      } else if (ev.shiftKey) {
-        datepicker.enterEditMode();
-        return;
-      } else {
-        moveByArrowKey(datepicker, ev, -1, true);
-      }
-    } else if (key === 'ArrowDown') {
-      if (ev.shiftKey && !ev.ctrlKey && !ev.metaKey) {
-        datepicker.enterEditMode();
-        return;
-      }
-      moveByArrowKey(datepicker, ev, 1, true);
+    if (key === 'ArrowDown' || key === 'Escape') {
+      datepicker.show();
+      cancelEvent();
     } else if (key === 'Enter') {
-      if (isMinView) {
-        datepicker.setDate(picker.viewDate);
-        return;
+      datepicker.update();
+    }
+  } else {
+    if (key === 'Escape') {
+      picker.hide();
+      cancelEvent();
+    } else if (datepicker.editMode) {
+      if (key === 'Enter') {
+        datepicker.exitEditMode({update: true, autohide: datepicker.config.autohide});
       }
-      picker.changeView(id - 1).render();
     } else {
-      if (key === 'Escape') {
-        picker.hide();
+      if (key === 'ArrowLeft') {
+        if (ev.ctrlKey || ev.metaKey) {
+          goToPrevOrNext(datepicker, -1);
+          cancelEvent();
+        } else if (ev.shiftKey) {
+          datepicker.enterEditMode();
+        } else {
+          handleArrowNav(-1, false);
+        }
+      } else if (key === 'ArrowRight') {
+        if (ev.ctrlKey || ev.metaKey) {
+          goToPrevOrNext(datepicker, 1);
+          cancelEvent();
+        } else if (ev.shiftKey) {
+          datepicker.enterEditMode();
+        } else {
+          handleArrowNav(1, false);
+        }
+      } else if (key === 'ArrowUp') {
+        if (ev.ctrlKey || ev.metaKey) {
+          switchView(datepicker);
+          cancelEvent();
+        } else if (ev.shiftKey) {
+          datepicker.enterEditMode();
+        } else {
+          handleArrowNav(-1, true);
+        }
+      } else if (key === 'ArrowDown') {
+        if (ev.shiftKey && !ev.ctrlKey && !ev.metaKey) {
+          datepicker.enterEditMode();
+        } else {
+          handleArrowNav(1, true);
+        }
+      } else if (key === 'Enter') {
+        if (isMinView) {
+          datepicker.setDate(picker.viewDate);
+        } else {
+          picker.changeView(id - 1).render();
+          cancelEvent();
+        }
       } else if (
         key === 'Backspace'
         || key === 'Delete'
@@ -146,10 +144,8 @@ export function onKeydown(datepicker, ev) {
       ) {
         datepicker.enterEditMode();
       }
-      return;
     }
   }
-  ev.preventDefault();
 }
 
 export function onFocus(datepicker) {
