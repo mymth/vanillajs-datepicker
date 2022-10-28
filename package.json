@@ -9,7 +9,8 @@
     "./Datepicker": "./js/Datepicker.js",
     "./DateRangePicker": "./js/DateRangePicker.js",
     "./locales/*": "./js/i18n/locales/*.js",
-    "./locales/": "./js/i18n/locales/"
+    "./locales/": "./js/i18n/locales/",
+    "./package.json": "./package.json"
   },
   "scripts": {
     "build:js": "rollup -c",
