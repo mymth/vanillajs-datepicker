@@ -531,7 +531,7 @@
   };
 
   // config options updatable by setOptions() and their default values
-  const defaultOptions = {
+  var defaultOptions = {
     autohide: false,
     beforeShowDay: null,
     beforeShowDecade: null,
@@ -891,6 +891,39 @@
     });
 
     return config;
+  }
+
+  const defaultShortcutKeys = {
+    show: {key: 'ArrowDown'},
+    hide: null,
+    toggle: {key: 'Escape'},
+    prevButton: {key: 'ArrowLeft', ctrlOrMetaKey: true},
+    nextButton: {key: 'ArrowRight', ctrlOrMetaKey: true},
+    viewSwitch: {key: 'ArrowUp', ctrlOrMetaKey: true},
+    exitEditMode: {key: 'ArrowDown', ctrlOrMetaKey: true},
+  };
+
+  function createShortcutKeyConfig(options) {
+    return Object.keys(defaultShortcutKeys).reduce((keyDefs, shortcut) => {
+      const keyDef = options[shortcut] === undefined
+        ? defaultShortcutKeys[shortcut]
+        : options[shortcut];
+      const key = keyDef && keyDef.key;
+      if (!key || typeof key !== 'string') {
+        return keyDefs;
+      }
+
+      const normalizedDef = {
+        key,
+        ctrlOrMetaKey: !!(keyDef.ctrlOrMetaKey || keyDef.ctrlKey || keyDef.metaKey),
+      };
+      if (key.length > 1) {
+        normalizedDef.altKey = !!keyDef.altKey;
+        normalizedDef.shiftKey = !!keyDef.shiftKey;
+      }
+      keyDefs[shortcut] = normalizedDef;
+      return keyDefs;
+    }, {});
   }
 
   const pickerTemplate = optimizeTemplateHTML(`<div class="datepicker">
@@ -1899,10 +1932,10 @@
           element.removeAttribute('dir');
         }
 
-        element.style.visiblity = 'hidden';
+        element.style.visibility = 'hidden';
         element.classList.add('active');
         this.place();
-        element.style.visiblity = '';
+        element.style.visibility = '';
 
         if (datepicker.config.disableTouchKeyboard) {
           datepicker.inputField.blur();
@@ -2077,8 +2110,8 @@
   // addFn: function to calculate the next date
   //   - args: time value, amount
   // increase: amount to pass to addFn
-  // testFn: function to test the unavailablity of the date
-  //   - args: time value; retun: true if unavailable
+  // testFn: function to test the unavailability of the date
+  //   - args: time value; return: true if unavailable
   function findNextAvailableOne(date, addFn, increase, testFn, min, max) {
     if (!isInRange(date, min, max)) {
       return;
@@ -2133,87 +2166,103 @@
   }
 
   function onKeydown(datepicker, ev) {
-    const key = ev.key;
-    if (key === 'Tab') {
-      unfocus(datepicker);
-      return;
-    }
-
-    const picker = datepicker.picker;
-    const {id, isMinView} = picker.currentView;
+    const {config, picker, editMode} = datepicker;
+    const active = picker.active;
+    const {key, altKey, shiftKey} = ev;
+    const ctrlOrMetaKey = ev.ctrlKey || ev.metaKey;
     const cancelEvent = () => {
       ev.preventDefault();
       ev.stopPropagation();
     };
-    const handleArrowNav = (direction, vertical) => {
-      moveByArrowKey(datepicker, direction, vertical);
-      ev.preventDefault();
+
+    // tab/enter keys should not be taken by shortcut keys
+    if (key === 'Tab') {
+      unfocus(datepicker);
+      return;
+    }
+    if (key === 'Enter') {
+      if (!active) {
+        datepicker.update();
+      } else if (editMode) {
+        datepicker.exitEditMode({update: true, autohide: config.autohide});
+      } else {
+        const currentView = picker.currentView;
+        if (currentView.isMinView) {
+          datepicker.setDate(picker.viewDate);
+        } else {
+          picker.changeView(currentView.id - 1).render();
+          cancelEvent();
+        }
+      }
+      return;
+    }
+
+    const shortcutKeys = config.shortcutKeys;
+    const keyInfo = {key, ctrlOrMetaKey, altKey, shiftKey};
+    const shortcut = Object.keys(shortcutKeys).find((item) => {
+      const keyDef = shortcutKeys[item];
+      return !Object.keys(keyDef).find(prop => keyDef[prop] !== keyInfo[prop]);
+    });
+    if (shortcut) {
+      let action;
+      if (shortcut === 'toggle') {
+        action = shortcut;
+      } else if (editMode) {
+        if (shortcut === 'exitEditMode') {
+          action = shortcut;
+        }
+      } else if (active) {
+        if (shortcut === 'hide') {
+          action = shortcut;
+        } else if (shortcut === 'prevButton') {
+          action = [goToPrevOrNext, [datepicker, -1]];
+        } else if (shortcut === 'nextButton') {
+          action = [goToPrevOrNext, [datepicker, 1]];
+        } else if (shortcut === 'viewSwitch') {
+          action = [switchView, [datepicker]];
+        }
+      } else if (shortcut === 'show') {
+        action = shortcut;
+      }
+      if (action) {
+        if (Array.isArray(action)) {
+          action[0].apply(null, action[1]);
+        } else {
+          datepicker[action]();
+        }
+        cancelEvent();
+        return;
+      }
+    }
+
+    // perform as a regular <input> when picker in hidden or in edit mode
+    if (!active || editMode) {
+      return;
+    }
+
+    const handleArrowKeyPress = (direction, vertical) => {
+      if (shiftKey || ctrlOrMetaKey || altKey) {
+        datepicker.enterEditMode();
+      } else {
+        moveByArrowKey(datepicker, direction, vertical);
+        ev.preventDefault();
+      }
     };
 
-    if (!picker.active) {
-      if (key === 'ArrowDown' || key === 'Escape') {
-        datepicker.show();
-        cancelEvent();
-      } else if (key === 'Enter') {
-        datepicker.update();
-      }
-    } else {
-      if (key === 'Escape') {
-        picker.hide();
-        cancelEvent();
-      } else if (datepicker.editMode) {
-        if (key === 'Enter') {
-          datepicker.exitEditMode({update: true, autohide: datepicker.config.autohide});
-        }
-      } else {
-        if (key === 'ArrowLeft') {
-          if (ev.ctrlKey || ev.metaKey) {
-            goToPrevOrNext(datepicker, -1);
-            cancelEvent();
-          } else if (ev.shiftKey) {
-            datepicker.enterEditMode();
-          } else {
-            handleArrowNav(-1, false);
-          }
-        } else if (key === 'ArrowRight') {
-          if (ev.ctrlKey || ev.metaKey) {
-            goToPrevOrNext(datepicker, 1);
-            cancelEvent();
-          } else if (ev.shiftKey) {
-            datepicker.enterEditMode();
-          } else {
-            handleArrowNav(1, false);
-          }
-        } else if (key === 'ArrowUp') {
-          if (ev.ctrlKey || ev.metaKey) {
-            switchView(datepicker);
-            cancelEvent();
-          } else if (ev.shiftKey) {
-            datepicker.enterEditMode();
-          } else {
-            handleArrowNav(-1, true);
-          }
-        } else if (key === 'ArrowDown') {
-          if (ev.shiftKey && !ev.ctrlKey && !ev.metaKey) {
-            datepicker.enterEditMode();
-          } else {
-            handleArrowNav(1, true);
-          }
-        } else if (key === 'Enter') {
-          if (isMinView) {
-            datepicker.setDate(picker.viewDate);
-          } else {
-            picker.changeView(id - 1).render();
-            cancelEvent();
-          }
-        } else if (
-          key === 'Backspace'
-          || key === 'Delete'
-          || (key.length === 1 && !ev.ctrlKey && !ev.metaKey)
-        ) {
-          datepicker.enterEditMode();
-        }
-      }
+    if (key === 'ArrowLeft') {
+      handleArrowKeyPress(-1, false);
+    } else if (key === 'ArrowRight') {
+      handleArrowKeyPress(1, false);
+    } else if (key === 'ArrowUp') {
+      handleArrowKeyPress(-1, true);
+    } else if (key === 'ArrowDown') {
+      handleArrowKeyPress(1, true);
+    } else if (
+      key === 'Backspace'
+      || key === 'Delete'
+      || (key.length === 1 && !ctrlOrMetaKey)
+    ) {
+      datepicker.enterEditMode();
     }
   }
 
@@ -2439,6 +2488,7 @@
       // set up config
       this._options = options;
       Object.assign(config, processOptions(options, this));
+      config.shortcutKeys = createShortcutKeyConfig(options.shortcutKeys || {});
 
       // set initial dates
       let initialDates;
@@ -2583,6 +2633,20 @@
     }
 
     /**
+     * Toggle the display of the picker element
+     * Not available on inline picker
+     *
+     * Unlike hide(), the picker does not return to the start view when hiding.
+     */
+    toggle() {
+      if (!this.picker.active) {
+        this.show();
+      } else if (!this.inline) {
+        this.picker.hide();
+      }
+    }
+
+    /**
      * Destroy the Datepicker instance
      * @return {Detepicker} - the instance destroyed
      */
@@ -2606,7 +2670,7 @@
      *
      * @param  {String} [format] - Format string to stringify the date(s)
      * @return {Date|String|Date[]|String[]} - selected date(s), or if none is
-     * selected, empty array in multidate mode and untitled in sigledate mode
+     * selected, empty array in multidate mode and undefined in sigledate mode
      */
     getDate(format = undefined) {
       const callback = format

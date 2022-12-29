@@ -691,22 +691,36 @@ describe('events', function () {
       dp.show();
       expect(spyShow.called, 'to be false');
 
+      spyShow.resetHistory();
       dp.hide();
+
       // by API call
       dp.show();
-      expect(spyShow.calledOnce, 'to be true');
+      expect(spyShow.called, 'to be true');
 
+      spyShow.resetHistory();
       dp.hide();
       input.blur();
+
       // by getting focus
       input.focus();
-      expect(spyShow.calledTwice, 'to be true');
+      expect(spyShow.called, 'to be true');
 
-      // by toggling visibility by Esc key
-      simulant.fire(input, 'keydown', {key: 'Escape'});
-      expect(spyShow.calledTwice, 'to be true');
-      simulant.fire(input, 'keydown', {key: 'Escape'});
-      expect(spyShow.calledThrice, 'to be true');
+      spyShow.resetHistory();
+
+      // by toggling picker's display by API call
+      dp.toggle();  // hiding
+      expect(spyShow.called, 'to be false');
+      dp.toggle();  // showing
+      expect(spyShow.called, 'to be true');
+
+      spyShow.resetHistory();
+
+      // by toggling picker's display by Esc key
+      simulant.fire(input, 'keydown', {key: 'Escape'}); // hiding
+      expect(spyShow.called, 'to be false');
+      simulant.fire(input, 'keydown', {key: 'Escape'}); // showing
+      expect(spyShow.called, 'to be true');
     });
   });
 
@@ -727,22 +741,37 @@ describe('events', function () {
     it('is triggered when the picker becomes hidden', function () {
       // by API call
       dp.hide();
-      expect(spyHide.callCount, 'to be', 1);
+      expect(spyHide.called, 'to be true');
 
+      spyHide.resetHistory();
       dp.show();
+
       // by clicking outside
       simulant.fire(testContainer, 'mousedown');
-      expect(spyHide.callCount, 'to be', 2);
+      expect(spyHide.called, 'to be true');
 
+      spyHide.resetHistory();
       dp.show();
+
       // by pressing tab key
       simulant.fire(input, 'keydown', {key: 'Tab'});
-      expect(spyHide.callCount, 'to be', 3);
+      expect(spyHide.called, 'to be true');
 
-      dp.show();
-      // by toggling visibility by Esc key
-      simulant.fire(input, 'keydown', {key: 'Escape'});
-      expect(spyHide.callCount, 'to be', 4);
+      spyHide.resetHistory();
+
+      // by toggling picker's display by API call
+      dp.toggle(); // showing
+      expect(spyHide.called, 'to be false');
+      dp.toggle(); // hiding
+      expect(spyHide.called, 'to be true');
+
+      spyHide.resetHistory();
+
+      // by toggling picker's display by Esc key
+      simulant.fire(input, 'keydown', {key: 'Escape'}); // showing
+      expect(spyHide.called, 'to be false');
+      simulant.fire(input, 'keydown', {key: 'Escape'}); // hiding
+      expect(spyHide.called, 'to be true');
     });
   });
 

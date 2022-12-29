@@ -165,6 +165,17 @@ Show the picker element
 datepicker.show()
 ```
 
+#### datepicker.toggle()
+
+Toggle the display of the picker element  
+Not available on inline picker
+
+Unlike [`hide()`](api?id=datepickerhide), the picker does not return to the start view when hiding.
+
+```javascript
+datepicker.toggle()
+```
+
 #### datepicker.update()
 
 Update the selected date(s) with input field's value  

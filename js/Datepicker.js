@@ -6,6 +6,7 @@ import {registerListeners, unregisterListeners} from './lib/event.js';
 import {locales} from './i18n/base-locales.js';
 import defaultOptions from './options/defaultOptions.js';
 import processOptions from './options/processOptions.js';
+import createShortcutKeyConfig from './options/shortcutKeys.js';
 import Picker from './picker/Picker.js';
 import {triggerDatepickerEvent} from './events/functions.js';
 import {onKeydown, onFocus, onMousedown, onClickInput, onPaste} from './events/inputFieldListeners.js';
@@ -174,6 +175,7 @@ export default class Datepicker {
     // set up config
     this._options = options;
     Object.assign(config, processOptions(options, this));
+    config.shortcutKeys = createShortcutKeyConfig(options.shortcutKeys || {});
 
     // set initial dates
     let initialDates;
@@ -318,6 +320,20 @@ export default class Datepicker {
   }
 
   /**
+   * Toggle the display of the picker element
+   * Not available on inline picker
+   *
+   * Unlike hide(), the picker does not return to the start view when hiding.
+   */
+  toggle() {
+    if (!this.picker.active) {
+      this.show();
+    } else if (!this.inline) {
+      this.picker.hide();
+    }
+  }
+
+  /**
    * Destroy the Datepicker instance
    * @return {Detepicker} - the instance destroyed
    */
@@ -341,7 +357,7 @@ export default class Datepicker {
    *
    * @param  {String} [format] - Format string to stringify the date(s)
    * @return {Date|String|Date[]|String[]} - selected date(s), or if none is
-   * selected, empty array in multidate mode and untitled in sigledate mode
+   * selected, empty array in multidate mode and undefined in sigledate mode
    */
   getDate(format = undefined) {
     const callback = format

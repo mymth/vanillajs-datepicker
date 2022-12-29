@@ -317,7 +317,7 @@ describe('keyboard operation - arrow-down', function () {
     testContainer.replaceChild(input, outer);
   });
 
-  it('keydown event is canceled but bubble when used to move view date/month/year/decade', function () {
+  it('keydown event is canceled but bubbles when used to move view date/month/year/decade', function () {
     const outer = document.createElement('div');
     testContainer.replaceChild(outer, input);
     outer.appendChild(input);

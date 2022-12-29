@@ -1,5 +1,5 @@
 // config options updatable by setOptions() and their default values
-const defaultOptions = {
+export default {
   autohide: false,
   beforeShowDay: null,
   beforeShowDecade: null,
@@ -35,5 +35,3 @@ const defaultOptions = {
   weekNumbers: 0,
   weekStart: 0,
 };
-
-export default defaultOptions;

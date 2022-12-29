@@ -166,7 +166,7 @@ describe('keyboard operation - arrow-left', function () {
     dp.destroy();
   });
 
-  it('keydown event is canceled but bubble', function () {
+  it('keydown event is canceled but bubbles', function () {
     const outer = document.createElement('div');
     testContainer.replaceChild(outer, input);
     outer.appendChild(input);

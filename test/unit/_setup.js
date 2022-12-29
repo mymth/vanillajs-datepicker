@@ -1,11 +1,9 @@
 import expect from 'unexpected';
 import sinon from 'sinon';
 import jsdom from 'jsdom';
-import simulant from 'jsdom-simulant';
 
 global.expect = expect;
 global.sinon = sinon;
-global.simulant = simulant;
 
 const {JSDOM} = jsdom;
 const {window} = new JSDOM('<body><div id="test-container"></div></body>', {
@@ -33,6 +31,8 @@ const exposeToGlobal = [
 exposeToGlobal.forEach((prop) => {
   global[prop] = window[prop];
 });
+
+global.simulant = await import('simulant').then(module => module.default);
 
 class CustomElement extends HTMLElement {
   constructor() {

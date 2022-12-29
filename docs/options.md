@@ -300,6 +300,60 @@ HTML (or plain text) for the button label of the "Prev" button.
 
 > See the note in [i18n ≻ Text Direction](i18n?id=text-direction) when using with RTL languages.
 
+#### shortcutKeys
+- Type: `Objrct`
+- Default: <span><code>{
+    show: {key: 'ArrowDown'},
+    hide: null,
+    toggle: {key: 'Escape'},
+    prevButton: {key: 'ArrowLeft', ctrlOrMetaKey: true},
+    nextButton: {key: 'ArrowRight', ctrlOrMetaKey: true},
+    viewSwitch: {key: 'ArrowUp', ctrlOrMetaKey: true},
+    exitEditMode: {key: 'ArrowDown', ctrlOrMetaKey: true},
+  }</code></span>
+
+Object to assign or unset shortcut keys, where the keys of the object are the name of actions to assign/unset shortcut key, and each value is either an object to define the key combination of the shortcut key (key definition object) or, when unsetting the default shortcut, a falsy value except `undefined`.
+
+> <kbd>Enter</kbd> and <kbd>Tab</kbd> keys cannot be used as shortcut key.
+>
+> Keys assigned to the actions function as shortcut key only under the condition the action takes effect. (e.g. show → only when the picker is hidden) 
+>
+> For constructor only. Cannot be used with setOptions().
+ 
+- **Actions**  
+  Available actions:
+  Name | Default shortcut key | Description
+  ---|---|---
+  `show` | <kbd>↓</kbd> _(ArrowDown)_ | Show the picker 
+  `hide` | N/A | Hide the picker 
+  `toggle` | <kbd>Esc</kbd> _(Escape)_ | Toggle the deisplay of the picker 
+  `prevButton` | <kbd>Ctrl</kbd>/<kbd>Meta</kbd> + <kbd>←</kbd> _(ArrowLeft)_ | Perform the Prev button action 
+  `nextButton` | <kbd>Ctrl</kbd>/<kbd>Meta</kbd> + <kbd>→</kbd> _(ArrowRight)_ | Perform the Next button action 
+  `viewSwitch` | <kbd>Ctrl</kbd>/<kbd>Meta</kbd> + <kbd>↑</kbd> _(ArrowUp)_ | Perform the View switch action 
+  `exitEditMode` | <kbd>Ctrl</kbd>/<kbd>Meta</kbd> + <kbd>↓</kbd> _(ArrowDown)_ | Exit edit mode 
+  - Unknown actions and the actions whose value is `undefined` are ignored.
+  - Actions not to change the default shortcut key can be omitted.
+
+- **key definition object**  
+  The object's keys and values are basically the properties/values to match against the [`KeyboardEvent`](https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent) object of `keydown` event.
+  Key (property) | Type | Description
+  ---|---|---
+  `key` | `String` | What the [`key`](https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key) propery's value is<br>&bull; Required
+  `ctrlOrMetaKey`  | `Boolean` | Whether the `ctrlKey` or `metaKey` property is `true`<br>&bull; Default: `false`
+  `ctrlKey` | | Alias of `ctrlOrMetaKey`
+  `metaKey` | | Alias of `ctrlOrMetaKey`
+  `altKey` | `Boolean` | Whether the `altKey` property is `true`<br>&bull; Default: `false`<br>&bull; Ignored when `key` is a printable character
+  `shiftKey` | `Boolean` | Whether the `shiftKey` property is `true`<br>&bull; Default: `false`<br>&bull; Ignored when `key` is a printable character
+  - [See a full list of key values](https://developer.mozilla.org/en-US/docs/Web/API/UI_Events/Keyboard_event_key_values) for available values for  `key`.
+  - For simplicity, <kbd>Ctrl</kbd> and <kbd>Meta</kbd> keys are not distinguished.
+  - When omitted, `ctrlOrMetaKey`, `altKey`, and `shiftKey` are complemented with `false` and  treated as a criterion for "not pressed".  
+    e.g.
+    - `{key: 'Enter'}` does not match any modifier key + <kbd>Enter</kbd>
+    - `{key: 'Enter', altKey: true}` does not match <kbd>Alt</kbd> + <kbd>Shift</kbd> + <kbd>Enter</kbd>, <kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>Enter</kbd>
+  - Since <kbd>Shift</kbd> and <kbd>Alt</kbd> keys' state is reflected in the value of `KeyboardEvent.key` when the value is a printable character, `altKey` and `shiftKey` are not evaluated if a printable character is set to `key` in order to avoid cases like below:
+    - When a `keypress` event with `key: '/'` is triggered, the key(s) the user pressed differ(s) depending on the keyboard layout of the user's computer. For example, <kbd>/</kbd> _(w/o modifier keys)_ if it's US keyboard, <kbd>Shift</kbd> + <kbd>:</kbd> if it's French keyboard, and <kbd>Shift</kbd> + <kbd>7</kbd> if it's German keyboard. If `shiftKey` is evaluated, `{key: '/'}` works with US keyboard, but not with French and German keyboards, and `{key: '/', shiftKey: true}` works with French and German keyboards, but not with US keyboard.
+    - On Mac, when a `keypress` event with `key: '\'` is triggered, the key(s) the user pressed is/are <kbd>\\</kbd> _(w/o modifier keys)_ if the keyboard is US keyboard  and <kbd>Alt</kbd> + <kbd>Shift</kbd> + <kbd>7</kbd> if the keyboard is German. If `altKey` is also evaluated, `{key: '\'}` works with US keyboad, but not with German keyboard.
+
 #### showDaysOfWeek
 - Type: `Boolean`
 - Default: `true`
@@ -439,7 +493,7 @@ Week numbers to display
       </ul>
       <pre data-lang="javascript" style="margin-bottom: 0;"><code class="lang-javascript"><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">date</span>, <span class="token parameter">weekStart</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
     <span class="token keyword">let</span> weekNumber<span class="token punctuation">;</span>
-    <span class="token comment">//...your calculation< algorithm</span>
+    <span class="token comment">//...your calculation algorithm</span>
     <span class="token keyword">return</span> weekNumber<span class="token punctuation">;</span>
 <span class="token punctuation">}</span></code></pre>
     </td>

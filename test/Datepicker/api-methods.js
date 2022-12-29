@@ -21,6 +21,19 @@ describe('Datepicker - API methods', function () {
     clock.restore();
   });
 
+  describe('toggle()', function () {
+    it('shows or hides the picker', function () {
+      dp.toggle();
+      expect(isVisible(picker), 'to be false');
+
+      dp.toggle();
+      expect(isVisible(picker), 'to be true');
+
+      dp.toggle();
+      expect(isVisible(picker), 'to be false');
+    });
+  });
+
   describe('getDate()', function () {
     it('returns a Date object of selected date', function () {
       const date = dp.getDate();

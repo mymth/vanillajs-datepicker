@@ -1,8 +1,13 @@
 import './_setup.js';
 import Datepicker from '../../js/Datepicker.js';
+import Picker from '../../js/picker/Picker.js';
+import DaysView from '../../js/picker/views/DaysView.js';
+import MonthsView from '../../js/picker/views/MonthsView.js';
+import YearsView from '../../js/picker/views/YearsView.js';
 import defaultOptions from '../../js/options/defaultOptions.js';
 import {locales} from '../../js/i18n/base-locales.js';
-import {dateValue, today} from '../../js/lib/date.js';
+import {dateValue, today, startOfYearPeriod} from '../../js/lib/date.js';
+import expect from 'unexpected';
 
 const esLocale = {
   months: ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"],
@@ -43,9 +48,10 @@ describe('Datepicker', function () {
 
     it('configures the instance with the default options', function () {
       const dp = new Datepicker(input);
-      // config items should be options + buttonClass, container, locale, getWeekNumber, multidate and weekEnd
+      // config items should be options + buttonClass, container, locale, getWeekNumber,
+      // multidate, shortcutKeys and weekEnd
       const numOfOptions = Object.keys(defaultOptions).length;
-      expect(Object.keys(dp.config), 'to have length', numOfOptions + 6);
+      expect(Object.keys(dp.config), 'to have length', numOfOptions + 7);
 
       expect(dp.config.autohide, 'to be false');
       expect(dp.config.beforeShowDay, 'to be null');
@@ -86,6 +92,14 @@ describe('Datepicker', function () {
       expect(dp.config.prevArrow.length, 'to be', 1);
       expect(dp.config.prevArrow[0].wholeText, 'to be', '«');
       //
+      expect(dp.config.shortcutKeys, 'to equal', {
+        show: {key: 'ArrowDown', ctrlOrMetaKey: false, altKey: false, shiftKey: false},
+        toggle: {key: 'Escape', ctrlOrMetaKey: false, altKey: false, shiftKey: false},
+        prevButton: {key: 'ArrowLeft', ctrlOrMetaKey: true, altKey: false, shiftKey: false},
+        nextButton: {key: 'ArrowRight', ctrlOrMetaKey: true, altKey: false, shiftKey: false},
+        viewSwitch: {key: 'ArrowUp', ctrlOrMetaKey: true, altKey: false, shiftKey: false},
+        exitEditMode: {key: 'ArrowDown', ctrlOrMetaKey: true, altKey: false, shiftKey: false},
+      });
       expect(dp.config.showDaysOfWeek, 'to be true');
       expect(dp.config.showOnFocus, 'to be true');
       expect(dp.config.startView, 'to be', 0);
@@ -98,19 +112,40 @@ describe('Datepicker', function () {
       expect(dp.config.weekEnd, 'to be', 6);
     });
 
+    it('creates Picker object', function () {
+      const dp = new Datepicker(input);
+      const picker = dp.picker;
+
+      expect(picker, 'to be a', Picker);
+      expect(picker, 'not to have property', 'active');
+      expect(picker.element, 'to be an', HTMLElement);
+      expect(picker.element.classList.contains('datepicker'), 'to be true');
+      expect(picker.views, 'to have length', 4);
+      expect(picker.views, 'to satisfy', {
+        0: expect.it('to be a', DaysView),
+        1: expect.it('to be a', MonthsView),
+        2: expect.it('to be a', YearsView).and('to have properties', {id: 2, step: 1}),
+        3: expect.it('to be a', YearsView).and('to have properties', {id: 3, step: 10}),
+      });
+      expect(picker.currentView, 'to be', picker.views[dp.config.startView]);
+      expect(picker.main, 'to be', picker.element.querySelector('.datepicker-main'));
+      expect(Array.from(picker.main.childNodes), 'to equal', [picker.currentView.element]);
+      expect(picker.viewDate, 'to be', dp.config.defaultViewDate);
+    });
+
     it('inserts datepicker element after the input element', function () {
-      new Datepicker(input);
+      const dp = new Datepicker(input);
 
       const dpElems = document.querySelectorAll('.datepicker');
       expect(dpElems.length, 'to be', 1);
+      expect(dpElems[0], 'to be', dp.picker.element);
       expect(dpElems[0].previousElementSibling, 'to be', input);
     });
 
     it('does not add the active class to the picker element', function () {
-      new Datepicker(input);
+      const dp = new Datepicker(input);
 
-      const dpElem = document.querySelector('.datepicker');
-      expect(dpElem.classList.contains('active'), 'to be false');
+      expect(dp.picker.element.classList.contains('active'), 'to be false');
     });
 
     it('sets rangepicker property if DateRangePicker to link is passed', function () {
@@ -226,6 +261,160 @@ describe('Datepicker', function () {
     });
   });
 
+  describe('picker.changeView()', function () {
+    let input;
+    let dp;
+    let picker;
+    let initialView;
+    let views;
+    let main;
+
+    before(function () {
+      input = document.createElement('input');
+      testContainer.appendChild(input);
+      dp = new Datepicker(input);
+      picker = dp.picker;
+      initialView = picker.currentView;
+      ({views, main} = picker);
+    });
+
+    after(function () {
+      dp.destroy();
+      testContainer.removeChild(input);
+    });
+
+    it('changes the currentView to the view object of given id', function () {
+      picker.changeView(2);
+      expect(picker.currentView, 'to be', views[2]);
+      // also replace the main element's children
+      expect(Array.from(main.childNodes), 'to equal', [views[2].element]);
+
+      picker.changeView(initialView.id);
+      expect(picker.currentView, 'to be', initialView);
+      expect(Array.from(main.childNodes), 'to equal', [initialView.element]);
+    });
+  });
+
+  describe('picker.changeFocus()', function () {
+    let clock;
+    let input;
+    let dp;
+    let picker;
+
+    before(function () {
+      clock = sinon.useFakeTimers({now: new Date(2020, 1, 14), shouldAdvanceTime: true});
+      input = document.createElement('input');
+      testContainer.appendChild(input);
+      dp = new Datepicker(input);
+      picker = dp.picker;
+    });
+
+    after(function () {
+      clock.restore();
+      dp.destroy();
+      testContainer.removeChild(input);
+    });
+
+    it('updates viewDate to given date', function () {
+      const views = picker.views;
+      let newViewDate = dateValue(2016, 10, 8);
+
+      picker.changeFocus(newViewDate);
+      expect(picker.viewDate, 'to be', newViewDate);
+      // also update view objects' focused properties
+      expect(views[0].focused, 'to be', newViewDate);
+      expect(views[1].focused, 'to be', 10);
+      expect(views[1].year, 'to be', 2016);
+      expect(views[2].focused, 'to be', 2016);
+      expect(views[3].focused, 'to be', 2010);
+
+      newViewDate = dateValue(2020, 1, 14);
+
+      picker.changeFocus(newViewDate);
+      expect(picker.viewDate, 'to be', newViewDate);
+
+      expect(views[0].focused, 'to be', newViewDate);
+      expect(views[1].focused, 'to be', 1);
+      expect(views[1].year, 'to be', 2020);
+      expect(views[2].focused, 'to be', 2020);
+      expect(views[3].focused, 'to be', 2020);
+    });
+  });
+
+  describe('picker.update()', function () {
+    let input;
+    let dp;
+    let picker;
+    let defaultViewDate;
+
+    before(function () {
+      input = document.createElement('input');
+      testContainer.appendChild(input);
+      dp = new Datepicker(input);
+      picker = dp.picker;
+      defaultViewDate = dp.config.defaultViewDate;
+    });
+
+    after(function () {
+      dp.destroy();
+      testContainer.removeChild(input);
+    });
+
+    it('applies selected dates to views, updates viewDate to the last item', function () {
+      const views = picker.views;
+      const date1 = dateValue(2016, 10, 8);
+      const date2 = dateValue(2020, 2, 14);
+      const date3 = dateValue(2020, 1, 4);
+      dp.dates.push(date1);
+
+      picker.update();
+      expect(views[0].selected, 'to equal', [date1]);
+      expect(views[1].selected, 'to equal', {2016: [10]});
+      expect(views[2].selected, 'to equal', [2016]);
+      expect(views[3].selected, 'to equal', [2010]);
+      expect(picker.viewDate, 'to be', date1);
+      // also update view objects' focused properties
+      expect(views[0].focused, 'to be', date1);
+      expect(views[1].focused, 'to be', 10);
+      expect(views[1].year, 'to be', 2016);
+      expect(views[2].focused, 'to be', 2016);
+      expect(views[3].focused, 'to be', 2010);
+
+      dp.dates.push(date2, date3);
+
+      picker.update();
+      expect(views[0].selected, 'to equal', [date1, date2, date3]);
+      expect(views[1].selected, 'to equal', {2016: [10], 2020: [2, 1]});
+      expect(views[2].selected, 'to equal', [2016, 2020]);
+      expect(views[3].selected, 'to equal', [2010, 2020]);
+      expect(picker.viewDate, 'to be', date3);
+
+      expect(views[0].focused, 'to be', date3);
+      expect(views[1].focused, 'to be', 1);
+      expect(views[1].year, 'to be', 2020);
+      expect(views[2].focused, 'to be', 2020);
+      expect(views[3].focused, 'to be', 2020);
+
+      // if no dates in the selection, use defaultViewDate config for viewDate
+      const dateDefault = new Date(defaultViewDate);
+
+      dp.dates = [];
+
+      picker.update();
+      expect(views[0].selected, 'to equal', []);
+      expect(views[1].selected, 'to equal', {});
+      expect(views[2].selected, 'to equal', []);
+      expect(views[3].selected, 'to equal', []);
+      expect(picker.viewDate, 'to be', defaultViewDate);
+
+      expect(views[0].focused, 'to be', defaultViewDate);
+      expect(views[1].focused, 'to be', dateDefault.getMonth());
+      expect(views[1].year, 'to be', dateDefault.getFullYear());
+      expect(views[2].focused, 'to be', dateDefault.getFullYear());
+      expect(views[3].focused, 'to be', startOfYearPeriod(dateDefault, 10));
+    });
+  });
+
   describe('show()', function () {
     let input;
     let dp;
@@ -262,7 +451,7 @@ describe('Datepicker', function () {
       input = document.createElement('input');
       testContainer.appendChild(input);
       dp = new Datepicker(input);
-      dpElem = document.querySelector('.datepicker');
+      dpElem = dp.picker.element;
       dp.picker.active = true;
       dpElem.classList.add('active');
 
@@ -278,8 +467,90 @@ describe('Datepicker', function () {
       expect(dpElem.classList.contains('active'), 'to be false');
     });
 
-    it('deletes the "picker.active" property', function () {
-      expect(dp.picker, 'to have property', 'active');
+    it('sets false to the "picker.active" property', function () {
+      expect(dp.picker.active, 'to be false');
+    });
+
+    it('resets the picker to the start view state', function () {
+      const {config, picker} = dp;
+      const {views, currentView} = picker;
+      const newViewDate = dateValue(2020, 1, 14);
+
+      picker.active = true;
+      picker.changeFocus(newViewDate);
+      picker.changeView(2);
+      dp.hide();
+
+      expect(picker.viewDate, 'to be', config.defaultViewDate);
+      expect(currentView, 'to be', views[config.startView]);
+      expect(currentView.selected, 'to equal', []);
+
+      picker.active = true;
+      dp.dates = [newViewDate];
+      picker.changeView(1);
+      dp.hide();
+
+      expect(picker.viewDate, 'to be', newViewDate);
+      expect(currentView, 'to be', views[config.startView]);
+      expect(currentView.selected, 'to equal', [newViewDate]);
+    });
+  });
+
+  describe('toggle()', function () {
+    let input;
+    let dp;
+    let dpElem;
+
+    before(function () {
+      input = document.createElement('input');
+      testContainer.appendChild(input);
+      dp = new Datepicker(input);
+      dpElem = dp.picker.element;
+    });
+
+    after(function () {
+      dp.destroy();
+      testContainer.removeChild(input);
+    });
+
+    it('toggles picker.active and the datepicker element\'s "active" class', function () {
+      dp.toggle();
+
+      expect(dpElem.classList.contains('active'), 'to be true');
+      expect(dp.picker.active, 'to be true');
+
+      dp.toggle();
+
+      expect(dpElem.classList.contains('active'), 'to be false');
+      expect(dp.picker.active, 'to be false');
+    });
+
+    it('does not reset the picker to the start view state when removing active state', function () {
+      const picker = dp.picker;
+      const views = picker.views;
+      const newViewDate = dateValue(2020, 1, 14);
+      const currentDate = today();
+      dp.toggle();
+
+      picker.changeFocus(newViewDate);
+      picker.changeView(2);
+      dp.toggle();
+
+      expect(picker.viewDate, 'to be', newViewDate);
+      expect(picker.currentView, 'to be', views[2]);
+      expect(picker.currentView.selected, 'to equal', []);
+
+      dp.dates = [newViewDate];
+      picker.update();
+      dp.toggle();
+
+      picker.changeFocus(currentDate);
+      picker.changeView(1);
+      dp.toggle();
+
+      expect(picker.viewDate, 'to be', currentDate);
+      expect(picker.currentView, 'to be', views[1]);
+      expect(picker.currentView.selected, 'to equal', {2020: [1]});
     });
   });
 

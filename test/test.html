@@ -20,7 +20,7 @@
     <script src="../node_modules/mocha/mocha.js"></script>
     <script src="../node_modules/unexpected/unexpected.js"></script>
     <script src="../node_modules/sinon/pkg/sinon.js"></script>
-    <script src="../node_modules/jsdom-simulant/dist/jsdom-simulant.umd.js"></script>
+    <script src="../node_modules/simulant/dist/simulant.umd.js"></script>
 
     <script class="mocha-init">
       mocha.setup('bdd');
@@ -33,6 +33,23 @@
     <script src="./_utils/date.js"></script>
     <script src="./_utils/dom.js"></script>
     <script class="setup">
+      // patch simulant's bug that the default value of keyboad events'
+      // modifier key properties are not set (They should be false)
+      const keyboardEventTypes = ['keydown', 'keypress', 'keyup'];
+      const modifierKeyDefaults = {
+        ctrlKey: false,
+        altKey: false,
+        shiftKey: false,
+        metaKey: false,
+      };
+      const fireOrinial = simulant.fire;
+      simulant.fire = function fire(node, type, originalParams) {
+        const params = keyboardEventTypes.indexOf(type) === -1
+          ? originalParams
+          : Object.assign({}, modifierKeyDefaults, originalParams);
+        return fireOrinial.call(simulant, node, type, params)
+      };
+
       /* eslint-disable no-undef, no-unused-vars */
       var expect = weknowhow.expect;
       var dateValue = dateUtils.dateValue;
@@ -106,6 +123,7 @@
     <script src="./options/buttons.js"></script>
     <script src="./options/orientation.js"></script>
     <script src="./options/before-show.js"></script>
+    <script src="./options/shortcut-keys.js"></script>
     <script src="./inline-mode.js"></script>
     <script src="./DateRangePicker/DateRangePicker.js"></script>
     <script src="./DateRangePicker/api-methods.js"></script>
