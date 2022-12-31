@@ -369,8 +369,10 @@ export default class Picker {
   }
 
   // Apply the change of the selected dates
-  update() {
-    const newViewDate = computeResetViewDate(this.datepicker);
+  update(viewDate = undefined) {
+    const newViewDate = viewDate === undefined
+      ? computeResetViewDate(this.datepicker)
+      : viewDate;
     this._renderMethod = setViewDate(this, newViewDate) ? 'render' : 'refresh';
     this.views.forEach((view) => {
       view.updateFocus();

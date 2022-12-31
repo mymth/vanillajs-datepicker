@@ -345,6 +345,7 @@ describe('Datepicker', function () {
     let input;
     let dp;
     let picker;
+    let views;
     let defaultViewDate;
 
     before(function () {
@@ -352,6 +353,7 @@ describe('Datepicker', function () {
       testContainer.appendChild(input);
       dp = new Datepicker(input);
       picker = dp.picker;
+      views = picker.views;
       defaultViewDate = dp.config.defaultViewDate;
     });
 
@@ -361,7 +363,6 @@ describe('Datepicker', function () {
     });
 
     it('applies selected dates to views, updates viewDate to the last item', function () {
-      const views = picker.views;
       const date1 = dateValue(2016, 10, 8);
       const date2 = dateValue(2020, 2, 14);
       const date3 = dateValue(2020, 1, 4);
@@ -412,6 +413,26 @@ describe('Datepicker', function () {
       expect(views[1].year, 'to be', dateDefault.getFullYear());
       expect(views[2].focused, 'to be', dateDefault.getFullYear());
       expect(views[3].focused, 'to be', startOfYearPeriod(dateDefault, 10));
+    });
+
+    it('sets diven date to viewDate insteead of the last item of the selection if it is passed', function () {
+      const date1 = dateValue(2020, 1, 4);
+      const date2 = dateValue(2020, 2, 14);
+      const date3 = dateValue(2016, 10, 8);
+      dp.dates.push(date1, date2);
+
+      picker.update(date3);
+      expect(views[0].selected, 'to equal', [date1, date2]);
+      expect(views[1].selected, 'to equal', {2020: [1, 2]});
+      expect(views[2].selected, 'to equal', [2020]);
+      expect(views[3].selected, 'to equal', [2020]);
+      expect(picker.viewDate, 'to be', date3);
+
+      expect(views[0].focused, 'to be', date3);
+      expect(views[1].focused, 'to be', 10);
+      expect(views[1].year, 'to be', 2016);
+      expect(views[2].focused, 'to be', 2016);
+      expect(views[3].focused, 'to be', 2010);
     });
   });
 

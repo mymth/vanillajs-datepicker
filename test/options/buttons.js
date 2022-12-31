@@ -404,7 +404,7 @@ describe('options - buttons', function () {
         dp.setDate({clear: true});
       });
 
-      it('always changes the view to current date\'s days view when todayBtnMode = 1', function () {
+      it('always changes the view to current date\'s view of pickLevel when todayBtnMode = 1', function () {
         const nextBtn = picker.querySelector('.next-btn');
         dp.setOptions({todayBtnMode: 1});
 
@@ -438,6 +438,52 @@ describe('options - buttons', function () {
         expect(cells[19].classList.contains('focused'), 'to be true');
         expect(cells[19].classList.contains('selected'), 'to be true');
         expect(dp.dates, 'to equal', [dateValue(2020, 1, 14)]);
+
+        // pickLevel = 1
+        dp.setOptions({pickLevel: 1});
+        dp.setDate('4/1/2020');
+
+        viewSwitch.click();
+        todayBtn.click();
+        cells = getCells(picker);
+        expect(viewSwitch.textContent, 'to be', '2020');
+        expect(cells[1].classList.contains('focused'), 'to be true');
+        expect(cells[1].classList.contains('selected'), 'to be true');
+        expect(dp.dates, 'to equal', [dateValue(2020, 1, 1)]);
+
+        viewSwitch.click();
+        viewSwitch.click();
+        nextBtn.click();
+        todayBtn.click();
+        cells = getCells(picker);
+        expect(viewSwitch.textContent, 'to be', '2020');
+        expect(cells[1].classList.contains('focused'), 'to be true');
+        expect(cells[1].classList.contains('selected'), 'to be true');
+        expect(dp.dates, 'to equal', [dateValue(2020, 1, 1)]);
+
+        // pickLevel = 2
+        dp.setOptions({pickLevel: 2});
+        dp.setDate('1/1/2020');
+
+        viewSwitch.click();
+        todayBtn.click();
+        cells = getCells(picker);
+        expect(viewSwitch.textContent, 'to be', '2020-2029');
+        expect(cells[1].classList.contains('focused'), 'to be true');
+        expect(cells[1].classList.contains('selected'), 'to be true');
+        expect(dp.dates, 'to equal', [dateValue(2020, 0, 1)]);
+
+        viewSwitch.click();
+        nextBtn.click();
+        todayBtn.click();
+        cells = getCells(picker);
+        expect(viewSwitch.textContent, 'to be', '2020-2029');
+        expect(cells[1].classList.contains('focused'), 'to be true');
+        expect(cells[1].classList.contains('selected'), 'to be true');
+        expect(dp.dates, 'to equal', [dateValue(2020, 0, 1)]);
+
+        dp.setOptions({pickLevel: 0});
+        dp.setDate('today');
 
         // when current date is deslected by toggling in multi-date mode
         dp.setOptions({maxNumberOfDates: 3});

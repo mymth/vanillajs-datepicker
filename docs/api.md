@@ -127,7 +127,10 @@ With `clear: true` option, the method can be used to clear the selection and to 
 
 When `render: false` option is used, the method omits re-rendering the picker element. In this case, you need to call [`refresh()`](api?id=datepickerrefresh) method later in order for the picker element to reflect the changes. The input field is refreshed always regardless of this option.
 
-When invalid (unparsable, repeated, disabled or out-of-range) dates are passed, the method ignores them and applies only valid ones. In the case that all the given dates are invalid, which is distinguished from passing no dates, the method considers it as an error and leaves the selection untouched. (The input field also remains untouched unless `revert: true` option is used.)
+When invalid (unparsable, repeated, disabled or out-of-range) dates are passed, the method ignores them and applies only valid ones. In the case that all the given dates are invalid, which is distinguished from passing no dates, the method considers it as an error and leaves the selection untouched. (The input field also remains untouched unless `revert: true` option is used.)  
+Replacing the selection with the same date(s) also causes a similar situation. In both cases, the method does not refresh the picker element unless `forceRefresh: true` option is used.
+
+If `viewDate` option is used, the method changes the focused date to the specified date instead of the last item of the selection.
 
 ```javascript
 datepicker.setDate( date1 [, date2 [, ... dateN ]][, options ] )
@@ -146,6 +149,10 @@ datepicker.setDate( [ options ] )
       – Default: the value of `autohide` config option
     - `revert`: {`Boolean`} - Whether to refresh the input field when all the passed dates are invalid  
       – Default: `false`
+    - `forceRefresh`: {`Boolean`} - Whether to refresh the picker element when passed dates don't change the existing selection  
+      – Default: `false`
+    - `viewDate`: {`Date`|`Number`|`String`} - Date to be focused after setiing date(s)  
+      – Default: The last item of the resulting selection, or `defaultViewDate` config option if none is selected
 
 #### datepicker.setOptions()
 
@@ -183,7 +190,8 @@ Not available on inline picker
 
 The input field will be refreshed with properly formatted date string.
 
-In the case that all the entered dates are invalid (unparsable, repeated, disabled or out-of-range), whixh is distinguished from empty input field, the method leaves the input field untouched as well as the selection by default. If `revert: true` option is used in this case, the input field is refreshed with the existing selection.
+In the case that all the entered dates are invalid (unparsable, repeated, disabled or out-of-range), which is distinguished from empty input field, the method leaves the input field untouched as well as the selection by default. If `revert: true` option is used in this case, the input field is refreshed with the existing selection.  
+The method also doesn't refresh the picker element in this case and when the entered dates are the same as the existing selection. If `forceRefresh: true` option is used, the picker element is refreshed in these cases too.
 
 ```javascript
 datepicker.update( [ options ] )
@@ -193,6 +201,8 @@ datepicker.update( [ options ] )
     - `autohide`: {`Boolean`} - Whether to hide the picker element after update  
        – Default: `false`
     - `revert`: {`Boolean`} - Whether to refresh the input field when all the passed dates are invalid  
+      – Default: `false`
+    - `forceRefresh`: {`Boolean`} - Whether to refresh the picker element when input field's value doesn't change the existing selection  
       – Default: `false`
 
 

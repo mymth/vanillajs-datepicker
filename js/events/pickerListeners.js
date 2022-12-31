@@ -16,19 +16,14 @@ function goToSelectedMonthOrYear(datepicker, selection) {
 export function onClickTodayBtn(datepicker) {
   const {config, picker} = datepicker;
   const currentDate = today();
-  const selectMode = config.todayBtnMode === 1;
-  if (selectMode) {
-    if (config.autohide) {
-      datepicker.setDate(currentDate);
-      return;
+  if (config.todayBtnMode === 1) {
+    datepicker.setDate(currentDate, {forceRefresh: true, viewDate: currentDate});
+  } else {
+    if (picker.viewDate !== currentDate) {
+      picker.changeFocus(currentDate);
     }
-    datepicker.setDate(currentDate, {render: false});
-    picker.update();
+    picker.changeView(config.pickLevel).render();
   }
-  if (picker.viewDate !== currentDate) {
-    picker.changeFocus(currentDate);
-  }
-  picker.changeView(config.pickLevel).render(!selectMode);
 }
 
 export function onClickClearBtn(datepicker) {

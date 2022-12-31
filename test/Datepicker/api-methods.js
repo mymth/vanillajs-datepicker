@@ -60,13 +60,13 @@ describe('Datepicker - API methods', function () {
       const spyChnageEvent = sinon.spy();
       input.addEventListener('change', spyChnageEvent);
 
-      const viewSwitdh = getViewSwitch(picker);
+      const viewSwitch = getViewSwitch(picker);
       const date = new Date(2019, 11, 23);
       dp.setDate(date);
 
       expect(dp.dates, 'to equal', [date.getTime()]);
       expect(input.value, 'to be', '12/23/2019');
-      expect(viewSwitdh.textContent, 'to be', 'December 2019');
+      expect(viewSwitch.textContent, 'to be', 'December 2019');
 
       let cells = getCells(picker);
       expect(getCellIndices(cells, '.selected'), 'to equal', [22]);
@@ -77,7 +77,7 @@ describe('Datepicker - API methods', function () {
 
       expect(dp.dates, 'to equal', [dateValue(2020, 3, 22)]);
       expect(input.value, 'to be', '04/22/2020');
-      expect(viewSwitdh.textContent, 'to be', 'April 2020');
+      expect(viewSwitch.textContent, 'to be', 'April 2020');
 
       cells = getCells(picker);
       expect(getCellIndices(cells, '.selected'), 'to equal', [24]);
@@ -96,7 +96,7 @@ describe('Datepicker - API methods', function () {
 
       expect(dp.dates, 'to equal', [dateValue(2020, 1, 14)]);
       expect(input.value, 'to be', '02/14/2020');
-      expect(viewSwitdh.textContent, 'to be', 'February 2020');
+      expect(viewSwitch.textContent, 'to be', 'February 2020');
 
       cells = getCells(picker);
       expect(getCellIndices(cells, '.selected'), 'to equal', [19]);
@@ -105,13 +105,13 @@ describe('Datepicker - API methods', function () {
     });
 
     it('does nothing if no date or invalid date is given', function () {
-      const viewSwitdh = getViewSwitch(picker);
+      const viewSwitch = getViewSwitch(picker);
       const origDates = [dateValue(2020, 3, 22)];
 
       dp.setDate();
       expect(dp.dates, 'to equal', origDates);
       expect(input.value, 'to be', '04/22/2020');
-      expect(viewSwitdh.textContent, 'to be', 'April 2020');
+      expect(viewSwitch.textContent, 'to be', 'April 2020');
 
       const cells = getCells(picker);
       expect(getCellIndices(cells, '.selected'), 'to equal', [24]);
@@ -127,13 +127,13 @@ describe('Datepicker - API methods', function () {
       const spyChnageEvent = sinon.spy();
       input.addEventListener('change', spyChnageEvent);
 
-      const viewSwitdh = getViewSwitch(picker);
+      const viewSwitch = getViewSwitch(picker);
       const today = dateUtils.today();
 
       dp.setDate({clear: true});
       expect(dp.dates, 'to equal', []);
       expect(input.value, 'to be', '');
-      expect(viewSwitdh.textContent, 'to be', Datepicker.formatDate(today, 'MM yyyy'));
+      expect(viewSwitch.textContent, 'to be', Datepicker.formatDate(today, 'MM yyyy'));
 
       // view date is changed to the default view date (current date)
       const cells = getCells(picker);
@@ -210,18 +210,100 @@ describe('Datepicker - API methods', function () {
       expect(dp.dates, 'to equal', []);
       expect(isVisible(picker), 'to be false');
     });
+
+    it('refreshes the picker even when given date equals the selection if forceRefresh option = true', function () {
+      const [viewSwitch, prevBtn] = getParts(picker, ['.view-switch', '.prev-btn']);
+      prevBtn.click();
+      dp.setDate('04/22/2020');
+
+      let cells = getCells(picker);
+      expect(viewSwitch.textContent, 'to be', 'March 2020');
+      expect(getCellIndices(cells, '.selected'), 'to be empty');
+      expect(getCellIndices(cells, '.focused'), 'to equal', [21]);
+      expect(cells[21].textContent, 'to be', '22');
+
+      viewSwitch.click();
+      dp.setDate('04/22/2020');
+
+      cells = getCells(picker);
+      expect(viewSwitch.textContent, 'to be', '2020');
+      expect(getCellIndices(cells, '.selected'), 'to equal', [3]);
+      expect(cells[3].textContent, 'to be', 'Apr');
+
+      dp.setDate('04/22/2020', {forceRefresh: true});
+
+      cells = getCells(picker);
+      expect(viewSwitch.textContent, 'to be', 'April 2020');
+      expect(getCellIndices(cells, '.selected'), 'to equal', [24]);
+      expect(getCellIndices(cells, '.focused'), 'to equal', [24]);
+      expect(cells[24].textContent, 'to be', '22');
+
+      viewSwitch.click();
+      dp.setDate('04/22/2020', {forceRefresh: true});
+
+      cells = getCells(picker);
+      expect(viewSwitch.textContent, 'to be', 'April 2020');
+      expect(getCellIndices(cells, '.selected'), 'to equal', [24]);
+
+      // forceRefresh is ignored if used with render: false
+      prevBtn.click();
+      dp.setDate('04/22/2020', {forceRefresh: true, render: false});
+
+      cells = getCells(picker);
+      expect(viewSwitch.textContent, 'to be', 'March 2020');
+      expect(getCellIndices(cells, '.selected'), 'to be empty');
+      expect(getCellIndices(cells, '.focused'), 'to equal', [21]);
+      expect(cells[21].textContent, 'to be', '22');
+    });
+
+    it('uses the viewDate option\'s date for the focused date if the option is set', function () {
+      const viewSwitch = getViewSwitch(picker);
+      dp.setDate('02/04/2020', {viewDate: '02/11/2020'});
+
+      let cells = getCells(picker);
+      expect(viewSwitch.textContent, 'to be', 'February 2020');
+      expect(getCellIndices(cells, '.selected'), 'to equal', [9]);
+      expect(getCellIndices(cells, '.focused'), 'to equal', [16]);
+      expect(cells[9].textContent, 'to be', '4');
+      expect(cells[16].textContent, 'to be', '11');
+
+      dp.setDate('02/11/2020', {viewDate: new Date(2020, 2, 14)});
+
+      cells = getCells(picker);
+      expect(viewSwitch.textContent, 'to be', 'March 2020');
+      expect(getCellIndices(cells, '.selected'), 'to be empty');
+      expect(getCellIndices(cells, '.focused'), 'to equal', [13]);
+      expect(cells[13].textContent, 'to be', '14');
+
+      dp.setDate('02/14/2020', {viewDate: dateValue(2020, 1, 20)});
+
+      cells = getCells(picker);
+      expect(viewSwitch.textContent, 'to be', 'February 2020');
+      expect(getCellIndices(cells, '.selected'), 'to equal', [19]);
+      expect(getCellIndices(cells, '.focused'), 'to equal', [25]);
+      expect(cells[19].textContent, 'to be', '14');
+      expect(cells[25].textContent, 'to be', '20');
+
+      dp.setDate('02/04/2020', {viewDate: null});
+
+      cells = getCells(picker);
+      expect(viewSwitch.textContent, 'to be', 'February 2020');
+      expect(getCellIndices(cells, '.selected'), 'to equal', [9]);
+      expect(getCellIndices(cells, '.focused'), 'to equal', [9]);
+      expect(cells[9].textContent, 'to be', '4');
+    });
   });
 
   describe('update()', function () {
     it('updates the selected date with the input element\'s value', function () {
-      const viewSwitdh = getViewSwitch(picker);
+      const viewSwitch = getViewSwitch(picker);
       const date = new Date(2019, 11, 23);
       input.value = '12/23/2019';
       dp.update();
 
       expect(dp.dates, 'to equal', [date.getTime()]);
       expect(input.value, 'to be', '12/23/2019');
-      expect(viewSwitdh.textContent, 'to be', 'December 2019');
+      expect(viewSwitch.textContent, 'to be', 'December 2019');
 
       let cells = getCells(picker);
       expect(getCellIndices(cells, '.selected'), 'to equal', [22]);
@@ -236,7 +318,7 @@ describe('Datepicker - API methods', function () {
 
       expect(dp.dates, 'to equal', [dateValue(2020, 1, 14)]);
       expect(input.value, 'to be', '02/14/2020');
-      expect(viewSwitdh.textContent, 'to be', 'February 2020');
+      expect(viewSwitch.textContent, 'to be', 'February 2020');
 
       cells = getCells(picker);
       expect(getCellIndices(cells, '.selected'), 'to equal', [19]);
@@ -289,6 +371,41 @@ describe('Datepicker - API methods', function () {
       expect(input.value, 'to be', '');
       expect(dp.dates, 'to equal', []);
       expect(isVisible(picker), 'to be false');
+    });
+
+    it('refreshes the picker even when given date equals the selection if forceRefresh option = true', function () {
+      const [viewSwitch, prevBtn] = getParts(picker, ['.view-switch', '.prev-btn']);
+      prevBtn.click();
+      dp.update();
+
+      let cells = getCells(picker);
+      expect(viewSwitch.textContent, 'to be', 'March 2020');
+      expect(getCellIndices(cells, '.selected'), 'to be empty');
+      expect(getCellIndices(cells, '.focused'), 'to equal', [21]);
+      expect(cells[21].textContent, 'to be', '22');
+
+      viewSwitch.click();
+      dp.update();
+
+      cells = getCells(picker);
+      expect(viewSwitch.textContent, 'to be', '2020');
+      expect(getCellIndices(cells, '.selected'), 'to equal', [3]);
+      expect(cells[3].textContent, 'to be', 'Apr');
+
+      dp.update({forceRefresh: true});
+
+      cells = getCells(picker);
+      expect(viewSwitch.textContent, 'to be', 'April 2020');
+      expect(getCellIndices(cells, '.selected'), 'to equal', [24]);
+      expect(getCellIndices(cells, '.focused'), 'to equal', [24]);
+      expect(cells[24].textContent, 'to be', '22');
+
+      viewSwitch.click();
+      dp.update({forceRefresh: true});
+
+      cells = getCells(picker);
+      expect(viewSwitch.textContent, 'to be', 'April 2020');
+      expect(getCellIndices(cells, '.selected'), 'to equal', [24]);
     });
   });
 

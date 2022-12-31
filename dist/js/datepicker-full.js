@@ -1682,19 +1682,14 @@
   function onClickTodayBtn(datepicker) {
     const {config, picker} = datepicker;
     const currentDate = today();
-    const selectMode = config.todayBtnMode === 1;
-    if (selectMode) {
-      if (config.autohide) {
-        datepicker.setDate(currentDate);
-        return;
+    if (config.todayBtnMode === 1) {
+      datepicker.setDate(currentDate, {forceRefresh: true, viewDate: currentDate});
+    } else {
+      if (picker.viewDate !== currentDate) {
+        picker.changeFocus(currentDate);
       }
-      datepicker.setDate(currentDate, {render: false});
-      picker.update();
+      picker.changeView(config.pickLevel).render();
     }
-    if (picker.viewDate !== currentDate) {
-      picker.changeFocus(currentDate);
-    }
-    picker.changeView(config.pickLevel).render(!selectMode);
   }
 
   function onClickClearBtn(datepicker) {
@@ -2086,8 +2081,10 @@
     }
 
     // Apply the change of the selected dates
-    update() {
-      const newViewDate = computeResetViewDate(this.datepicker);
+    update(viewDate = undefined) {
+      const newViewDate = viewDate === undefined
+        ? computeResetViewDate(this.datepicker)
+        : viewDate;
       this._renderMethod = setViewDate(this, newViewDate) ? 'render' : 'refresh';
       this.views.forEach((view) => {
         view.updateFocus();
@@ -2383,11 +2380,11 @@
 
   // refresh the UI elements
   // modes: 1: input only, 2, picker only, 3 both
-  function refreshUI(datepicker, mode = 3, quickRender = true) {
+  function refreshUI(datepicker, mode = 3, quickRender = true, viewDate = undefined) {
     const {config, picker, inputField} = datepicker;
     if (mode & 2) {
       const newView = picker.active ? config.pickLevel : config.startView;
-      picker.update().changeView(newView).render(quickRender);
+      picker.update(viewDate).changeView(newView).render(quickRender);
     }
     if (mode & 1 && inputField) {
       inputField.value = stringifyDates(datepicker.dates, config);
@@ -2395,15 +2392,17 @@
   }
 
   function setDate(datepicker, inputDates, options) {
-    let {clear, render, autohide, revert} = options;
+    const config = datepicker.config;
+    let {clear, render, autohide, revert, forceRefresh, viewDate} = options;
     if (render === undefined) {
       render = true;
     }
     if (!render) {
-      autohide = false;
+      autohide = forceRefresh = false;
     } else if (autohide === undefined) {
-      autohide = datepicker.config.autohide;
+      autohide = config.autohide;
     }
+    viewDate = parseDate(viewDate, config.format, config.locale);
 
     const newDates = processInputDates(datepicker, inputDates, clear);
     if (!newDates && !revert) {
@@ -2411,10 +2410,10 @@
     }
     if (newDates && newDates.toString() !== datepicker.dates.toString()) {
       datepicker.dates = newDates;
-      refreshUI(datepicker, render ? 3 : 1);
+      refreshUI(datepicker, render ? 3 : 1, true, viewDate);
       triggerDatepickerEvent(datepicker, 'changeDate');
     } else {
-      refreshUI(datepicker, 1);
+      refreshUI(datepicker, forceRefresh ? 3 : 1, true, viewDate);
     }
 
     if (autohide) {
@@ -2713,6 +2712,12 @@
      * no dates, the method considers it as an error and leaves the selection
      * untouched. (The input field also remains untouched unless revert: true
      * option is used.)
+     * Replacing the selection with the same date(s) also causes a similar
+     * situation. In both cases, the method does not refresh the picker element
+     * unless forceRefresh: true option is used.
+     *
+     * If viewDate option is used, the method changes the focused date to the
+     * specified date instead of the last item of the selection.
      *
      * @param {...(Date|Number|String)|Array} [dates] - Date strings, Date
      * objects, time values or mix of those for new selection
@@ -2727,6 +2732,12 @@
      * - revert: {boolean} - Whether to refresh the input field when all the
      *     passed dates are invalid
      *     default: false
+     * - forceRefresh: {boolean} - Whether to refresh the picker element when
+     *     passed dates don't change the existing selection
+     *     default: false
+     * - viewDate: {Date|Number|String} - Date to be focused after setiing date(s)
+     *     default: The last item of the resulting selection, or defaultViewDate
+     *     config option if none is selected
      */
     setDate(...args) {
       const dates = [...args];
@@ -2752,10 +2763,14 @@
      * The input field will be refreshed with properly formatted date string.
      *
      * In the case that all the entered dates are invalid (unparsable, repeated,
-     * disabled or out-of-range), whixh is distinguished from empty input field,
+     * disabled or out-of-range), which is distinguished from empty input field,
      * the method leaves the input field untouched as well as the selection by
      * default. If revert: true option is used in this case, the input field is
      * refreshed with the existing selection.
+     * The method also doesn't refresh the picker element in this case and when
+     * the entered dates are the same as the existing selection. If
+     * forceRefresh: true option is used, the picker element is refreshed in
+     * these cases too.
      *
      * @param  {Object} [options] - function options
      * - autohide: {boolean} - whether to hide the picker element after refresh
@@ -2763,13 +2778,16 @@
      * - revert: {boolean} - Whether to refresh the input field when all the
      *     passed dates are invalid
      *     default: false
+     * - forceRefresh: {boolean} - Whether to refresh the picer element when
+     *     input field's value doesn't change the existing selection
+     *     default: false
      */
     update(options = undefined) {
       if (this.inline) {
         return;
       }
 
-      const opts = Object.assign(options || {}, {clear: true, render: true});
+      const opts = Object.assign(options || {}, {clear: true, render: true, viewDate: undefined});
       const inputDates = stringToArray(this.inputField.value, this.config.dateDelimiter);
       setDate(this, inputDates, opts);
     }
