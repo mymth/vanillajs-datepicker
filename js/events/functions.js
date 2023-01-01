@@ -1,5 +1,6 @@
 import {limitToRange} from '../lib/utils.js';
 import {addMonths, addYears} from '../lib/date.js';
+import {isActiveElement} from '../lib/dom.js';
 
 export function triggerDatepickerEvent(datepicker, type) {
   const detail = {
@@ -39,10 +40,19 @@ export function switchView(datepicker) {
 }
 
 export function unfocus(datepicker) {
-  if (datepicker.config.updateOnBlur) {
-    datepicker.update({revert: true});
+  const onBlur = () => {
+    if (datepicker.config.updateOnBlur) {
+      datepicker.update({revert: true});
+    } else {
+      datepicker.refresh('input');
+    }
+    datepicker.hide();
+  };
+  const element = datepicker.element;
+
+  if (isActiveElement(element)) {
+    element.addEventListener('blur', onBlur, {once: true});
   } else {
-    datepicker.refresh('input');
+    onBlur();
   }
-  datepicker.hide();
 }

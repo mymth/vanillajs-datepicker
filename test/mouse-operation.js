@@ -13,7 +13,7 @@ describe('mouse operation', function () {
     testContainer.removeChild(input);
   });
 
-  it('picker hides if mouse is pressed outside the picker or the input', async function () {
+  it('picker hides if the input blurs after mouse is pressed outside the picker or the input', async function () {
     const outsider = document.createElement('p');
     testContainer.appendChild(outsider);
 
@@ -21,29 +21,39 @@ describe('mouse operation', function () {
     input.focus();
 
     simulant.fire(picker.querySelector('.dow'), 'mousedown');
+    input.blur();
     expect(isVisible(picker), 'to be true');
+
+    input.focus();
 
     simulant.fire(input, 'mousedown');
+    input.blur();
     expect(isVisible(picker), 'to be true');
 
+    input.focus();
+
     simulant.fire(outsider, 'mousedown');
+    input.blur();
     expect(isVisible(picker), 'to be false');
 
     // hide() should not called when picker is hidden
     // (issue #45)
     const spyHide = sinon.spy(dp, 'hide');
-    input.blur();
 
     simulant.fire(outsider, 'mousedown');
+    input.blur();
     expect(spyHide.called, 'to be false');
 
     spyHide.restore();
+    input.focus();
+    dp.hide();
 
     // picker shown programmatically should be closed by clicking outside
     // (issue #52)
     dp.show();
 
     simulant.fire(outsider, 'mousedown');
+    input.blur();
     expect(isVisible(picker), 'to be false');
 
     // picker hides even when input is already unfocused
@@ -54,19 +64,21 @@ describe('mouse operation', function () {
     expect(isVisible(picker), 'to be false');
 
     // picker hides reverting the input when invalid date is in the input (bugfix)
-    dp.show();
+    input.focus();
     input.value = '0/0/0';
 
     simulant.fire(outsider, 'mousedown');
+    input.blur();
     expect(isVisible(picker), 'to be false');
     expect(input.value, 'to be', '');
 
     // reverting the input also works when picker is already hidden
-    dp.show();
+    input.focus();
     input.value = '0/0/0';
     dp.hide();
 
     simulant.fire(outsider, 'mousedown');
+    input.blur();
     expect(input.value, 'to be', '');
 
     dp.destroy();
@@ -85,12 +97,19 @@ describe('mouse operation', function () {
       });
     });
     simulant.fire(picker.querySelector('.dow'), 'mousedown');
+    input.blur();
     expect(await isPickerVisible(), 'to be true');
+
+    input.focus();
 
     simulant.fire(input, 'mousedown');
+    input.blur();
     expect(await isPickerVisible(), 'to be true');
 
+    input.focus();
+
     simulant.fire(outsider, 'mousedown');
+    input.blur();
     expect(await isPickerVisible(), 'to be false');
 
     dp.destroy();
@@ -100,7 +119,7 @@ describe('mouse operation', function () {
     return Promise.resolve();
   });
 
-  it('selection is updated with input\'s value if mouse is pressed outside the input', function () {
+  it('selection is updated with input\'s value if the input blurs after mouse is pressed outside the input', function () {
     const clock = sinon.useFakeTimers({now: new Date(2020, 1, 14), shouldAdvanceTime: true});
     const outsider = document.createElement('p');
     testContainer.appendChild(outsider);
@@ -111,12 +130,19 @@ describe('mouse operation', function () {
     input.value = 'foo';
 
     simulant.fire(picker.querySelector('.dow'), 'mousedown');
+    input.blur();
     expect(input.value, 'to be', 'foo');
+
+    input.focus();
 
     simulant.fire(input, 'mousedown');
+    input.blur();
     expect(input.value, 'to be', 'foo');
 
+    input.focus();
+
     simulant.fire(outsider, 'mousedown');
+    input.blur();
     expect(input.value, 'to be', '02/14/2020');
     expect(dp.getDate().getTime(), 'to be', dateValue(2020, 1, 14));
 
@@ -125,6 +151,7 @@ describe('mouse operation', function () {
     input.value = '04/22/2020';
 
     simulant.fire(outsider, 'mousedown');
+    input.blur();
     expect(input.value, 'to be', '04/22/2020');
     expect(dp.getDate().getTime(), 'to be', dateValue(2020, 3, 22));
 
@@ -132,6 +159,7 @@ describe('mouse operation', function () {
     input.value = '';
 
     simulant.fire(outsider, 'mousedown');
+    input.blur();
     expect(input.value, 'to be', '');
     expect(dp.getDate(), 'to be undefined');
 

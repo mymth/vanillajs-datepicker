@@ -748,13 +748,15 @@ describe('events', function () {
 
       // by clicking outside
       simulant.fire(testContainer, 'mousedown');
+      input.blur();
       expect(spyHide.called, 'to be true');
 
       spyHide.resetHistory();
-      dp.show();
+      input.focus();
 
       // by pressing tab key
       simulant.fire(input, 'keydown', {key: 'Tab'});
+      input.blur();
       expect(spyHide.called, 'to be true');
 
       spyHide.resetHistory();

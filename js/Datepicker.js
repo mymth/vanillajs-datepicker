@@ -210,8 +210,13 @@ export default class Datepicker {
         [inputField, 'mousedown', onMousedown.bind(null, this)],
         [inputField, 'click', onClickInput.bind(null, this)],
         [inputField, 'paste', onPaste.bind(null, this)],
+        // To detect a click on outside, just listening to mousedown is enough,
+        // no need to listen to touchstart.
+        // Actually, listening to touchstart can be a problem because, while
+        // mousedown is fired only on tapping but not on swiping/pinching,
+        // touchstart is fired on swiping/pinching as well.
+        // (issue #95)
         [document, 'mousedown', onMousedownDocument],
-        [document, 'touchstart', onMousedownDocument],
         [window, 'resize', picker.place.bind(picker)]
       ];
       registerListeners(this, listeners);

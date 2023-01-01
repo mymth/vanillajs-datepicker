@@ -53,12 +53,14 @@ describe('DateRangePicker', function () {
     expect(isVisible(picker0), 'to be true');
 
     simulant.fire(input0, 'keydown', {key: 'Tab'});
+    input0.blur();
     expect(isVisible(picker0), 'to be false');
 
     input1.focus();
     expect(isVisible(picker1), 'to be true');
 
     simulant.fire(input1, 'keydown', {key: 'Tab'});
+    input1.blur();
     expect(isVisible(picker1), 'to be false');
 
     drp.destroy();

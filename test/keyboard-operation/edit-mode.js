@@ -679,6 +679,7 @@ describe('keyboard operation - edit mode', function () {
     input.value = '4/22/2020';
 
     simulant.fire(input, 'keydown', {key: 'Tab'});
+    input.blur();
     expect(dp.editMode, 'to be undefined');
     expect(input.classList.contains('in-edit'), 'to be false');
     expect(input.value, 'to be', '04/22/2020');
@@ -686,11 +687,12 @@ describe('keyboard operation - edit mode', function () {
 
     //by clicking outside
     dp.setDate('02/14/2020');
-    dp.show();
+    input.focus();
     dp.enterEditMode();
     input.value = '4/22/2020';
 
     simulant.fire(outsider, 'mousedown');
+    input.blur();
     expect(dp.editMode, 'to be undefined');
     expect(input.classList.contains('in-edit'), 'to be false');
     expect(input.value, 'to be', '04/22/2020');

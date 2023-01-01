@@ -701,33 +701,44 @@ describe('options', function () {
 
       // on tab key press
       simulant.fire(input, 'keydown', {key: 'Tab'});
+      input.blur();
       expect(input.value, 'to be', '');
 
       dp.setDate('04/22/2020');
-      dp.show();
+      input.focus();
       dp.enterEditMode();
       input.value = 'foo';
 
       simulant.fire(input, 'keydown', {key: 'Tab'});
+      input.blur();
       expect(input.value, 'to be', '04/22/2020');
 
       // on click outside
-      dp.show();
+      input.focus();
       input.value = 'foo';
 
       simulant.fire(picker.querySelector('.dow'), 'mousedown');
+      input.blur();
       expect(input.value, 'to be', 'foo');
+
+      input.focus();
 
       simulant.fire(input, 'mousedown');
+      input.blur();
       expect(input.value, 'to be', 'foo');
 
+      input.focus();
+
       simulant.fire(outsider, 'mousedown');
+      input.blur();
       expect(input.value, 'to be', '04/22/2020');
 
       dp.setDate({clear: true});
+      input.focus();
       input.value = 'foo';
 
       simulant.fire(outsider, 'mousedown');
+      input.blur();
       expect(input.value, 'to be', '');
 
       dp.destroy();
@@ -741,6 +752,7 @@ describe('options', function () {
       input.value = '04/22/2020';
 
       simulant.fire(input, 'keydown', {key: 'Tab'});
+      input.blur();
       expect(input.value, 'to be', '');
 
       dp.setOptions({updateOnBlur: true});
@@ -748,6 +760,7 @@ describe('options', function () {
       input.value = '04/22/2020';
 
       simulant.fire(input, 'keydown', {key: 'Tab'});
+      input.blur();
       expect(input.value, 'to be', '04/22/2020');
 
       dp.destroy();

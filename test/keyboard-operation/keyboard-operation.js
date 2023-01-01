@@ -14,11 +14,12 @@ describe('keyboard operation', function () {
   });
 
   describe('tab', function () {
-    it('hides the picker', function () {
+    it('hides the picker on the input blurs', function () {
       const {dp, picker} = createDP(input);
       input.focus();
 
       simulant.fire(input, 'keydown', {key: 'Tab'});
+      input.blur();
       expect(isVisible(picker), 'to be false');
 
       dp.destroy();
@@ -33,6 +34,7 @@ describe('keyboard operation', function () {
       input.value = 'foo';
 
       simulant.fire(input, 'keydown', {key: 'Tab'});
+      input.blur();
       expect(input.value, 'to be', '02/14/2020');
       expect(dp.getDate().getTime(), 'to be', dateValue(2020, 1, 14));
 
@@ -41,6 +43,7 @@ describe('keyboard operation', function () {
       input.value = '04/22/2020';
 
       simulant.fire(input, 'keydown', {key: 'Tab'});
+      input.blur();
       expect(input.value, 'to be', '04/22/2020');
       expect(dp.getDate().getTime(), 'to be', dateValue(2020, 3, 22));
 
@@ -48,6 +51,7 @@ describe('keyboard operation', function () {
       input.value = '';
 
       simulant.fire(input, 'keydown', {key: 'Tab'});
+      input.blur();
       expect(input.value, 'to be', '');
       expect(dp.getDate(), 'to be undefined');
 
@@ -56,6 +60,7 @@ describe('keyboard operation', function () {
       input.value = '0/0/0';
 
       simulant.fire(input, 'keydown', {key: 'Tab'});
+      input.blur();
       expect(isVisible(dp.picker.element), 'to be false');
       expect(input.value, 'to be', '');
       expect(dp.getDate(), 'to be undefined');
