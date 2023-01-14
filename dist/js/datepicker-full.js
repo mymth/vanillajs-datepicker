@@ -1803,22 +1803,16 @@
 
   // Change current view's view date
   function setViewDate(picker, newDate) {
-    const oldViewDate = new Date(picker.viewDate);
-    const newViewDate = new Date(newDate);
-    const {id, year, first, last} = picker.currentView;
-    const viewYear = newViewDate.getFullYear();
-
+    if (!('_oldViewDate' in picker) && newDate !== picker.viewDate) {
+      picker._oldViewDate = picker.viewDate;
+    }
     picker.viewDate = newDate;
-    if (viewYear !== oldViewDate.getFullYear()) {
-      triggerDatepickerEvent(picker.datepicker, 'changeYear');
-    }
-    if (newViewDate.getMonth() !== oldViewDate.getMonth()) {
-      triggerDatepickerEvent(picker.datepicker, 'changeMonth');
-    }
 
     // return whether the new date is in different period on time from the one
     // displayed in the current view
     // when true, the view needs to be re-rendered on the next UI refresh.
+    const {id, year, first, last} = picker.currentView;
+    const viewYear = new Date(newDate).getFullYear();
     switch (id) {
       case 0:
         return newDate < first || newDate > last;
@@ -2069,13 +2063,13 @@
     }
 
     changeView(viewId) {
-      const oldView = this.currentView;
-      const newView =  this.views[viewId];
-      if (newView.id !== oldView.id) {
-        this.currentView = newView;
+      const currentView = this.currentView;
+      if (viewId !== currentView.id) {
+        if (!this._oldView) {
+          this._oldView = currentView;
+        }
+        this.currentView = this.views[viewId];
         this._renderMethod = 'render';
-        triggerDatepickerEvent(this.datepicker, 'changeView');
-        this.main.replaceChild(newView.element, oldView.element);
       }
       return this;
     }
@@ -2104,10 +2098,27 @@
 
     // Refresh the picker UI
     render(quickRender = true) {
+      const {currentView, datepicker, _oldView: oldView} = this;
+      const oldViewDate = new Date(this._oldViewDate);
       const renderMethod = (quickRender && this._renderMethod) || 'render';
+      delete this._oldView;
+      delete this._oldViewDate;
       delete this._renderMethod;
 
-      this.currentView[renderMethod]();
+      currentView[renderMethod]();
+      if (oldView) {
+        this.main.replaceChild(currentView.element, oldView.element);
+        triggerDatepickerEvent(datepicker, 'changeView');
+      }
+      if (!isNaN(oldViewDate)) {
+        const newViewDate = new Date(this.viewDate);
+        if (newViewDate.getFullYear() !== oldViewDate.getFullYear()) {
+          triggerDatepickerEvent(datepicker, 'changeYear');
+        }
+        if (newViewDate.getMonth() !== oldViewDate.getMonth()) {
+          triggerDatepickerEvent(datepicker, 'changeMonth');
+        }
+      }
     }
   }
 

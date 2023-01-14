@@ -286,8 +286,8 @@ describe('Datepicker', function () {
     it('changes the currentView to the view object of given id', function () {
       picker.changeView(2);
       expect(picker.currentView, 'to be', views[2]);
-      // also replace the main element's children
-      expect(Array.from(main.childNodes), 'to equal', [views[2].element]);
+      // picker element is not updated
+      expect(Array.from(main.childNodes), 'to equal', [initialView.element]);
 
       picker.changeView(initialView.id);
       expect(picker.currentView, 'to be', initialView);
@@ -415,7 +415,7 @@ describe('Datepicker', function () {
       expect(views[3].focused, 'to be', startOfYearPeriod(dateDefault, 10));
     });
 
-    it('sets diven date to viewDate insteead of the last item of the selection if it is passed', function () {
+    it('sets given date to viewDate insteead of the last item of the selection if it is passed', function () {
       const date1 = dateValue(2020, 1, 4);
       const date2 = dateValue(2020, 2, 14);
       const date3 = dateValue(2016, 10, 8);
