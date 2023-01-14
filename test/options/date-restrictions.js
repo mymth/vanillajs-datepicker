@@ -25,11 +25,10 @@ describe('options - date restrictions', function () {
       clock.restore();
     });
 
-    it('specifies unselectable dates', function () {
-      const dp = new Datepicker(input, {
+    it('makes the dates in given array unselectable', function () {
+      const {dp, picker} = createDP(input, {
         datesDisabled: [new Date(2020, 1, 12), '2/13/2020', new Date(2020, 1, 13), '2/20/2020'],
       });
-      const picker = document.querySelector('.datepicker');
       dp.show();
 
       expect(picker.querySelector('.prev-btn').disabled, 'to be false');
@@ -74,10 +73,9 @@ describe('options - date restrictions', function () {
     });
 
     it('makes the picker prevent those dates becoming view date', function () {
-      const dp = new Datepicker(input, {
+      const {dp, picker} = createDP(input, {
         datesDisabled: ['2/11/2020', '2/12/2020', '2/13/2020', '2/20/2020'],
       });
-      const picker = document.querySelector('.datepicker');
       const cells = getCells(picker);
       dp.show();
 
@@ -115,11 +113,10 @@ describe('options - date restrictions', function () {
     });
 
     it('disables months if pickLevel = 1 (month)', function () {
-      const dp = new Datepicker(input, {
+      const {dp, picker} = createDP(input, {
         datesDisabled: [new Date(2020, 2, 1), '3/14/2020', new Date(2020, 5, 13), '9/20/2020', '7/1/2021'],
         pickLevel: 1,
       });
-      const picker = document.querySelector('.datepicker');
       const [prevBtn, nextBtn] = getParts(picker, ['.prev-btn', '.next-btn']);
       dp.show();
 
@@ -198,11 +195,10 @@ describe('options - date restrictions', function () {
     });
 
     it('disables years if pickLevel = 2 (year)', function () {
-      const dp = new Datepicker(input, {
+      const {dp, picker} = createDP(input, {
         datesDisabled: [new Date(2021, 1, 1), '2/14/2021', new Date(2024, 1, 1), '1/20/2027', '1/1/2035'],
         pickLevel: 2,
       });
-      const picker = document.querySelector('.datepicker');
       const [prevBtn, nextBtn] = getParts(picker, ['.prev-btn', '.next-btn']);
       dp.show();
 
@@ -283,6 +279,450 @@ describe('options - date restrictions', function () {
       dp.destroy();
     });
 
+    it('makes the dates evaluated true by given callback unselectable', function () {
+      const {dp, picker} = createDP(input, {
+        datesDisabled: date => [
+          new Date(2020, 1, 12),
+          new Date(2020, 1, 13),
+          new Date(2020, 1, 20),
+        ].find(disabled => disabled.toDateString() === date.toDateString()),
+      });
+      dp.show();
+
+      expect(picker.querySelector('.prev-btn').disabled, 'to be false');
+      expect(picker.querySelector('.next-btn').disabled, 'to be false');
+
+      let cells = getCells(picker);
+      expect(getDisabled(cells), 'to equal', [
+        [17, '12'],
+        [18, '13'],
+        [25, '20'],
+      ]);
+
+      cells[17].click();
+      expect(dp.dates, 'to equal', []);
+      expect(input.value, 'to be', '');
+      expect(getCellIndices(cells, '.selected'), 'to equal', []);
+
+      dp.setDate(new Date(2020, 1, 12));
+      expect(dp.dates, 'to equal', []);
+      expect(input.value, 'to be', '');
+      expect(getCellIndices(cells, '.selected'), 'to equal', []);
+
+      input.value = '2/12/2020';
+      dp.update();
+      expect(dp.dates, 'to equal', []);
+      expect(input.value, 'to be', '2/12/2020');
+      expect(getCellIndices(cells, '.selected'), 'to equal', []);
+
+      cells[16].click();
+      expect(dp.dates, 'to equal', [dateValue(2020, 1, 11)]);
+      expect(input.value, 'to be', '02/11/2020');
+      expect(getCellIndices(cells, '.selected'), 'to equal', [16]);
+
+      dp.enterEditMode();
+      input.value = '2/12/2020';
+      simulant.fire(input, 'keydown', {key: 'Enter'});
+      expect(dp.dates, 'to equal', [dateValue(2020, 1, 11)]);
+      expect(input.value, 'to be', '2/12/2020');
+      expect(getCellIndices(cells, '.selected'), 'to equal', [16]);
+
+      dp.destroy();
+    });
+
+    it('makes the picker prevent the dates disabled by callback from becoming view date', function () {
+      const {dp, picker} = createDP(input, {
+        datesDisabled: date => [
+          new Date(2020, 1, 11),
+          new Date(2020, 1, 12),
+          new Date(2020, 1, 13),
+          new Date(2020, 1, 20),
+        ].find(disabled => disabled.toDateString() === date.toDateString()),
+      });
+      const cells = getCells(picker);
+      dp.show();
+
+      simulant.fire(input, 'keydown', {key: 'ArrowLeft'});
+      expect(getCellIndices(cells, '.focused'), 'to equal', [15]);
+
+      simulant.fire(input, 'keydown', {key: 'ArrowRight'});
+      expect(getCellIndices(cells, '.focused'), 'to equal', [19]);
+
+      simulant.fire(input, 'keydown', {key: 'ArrowUp'});
+      simulant.fire(input, 'keydown', {key: 'ArrowLeft'});
+      simulant.fire(input, 'keydown', {key: 'ArrowLeft'});
+      // on 5th
+      simulant.fire(input, 'keydown', {key: 'ArrowDown'});
+      expect(getCellIndices(cells, '.focused'), 'to equal', [19]);
+
+      simulant.fire(input, 'keydown', {key: 'ArrowDown'});
+      simulant.fire(input, 'keydown', {key: 'ArrowDown'});
+      simulant.fire(input, 'keydown', {key: 'ArrowLeft'});
+      // on 27th
+      simulant.fire(input, 'keydown', {key: 'ArrowUp'});
+      expect(getCellIndices(cells, '.focused'), 'to equal', [24]);
+
+      // on 19th
+      simulant.fire(input, 'keydown', {key: 'ArrowUp'});
+      expect(getCellIndices(cells, '.focused'), 'to equal', [15]);
+
+      simulant.fire(input, 'keydown', {key: 'ArrowUp'});
+      simulant.fire(input, 'keydown', {key: 'ArrowRight'});
+      // on 4th
+      simulant.fire(input, 'keydown', {key: 'ArrowDown'});
+      expect(getCellIndices(cells, '.focused'), 'to equal', [19]);
+
+      dp.destroy();
+    });
+
+    it('disables months designated by callback if pickLevel = 1 (month)', function () {
+      const {dp, picker} = createDP(input, {
+        datesDisabled: date => [
+          new Date(2020, 2, 1),
+          new Date(2020, 5, 1),
+          new Date(2020, 8, 1),
+          new Date(2021, 6, 1),
+        ].find(disabled => disabled.toDateString() === date.toDateString()),
+        pickLevel: 1,
+      });
+      const [prevBtn, nextBtn] = getParts(picker, ['.prev-btn', '.next-btn']);
+      dp.show();
+
+      expect(prevBtn.disabled, 'to be false');
+      expect(nextBtn.disabled, 'to be false');
+
+      let cells = getCells(picker);
+      expect(getDisabled(cells), 'to equal', [
+        [2, 'Mar'],
+        [5, 'Jun'],
+        [8, 'Sep'],
+      ]);
+
+      nextBtn.click();
+      cells = getCells(picker);
+      expect(getDisabled(cells), 'to equal', [
+        [6, 'Jul'],
+      ]);
+
+      prevBtn.click();
+      cells = getCells(picker);
+
+      cells[8].click();
+      expect(dp.dates, 'to equal', []);
+      expect(input.value, 'to be', '');
+      expect(getCellIndices(cells, '.selected'), 'to equal', []);
+
+      dp.setDate(new Date(2020, 2, 1));
+      expect(dp.dates, 'to equal', []);
+      expect(input.value, 'to be', '');
+      expect(getCellIndices(cells, '.selected'), 'to equal', []);
+
+      input.value = '3/12/2020';
+      dp.update();
+      expect(dp.dates, 'to equal', []);
+      expect(input.value, 'to be', '3/12/2020');
+      expect(getCellIndices(cells, '.selected'), 'to equal', []);
+
+      cells[6].click();
+      expect(dp.dates, 'to equal', [dateValue(2020, 6, 1)]);
+      expect(input.value, 'to be', '07/01/2020');
+      expect(getCellIndices(cells, '.selected'), 'to equal', [6]);
+
+      dp.enterEditMode();
+      input.value = '4/12/2020';
+      simulant.fire(input, 'keydown', {key: 'Enter'});
+      expect(dp.dates, 'to equal', [dateValue(2020, 3, 1)]);
+      expect(input.value, 'to be', '04/01/2020');
+      expect(getCellIndices(cells, '.selected'), 'to equal', [3]);
+
+      dp.setDate({clear: true});
+
+      simulant.fire(input, 'keydown', {key: 'ArrowRight'});
+      expect(getCellIndices(cells, '.focused'), 'to equal', [3]);
+
+      simulant.fire(input, 'keydown', {key: 'ArrowLeft'});
+      expect(getCellIndices(cells, '.focused'), 'to equal', [1]);
+
+      simulant.fire(input, 'keydown', {key: 'ArrowDown'});
+      expect(getCellIndices(cells, '.focused'), 'to equal', [6]);
+
+      simulant.fire(input, 'keydown', {key: 'ArrowDown'});
+      simulant.fire(input, 'keydown', {key: 'ArrowLeft'});
+      // on October
+      simulant.fire(input, 'keydown', {key: 'ArrowUp'});
+      expect(getCellIndices(cells, '.focused'), 'to equal', [4]);
+
+      simulant.fire(input, 'keydown', {key: 'ArrowRight'});
+      simulant.fire(input, 'keydown', {key: 'ArrowDown'});
+      simulant.fire(input, 'keydown', {key: 'ArrowLeft'});
+      // on October
+      simulant.fire(input, 'keydown', {key: 'ArrowLeft'});
+      expect(getCellIndices(cells, '.focused'), 'to equal', [7]);
+
+      dp.destroy();
+    });
+
+    it('disables years designated by callback if pickLevel = 2 (year)', function () {
+      const {dp, picker} = createDP(input, {
+        datesDisabled: date => [
+          new Date(2021, 0, 1),
+          new Date(2024, 0, 1),
+          new Date(2027, 0, 1),
+          new Date(2035, 0, 1),
+        ].find(disabled => disabled.toDateString() === date.toDateString()),
+        pickLevel: 2,
+      });
+      const [prevBtn, nextBtn] = getParts(picker, ['.prev-btn', '.next-btn']);
+      dp.show();
+
+      expect(prevBtn.disabled, 'to be false');
+      expect(nextBtn.disabled, 'to be false');
+
+      expect(prevBtn.disabled, 'to be false');
+      expect(nextBtn.disabled, 'to be false');
+
+      let cells = getCells(picker);
+      expect(getDisabled(cells), 'to equal', [
+        [2, '2021'],
+        [5, '2024'],
+        [8, '2027'],
+      ]);
+
+      nextBtn.click();
+      cells = getCells(picker);
+      expect(getDisabled(cells), 'to equal', [
+        [6, '2035'],
+      ]);
+
+      prevBtn.click();
+      cells = getCells(picker);
+
+      cells[5].click();
+      expect(dp.dates, 'to equal', []);
+      expect(input.value, 'to be', '');
+      expect(getCellIndices(cells, '.selected'), 'to equal', []);
+
+      dp.setDate(new Date(2021, 1, 1));
+      expect(dp.dates, 'to equal', []);
+      expect(input.value, 'to be', '');
+      expect(getCellIndices(cells, '.selected'), 'to equal', []);
+
+      input.value = '2/12/2021';
+      dp.update();
+      expect(dp.dates, 'to equal', []);
+      expect(input.value, 'to be', '2/12/2021');
+      expect(getCellIndices(cells, '.selected'), 'to equal', []);
+
+      cells[3].click();
+      expect(dp.dates, 'to equal', [dateValue(2022, 0, 1)]);
+      expect(input.value, 'to be', '01/01/2022');
+      expect(getCellIndices(cells, '.selected'), 'to equal', [3]);
+
+      dp.enterEditMode();
+      input.value = '3/12/2026';
+      simulant.fire(input, 'keydown', {key: 'Enter'});
+      expect(dp.dates, 'to equal', [dateValue(2026, 0, 1)]);
+      expect(input.value, 'to be', '01/01/2026');
+      expect(getCellIndices(cells, '.selected'), 'to equal', [7]);
+
+      dp.setDate({clear: true});
+
+      simulant.fire(input, 'keydown', {key: 'ArrowRight'});
+      expect(getCellIndices(cells, '.focused'), 'to equal', [3]);
+
+      simulant.fire(input, 'keydown', {key: 'ArrowLeft'});
+      expect(getCellIndices(cells, '.focused'), 'to equal', [1]);
+
+      simulant.fire(input, 'keydown', {key: 'ArrowDown'});
+      expect(getCellIndices(cells, '.focused'), 'to equal', [6]);
+
+      simulant.fire(input, 'keydown', {key: 'ArrowDown'});
+      simulant.fire(input, 'keydown', {key: 'ArrowLeft'});
+      // on 2028
+      simulant.fire(input, 'keydown', {key: 'ArrowUp'});
+      expect(getCellIndices(cells, '.focused'), 'to equal', [4]);
+
+      simulant.fire(input, 'keydown', {key: 'ArrowRight'});
+      simulant.fire(input, 'keydown', {key: 'ArrowDown'});
+      simulant.fire(input, 'keydown', {key: 'ArrowLeft'});
+      // on 2028
+      simulant.fire(input, 'keydown', {key: 'ArrowLeft'});
+      expect(getCellIndices(cells, '.focused'), 'to equal', [7]);
+
+      dp.destroy();
+    });
+
+    it('passes view\'s id to callback as well as date when used in View.render()', function () {
+      let args = [];
+      let cells;
+      const callback = (date, viewId) => {
+        args.push([date.getTime(), viewId]);
+        return date.getMonth() === 0 && viewId < 2
+          || date.getDate() % 20 === 1 && viewId === 0;
+      };
+      const {dp, picker} = createDP(input, {datesDisabled: callback});
+      const [prevBtn, viewSwitch] = getParts(picker, ['.prev-btn', '.view-switch']);
+      dp.show();
+      cells = getCells(picker);
+
+      // both month === 0 and day % 10 === 1 are applied
+      // Jan 26-31, Feb 1, 21, and Mar 1 are disabled
+      expect(getCellIndices(cells, '.disabled'), 'to equal', [0, 1, 2, 3, 4, 5, 6, 26, 35]);
+      expect(args[0], 'to equal', [dateValue(2020, 0, 26), 0]);
+      expect(args[6], 'to equal', [dateValue(2020, 1, 1), 0]);
+      expect(args[41], 'to equal', [dateValue(2020, 2, 7), 0]);
+
+      args = [];
+      prevBtn.click();
+      cells = getCells(picker);
+
+      // all days in Jan and Feb 1 are disabled
+      expect(getCellIndices(cells, ':not(.disabled)'), 'to equal', [0, 1, 2, 35, 36, 37, 38, 39, 40, 41]);
+      expect(args[0], 'to equal', [dateValue(2019, 11, 29), 0]);
+      expect(args[41], 'to equal', [dateValue(2020, 1, 8), 0]);
+
+      // go to months view
+      args = [];
+      viewSwitch.click();
+      cells = getCells(picker);
+
+      // month === 0 is applied but day % 10 === 1 isn't
+      // only Jan is disabled
+      expect(getCellIndices(cells, '.disabled'), 'to equal', [0]);
+      expect(args[0], 'to equal', [dateValue(2020, 0, 1), 1]);
+      expect(args[11], 'to equal', [dateValue(2020, 11, 1), 1]);
+
+      // go to years view
+      args = [];
+      viewSwitch.click();
+      cells = getCells(picker);
+
+      // both month === 0 and day % 10 === 1 are not applied
+      // no years are disabled
+      expect(getCellIndices(cells, '.disabled'), 'to be empty');
+      expect(args[0], 'to equal', [dateValue(2019, 0, 1), 2]);
+      expect(args[11], 'to equal', [dateValue(2030, 0, 1), 2]);
+
+      // go to decades view
+      args = [];
+      viewSwitch.click();
+      cells = getCells(picker);
+
+      // both month === 0 and day % 10 === 1 are not applied
+      // no decades are disabled
+      expect(getCellIndices(cells, '.disabled'), 'to be empty');
+      expect(args[0], 'to equal', [dateValue(1990, 0, 1), 3]);
+      expect(args[11], 'to equal', [dateValue(2100, 0, 1), 3]);
+
+      dp.destroy();
+    });
+
+    it('uses pickLevel for the viewId to pass to callback when used in setDate()/update()', function () {
+      let args = [];
+      let pickLevel = 0;
+      const callback = (date, viewId) => {
+        args.push([date.getTime(), viewId]);
+        return !(date.getMonth() % 3) && date.getDate() === 1 && viewId === pickLevel;
+      };
+      let {dp, picker} = createDP(input, {datesDisabled: callback});
+      let viewSwitch = getViewSwitch(picker);
+      dp.show();
+
+      args = [];
+      dp.setDate('1/1/2020');
+
+      expect(args, 'to equal', [[dateValue(2020, 0, 1), 0]]);
+      expect(dp.dates, 'to be empty');
+
+      // go to months view
+      viewSwitch.click();
+      args = [];
+      dp.setDate('4/1/2020');
+
+      expect(args, 'to equal', [[dateValue(2020, 3, 1), 0]]);
+      expect(dp.dates, 'to be empty');
+
+      args = [];
+      input.value = '1/1/2022';
+      dp.update();
+
+      expect(args, 'to equal', [[dateValue(2022, 0, 1), 0]]);
+      expect(dp.dates, 'to be empty');
+
+      // go to years view
+      viewSwitch.click();
+      args = [];
+      dp.setDate('4/1/2020');
+
+      expect(args, 'to equal', [[dateValue(2020, 3, 1), 0]]);
+      expect(dp.dates, 'to be empty');
+
+      args = [];
+      input.value = '1/1/2022';
+      dp.update();
+
+      expect(args, 'to equal', [[dateValue(2022, 0, 1), 0]]);
+      expect(dp.dates, 'to be empty');
+
+      dp.destroy();
+
+      pickLevel = 1;
+      ({dp, picker} = createDP(input, {datesDisabled: callback, pickLevel}));
+      viewSwitch = getViewSwitch(picker);
+      dp.show();
+
+      args = [];
+      dp.setDate('1/1/2020');
+
+      expect(args, 'to equal', [[dateValue(2020, 0, 1), 1]]);
+      expect(dp.dates, 'to be empty');
+
+      // go to years view
+      viewSwitch.click();
+      args = [];
+      dp.setDate('4/1/2020');
+
+      expect(args, 'to equal', [[dateValue(2020, 3, 1), 1]]);
+      expect(dp.dates, 'to be empty');
+
+      args = [];
+      input.value = '1/1/2022';
+      dp.update();
+
+      expect(args, 'to equal', [[dateValue(2022, 0, 1), 1]]);
+      expect(dp.dates, 'to be empty');
+
+      dp.destroy();
+
+      pickLevel = 2;
+      ({dp, picker} = createDP(input, {datesDisabled: callback, pickLevel}));
+      viewSwitch = getViewSwitch(picker);
+      dp.show();
+
+      args = [];
+      dp.setDate('1/1/2020');
+
+      expect(args, 'to equal', [[dateValue(2020, 0, 1), 2]]);
+      expect(dp.dates, 'to be empty');
+
+      // go to decades view
+      viewSwitch.click();
+      args = [];
+      dp.setDate('4/1/2020');
+
+      expect(args, 'to equal', [[dateValue(2020, 0, 1), 2]]);
+      expect(dp.dates, 'to be empty');
+
+      args = [];
+      input.value = '1/1/2022';
+      dp.update();
+
+      expect(args, 'to equal', [[dateValue(2022, 0, 1), 2]]);
+      expect(dp.dates, 'to be empty');
+
+      dp.destroy();
+    });
+
     it('can be updated with setOptions()', function () {
       const {dp, picker} = createDP(input);
       dp.setOptions({datesDisabled: [new Date(2020, 1, 11), new Date(2020, 1, 26)]});
@@ -292,6 +732,14 @@ describe('options - date restrictions', function () {
       expect(getDisabled(cells), 'to equal', [
         [16, '11'],
         [31, '26'],
+      ]);
+
+      dp.setOptions({datesDisabled: (date) => [10, 20].includes(date.getDate())});
+
+      cells = getCells(picker);
+      expect(getDisabled(cells), 'to equal', [
+        [15, '10'],
+        [25, '20'],
       ]);
 
       dp.setOptions({datesDisabled: []});

@@ -48,10 +48,10 @@ describe('Datepicker', function () {
 
     it('configures the instance with the default options', function () {
       const dp = new Datepicker(input);
-      // config items should be options + buttonClass, container, locale, getWeekNumber,
-      // multidate, shortcutKeys and weekEnd
+      // config items should be options + buttonClass, checkDisabled, container,
+      // locale, getWeekNumber, multidate, shortcutKeys and weekEnd
       const numOfOptions = Object.keys(defaultOptions).length;
-      expect(Object.keys(dp.config), 'to have length', numOfOptions + 7);
+      expect(Object.keys(dp.config), 'to have length', numOfOptions + 8);
 
       expect(dp.config.autohide, 'to be false');
       expect(dp.config.beforeShowDay, 'to be null');
@@ -59,6 +59,7 @@ describe('Datepicker', function () {
       expect(dp.config.beforeShowMonth, 'to be null');
       expect(dp.config.beforeShowYear, 'to be null');
       expect(dp.config.buttonClass, 'to be', 'button');
+      expect(dp.config.checkDisabled, 'to be a function');
       expect(dp.config.clearBtn, 'to be false');
       expect(dp.config.container, 'to be null');
       expect(dp.config.dateDelimiter, 'to be', ',');

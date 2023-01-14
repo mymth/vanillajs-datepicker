@@ -621,8 +621,9 @@ var Datepicker = (function () {
     const inOpts = Object.assign({}, options);
     const config = {};
     const locales = datepicker.constructor.locales;
-    const rangeSideIndex = datepicker.rangeSideIndex;
+    const rangeEnd = !!datepicker.rangeSideIndex;
     let {
+      datesDisabled,
       format,
       language,
       locale,
@@ -703,7 +704,7 @@ var Datepicker = (function () {
         }
       }
       // complement datesDisabled so that it will be reset later
-      if (!inOpts.datesDisabled) {
+      if (datesDisabled && !inOpts.datesDisabled) {
         inOpts.datesDisabled = [];
       }
       pickLevel = config.pickLevel = newPickLevel;
@@ -747,12 +748,23 @@ var Datepicker = (function () {
     }
 
     if (inOpts.datesDisabled) {
-      config.datesDisabled = inOpts.datesDisabled.reduce((dates, dt) => {
-        const date = parseDate(dt, format, locale);
-        return date !== undefined
-          ? pushUnique(dates, regularizeDate(date, pickLevel, rangeSideIndex))
-          : dates;
-      }, []);
+      const dtsDisabled = inOpts.datesDisabled;
+      if (typeof dtsDisabled === 'function') {
+        config.datesDisabled = null;
+        config.checkDisabled = (timeValue, viewId) => dtsDisabled(
+          new Date(timeValue),
+          viewId,
+          rangeEnd
+        );
+      } else {
+        const disabled = config.datesDisabled = dtsDisabled.reduce((dates, dt) => {
+          const date = parseDate(dt, format, locale);
+          return date !== undefined
+            ? pushUnique(dates, regularizeDate(date, pickLevel, rangeEnd))
+            : dates;
+        }, []);
+        config.checkDisabled = timeValue => disabled.includes(timeValue);
+      }
       delete inOpts.datesDisabled;
     }
     if (inOpts.defaultViewDate !== undefined) {
@@ -963,6 +975,7 @@ var Datepicker = (function () {
         picker,
         element: parseHTML(`<div class="datepicker-view"></div>`).firstChild,
         selected: [],
+        isRangeEnd: !!picker.datepicker.rangeSideIndex,
       });
       this.init(this.picker.datepicker.config);
     }
@@ -1037,8 +1050,8 @@ var Datepicker = (function () {
       if (hasProperty(options, 'maxDate')) {
         this.maxDate = options.maxDate;
       }
-      if (options.datesDisabled) {
-        this.datesDisabled = options.datesDisabled;
+      if (options.checkDisabled) {
+        this.checkDisabled = options.checkDisabled;
       }
       if (options.daysOfWeekDisabled) {
         this.daysOfWeekDisabled = options.daysOfWeekDisabled;
@@ -1139,7 +1152,7 @@ var Datepicker = (function () {
       this.today = this.todayHighlight ? today() : undefined;
       // refresh disabled dates on every render in order to clear the ones added
       // by beforeShow hook at previous render
-      this.disabled = [...this.datesDisabled];
+      this.disabled = [];
 
       const switchLabel = formatDate(this.focused, this.switchLabelFormat, this.locale);
       this.picker.setViewSwitchLabel(switchLabel);
@@ -1170,8 +1183,13 @@ var Datepicker = (function () {
         if (this.today === current) {
           classList.add('today');
         }
-        if (current < this.minDate || current > this.maxDate || this.disabled.includes(current)) {
+        if (
+          current < this.minDate
+          || current > this.maxDate
+          || this.checkDisabled(current, this.id)
+        ) {
           classList.add('disabled');
+          pushUnique(this.disabled, current);
         }
         if (this.daysOfWeekDisabled.includes(day)) {
           classList.add('disabled');
@@ -1301,12 +1319,10 @@ var Datepicker = (function () {
           this.maxDate = dateValue(this.maxYear, this.maxMonth + 1, 0);
         }
       }
-      if (this.isMinView) {
-        if (options.datesDisabled) {
-          this.datesDisabled = options.datesDisabled;
-        }
-      } else {
-        this.datesDisabled = [];
+      if (options.checkDisabled) {
+        this.checkDisabled = this.isMinView || options.datesDisabled === null
+          ? options.checkDisabled
+          : () => false;
       }
       if (options.beforeShowMonth !== undefined) {
         this.beforeShow = typeof options.beforeShowMonth === 'function'
@@ -1348,14 +1364,7 @@ var Datepicker = (function () {
     render() {
       // refresh disabled months on every render in order to clear the ones added
       // by beforeShow hook at previous render
-      // this.disabled = [...this.datesDisabled];
-      this.disabled = this.datesDisabled.reduce((arr, disabled) => {
-        const dt = new Date(disabled);
-        if (this.year === dt.getFullYear()) {
-          arr.push(dt.getMonth());
-        }
-        return arr;
-      }, []);
+      this.disabled = [];
 
       this.picker.setViewSwitchLabel(this.year);
       this.picker.setPrevBtnDisabled(this.year <= this.minYear);
@@ -1369,7 +1378,7 @@ var Datepicker = (function () {
 
       Array.from(this.grid.children).forEach((el, index) => {
         const classList = el.classList;
-        const date = dateValue(this.year, index, 1);
+        const date = regularizeDate(new Date(this.year, index, 1), 1, this.isRangeEnd);
 
         el.className = `datepicker-cell ${this.cellClass}`;
         if (this.isMinView) {
@@ -1383,9 +1392,10 @@ var Datepicker = (function () {
           yrOutOfRange
           || isMinYear && index < this.minMonth
           || isMaxYear && index > this.maxMonth
-          || this.disabled.includes(index)
+          || this.checkDisabled(date, this.id)
         ) {
           classList.add('disabled');
+          pushUnique(this.disabled, date);
         }
         if (range) {
           const [rangeStart, rangeEnd] = range;
@@ -1407,7 +1417,7 @@ var Datepicker = (function () {
         }
 
         if (this.beforeShow) {
-          this.performBeforeHook(el, index, date);
+          this.performBeforeHook(el, date, date);
         }
       });
     }
@@ -1488,12 +1498,10 @@ var Datepicker = (function () {
           this.maxDate = dateValue(this.maxYear, 11, 31);
         }
       }
-      if (this.isMinView) {
-        if (options.datesDisabled) {
-          this.datesDisabled = options.datesDisabled;
-        }
-      } else {
-        this.datesDisabled = [];
+      if (options.checkDisabled) {
+        this.checkDisabled = this.isMinView || options.datesDisabled === null
+          ? options.checkDisabled
+          : () => false;
       }
       if (options[this.beforeShowOption] !== undefined) {
         const beforeShow = options[this.beforeShowOption];
@@ -1532,8 +1540,7 @@ var Datepicker = (function () {
     render() {
       // refresh disabled years on every render in order to clear the ones added
       // by beforeShow hook at previous render
-      // this.disabled = [...this.datesDisabled];
-      this.disabled = this.datesDisabled.map(disabled => new Date(disabled).getFullYear());
+      this.disabled = [];
 
       this.picker.setViewSwitchLabel(`${this.first}-${this.last}`);
       this.picker.setPrevBtnDisabled(this.first <= this.minYear);
@@ -1542,7 +1549,7 @@ var Datepicker = (function () {
       Array.from(this.grid.children).forEach((el, index) => {
         const classList = el.classList;
         const current = this.start + (index * this.step);
-        const date = dateValue(current, 0, 1);
+        const date = regularizeDate(new Date(current, 0, 1), 2, this.isRangeEnd);
 
         el.className = `datepicker-cell ${this.cellClass}`;
         if (this.isMinView) {
@@ -1555,8 +1562,13 @@ var Datepicker = (function () {
         } else if (index === 11) {
           classList.add('next');
         }
-        if (current < this.minYear || current > this.maxYear || this.disabled.includes(current)) {
+        if (
+          current < this.minYear
+          || current > this.maxYear
+          || this.checkDisabled(date, this.id)
+        ) {
           classList.add('disabled');
+          pushUnique(this.disabled, date);
         }
         if (this.range) {
           const [rangeStart, rangeEnd] = this.range;
@@ -1578,7 +1590,7 @@ var Datepicker = (function () {
         }
 
         if (this.beforeShow) {
-          this.performBeforeHook(el, current, date);
+          this.performBeforeHook(el, date, date);
         }
       });
     }
@@ -1725,12 +1737,13 @@ var Datepicker = (function () {
     }
 
     const {id, isMinView} = datepicker.picker.currentView;
+    const {date, month, year} = target.dataset;
     if (isMinView) {
-      datepicker.setDate(Number(target.dataset.date));
+      datepicker.setDate(Number(date));
     } else if (id === 1) {
-      goToSelectedMonthOrYear(datepicker, Number(target.dataset.month));
+      goToSelectedMonthOrYear(datepicker, Number(month));
     } else {
-      goToSelectedMonthOrYear(datepicker, Number(target.dataset.year));
+      goToSelectedMonthOrYear(datepicker, Number(year));
     }
   }
 
@@ -1796,8 +1809,10 @@ var Datepicker = (function () {
   // - the last item of the selected dates or defaultViewDate if no selection
   // - limitted to minDate or maxDate if it exceeds the range
   function computeResetViewDate(datepicker) {
-    const {dates, config} = datepicker;
-    const viewDate = dates.length > 0 ? lastItemOf(dates) : config.defaultViewDate;
+    const {dates, config, rangeSideIndex} = datepicker;
+    const viewDate = dates.length > 0
+      ? lastItemOf(dates)
+      : regularizeDate(config.defaultViewDate, config.pickLevel, rangeSideIndex);
     return limitToRange(viewDate, config.minDate, config.maxDate);
   }
 
@@ -2148,32 +2163,24 @@ var Datepicker = (function () {
     const step = currentView.step || 1;
     let viewDate = picker.viewDate;
     let addFn;
-    let testFn;
     switch (currentView.id) {
       case 0:
         viewDate = addDays(viewDate, vertical ? direction * 7 : direction);
         addFn = addDays;
-        testFn = (date) => currentView.disabled.includes(date);
         break;
       case 1:
         viewDate = addMonths(viewDate, vertical ? direction * 4 : direction);
         addFn = addMonths;
-        testFn = (date) => {
-          const dt = new Date(date);
-          const {year, disabled} = currentView;
-          return dt.getFullYear() === year && disabled.includes(dt.getMonth());
-        };
         break;
       default:
         viewDate = addYears(viewDate, direction * (vertical ? 4 : 1) * step);
         addFn = addYears;
-        testFn = date => currentView.disabled.includes(startOfYearPeriod(date, step));
     }
     viewDate = findNextAvailableOne(
       viewDate,
       addFn,
       direction < 0 ? -step : step,
-      testFn,
+      (date) => currentView.disabled.includes(date),
       currentView.minDate,
       currentView.maxDate
     );
@@ -2353,14 +2360,13 @@ var Datepicker = (function () {
   // when origDates (current selection) is passed, the function works to mix
   // the input dates into the current selection
   function processInputDates(datepicker, inputDates, clear = false) {
-    // const {config, dates: origDates, rangepicker} = datepicker;
-    const {config, dates: origDates, rangeSideIndex} = datepicker;
     if (inputDates.length === 0) {
       // empty input is considered valid unless origiDates is passed
       return clear ? [] : undefined;
     }
 
-    // const rangeEnd = rangepicker && datepicker === rangepicker.datepickers[1];
+    const {config, dates: origDates, rangeSideIndex} = datepicker;
+    const {pickLevel, maxNumberOfDates} = config;
     let newDates = inputDates.reduce((dates, dt) => {
       let date = parseDate(dt, config.format, config.locale);
       if (date === undefined) {
@@ -2369,12 +2375,12 @@ var Datepicker = (function () {
       // adjust to 1st of the month/Jan 1st of the year
       // or to the last day of the monh/Dec 31st of the year if the datepicker
       // is the range-end picker of a rangepicker
-      date = regularizeDate(date, config.pickLevel, rangeSideIndex);
+      date = regularizeDate(date, pickLevel, rangeSideIndex);
       if (
         isInRange(date, config.minDate, config.maxDate)
         && !dates.includes(date)
-        && !config.datesDisabled.includes(date)
-        && (config.pickLevel > 0 || !config.daysOfWeekDisabled.includes(new Date(date).getDay()))
+        && !config.checkDisabled(date, pickLevel)
+        && (pickLevel > 0 || !config.daysOfWeekDisabled.includes(new Date(date).getDay()))
       ) {
         dates.push(date);
       }
@@ -2393,8 +2399,8 @@ var Datepicker = (function () {
       }, origDates.filter(date => !newDates.includes(date)));
     }
     // do length check always because user can input multiple dates regardless of the mode
-    return config.maxNumberOfDates && newDates.length > config.maxNumberOfDates
-      ? newDates.slice(config.maxNumberOfDates * -1)
+    return maxNumberOfDates && newDates.length > maxNumberOfDates
+      ? newDates.slice(maxNumberOfDates * -1)
       : newDates;
   }
 

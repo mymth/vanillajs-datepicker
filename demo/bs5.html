@@ -4,7 +4,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Vanilla JS Datepicker Demo</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.7.0/build/styles/github.min.css">
     <link rel="stylesheet" type="text/css" href="../dist/css/datepicker-bs5.css">
     <script defer src="https://use.fontawesome.com/releases/v5.15.4/js/all.js"></script>
     <style type="text/css">
@@ -34,6 +35,8 @@
       .code-wrap pre {
         background-color: whitesmoke;
         padding: 1.25rem 1.5rem;
+        max-height: 320px;
+        overflow-y: auto;
       }
       .code-wrap pre:not(.is-active) {
         height: 0;
@@ -45,9 +48,28 @@
         top: 0;
         right: 0;
         left: auto;
+        background-color: #f6f6f6cc;
         cursor: pointer;
         padding: 0.125rem 0.25rem;
         font-size: 0.75rem;
+      }
+      .code-wrap pre:not(.is-active) + .collapse-button {
+        background-color: transparent;
+      }
+      .code-wrap pre code.hljs {
+        display: initial;
+        overflow: initial;
+        background: initial;
+        padding: initial;
+      }
+      .option-type-selector {
+        margin-top: -0.5rem;
+      }
+      .option-type-selector > label:first-of-type {
+        margin: 0 0.25rem;
+      }
+      .is-hidden {
+        display: none;
       }
 
       .toggle-btn {
@@ -80,6 +102,12 @@
         }
         .toggle-btn {
           display: none;
+        }
+      }
+
+      @media (min-width: 992px) {
+        .code-wrap pre {
+          max-height: calc(39vw - 7.5rem);
         }
       }
     </style>
@@ -158,7 +186,7 @@
                 <input type="checkbox" class="form-check-input" id="beforeShowDay" name="beforeShowDay" value="true">
                 <label for="beforeShowDay" class="form-check-label">beforeShowDay</label>
                 <div class="code-wrap">
-                  <pre id="code-beforeShowDay"></pre>
+                  <pre id="code-beforeShowDay"><code class="language-javascript"></code></pre>
                   <div class="collapse-button" data-target="code-beforeShowDay">show/hide</div>
                 </div>
               </div>
@@ -167,7 +195,7 @@
                 <input type="checkbox" class="form-check-input" id="beforeShowMonth" name="beforeShowMonth" value="true">
                 <label for="beforeShowMonth" class="form-check-label">beforeShowMonth</label>
                 <div class="code-wrap">
-                  <pre id="code-beforeShowMonth"></pre>
+                  <pre id="code-beforeShowMonth"><code class="language-javascript"></code></pre>
                   <div class="collapse-button" data-target="code-beforeShowMonth">show/hide</div>
                 </div>
               </div>
@@ -176,7 +204,7 @@
                 <input type="checkbox" class="form-check-input" id="beforeShowYear" name="beforeShowYear" value="true">
                 <label for="beforeShowYear" class="form-check-label">beforeShowYear</label>
                 <div class="code-wrap">
-                  <pre id="code-beforeShowYear"></pre>
+                  <pre id="code-beforeShowYear"><code class="language-javascript"></code></pre>
                   <div class="collapse-button" data-target="code-beforeShowYear">show/hide</div>
                 </div>
               </div>
@@ -185,7 +213,7 @@
                 <input type="checkbox" class="form-check-input" id="beforeShowDecade" name="beforeShowDecade" value="true">
                 <label for="beforeShowDecade" class="form-check-label">beforeShowDecade</label>
                 <div class="code-wrap">
-                  <pre id="code-beforeShowDecade"></pre>
+                  <pre id="code-beforeShowDecade"><code class="language-javascript"></code></pre>
                   <div class="collapse-button" data-target="code-beforeShowDecade">show/hide</div>
                 </div>
               </div>
@@ -200,10 +228,27 @@
                 <input type="text" class="form-control" name="dateDelimiter" placeholder=",">
               </div>
 
-              <div class="mb-3" data-bs-toggle="tooltip" title="enter in JSON format">
+              <div class="mb-3">
                 <label class="form-label">datesDisabled</label>
-                <textarea class="form-control" name="datesDisabled" placeholder="[]"></textarea>
-                <div class="invalid-feedback"></div>
+                <div class="option-type-selector">
+                  use
+                  <label class="radio">
+                    <input type="radio" name="datesDisabledFn" value="" checked>
+                    array
+                  </label>
+                  <label class="radio">
+                    <input type="radio" name="datesDisabledFn" value="1">
+                    function
+                  </label>
+                </div>
+                <div id="datesDisabled-arr" data-bs-toggle="tooltip" title="enter in JSON format">
+                  <textarea class="form-control" name="datesDisabled" placeholder="[]"></textarea>
+                  <div class="invalid-feedback"></div>
+                </div>
+                <div id="datesDisabled-fn" class="code-wrap is-hidden">
+                  <pre id="code-datesDisabled"><code class="language-javascript"></code></pre>
+                  <div class="collapse-button" data-target="code-datesDisabled">show/hide</div>
+                </div>
               </div>
 
               <div class="mb-3">
@@ -447,8 +492,9 @@
     </aside>
 
     <div class="toggle-btn"></div>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js" integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js" integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.7.0/build/highlight.min.js"></script>
     <script src="../dist/js/datepicker-full.js"></script>
     <script src="./live-demo.js"></script>
     <script>
@@ -519,6 +565,7 @@ beforeShowDecade(date) {
       }
 
       initialize();
+      hljs.highlightAll();
 
       document.getElementById('types').querySelectorAll('input').forEach((el) => {
         el.addEventListener('change', onChangeType);

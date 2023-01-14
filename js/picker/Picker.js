@@ -1,5 +1,5 @@
 import {hasProperty, lastItemOf, isInRange, limitToRange} from '../lib/utils.js';
-import {today} from '../lib/date.js';
+import {today, regularizeDate} from '../lib/date.js';
 import {parseHTML, getParent, showElement, hideElement, emptyChildNodes} from '../lib/dom.js';
 import {registerListeners} from '../lib/event.js';
 import pickerTemplate from './templates/pickerTemplate.js';
@@ -75,8 +75,10 @@ function processPickerOptions(picker, options) {
 // - the last item of the selected dates or defaultViewDate if no selection
 // - limitted to minDate or maxDate if it exceeds the range
 function computeResetViewDate(datepicker) {
-  const {dates, config} = datepicker;
-  const viewDate = dates.length > 0 ? lastItemOf(dates) : config.defaultViewDate;
+  const {dates, config, rangeSideIndex} = datepicker;
+  const viewDate = dates.length > 0
+    ? lastItemOf(dates)
+    : regularizeDate(config.defaultViewDate, config.pickLevel, rangeSideIndex);
   return limitToRange(viewDate, config.minDate, config.maxDate);
 }
 

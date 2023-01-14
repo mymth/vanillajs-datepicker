@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Vanilla JS Datepicker Demo</title>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bulma-tooltip@3.0.2/dist/css/bulma-tooltip.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.7.0/build/styles/github.min.css">
     <link rel="stylesheet" type="text/css" href="../dist/css/datepicker.css">
     <script defer src="https://use.fontawesome.com/releases/v5.15.4/js/all.js"></script>
     <style type="text/css">
@@ -68,6 +69,10 @@
       .code-wrap {
         position: relative;
       }
+      .code-wrap pre {
+        max-height: 320px;
+        overflow-y: auto;
+      }
       .code-wrap pre:not(.is-active) {
         height: 0;
         overflow: hidden;
@@ -79,8 +84,25 @@
         right: 0;
         left: auto;
         cursor: pointer;
+        background-color: #f6f6f6cc;
         padding: 0.125rem 0.25rem;
         font-size: 0.75rem;
+      }
+      .code-wrap pre:not(.is-active) + .collapse-button {
+        background-color: transparent;
+      }
+      .code-wrap pre code.hljs {
+        display: initial;
+        overflow: initial;
+        background: initial;
+        padding: initial;
+      }
+
+      .option-type-selector > label:first-of-type {
+        margin: 0 0.25rem;
+      }
+      .is-hidden {
+        display: none;
       }
       label.checkbox {
         display: inline-block;
@@ -129,6 +151,12 @@
         }
         .toggle-btn {
           display: none;
+        }
+      }
+
+      @media (min-width: 1024px) {
+        .code-wrap pre {
+          max-height: calc(39vw - 7.5rem);
         }
       }
     </style>
@@ -222,7 +250,7 @@
                   </label>
                 </div>
                 <div class="code-wrap">
-                  <pre id="code-beforeShowDay"></pre>
+                  <pre id="code-beforeShowDay"><code class="language-javascript"></code></pre>
                   <div class="collapse-button" data-target="code-beforeShowDay">show/hide</div>
                 </div>
               </div>
@@ -235,7 +263,7 @@
                   </label>
                 </div>
                 <div class="code-wrap">
-                  <pre id="code-beforeShowMonth"></pre>
+                  <pre id="code-beforeShowMonth"><code class="language-javascript"></code></pre>
                   <div class="collapse-button" data-target="code-beforeShowMonth">show/hide</div>
                 </div>
               </div>
@@ -248,7 +276,7 @@
                   </label>
                 </div>
                 <div class="code-wrap">
-                  <pre id="code-beforeShowYear"></pre>
+                  <pre id="code-beforeShowYear"><code class="language-javascript"></code></pre>
                   <div class="collapse-button" data-target="code-beforeShowYear">show/hide</div>
                 </div>
               </div>
@@ -261,7 +289,7 @@
                   </label>
                 </div>
                 <div class="code-wrap">
-                  <pre id="code-beforeShowDecade"></pre>
+                  <pre id="code-beforeShowDecade"><code class="language-javascript"></code></pre>
                   <div class="collapse-button" data-target="code-beforeShowDecade">show/hide</div>
                 </div>
               </div>
@@ -284,8 +312,23 @@
 
               <div class="field">
                 <label class="label">datesDisabled</label>
-                <div class="control tooltip" data-tooltip="enter in JSON format">
+                <div class="option-type-selector">
+                  use
+                  <label class="radio">
+                    <input type="radio" name="datesDisabledFn" value="" checked>
+                    array
+                  </label>
+                  <label class="radio">
+                    <input type="radio" name="datesDisabledFn" value="1">
+                    function
+                  </label>
+                </div>
+                <div id="datesDisabled-arr" class="control tooltip" data-tooltip="enter in JSON format">
                   <textarea class="input" name="datesDisabled" placeholder="[]"></textarea>
+                </div>
+                <div id="datesDisabled-fn" class="code-wrap is-hidden">
+                  <pre id="code-datesDisabled"><code class="language-javascript"></code></pre>
+                  <div class="collapse-button" data-target="code-datesDisabled">show/hide</div>
                 </div>
               </div>
 
@@ -592,11 +635,13 @@
     </aside>
 
     <div class="toggle-btn"></div>
+    <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.7.0/build/highlight.min.js"></script>
     <script src="../dist/js/datepicker-full.js"></script>
     <script src="./live-demo.js"></script>
     <script>
       /*global initialize onChangeType onChnageDirection onChangeInputOption onChangeInputOption onChangeTextareaOption onClickCheckboxOptions switchPicker */
       initialize();
+      hljs.highlightAll();
 
       document.getElementById('types').querySelectorAll('input').forEach((el) => {
         el.addEventListener('change', onChangeType);

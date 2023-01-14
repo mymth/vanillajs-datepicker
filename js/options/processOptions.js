@@ -63,8 +63,9 @@ export default function processOptions(options, datepicker) {
   const inOpts = Object.assign({}, options);
   const config = {};
   const locales = datepicker.constructor.locales;
-  const rangeSideIndex = datepicker.rangeSideIndex;
+  const rangeEnd = !!datepicker.rangeSideIndex;
   let {
+    datesDisabled,
     format,
     language,
     locale,
@@ -145,7 +146,7 @@ export default function processOptions(options, datepicker) {
       }
     }
     // complement datesDisabled so that it will be reset later
-    if (!inOpts.datesDisabled) {
+    if (datesDisabled && !inOpts.datesDisabled) {
       inOpts.datesDisabled = [];
     }
     pickLevel = config.pickLevel = newPickLevel;
@@ -189,12 +190,23 @@ export default function processOptions(options, datepicker) {
   }
 
   if (inOpts.datesDisabled) {
-    config.datesDisabled = inOpts.datesDisabled.reduce((dates, dt) => {
-      const date = parseDate(dt, format, locale);
-      return date !== undefined
-        ? pushUnique(dates, regularizeDate(date, pickLevel, rangeSideIndex))
-        : dates;
-    }, []);
+    const dtsDisabled = inOpts.datesDisabled;
+    if (typeof dtsDisabled === 'function') {
+      config.datesDisabled = null;
+      config.checkDisabled = (timeValue, viewId) => dtsDisabled(
+        new Date(timeValue),
+        viewId,
+        rangeEnd
+      );
+    } else {
+      const disabled = config.datesDisabled = dtsDisabled.reduce((dates, dt) => {
+        const date = parseDate(dt, format, locale);
+        return date !== undefined
+          ? pushUnique(dates, regularizeDate(date, pickLevel, rangeEnd))
+          : dates;
+      }, []);
+      config.checkDisabled = timeValue => disabled.includes(timeValue);
+    }
     delete inOpts.datesDisabled;
   }
   if (inOpts.defaultViewDate !== undefined) {

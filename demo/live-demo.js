@@ -23,7 +23,7 @@ beforeShowDay(date) {
           classes: 'has-background-info'
         };
       case 8:
-        return false;
+        return {content: '🎱'};
       case 12:
         return "has-text-success";
     }
@@ -37,28 +37,69 @@ beforeShowMonth(date) {
       }
       break;
     case 8:
-      return false;
+      return 'highlighted';
   }
 },
 beforeShowYear(date) {
   switch (date.getFullYear()) {
-    case 2017:
-      return false;
     case 2020:
+      return 'is-italic is-underlined';
+    case 2025:
       return {content: '<span class="tooltip is-tooltip-bottom" data-tooltip="Tooltip text">2020</span>'};
   }
 },
 beforeShowDecade(date) {
   switch (date.getFullYear()) {
     case 2000:
-      return false;
+      return 'has-text-weight-bold';
     case 2100:
       return {
-        content: '💯',
+        content: '2💯',
         classes: 'is-background-success',
       };
   }
 },
+};
+var datesDisabledFn = function datesDisabled(date, viewId, rangeEnd) {
+  const currentDate = new Date();
+
+  // Disable entire last year
+  const year = date.getFullYear();
+  const thisYear = currentDate.getFullYear();
+  if (viewId < 3 && year === thisYear - 1) {
+    return true;
+  }
+
+  // Disable the month after next month of each year before next year
+  const month = date.getMonth();
+  const thisMonth = currentDate.getMonth();
+  if (
+    viewId < 2
+    && year < thisYear + 1 && month == (thisMonth + 2) % 12
+  ) {
+    return true;
+  }
+
+  // Disable every year's 1st of January and 4th of May
+  const dayOfMonth = date.getDate();
+  if (
+    viewId == 0 && month == 0 && dayOfMonth == 1
+    || month == 4 && dayOfMonth == 4
+  ) {
+    return true;
+  }
+
+  // In this month, disable all Saturdays if the picker is the end side
+  // of date range picker, and all Sundays if not
+  const dayOfWeek = date.getDay();
+  if (
+    viewId == 0 && year == thisYear && month == thisMonth
+    && (!rangeEnd && dayOfWeek == 0 || rangeEnd && dayOfWeek == 6)
+  ) {
+    return true;
+  }
+
+  return false;
 };
 var buttonClass;
 
@@ -272,6 +313,9 @@ const refreshOptionForm = function refreshOptionForm() {
         el.value = formatDate(val);
         break;
       case 'datesDisabled':
+        if (!val) {
+          break;
+        }
         el = formElemByName(key);
         if (val.length === 0) {
           if (!el.value || el.value === '[]') {
@@ -401,7 +445,22 @@ function onChnageDirection(ev) {
 }
 
 function onChangeInputOption(ev) {
-  updateOption(ev.target.name, ev.target.value);
+  let {name, value} = ev.target;
+  if (name === 'datesDisabledFn') {
+    name = 'datesDisabled';
+    const [arrElem, fnElem] = ['arr', 'fn']
+      .map(suffix => document.getElementById(`${name}-${suffix}`));
+    if (!value) {
+      fnElem.classList.add('is-hidden');
+      arrElem.classList.remove('is-hidden');
+      onChangeTextareaOption({target: arrElem.querySelector('textarea')});
+      return;
+    }
+    arrElem.classList.add('is-hidden');
+    fnElem.classList.remove('is-hidden');
+    value = datesDisabledFn;
+  }
+  updateOption(name, value);
 }
 
 function onChangeTextareaOption(ev) {
@@ -475,7 +534,9 @@ function initialize() {
   });
 
   document.querySelectorAll('.code-wrap pre').forEach((el) => {
-    el.textContent = getBeforeShowFnSrc(el.id.replace('code-', ''));
+    el.firstElementChild.textContent = el.id == 'code-datesDisabled'
+      ? datesDisabledFn.toString()
+      : getBeforeShowFnSrc(el.id.replace('code-', ''));
   });
 
   // collapsibles
@@ -484,6 +545,7 @@ function initialize() {
       const target = document.getElementById(el.dataset.target);
       el.classList.toggle('is-active');
       target.classList.toggle('is-active');
+      target.scrollTo(0, 0);
     });
   });
 

@@ -29,26 +29,25 @@ Function to customize the day cells in the days view. The function is called whe
     - `date`: {`Date`} - Date associated with the cell
   - Return:
     - {`Object`} - Things to customize. Available properties are:
-      - `enabled`: {`Boolean`} - whether the cell is selectable
+      - <span class="muted">`enabled`: {`Boolean`} - whether the cell is selectable (deprecated)</span>
       - `classes`: {`String`} - space-separated additional CSS classes for the cell element
       - `content`: {`String`} - HTML for the cell element's child nodes
     - {`String`} - additional classes — same as returning `{ classes: additionalClasses }`
-    - {`Boolean`} - whether the cell is selectable — same as returning `{ enabled: isSelectable }`
+    - <span class="muted">{`Boolean`} - whether the cell is selectable — same as returning `{ enabled: isSelectable } (deprecated)`</span>
+
+  > Support for boolean return value, `enabled` property of return object, and "disabled" class in `classes` property or return string will be removed. Use [`datesDisabled`](#datesDisabled) with callback function instead.
 
 ```javascript
 function (date) {
-    let isSelectable, additionalClasses, htmlFragment;
+    let additionalClasses, htmlFragment;
     //...your customization logic
     
     return {
-        enabled: isSelectable,
         classes: additionalClasses,
         content: htmlFragment,
     };
     // Or
     return additionalClasses;
-    // Or
-    return isSelectable;
 }
 ```
 
@@ -83,16 +82,15 @@ CSS class for `<button>` elements. (view switch, prev/next buttons, clear and to
 >
 > For constructor only. Cannot be used with `setOptions()`.  
 
-#### <span style="color: #999;">calendarWeeks (deprecated)</span>
+#### <span class="muted">calendarWeeks (deprecated)</span>
 This option will be removed in favor of the [`weekNumbers`](#weekNumbers) option.
 
-<div style="color: #999;">
-<ul>
-  <li>Type: <code style="color: #999;">Boolean</code></li>
-  <li>Default: <code style="color: #999;">false</code></li>
-</ul>
+<div class="muted">
 
-Whether to show the week number (<a href="https://en.wikipedia.org/wiki/ISO_week_date" target="_blank" rel="noopener" style="color: #999;">ISO week</a>) on week rows.
+- Type: `Boolean`
+- Default: `false`
+
+Whether to show the week number ([ISO week](https://en.wikipedia.org/wiki/ISO_week_date)) on week rows.
 </div>
 
 #### clearBtn
@@ -121,7 +119,7 @@ Delimiter string to separate the dates in a multi-date string.
 > The delimiter must not be included in date format string.
 
 #### datesDisabled
-- Type: `Array`
+- Type: `Array`|`Function`
 - Default: `[]`
 
 Dates to disable. Array of date strings, Date objects, time values or mix of those.
@@ -129,8 +127,38 @@ Dates to disable. Array of date strings, Date objects, time values or mix of tho
 > Multi-date string cannot be used. Use multiple single-date strings instead.  
 >
 > Given dates are processed to match the [`pickLevel`](#pickLevel) at the time.    
-> If [`pickLevel`](#pickLevel) is changed dynamically and independently, this option will be reset.  
-> This option should be changed together when changing [`pickLevel`](#pickLevel) dynamically.
+> If [`pickLevel`](#pickLevel) is changed dynamically and independently, the array will be reset to empty. Therefore, this option should be changed together when changing [`pickLevel`](#pickLevel) dynamically.
+
+Alternatively, a function that returns whether the passed date is disabled can be used.
+
+- **function**
+  - Arguments:
+    - `date`: {`Date`} - Date to examine. When the function is used...
+      - to render the picker element, the date associated with the cell to render
+      - for `setDate()`/`update()` to validate the date(s) passed/entered by the user, the given date
+    - `viewId`: {`Number`} - When the function is used...
+      - to render the picker element, the ID of the view currently rendering (`0`:_days_ – `3`:_decades_ )
+      - for `setDate()`/`update()` to validate the passed/entered date(s), [`pickLevel`](#pickLevel)
+    - `rangeEnd`: {`Boolean`} - Whether the date picker is the end-date picker of date range picker 
+  - Return:
+    - {`Boolean`} - Whether the date is disabled
+
+```javascript
+function (date, viewId, rangeEnd) {
+  let isDateDisabled;
+  // ...your evaluation logic
+  return isDateDisabled;
+}
+```
+
+> When view ID > `0`, the 1st of the month or the 1st of January of the year is passed to the `date` argument, and if the date picker is the end-date picker of a date range picker, the last day of the month or the 31st of December of the year is passed, instead. (The same rules as [`pickLevel`](#pickLevel))
+>
+> Note: because of the above, to disable the 1st of a month (the last day if `rangeEnd` is `true`), the `viewId` argument has to be evaluated along with `date`.<br>
+> (e.g. `date.getDate() == 1 && date.getMonth() == 0 && viewId == 0`)<br>
+> Otherwise, that month will be unclickable in the months view (if the month is January, so will its year in the years view).
+>
+> When a function is set, this option will not be reset by changing [`pickLevel`](#pickLevel) dynamically.  
+> The need of changing together with `pickLevel` is only applied when an array is used, but not when a function is used.
 
 #### daysOfWeekDisabled
 - Type: `Number[]`
@@ -152,18 +180,17 @@ Days of the week to highlight. `0`:_Sunday_ – `6`:_Saturday_, up to 6 items.
 
 The date to be focused when the date picker opens with no selected date(s).
 
-#### <span style="color: #999;">disableTouchKeyboard (deprecated)</span>
+#### <span class="muted">disableTouchKeyboard (deprecated)</span>
 This option will be removed. Use the attribute: `inputmode="none"` on the `<input>` element instead.
 
-<div style="color: #999;">
-<ul>
-  <li>Type: <code style="color: #999;">Boolean</code></li>
-  <li>Default: <code style="color: #999;">false</code></li>
-</ul>
+<div class="muted">
+
+- Type: `Boolean`
+- Default: `false`
 
 Whether to prevent on-screen keyboard on mobile devices from showing up when the associated input field receives focus.
 
-<blockquote style="border-left-color: #bbb;">Not available on inline picker.</blockquote>
+> Not available on inline picker.
 </div>
 
 #### enableOnReadonly
@@ -287,10 +314,10 @@ Space-separated string for date picker's horizontal and vertical placement to th
 
 The level that the date picker allows to pick. `0`:_date_,`1`: _month_ &nbsp;or `2`:_year_.
 
-> When this option is `1`, the selected date becomes the 1st of the month or, if the date picker is the end-date picker of date range picker, the last day of the month.  
-> When this option is `2`, the selected date becomes January 1st of the year or, if the date picker is the end-date picker of date range picker, December 31st of the year.
+> When this option is `1`, the selected date becomes the 1st of the month or, if the date picker is the end-date picker of a date range picker, the last day of the month.  
+> When this option is `2`, the selected date becomes January 1st of the year or, if the date picker is the end-date picker of a date range picker, December 31st of the year.
 >
-> Changing this option dynamically affects existing [`datesDisabled`](#datesDisabled), [`maxDate`](#maxdate) and [`minDate`](#minDate). This options should be updated together with those options when they are customized.
+> Changing this option dynamically affects existing [`datesDisabled`](#datesDisabled) (except when a function is set), [`maxDate`](#maxdate) and [`minDate`](#minDate). This option should be updated together with those options when they are customized.
 
 #### prevArrow
 - Type: `String`

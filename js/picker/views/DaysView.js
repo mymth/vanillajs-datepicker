@@ -34,8 +34,8 @@ export default class DaysView extends View {
     if (hasProperty(options, 'maxDate')) {
       this.maxDate = options.maxDate;
     }
-    if (options.datesDisabled) {
-      this.datesDisabled = options.datesDisabled;
+    if (options.checkDisabled) {
+      this.checkDisabled = options.checkDisabled;
     }
     if (options.daysOfWeekDisabled) {
       this.daysOfWeekDisabled = options.daysOfWeekDisabled;
@@ -136,7 +136,7 @@ export default class DaysView extends View {
     this.today = this.todayHighlight ? today() : undefined;
     // refresh disabled dates on every render in order to clear the ones added
     // by beforeShow hook at previous render
-    this.disabled = [...this.datesDisabled];
+    this.disabled = [];
 
     const switchLabel = formatDate(this.focused, this.switchLabelFormat, this.locale);
     this.picker.setViewSwitchLabel(switchLabel);
@@ -167,8 +167,13 @@ export default class DaysView extends View {
       if (this.today === current) {
         classList.add('today');
       }
-      if (current < this.minDate || current > this.maxDate || this.disabled.includes(current)) {
+      if (
+        current < this.minDate
+        || current > this.maxDate
+        || this.checkDisabled(current, this.id)
+      ) {
         classList.add('disabled');
+        pushUnique(this.disabled, current);
       }
       if (this.daysOfWeekDisabled.includes(day)) {
         classList.add('disabled');

@@ -1,5 +1,5 @@
 import {hasProperty, pushUnique, createTagRepeat} from '../../lib/utils.js';
-import {dateValue, startOfYearPeriod} from '../../lib/date.js';
+import {dateValue, regularizeDate, startOfYearPeriod} from '../../lib/date.js';
 import {parseHTML} from '../../lib/dom.js';
 import View from './View.js';
 
@@ -41,12 +41,10 @@ export default class YearsView extends View {
         this.maxDate = dateValue(this.maxYear, 11, 31);
       }
     }
-    if (this.isMinView) {
-      if (options.datesDisabled) {
-        this.datesDisabled = options.datesDisabled;
-      }
-    } else {
-      this.datesDisabled = [];
+    if (options.checkDisabled) {
+      this.checkDisabled = this.isMinView || options.datesDisabled === null
+        ? options.checkDisabled
+        : () => false;
     }
     if (options[this.beforeShowOption] !== undefined) {
       const beforeShow = options[this.beforeShowOption];
@@ -85,8 +83,7 @@ export default class YearsView extends View {
   render() {
     // refresh disabled years on every render in order to clear the ones added
     // by beforeShow hook at previous render
-    // this.disabled = [...this.datesDisabled];
-    this.disabled = this.datesDisabled.map(disabled => new Date(disabled).getFullYear());
+    this.disabled = [];
 
     this.picker.setViewSwitchLabel(`${this.first}-${this.last}`);
     this.picker.setPrevBtnDisabled(this.first <= this.minYear);
@@ -95,7 +92,7 @@ export default class YearsView extends View {
     Array.from(this.grid.children).forEach((el, index) => {
       const classList = el.classList;
       const current = this.start + (index * this.step);
-      const date = dateValue(current, 0, 1);
+      const date = regularizeDate(new Date(current, 0, 1), 2, this.isRangeEnd);
 
       el.className = `datepicker-cell ${this.cellClass}`;
       if (this.isMinView) {
@@ -108,8 +105,13 @@ export default class YearsView extends View {
       } else if (index === 11) {
         classList.add('next');
       }
-      if (current < this.minYear || current > this.maxYear || this.disabled.includes(current)) {
+      if (
+        current < this.minYear
+        || current > this.maxYear
+        || this.checkDisabled(date, this.id)
+      ) {
         classList.add('disabled');
+        pushUnique(this.disabled, date);
       }
       if (this.range) {
         const [rangeStart, rangeEnd] = this.range;
@@ -131,7 +133,7 @@ export default class YearsView extends View {
       }
 
       if (this.beforeShow) {
-        this.performBeforeHook(el, current, date);
+        this.performBeforeHook(el, date, date);
       }
     });
   }

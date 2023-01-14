@@ -23,14 +23,13 @@ function stringifyDates(dates, config) {
 // when origDates (current selection) is passed, the function works to mix
 // the input dates into the current selection
 function processInputDates(datepicker, inputDates, clear = false) {
-  // const {config, dates: origDates, rangepicker} = datepicker;
-  const {config, dates: origDates, rangeSideIndex} = datepicker;
   if (inputDates.length === 0) {
     // empty input is considered valid unless origiDates is passed
     return clear ? [] : undefined;
   }
 
-  // const rangeEnd = rangepicker && datepicker === rangepicker.datepickers[1];
+  const {config, dates: origDates, rangeSideIndex} = datepicker;
+  const {pickLevel, maxNumberOfDates} = config;
   let newDates = inputDates.reduce((dates, dt) => {
     let date = parseDate(dt, config.format, config.locale);
     if (date === undefined) {
@@ -39,12 +38,12 @@ function processInputDates(datepicker, inputDates, clear = false) {
     // adjust to 1st of the month/Jan 1st of the year
     // or to the last day of the monh/Dec 31st of the year if the datepicker
     // is the range-end picker of a rangepicker
-    date = regularizeDate(date, config.pickLevel, rangeSideIndex);
+    date = regularizeDate(date, pickLevel, rangeSideIndex);
     if (
       isInRange(date, config.minDate, config.maxDate)
       && !dates.includes(date)
-      && !config.datesDisabled.includes(date)
-      && (config.pickLevel > 0 || !config.daysOfWeekDisabled.includes(new Date(date).getDay()))
+      && !config.checkDisabled(date, pickLevel)
+      && (pickLevel > 0 || !config.daysOfWeekDisabled.includes(new Date(date).getDay()))
     ) {
       dates.push(date);
     }
@@ -63,8 +62,8 @@ function processInputDates(datepicker, inputDates, clear = false) {
     }, origDates.filter(date => !newDates.includes(date)));
   }
   // do length check always because user can input multiple dates regardless of the mode
-  return config.maxNumberOfDates && newDates.length > config.maxNumberOfDates
-    ? newDates.slice(config.maxNumberOfDates * -1)
+  return maxNumberOfDates && newDates.length > maxNumberOfDates
+    ? newDates.slice(maxNumberOfDates * -1)
     : newDates;
 }
 

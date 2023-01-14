@@ -234,7 +234,7 @@ describe('options - pick level & view', function () {
       dp.destroy();
     });
 
-    it('makes datesDisabled be cleared if updated separately from it', function () {
+    it('makes datesDisabled be cleared if it\'s an array and not updated together', function () {
       const getDisabled = cells => cellInfo(cells, '.disabled');
       const {dp, picker} = createDP(input, {datesDisabled: ['2/11/2020', '2/20/2020']});
       dp.setOptions({pickLevel: 1});
@@ -268,6 +268,17 @@ describe('options - pick level & view', function () {
 
       dp.setOptions({datesDisabled: ['2/11/2020', '2/20/2020'], pickLevel: 0});
       expect(getDisabled(getCells(picker)), 'to equal', [[16, '11'], [25, '20']]);
+
+      // datesDisabled won't be cleard if it's a function
+      const cb = (date, viewId) => date.getMonth() === 1 && date.getDate() === 1 && viewId < 2;
+      dp.setOptions({datesDisabled: cb});
+      expect(getDisabled(getCells(picker)), 'to equal', [[6, '1']]);
+
+      dp.setOptions({pickLevel: 1});
+      expect(getDisabled(getCells(picker)), 'to equal', [[1, 'Feb']]);
+
+      dp.setOptions({pickLevel: 0});
+      expect(getDisabled(getCells(picker)), 'to equal', [[6, '1']]);
 
       dp.destroy();
     });

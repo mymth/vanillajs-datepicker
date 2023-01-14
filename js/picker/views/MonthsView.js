@@ -1,5 +1,5 @@
 import {hasProperty, pushUnique, createTagRepeat} from '../../lib/utils.js';
-import {dateValue} from '../../lib/date.js';
+import {dateValue, regularizeDate} from '../../lib/date.js';
 import {parseHTML} from '../../lib/dom.js';
 import View from './View.js';
 
@@ -60,12 +60,10 @@ export default class MonthsView extends View {
         this.maxDate = dateValue(this.maxYear, this.maxMonth + 1, 0);
       }
     }
-    if (this.isMinView) {
-      if (options.datesDisabled) {
-        this.datesDisabled = options.datesDisabled;
-      }
-    } else {
-      this.datesDisabled = [];
+    if (options.checkDisabled) {
+      this.checkDisabled = this.isMinView || options.datesDisabled === null
+        ? options.checkDisabled
+        : () => false;
     }
     if (options.beforeShowMonth !== undefined) {
       this.beforeShow = typeof options.beforeShowMonth === 'function'
@@ -107,14 +105,7 @@ export default class MonthsView extends View {
   render() {
     // refresh disabled months on every render in order to clear the ones added
     // by beforeShow hook at previous render
-    // this.disabled = [...this.datesDisabled];
-    this.disabled = this.datesDisabled.reduce((arr, disabled) => {
-      const dt = new Date(disabled);
-      if (this.year === dt.getFullYear()) {
-        arr.push(dt.getMonth());
-      }
-      return arr;
-    }, []);
+    this.disabled = [];
 
     this.picker.setViewSwitchLabel(this.year);
     this.picker.setPrevBtnDisabled(this.year <= this.minYear);
@@ -128,7 +119,7 @@ export default class MonthsView extends View {
 
     Array.from(this.grid.children).forEach((el, index) => {
       const classList = el.classList;
-      const date = dateValue(this.year, index, 1);
+      const date = regularizeDate(new Date(this.year, index, 1), 1, this.isRangeEnd);
 
       el.className = `datepicker-cell ${this.cellClass}`;
       if (this.isMinView) {
@@ -142,9 +133,10 @@ export default class MonthsView extends View {
         yrOutOfRange
         || isMinYear && index < this.minMonth
         || isMaxYear && index > this.maxMonth
-        || this.disabled.includes(index)
+        || this.checkDisabled(date, this.id)
       ) {
         classList.add('disabled');
+        pushUnique(this.disabled, date);
       }
       if (range) {
         const [rangeStart, rangeEnd] = range;
@@ -166,7 +158,7 @@ export default class MonthsView extends View {
       }
 
       if (this.beforeShow) {
-        this.performBeforeHook(el, index, date);
+        this.performBeforeHook(el, date, date);
       }
     });
   }

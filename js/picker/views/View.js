@@ -8,6 +8,7 @@ export default class View {
       picker,
       element: parseHTML(`<div class="datepicker-view"></div>`).firstChild,
       selected: [],
+      isRangeEnd: !!picker.datepicker.rangeSideIndex,
     });
     this.init(this.picker.datepicker.config);
   }

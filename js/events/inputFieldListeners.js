@@ -1,6 +1,6 @@
 import {isInRange} from '../lib/utils.js';
 import {isActiveElement} from '../lib/dom.js';
-import {addDays, addMonths, addYears, startOfYearPeriod} from '../lib/date.js';
+import {addDays, addMonths, addYears} from '../lib/date.js';
 import {goToPrevOrNext, switchView, unfocus} from './functions.js';
 
 // Find the closest date that doesn't meet the condition for unavailable date
@@ -29,32 +29,24 @@ function moveByArrowKey(datepicker, direction, vertical) {
   const step = currentView.step || 1;
   let viewDate = picker.viewDate;
   let addFn;
-  let testFn;
   switch (currentView.id) {
     case 0:
       viewDate = addDays(viewDate, vertical ? direction * 7 : direction);
       addFn = addDays;
-      testFn = (date) => currentView.disabled.includes(date);
       break;
     case 1:
       viewDate = addMonths(viewDate, vertical ? direction * 4 : direction);
       addFn = addMonths;
-      testFn = (date) => {
-        const dt = new Date(date);
-        const {year, disabled} = currentView;
-        return dt.getFullYear() === year && disabled.includes(dt.getMonth());
-      };
       break;
     default:
       viewDate = addYears(viewDate, direction * (vertical ? 4 : 1) * step);
       addFn = addYears;
-      testFn = date => currentView.disabled.includes(startOfYearPeriod(date, step));
   }
   viewDate = findNextAvailableOne(
     viewDate,
     addFn,
     direction < 0 ? -step : step,
-    testFn,
+    (date) => currentView.disabled.includes(date),
     currentView.minDate,
     currentView.maxDate
   );
