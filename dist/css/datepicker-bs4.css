@@ -1,9 +1,10 @@
 .datepicker {
-  display: none;
+  width: -moz-min-content;
+  width: min-content;
 }
 
-.datepicker.active {
-  display: block;
+.datepicker:not(.active) {
+  display: none;
 }
 
 .datepicker-dropdown {
@@ -20,7 +21,6 @@
 }
 
 .datepicker-picker {
-  display: inline-block;
   border-radius: 0.25rem;
   background-color: #fff;
 }

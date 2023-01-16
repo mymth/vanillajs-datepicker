@@ -78,10 +78,10 @@ $dp-input-in-edit-box-shadow: $dp-input-in-edit-focus-box-shadow-size rgba($dp-i
 
 //== styles ==//
 .datepicker {
-  display: none;
+  width: min-content;
 
-  &.active {
-    display: block;
+  &:not(.active) {
+    display: none;
   }
 }
 
@@ -99,7 +99,6 @@ $dp-input-in-edit-box-shadow: $dp-input-in-edit-focus-box-shadow-size rgba($dp-i
 }
 
 .datepicker-picker {
-  display: inline-block;
   border-radius: $dp-border-radius;
   background-color: $dp-background-color;
 

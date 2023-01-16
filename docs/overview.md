@@ -15,8 +15,7 @@ When Datepicker object is attached to a block element, it's configured as an inl
 ![](./images/datepicker-inline.jpg)
 
 - The picker element is embedded to the block element. (always shown)
-- Initial selection can be set in the `data-date` attribute
-- Inline picker does not support operation by keyboard.
+- Initial selection can be set in the `data-date` attribute.
 
 ##### Date range picker
 
@@ -156,7 +155,9 @@ You can operate date picker using keyboard. Here are the available keyboard oper
 > <sup>\*</sup> These keys are defined as shourcut key, and can be changed/disabled with the [shortcutKeys](options?id=shortcutKeys) option.<br>
 > <sup>\*\*</sup> By default, <kbd>Ctrl</kbd>/<kbd>Meta</kbd> + <kbd>←</kbd>, <kbd>Ctrl</kbd>/<kbd>Meta</kbd> + <kbd>→</kbd>, and <kbd>Ctrl</kbd>/<kbd>Meta</kbd> + <kbd>↑</kbd> are not included in this because they are assigned as deault shortcut keys for Prev/Next buttons and view switch, and start functioning as this if unassigned from shortcut key with [shortcutKeys](options?id=shortcutKeys). 
 >
-> Note: Keyboard operation is not supported by inline picker.
+> Note: On inline picker...
+> - keyboard operation works when the associated block element has `tabindex` attribute.
+> - operations related to picker's visibility and edit mode are not available.
 
 ## Edit Mode 
 

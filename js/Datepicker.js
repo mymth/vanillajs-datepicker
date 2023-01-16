@@ -9,7 +9,7 @@ import processOptions from './options/processOptions.js';
 import createShortcutKeyConfig from './options/shortcutKeys.js';
 import Picker from './picker/Picker.js';
 import {triggerDatepickerEvent} from './events/functions.js';
-import {onKeydown, onFocus, onMousedown, onClickInput, onPaste} from './events/inputFieldListeners.js';
+import {onKeydown, onFocus, onMousedown, onClickInput, onPaste} from './events/elementListeners.js';
 import {onClickOutside} from './events/otherListeners.js';
 
 function stringifyDates(dates, config) {
@@ -125,7 +125,9 @@ export default class Datepicker {
   constructor(element, options = {}, rangepicker = undefined) {
     element.datepicker = this;
     this.element = element;
+    this.dates = [];
 
+    // initialize config
     const config = this.config = Object.assign({
       buttonClass: (options.buttonClass && String(options.buttonClass)) || 'button',
       container: null,
@@ -133,12 +135,12 @@ export default class Datepicker {
       maxDate: undefined,
       minDate: undefined,
     }, processOptions(defaultOptions, this));
+
     // configure by type
-    const inline = this.inline = element.tagName !== 'INPUT';
     let inputField;
-    if (inline) {
-      config.container = element;
-    } else {
+    if (element.tagName === 'INPUT') {
+      inputField = this.inputField = element;
+      inputField.classList.add('datepicker-input');
       if (options.container) {
         // omit string type check because it doesn't guarantee to avoid errors
         // (invalid selector string causes abend with sytax error)
@@ -146,8 +148,8 @@ export default class Datepicker {
           ? options.container
           : document.querySelector(options.container);
       }
-      inputField = this.inputField = element;
-      inputField.classList.add('datepicker-input');
+    } else {
+      config.container = element;
     }
     if (rangepicker) {
       // check validiry
@@ -178,16 +180,12 @@ export default class Datepicker {
     Object.assign(config, processOptions(options, this));
     config.shortcutKeys = createShortcutKeyConfig(options.shortcutKeys || {});
 
-    // set initial dates
-    let initialDates;
-    if (inline) {
-      initialDates = stringToArray(element.dataset.date, config.dateDelimiter);
-      delete element.dataset.date;
-    } else {
-      initialDates = stringToArray(inputField.value, config.dateDelimiter);
-    }
-    this.dates = [];
     // process initial value
+    const initialDates = stringToArray(
+      element.value || element.dataset.date,
+      config.dateDelimiter
+    );
+    delete element.dataset.date;
     const inputDateValues = processInputDates(this, initialDates);
     if (inputDateValues && inputDateValues.length > 0) {
       this.dates = inputDateValues;
@@ -196,15 +194,13 @@ export default class Datepicker {
       inputField.value = stringifyDates(this.dates, config);
     }
 
+    // set up picekr element
     const picker = this.picker = new Picker(this);
 
-    if (inline) {
-      this.show();
-    } else {
-      // set up event listeners in other modes
-      const onMousedownDocument = onClickOutside.bind(null, this);
-      const listeners = [
-        [inputField, 'keydown', onKeydown.bind(null, this)],
+    const keydownListener = [element, 'keydown', onKeydown.bind(null, this)];
+    if (inputField) {
+      registerListeners(this, [
+        keydownListener,
         [inputField, 'focus', onFocus.bind(null, this)],
         [inputField, 'mousedown', onMousedown.bind(null, this)],
         [inputField, 'click', onClickInput.bind(null, this)],
@@ -215,10 +211,12 @@ export default class Datepicker {
         // mousedown is fired only on tapping but not on swiping/pinching,
         // touchstart is fired on swiping/pinching as well.
         // (issue #95)
-        [document, 'mousedown', onMousedownDocument],
+        [document, 'mousedown', onClickOutside.bind(null, this)],
         [window, 'resize', picker.place.bind(picker)]
-      ];
-      registerListeners(this, listeners);
+      ]);
+    } else {
+      registerListeners(this, [keydownListener]);
+      this.show();
     }
   }
 
@@ -286,11 +284,10 @@ export default class Datepicker {
    * @param {Object} options - config options to update
    */
   setOptions(options) {
-    const picker = this.picker;
     const newOptions = processOptions(options, this);
     Object.assign(this._options, options);
     Object.assign(this.config, newOptions);
-    picker.setOptions(newOptions);
+    this.picker.setOptions(newOptions);
 
     refreshUI(this, 3);
   }
@@ -318,7 +315,7 @@ export default class Datepicker {
    * Not available on inline picker
    */
   hide() {
-    if (this.inline) {
+    if (!this.inputField) {
       return;
     }
     this.picker.hide();
@@ -334,7 +331,7 @@ export default class Datepicker {
   toggle() {
     if (!this.picker.active) {
       this.show();
-    } else if (!this.inline) {
+    } else if (this.inputField) {
       this.picker.hide();
     }
   }
@@ -347,10 +344,9 @@ export default class Datepicker {
     this.hide();
     unregisterListeners(this);
     this.picker.detach();
-    if (!this.inline) {
-      this.inputField.classList.remove('datepicker-input');
-    }
-    delete this.element.datepicker;
+    const element = this.element;
+    element.classList.remove('datepicker-input');
+    delete element.datepicker;
     return this;
   }
 
@@ -438,10 +434,10 @@ export default class Datepicker {
     const opts = {};
     const lastArg = lastItemOf(args);
     if (
-      typeof lastArg === 'object'
+      lastArg
+      && typeof lastArg === 'object'
       && !Array.isArray(lastArg)
       && !(lastArg instanceof Date)
-      && lastArg
     ) {
       Object.assign(opts, dates.pop());
     }
@@ -477,7 +473,7 @@ export default class Datepicker {
    *     default: false
    */
   update(options = undefined) {
-    if (this.inline) {
+    if (!this.inputField) {
       return;
     }
 
@@ -515,11 +511,12 @@ export default class Datepicker {
    * Not available on inline picker or when the picker element is hidden
    */
   enterEditMode() {
-    if (this.inline || !this.picker.active || this.inputField.readOnly || this.editMode) {
+    const inputField = this.inputField;
+    if (!inputField || inputField.readOnly || !this.picker.active || this.editMode) {
       return;
     }
     this.editMode = true;
-    this.inputField.classList.add('in-edit');
+    inputField.classList.add('in-edit');
   }
 
   /**
@@ -531,7 +528,7 @@ export default class Datepicker {
    *     default: false
    */
   exitEditMode(options = undefined) {
-    if (this.inline || !this.editMode) {
+    if (!this.inputField || !this.editMode) {
       return;
     }
     const opts = Object.assign({update: false}, options);

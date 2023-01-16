@@ -128,7 +128,7 @@ function findScrollParents(el) {
 // Class representing the picker UI
 export default class Picker {
   constructor(datepicker) {
-    const {config} = this.datepicker = datepicker;
+    const {config, inputField} = this.datepicker = datepicker;
 
     const template = pickerTemplate.replace(/%buttonClass%/g, config.buttonClass);
     const element = this.element = parseHTML(template).firstChild;
@@ -147,7 +147,7 @@ export default class Picker {
     this.main = main;
     this.controls = controls;
 
-    const elementClass = datepicker.inline ? 'inline' : 'dropdown';
+    const elementClass = inputField ? 'dropdown' : 'inline';
     element.classList.add(`datepicker-${elementClass}`);
 
     processPickerOptions(this, config);
@@ -178,7 +178,7 @@ export default class Picker {
     if (config.container) {
       config.container.appendChild(this.element);
     } else {
-      datepicker.inputField.after(this.element);
+      inputField.after(this.element);
     }
   }
 
@@ -200,11 +200,10 @@ export default class Picker {
     }
 
     const {datepicker, element} = this;
-    if (datepicker.inline) {
-      element.classList.add('active');
-    } else {
+    const inputField = datepicker.inputField;
+    if (inputField) {
       // ensure picker's direction matches input's
-      const inputDirection = getTextDirection(datepicker.inputField);
+      const inputDirection = getTextDirection(inputField);
       if (inputDirection !== getTextDirection(getParent(element))) {
         element.dir = inputDirection;
       } else if (element.dir) {
@@ -217,8 +216,10 @@ export default class Picker {
       element.style.visibility = '';
 
       if (datepicker.config.disableTouchKeyboard) {
-        datepicker.inputField.blur();
+        inputField.blur();
       }
+    } else {
+      element.classList.add('active');
     }
     this.active = true;
     triggerDatepickerEvent(datepicker, 'show');
