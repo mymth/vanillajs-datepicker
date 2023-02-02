@@ -1161,15 +1161,20 @@ var Datepicker = (function () {
       // by beforeShow hook at previous render
       this.disabled = [];
 
+      const {first, last, weekStart} = this;
       const switchLabel = formatDate(this.focused, this.switchLabelFormat, this.locale);
       this.picker.setViewSwitchLabel(switchLabel);
-      this.picker.setPrevButtonDisabled(this.first <= this.minDate);
-      this.picker.setNextButtonDisabled(this.last >= this.maxDate);
+      this.picker.setPrevButtonDisabled(first <= this.minDate);
+      this.picker.setNextButtonDisabled(last >= this.maxDate);
 
       if (this.weekNumbers) {
-        const startOfWeek = dayOfTheWeekOf(this.first, this.weekStart, this.weekStart);
+        const startOfWeek = dayOfTheWeekOf(first, weekStart, weekStart);
         Array.from(this.weekNumbers.weeks.children).forEach((el, index) => {
-          el.textContent = this.getWeekNumber(addWeeks(startOfWeek, index), this.weekStart);
+          const dateOfWeekStart = addWeeks(startOfWeek, index);
+          el.textContent = this.getWeekNumber(dateOfWeekStart, weekStart);
+          if (index > 3) {
+            el.classList[dateOfWeekStart > last ? 'add' : 'remove']('next');
+          }
         });
       }
       Array.from(this.grid.children).forEach((el, index) => {
@@ -1182,9 +1187,9 @@ var Datepicker = (function () {
         el.dataset.date = current;
         el.textContent = date.getDate();
 
-        if (current < this.first) {
+        if (current < first) {
           classList.add('prev');
-        } else if (current > this.last) {
+        } else if (current > last) {
           classList.add('next');
         }
         if (this.today === current) {
