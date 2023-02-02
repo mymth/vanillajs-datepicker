@@ -31,8 +31,8 @@ describe('options - date restrictions', function () {
       });
       dp.show();
 
-      expect(picker.querySelector('.prev-btn').disabled, 'to be false');
-      expect(picker.querySelector('.next-btn').disabled, 'to be false');
+      expect(picker.querySelector('.prev-button').disabled, 'to be false');
+      expect(picker.querySelector('.next-button').disabled, 'to be false');
 
       let cells = getCells(picker);
       expect(getDisabled(cells), 'to equal', [
@@ -117,11 +117,11 @@ describe('options - date restrictions', function () {
         datesDisabled: [new Date(2020, 2, 1), '3/14/2020', new Date(2020, 5, 13), '9/20/2020', '7/1/2021'],
         pickLevel: 1,
       });
-      const [prevBtn, nextBtn] = getParts(picker, ['.prev-btn', '.next-btn']);
+      const [prevButton, nextButton] = getParts(picker, ['.prev-button', '.next-button']);
       dp.show();
 
-      expect(prevBtn.disabled, 'to be false');
-      expect(nextBtn.disabled, 'to be false');
+      expect(prevButton.disabled, 'to be false');
+      expect(nextButton.disabled, 'to be false');
 
       let cells = getCells(picker);
       expect(getDisabled(cells), 'to equal', [
@@ -130,13 +130,13 @@ describe('options - date restrictions', function () {
         [8, 'Sep'],
       ]);
 
-      nextBtn.click();
+      nextButton.click();
       cells = getCells(picker);
       expect(getDisabled(cells), 'to equal', [
         [6, 'Jul'],
       ]);
 
-      prevBtn.click();
+      prevButton.click();
       cells = getCells(picker);
 
       cells[8].click();
@@ -199,14 +199,14 @@ describe('options - date restrictions', function () {
         datesDisabled: [new Date(2021, 1, 1), '2/14/2021', new Date(2024, 1, 1), '1/20/2027', '1/1/2035'],
         pickLevel: 2,
       });
-      const [prevBtn, nextBtn] = getParts(picker, ['.prev-btn', '.next-btn']);
+      const [prevButton, nextButton] = getParts(picker, ['.prev-button', '.next-button']);
       dp.show();
 
-      expect(prevBtn.disabled, 'to be false');
-      expect(nextBtn.disabled, 'to be false');
+      expect(prevButton.disabled, 'to be false');
+      expect(nextButton.disabled, 'to be false');
 
-      expect(prevBtn.disabled, 'to be false');
-      expect(nextBtn.disabled, 'to be false');
+      expect(prevButton.disabled, 'to be false');
+      expect(nextButton.disabled, 'to be false');
 
       let cells = getCells(picker);
       expect(getDisabled(cells), 'to equal', [
@@ -215,13 +215,13 @@ describe('options - date restrictions', function () {
         [8, '2027'],
       ]);
 
-      nextBtn.click();
+      nextButton.click();
       cells = getCells(picker);
       expect(getDisabled(cells), 'to equal', [
         [6, '2035'],
       ]);
 
-      prevBtn.click();
+      prevButton.click();
       cells = getCells(picker);
 
       cells[5].click();
@@ -289,8 +289,8 @@ describe('options - date restrictions', function () {
       });
       dp.show();
 
-      expect(picker.querySelector('.prev-btn').disabled, 'to be false');
-      expect(picker.querySelector('.next-btn').disabled, 'to be false');
+      expect(picker.querySelector('.prev-button').disabled, 'to be false');
+      expect(picker.querySelector('.next-button').disabled, 'to be false');
 
       let cells = getCells(picker);
       expect(getDisabled(cells), 'to equal', [
@@ -385,11 +385,11 @@ describe('options - date restrictions', function () {
         ].find(disabled => disabled.toDateString() === date.toDateString()),
         pickLevel: 1,
       });
-      const [prevBtn, nextBtn] = getParts(picker, ['.prev-btn', '.next-btn']);
+      const [prevButton, nextButton] = getParts(picker, ['.prev-button', '.next-button']);
       dp.show();
 
-      expect(prevBtn.disabled, 'to be false');
-      expect(nextBtn.disabled, 'to be false');
+      expect(prevButton.disabled, 'to be false');
+      expect(nextButton.disabled, 'to be false');
 
       let cells = getCells(picker);
       expect(getDisabled(cells), 'to equal', [
@@ -398,13 +398,13 @@ describe('options - date restrictions', function () {
         [8, 'Sep'],
       ]);
 
-      nextBtn.click();
+      nextButton.click();
       cells = getCells(picker);
       expect(getDisabled(cells), 'to equal', [
         [6, 'Jul'],
       ]);
 
-      prevBtn.click();
+      prevButton.click();
       cells = getCells(picker);
 
       cells[8].click();
@@ -472,14 +472,14 @@ describe('options - date restrictions', function () {
         ].find(disabled => disabled.toDateString() === date.toDateString()),
         pickLevel: 2,
       });
-      const [prevBtn, nextBtn] = getParts(picker, ['.prev-btn', '.next-btn']);
+      const [prevButton, nextButton] = getParts(picker, ['.prev-button', '.next-button']);
       dp.show();
 
-      expect(prevBtn.disabled, 'to be false');
-      expect(nextBtn.disabled, 'to be false');
+      expect(prevButton.disabled, 'to be false');
+      expect(nextButton.disabled, 'to be false');
 
-      expect(prevBtn.disabled, 'to be false');
-      expect(nextBtn.disabled, 'to be false');
+      expect(prevButton.disabled, 'to be false');
+      expect(nextButton.disabled, 'to be false');
 
       let cells = getCells(picker);
       expect(getDisabled(cells), 'to equal', [
@@ -488,13 +488,13 @@ describe('options - date restrictions', function () {
         [8, '2027'],
       ]);
 
-      nextBtn.click();
+      nextButton.click();
       cells = getCells(picker);
       expect(getDisabled(cells), 'to equal', [
         [6, '2035'],
       ]);
 
-      prevBtn.click();
+      prevButton.click();
       cells = getCells(picker);
 
       cells[5].click();
@@ -561,7 +561,7 @@ describe('options - date restrictions', function () {
           || date.getDate() % 20 === 1 && viewId === 0;
       };
       const {dp, picker} = createDP(input, {datesDisabled: callback});
-      const [prevBtn, viewSwitch] = getParts(picker, ['.prev-btn', '.view-switch']);
+      const [prevButton, viewSwitch] = getParts(picker, ['.prev-button', '.view-switch']);
       dp.show();
       cells = getCells(picker);
 
@@ -573,7 +573,7 @@ describe('options - date restrictions', function () {
       expect(args[41], 'to equal', [dateValue(2020, 2, 7), 0]);
 
       args = [];
-      prevBtn.click();
+      prevButton.click();
       cells = getCells(picker);
 
       // all days in Jan and Feb 1 are disabled
@@ -766,8 +766,8 @@ describe('options - date restrictions', function () {
       const {dp, picker} = createDP(input, {daysOfWeekDisabled: [0, 6]});
       dp.show();
 
-      expect(picker.querySelector('.prev-btn').disabled, 'to be false');
-      expect(picker.querySelector('.next-btn').disabled, 'to be false');
+      expect(picker.querySelector('.prev-button').disabled, 'to be false');
+      expect(picker.querySelector('.next-button').disabled, 'to be false');
 
       let cells = getCells(picker);
       expect(getDisabled(cells), 'to equal', [
@@ -1023,11 +1023,11 @@ describe('options - date restrictions', function () {
 
     it('makes the picker disallow to navigate to after the max date', function () {
       const {dp, picker} = createDP(input, {maxDate: '2/14/2020'});
-      const [viewSwitch, prevBtn, nextBtn] = getParts(picker, ['.view-switch', '.prev-btn', '.next-btn']);
+      const [viewSwitch, prevButton, nextButton] = getParts(picker, ['.view-switch', '.prev-button', '.next-button']);
       dp.show();
 
-      expect(prevBtn.disabled, 'to be false');
-      expect(nextBtn.disabled, 'to be true');
+      expect(prevButton.disabled, 'to be false');
+      expect(nextButton.disabled, 'to be true');
 
       simulant.fire(input, 'keydown', {key: 'ArrowRight'});
       let cells = getCells(picker);
@@ -1042,21 +1042,21 @@ describe('options - date restrictions', function () {
       simulant.fire(input, 'keydown', {key: 'ArrowDown'});
       expect(getCellIndices(cells, '.focused'), 'to equal', [13]);
 
-      prevBtn.click();
-      expect(prevBtn.disabled, 'to be false');
-      expect(nextBtn.disabled, 'to be false');
+      prevButton.click();
+      expect(prevButton.disabled, 'to be false');
+      expect(nextButton.disabled, 'to be false');
 
       // move to Jan 22nd
       simulant.fire(input, 'keydown', {key: 'ArrowDown'});
       simulant.fire(input, 'keydown', {key: 'ArrowDown'});
-      nextBtn.click();
+      nextButton.click();
 
       // view date is limited to the max date
       cells = getCells(picker);
       expect(getCellIndices(cells, '.focused'), 'to equal', [19]);
 
       // the same goes for ctrl + ArrowRight key
-      prevBtn.click();
+      prevButton.click();
       simulant.fire(input, 'keydown', {key: 'ArrowDown'});
       simulant.fire(input, 'keydown', {key: 'ArrowRight', ctrlKey: true});
       cells = getCells(picker);
@@ -1064,8 +1064,8 @@ describe('options - date restrictions', function () {
 
       // months view
       viewSwitch.click();
-      expect(prevBtn.disabled, 'to be false');
-      expect(nextBtn.disabled, 'to be true');
+      expect(prevButton.disabled, 'to be false');
+      expect(nextButton.disabled, 'to be true');
 
       simulant.fire(input, 'keydown', {key: 'ArrowRight'});
       cells = getCells(picker);
@@ -1078,20 +1078,20 @@ describe('options - date restrictions', function () {
       cells = getCells(picker);
       expect(getCellIndices(cells, '.focused'), 'to equal', [10]);
 
-      prevBtn.click();
-      expect(prevBtn.disabled, 'to be false');
-      expect(nextBtn.disabled, 'to be false');
+      prevButton.click();
+      expect(prevButton.disabled, 'to be false');
+      expect(nextButton.disabled, 'to be false');
 
       // move to Mar
       simulant.fire(input, 'keydown', {key: 'ArrowDown'});
-      nextBtn.click();
+      nextButton.click();
 
       // view date is limited to the Feb
       cells = getCells(picker);
       expect(getCellIndices(cells, '.focused'), 'to equal', [1]);
 
       // the same goes for ctrl + ArrowRight key
-      prevBtn.click();
+      prevButton.click();
       simulant.fire(input, 'keydown', {key: 'ArrowDown'});
       simulant.fire(input, 'keydown', {key: 'ArrowRight', ctrlKey: true});
       cells = getCells(picker);
@@ -1099,8 +1099,8 @@ describe('options - date restrictions', function () {
 
       // years view
       viewSwitch.click();
-      expect(prevBtn.disabled, 'to be false');
-      expect(nextBtn.disabled, 'to be true');
+      expect(prevButton.disabled, 'to be false');
+      expect(nextButton.disabled, 'to be true');
 
       simulant.fire(input, 'keydown', {key: 'ArrowRight'});
       cells = getCells(picker);
@@ -1116,20 +1116,20 @@ describe('options - date restrictions', function () {
       simulant.fire(input, 'keydown', {key: 'ArrowLeft'});
       simulant.fire(input, 'keydown', {key: 'ArrowDown'});
 
-      prevBtn.click();
-      expect(prevBtn.disabled, 'to be false');
-      expect(nextBtn.disabled, 'to be false');
+      prevButton.click();
+      expect(prevButton.disabled, 'to be false');
+      expect(nextButton.disabled, 'to be false');
 
       // move to 2011
       simulant.fire(input, 'keydown', {key: 'ArrowRight'});
-      nextBtn.click();
+      nextButton.click();
 
       // view year is limited to 2020
       cells = getCells(picker);
       expect(getCellIndices(cells, '.focused'), 'to equal', [1]);
 
       // the same goes for ctrl + ArrowRight key
-      prevBtn.click();
+      prevButton.click();
       simulant.fire(input, 'keydown', {key: 'ArrowDown'});
       simulant.fire(input, 'keydown', {key: 'ArrowRight', ctrlKey: true});
       cells = getCells(picker);
@@ -1137,8 +1137,8 @@ describe('options - date restrictions', function () {
 
       // decades view
       viewSwitch.click();
-      expect(prevBtn.disabled, 'to be false');
-      expect(nextBtn.disabled, 'to be true');
+      expect(prevButton.disabled, 'to be false');
+      expect(nextButton.disabled, 'to be true');
 
       simulant.fire(input, 'keydown', {key: 'ArrowRight'});
       cells = getCells(picker);
@@ -1154,20 +1154,20 @@ describe('options - date restrictions', function () {
       simulant.fire(input, 'keydown', {key: 'ArrowLeft'});
       simulant.fire(input, 'keydown', {key: 'ArrowDown'});
 
-      prevBtn.click();
-      expect(prevBtn.disabled, 'to be false');
-      expect(nextBtn.disabled, 'to be false');
+      prevButton.click();
+      expect(prevButton.disabled, 'to be false');
+      expect(nextButton.disabled, 'to be false');
 
       // move to 1930
       simulant.fire(input, 'keydown', {key: 'ArrowRight'});
-      nextBtn.click();
+      nextButton.click();
 
       // view decade is limited to 2020
       cells = getCells(picker);
       expect(getCellIndices(cells, '.focused'), 'to equal', [3]);
 
       // the same goes for ctrl + ArrowRight key
-      prevBtn.click();
+      prevButton.click();
       simulant.fire(input, 'keydown', {key: 'ArrowDown'});
       simulant.fire(input, 'keydown', {key: 'ArrowRight', ctrlKey: true});
       cells = getCells(picker);
@@ -1315,11 +1315,15 @@ describe('options - date restrictions', function () {
 
     it('makes the picker disallow to navigate to before the min date', function () {
       const {dp, picker} = createDP(input, {minDate: '7/14/2022'});
-      const [viewSwitch, prevBtn, nextBtn] = getParts(picker, ['.view-switch', '.prev-btn', '.next-btn']);
+      const [viewSwitch, prevButton, nextButton] = getParts(picker, [
+        '.view-switch',
+        '.prev-button',
+        '.next-button'
+      ]);
       dp.show();
 
-      expect(prevBtn.disabled, 'to be true');
-      expect(nextBtn.disabled, 'to be false');
+      expect(prevButton.disabled, 'to be true');
+      expect(nextButton.disabled, 'to be false');
 
       simulant.fire(input, 'keydown', {key: 'ArrowLeft'});
       let cells = getCells(picker);
@@ -1334,20 +1338,20 @@ describe('options - date restrictions', function () {
       simulant.fire(input, 'keydown', {key: 'ArrowUp'});
       expect(getCellIndices(cells, '.focused'), 'to equal', [24]);
 
-      nextBtn.click();
-      expect(prevBtn.disabled, 'to be false');
-      expect(nextBtn.disabled, 'to be false');
+      nextButton.click();
+      expect(prevButton.disabled, 'to be false');
+      expect(nextButton.disabled, 'to be false');
 
       // move to Aug 13th
       simulant.fire(input, 'keydown', {key: 'ArrowUp'});
-      prevBtn.click();
+      prevButton.click();
 
       // view date is limited to min date
       cells = getCells(picker);
       expect(getCellIndices(cells, '.focused'), 'to equal', [18]);
 
       // the same goes for ctrl + ArrowLeft key
-      prevBtn.click();
+      prevButton.click();
       simulant.fire(input, 'keydown', {key: 'ArrowUp'});
       simulant.fire(input, 'keydown', {key: 'ArrowLeft', ctrlKey: true});
       cells = getCells(picker);
@@ -1355,8 +1359,8 @@ describe('options - date restrictions', function () {
 
       // months view
       viewSwitch.click();
-      expect(prevBtn.disabled, 'to be true');
-      expect(nextBtn.disabled, 'to be false');
+      expect(prevButton.disabled, 'to be true');
+      expect(nextButton.disabled, 'to be false');
 
       simulant.fire(input, 'keydown', {key: 'ArrowLeft'});
       cells = getCells(picker);
@@ -1369,20 +1373,20 @@ describe('options - date restrictions', function () {
       cells = getCells(picker);
       expect(getCellIndices(cells, '.focused'), 'to equal', [9]);
 
-      nextBtn.click();
-      expect(prevBtn.disabled, 'to be false');
-      expect(nextBtn.disabled, 'to be false');
+      nextButton.click();
+      expect(prevButton.disabled, 'to be false');
+      expect(nextButton.disabled, 'to be false');
 
       // move to Jun
       simulant.fire(input, 'keydown', {key: 'ArrowUp'});
-      prevBtn.click();
+      prevButton.click();
 
       // view date is limited to Jul
       cells = getCells(picker);
       expect(getCellIndices(cells, '.focused'), 'to equal', [6]);
 
       // the same goes for ctrl + ArrowLeft key
-      prevBtn.click();
+      prevButton.click();
       simulant.fire(input, 'keydown', {key: 'ArrowUp'});
       simulant.fire(input, 'keydown', {key: 'ArrowLeft', ctrlKey: true});
       cells = getCells(picker);
@@ -1390,8 +1394,8 @@ describe('options - date restrictions', function () {
 
       // years view
       viewSwitch.click();
-      expect(prevBtn.disabled, 'to be true');
-      expect(nextBtn.disabled, 'to be false');
+      expect(prevButton.disabled, 'to be true');
+      expect(nextButton.disabled, 'to be false');
 
       simulant.fire(input, 'keydown', {key: 'ArrowLeft'});
       cells = getCells(picker);
@@ -1407,20 +1411,20 @@ describe('options - date restrictions', function () {
       simulant.fire(input, 'keydown', {key: 'ArrowRight'});
       simulant.fire(input, 'keydown', {key: 'ArrowUp'});
 
-      nextBtn.click();
-      expect(prevBtn.disabled, 'to be false');
-      expect(nextBtn.disabled, 'to be false');
+      nextButton.click();
+      expect(prevButton.disabled, 'to be false');
+      expect(nextButton.disabled, 'to be false');
 
       // move to 2031
       simulant.fire(input, 'keydown', {key: 'ArrowLeft'});
-      prevBtn.click();
+      prevButton.click();
 
       // view year is limited to 2022
       cells = getCells(picker);
       expect(getCellIndices(cells, '.focused'), 'to equal', [3]);
 
       // the same goes for ctrl + ArrowLeft key
-      prevBtn.click();
+      prevButton.click();
       simulant.fire(input, 'keydown', {key: 'ArrowUp'});
       simulant.fire(input, 'keydown', {key: 'ArrowLeft', ctrlKey: true});
       cells = getCells(picker);
@@ -1428,8 +1432,8 @@ describe('options - date restrictions', function () {
 
       // decades view
       viewSwitch.click();
-      expect(prevBtn.disabled, 'to be true');
-      expect(nextBtn.disabled, 'to be false');
+      expect(prevButton.disabled, 'to be true');
+      expect(nextButton.disabled, 'to be false');
 
       simulant.fire(input, 'keydown', {key: 'ArrowLeft'});
       cells = getCells(picker);
@@ -1445,20 +1449,20 @@ describe('options - date restrictions', function () {
       simulant.fire(input, 'keydown', {key: 'ArrowRight'});
       simulant.fire(input, 'keydown', {key: 'ArrowUp'});
 
-      nextBtn.click();
-      expect(prevBtn.disabled, 'to be false');
-      expect(nextBtn.disabled, 'to be false');
+      nextButton.click();
+      expect(prevButton.disabled, 'to be false');
+      expect(nextButton.disabled, 'to be false');
 
       // move to 2110
       simulant.fire(input, 'keydown', {key: 'ArrowLeft'});
-      prevBtn.click();
+      prevButton.click();
 
       // view decade is limited to 2020
       cells = getCells(picker);
       expect(getCellIndices(cells, '.focused'), 'to equal', [3]);
 
       // the same goes for ctrl + ArrowLeft key
-      prevBtn.click();
+      prevButton.click();
       simulant.fire(input, 'keydown', {key: 'ArrowUp'});
       simulant.fire(input, 'keydown', {key: 'ArrowLeft', ctrlKey: true});
       cells = getCells(picker);

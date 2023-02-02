@@ -94,7 +94,7 @@
         border-bottom: 0;
       }
 
-      .toggle-btn {
+      .toggle-button {
         position: fixed;
         top: 0.75rem;
         right: 0.75rem;
@@ -106,11 +106,11 @@
         box-shadow: 1px 1px rgba(0, 0, 0, 10%);
         cursor: pointer;
       }
-      .toggle-btn::before {
+      .toggle-button::before {
         content: '\25c0';
         padding-left: 0.25rem;
       }
-      .open .toggle-btn::before {
+      .open .toggle-button::before {
         content: '\25b6';
       }
 
@@ -122,7 +122,7 @@
           right: 0;
           width: 38.1966%;
         }
-        .toggle-btn {
+        .toggle-button {
           display: none;
         }
       }
@@ -273,8 +273,8 @@
               </div>
 
               <div class="field">
-                <input type="checkbox" id="clearBtn" name="clearBtn" value="true">
-                <label for="clearBtn">clearBtn</label>
+                <input type="checkbox" id="clearButton" name="clearButton" value="true">
+                <label for="clearButton">clearButton</label>
               </div>
 
               <div class="field">
@@ -394,7 +394,7 @@
                 <label>
                   language
                   <select name="language" >
-                    <option valUe="en">en – English (US)</option>
+                    <option value="en">en – English (US)</option>
                   </select>
                 </label>
               </div>
@@ -509,14 +509,14 @@
               </div>
 
               <div class="field">
-                <input type="checkbox" id="todayBtn" name="todayBtn" value="true">
-                <label for="todayBtn">todayBtn</label>
+                <input type="checkbox" id="todayButton" name="todayButton" value="true">
+                <label for="todayButton">todayButton</label>
               </div>
 
               <div class="field">
                 <label>
-                  todayBtnMode
-                  <select name="todayBtnMode">
+                  todayButtonMode
+                  <select name="todayButtonMode">
                     <option value="0">0 – focus</option>
                     <option value="1">1 – select</option>
                   </select>
@@ -571,7 +571,7 @@
       </section>
     </aside>
 
-    <div class="toggle-btn"></div>
+    <div class="toggle-button"></div>
     <script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/foundation-sites@6.7.5/dist/js/foundation.min.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.7.0/build/highlight.min.js"></script>

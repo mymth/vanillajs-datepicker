@@ -1,4 +1,4 @@
-import {hasProperty, pushUnique} from '../../lib/utils.js';
+import {pushUnique} from '../../lib/utils.js';
 import {today, dateValue, addDays, addWeeks, dayOfTheWeekOf} from '../../lib/date.js';
 import {formatDate} from '../../lib/date-format.js';
 import {parseHTML, showElement, hideElement} from '../../lib/dom.js';
@@ -28,10 +28,10 @@ export default class DaysView extends View {
   setOptions(options) {
     let updateDOW;
 
-    if (hasProperty(options, 'minDate')) {
+    if ('minDate' in options) {
       this.minDate = options.minDate;
     }
-    if (hasProperty(options, 'maxDate')) {
+    if ('maxDate' in options) {
       this.maxDate = options.maxDate;
     }
     if (options.checkDisabled) {
@@ -47,7 +47,7 @@ export default class DaysView extends View {
     if (options.todayHighlight !== undefined) {
       this.todayHighlight = options.todayHighlight;
     }
-    if (options.weekStart !== undefined) {
+    if ('weekStart' in options) {
       this.weekStart = options.weekStart;
       this.weekEnd = options.weekEnd;
       updateDOW = true;
@@ -64,7 +64,7 @@ export default class DaysView extends View {
         : undefined;
     }
 
-    if (options.weekNumbers !== undefined) {
+    if ('weekNumbers' in options) {
       if (options.weekNumbers && !this.weekNumbers) {
         const weeksElem = parseHTML(weekNumbersTemplate).firstChild;
         this.weekNumbers = {
@@ -79,11 +79,11 @@ export default class DaysView extends View {
       }
     }
 
-    if (options.getWeekNumber !== undefined) {
+    if ('getWeekNumber' in options) {
       this.getWeekNumber = options.getWeekNumber;
     }
 
-    if (options.showDaysOfWeek !== undefined) {
+    if ('showDaysOfWeek' in options) {
       if (options.showDaysOfWeek) {
         showElement(this.dow);
         if (this.weekNumbers) {
@@ -140,8 +140,8 @@ export default class DaysView extends View {
 
     const switchLabel = formatDate(this.focused, this.switchLabelFormat, this.locale);
     this.picker.setViewSwitchLabel(switchLabel);
-    this.picker.setPrevBtnDisabled(this.first <= this.minDate);
-    this.picker.setNextBtnDisabled(this.last >= this.maxDate);
+    this.picker.setPrevButtonDisabled(this.first <= this.minDate);
+    this.picker.setNextButtonDisabled(this.last >= this.maxDate);
 
     if (this.weekNumbers) {
       const startOfWeek = dayOfTheWeekOf(this.first, this.weekStart, this.weekStart);

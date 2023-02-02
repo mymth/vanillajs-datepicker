@@ -1,5 +1,5 @@
 import {limitToRange} from '../lib/utils.js';
-import {addMonths, addYears} from '../lib/date.js';
+import {today, addMonths, addYears} from '../lib/date.js';
 import {isActiveElement} from '../lib/dom.js';
 
 export function triggerDatepickerEvent(datepicker, type) {
@@ -37,6 +37,23 @@ export function switchView(datepicker) {
     return;
   }
   datepicker.picker.changeView(viewId + 1).render();
+}
+
+export function clearSelection(datepicker) {
+  datepicker.setDate({clear: true});
+}
+
+export function goToOrSelectToday(datepicker) {
+  const {config, picker} = datepicker;
+  const currentDate = today();
+  if (config.todayButtonMode === 1) {
+    datepicker.setDate(currentDate, {forceRefresh: true, viewDate: currentDate});
+  } else {
+    if (picker.viewDate !== currentDate) {
+      picker.changeFocus(currentDate);
+    }
+    picker.changeView(config.pickLevel).render();
+  }
 }
 
 export function unfocus(datepicker) {

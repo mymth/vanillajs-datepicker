@@ -113,7 +113,7 @@
         color: #f14668;
       }
 
-      .toggle-btn {
+      .toggle-button {
         position: fixed;
         top: 0.75rem;
         right: 0.75rem;
@@ -125,11 +125,11 @@
         box-shadow: 1px 1px rgba(0, 0, 0, 10%);
         cursor: pointer;
       }
-      .toggle-btn::before {
+      .toggle-button::before {
         content: '\25c0';
         padding-left: 0.25rem;
       }
-      .open .toggle-btn::before {
+      .open .toggle-button::before {
         content: '\25b6';
       }
 
@@ -157,7 +157,7 @@
           right: 0;
           width: 38.1966%;
         }
-        .toggle-btn {
+        .toggle-button {
           display: none;
         }
       }
@@ -309,8 +309,8 @@
               <div class="field">
                 <div class="control">
                   <label class="label checkbox">
-                    <input type="checkbox" name="clearBtn" value="true">
-                    clearBtn
+                    <input type="checkbox" name="clearButton" value="true">
+                    clearButton
                   </label>
                 </div>
               </div>
@@ -564,17 +564,17 @@
               <div class="field">
                 <div class="control">
                   <label class="label checkbox">
-                    <input type="checkbox" name="todayBtn" value="true">
-                    todayBtn
+                    <input type="checkbox" name="todayButton" value="true">
+                    todayButton
                   </label>
                 </div>
               </div>
 
               <div class="field">
-                <label class="label">todayBtnMode</label>
+                <label class="label">todayButtonMode</label>
                 <div class="control">
                   <div class="select">
-                    <select name="todayBtnMode">
+                    <select name="todayButtonMode">
                       <option value="0">0 – focus</option>
                       <option value="1">1 – select</option>
                     </select>
@@ -646,7 +646,7 @@
       </section>
     </aside>
 
-    <div class="toggle-btn"></div>
+    <div class="toggle-button"></div>
     <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.7.0/build/highlight.min.js"></script>
     <script src="../dist/js/datepicker-full.js"></script>
     <script src="./live-demo.js"></script>

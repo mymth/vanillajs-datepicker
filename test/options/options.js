@@ -72,19 +72,19 @@ describe('options', function () {
   describe('buttonClass', function () {
     it('specifies the main class used for the button elements', function () {
       const {dp, picker} = createDP(input, {buttonClass: 'btn'});
-      const [viewSwitch, prevBtn, nextBtn, todayBtn, clearBtn] = getParts(picker, [
+      const [viewSwitch, prevButton, nextButton, todayButton, clearButton] = getParts(picker, [
         '.view-switch',
-        '.prev-btn',
-        '.next-btn',
-        '.today-btn',
-        '.clear-btn',
+        '.prev-button',
+        '.next-button',
+        '.today-button',
+        '.clear-button',
       ]);
 
       expect(viewSwitch.className, 'to be', 'btn view-switch');
-      expect(prevBtn.className, 'to be', 'btn prev-btn');
-      expect(nextBtn.className, 'to be', 'btn next-btn');
-      expect(todayBtn.className, 'to be', 'btn today-btn');
-      expect(clearBtn.className, 'to be', 'btn clear-btn');
+      expect(prevButton.className, 'to be', 'btn prev-button prev-btn');
+      expect(nextButton.className, 'to be', 'btn next-button next-btn');
+      expect(todayButton.className, 'to be', 'btn today-button today-btn');
+      expect(clearButton.className, 'to be', 'btn clear-button clear-btn');
 
       dp.destroy();
     });
@@ -93,18 +93,18 @@ describe('options', function () {
       const {dp, picker} = createDP(input);
       dp.setOptions({buttonClass: 'btn'});
 
-      const [viewSwitch, prevBtn, nextBtn, todayBtn, clearBtn] = getParts(picker, [
+      const [viewSwitch, prevButton, nextButton, todayButton, clearButton] = getParts(picker, [
         '.view-switch',
-        '.prev-btn',
-        '.next-btn',
-        '.today-btn',
-        '.clear-btn',
+        '.prev-button',
+        '.next-button',
+        '.today-button',
+        '.clear-button',
       ]);
       expect(viewSwitch.className, 'to be', 'button view-switch');
-      expect(prevBtn.className, 'to be', 'button prev-btn');
-      expect(nextBtn.className, 'to be', 'button next-btn');
-      expect(todayBtn.className, 'to be', 'button today-btn');
-      expect(clearBtn.className, 'to be', 'button clear-btn');
+      expect(prevButton.className, 'to be', 'button prev-button prev-btn');
+      expect(nextButton.className, 'to be', 'button next-button next-btn');
+      expect(todayButton.className, 'to be', 'button today-button today-btn');
+      expect(clearButton.className, 'to be', 'button clear-button clear-btn');
 
       dp.destroy();
     });
@@ -285,7 +285,7 @@ describe('options', function () {
       expect(getCellIndices(cells, '.focused'), 'to equal', [23]);
       expect(cells[23].textContent, 'to be', '24');
 
-      picker.querySelector('.prev-btn').click();
+      picker.querySelector('.prev-button').click();
       dp.hide();
       dp.show();
 
@@ -361,11 +361,11 @@ describe('options', function () {
 
     it('prevents the input from getting focus after an element in the picker is clicked', function () {
       const {dp, picker} = createDP(input, {disableTouchKeyboard: true});
-      const [viewSwitch, prevBtn] = getParts(picker, ['.view-switch', '.prev-btn']);
+      const [viewSwitch, prevButton] = getParts(picker, ['.view-switch', '.prev-button']);
       dp.show();
       input.blur();
 
-      prevBtn.click();
+      prevButton.click();
       expect(document.activeElement, 'not to be', input);
 
       simulant.fire(getCells(picker)[15], 'click');
@@ -387,7 +387,7 @@ describe('options', function () {
       delete document.ontouchstart;
 
       const {dp, picker} = createDP(input, {disableTouchKeyboard: true});
-      const [viewSwitch, prevBtn] = getParts(picker, ['.view-switch', '.prev-btn']);
+      const [viewSwitch, prevButton] = getParts(picker, ['.view-switch', '.prev-button']);
       input.focus();
 
       expect(document.activeElement, 'to be', input);
@@ -401,7 +401,7 @@ describe('options', function () {
 
       expect(document.activeElement, 'to be', input);
 
-      prevBtn.click();
+      prevButton.click();
       expect(document.activeElement, 'to be', input);
 
       simulant.fire(getCells(picker)[15], 'click');
@@ -485,24 +485,24 @@ describe('options', function () {
     it('specifies the label of the next button in HTML (or plain text)', function () {
       const html = '<i class="icn icn-arrow-right"></i>';
       const {dp, picker} = createDP(input, {nextArrow: html});
-      const nextBtn = picker.querySelector('.next-btn');
+      const nextButton = picker.querySelector('.next-button');
       dp.show();
 
-      expect(nextBtn.innerHTML, 'to be', html);
+      expect(nextButton.innerHTML, 'to be', html);
 
       dp.destroy();
     });
 
     it('can be updated with setOptions()', function () {
       const {dp, picker} = createDP(input);
-      const nextBtn = picker.querySelector('.next-btn');
+      const nextButton = picker.querySelector('.next-button');
       dp.setOptions({nextArrow: 'N'});
       dp.show();
 
-      expect(nextBtn.textContent, 'to be', 'N');
+      expect(nextButton.textContent, 'to be', 'N');
 
       dp.setOptions({nextArrow: '>'});
-      expect(nextBtn.textContent, 'to be', '>');
+      expect(nextButton.textContent, 'to be', '>');
 
       dp.destroy();
     });
@@ -512,24 +512,24 @@ describe('options', function () {
     it('specifies the label of the next button in HTML (or plain text)', function () {
       const html = '<i class="icn icn-arrow-left"></i>';
       const {dp, picker} = createDP(input, {prevArrow: html});
-      const prevBtn = picker.querySelector('.prev-btn');
+      const prevButton = picker.querySelector('.prev-button');
       dp.show();
 
-      expect(prevBtn.innerHTML, 'to be', html);
+      expect(prevButton.innerHTML, 'to be', html);
 
       dp.destroy();
     });
 
     it('can be updated with setOptions()', function () {
       const {dp, picker} = createDP(input);
-      const prevBtn = picker.querySelector('.prev-btn');
+      const prevButton = picker.querySelector('.prev-button');
       dp.setOptions({prevArrow: 'P'});
       dp.show();
 
-      expect(prevBtn.textContent, 'to be', 'P');
+      expect(prevButton.textContent, 'to be', 'P');
 
       dp.setOptions({prevArrow: '<'});
-      expect(prevBtn.textContent, 'to be', '<');
+      expect(prevButton.textContent, 'to be', '<');
 
       dp.destroy();
     });
@@ -657,10 +657,10 @@ describe('options', function () {
       let cells = getCells(picker);
       expect(getCellIndices(cells, '.today'), 'to equal', [19]);
 
-      picker.querySelector('.prev-btn').click();
+      picker.querySelector('.prev-button').click();
       expect(getCellIndices(getCells(picker), '.today'), 'to equal', []);
 
-      picker.querySelector('.next-btn').click();
+      picker.querySelector('.next-button').click();
       viewSwitch.click();
       expect(getCellIndices(getCells(picker), '.today'), 'to equal', []);
 

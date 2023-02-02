@@ -1,7 +1,13 @@
 import {isInRange} from '../lib/utils.js';
 import {isActiveElement} from '../lib/dom.js';
 import {addDays, addMonths, addYears} from '../lib/date.js';
-import {goToPrevOrNext, switchView, unfocus} from './functions.js';
+import {
+  goToPrevOrNext,
+  switchView,
+  clearSelection,
+  goToOrSelectToday,
+  unfocus,
+} from './functions.js';
 
 // Find the closest date that doesn't meet the condition for unavailable date
 // Returns undefined if no available date is found
@@ -110,6 +116,10 @@ export function onKeydown(datepicker, ev) {
         action = [goToPrevOrNext, [datepicker, 1]];
       } else if (shortcut === 'viewSwitch') {
         action = [switchView, [datepicker]];
+      } else if (config.clearButton && shortcut === 'clearButton') {
+        action = [clearSelection, [datepicker]];
+      } else if (config.todayButton && shortcut === 'todayButton') {
+        action = [goToOrSelectToday, [datepicker]];
       }
     } else if (shortcut === 'show') {
       action = shortcut;

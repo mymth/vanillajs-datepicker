@@ -9,8 +9,8 @@ describe('DateRangePicker - date selection', function () {
   let picker1;
   let viewSwitch0;
   let viewSwitch1;
-  let nextBtn0;
-  let nextBtn1;
+  let nextButton0;
+  let nextButton1;
   let cells0;
   let cells1;
 
@@ -92,15 +92,15 @@ describe('DateRangePicker - date selection', function () {
 
     // other month than default view date's
     // (issue #17, #19)
-    let partsClasses = ['.view-switch', '.next-btn'];
+    let partsClasses = ['.view-switch', '.next-button'];
     selectDate = dateValue(2020, 2, 10);
 
     ({drp, picker0, picker1} = createDRP(elem));
-    [viewSwitch0, nextBtn0] = getParts(picker0, partsClasses);
-    [viewSwitch1, nextBtn1] = getParts(picker1, partsClasses);
+    [viewSwitch0, nextButton0] = getParts(picker0, partsClasses);
+    [viewSwitch1, nextButton1] = getParts(picker1, partsClasses);
 
     drp.datepickers[0].show();
-    nextBtn0.click();
+    nextButton0.click();
     getCells(picker0)[9].click();
 
     cells0 = getCells(picker0);
@@ -124,7 +124,7 @@ describe('DateRangePicker - date selection', function () {
     expect(getCellIndices(cells1, '.focused'), 'to equal', [9]);
 
     drp.datepickers[1].show();
-    nextBtn1.click();
+    nextButton1.click();
     expect(viewSwitch1.textContent, 'to equal', 'April 2020');
 
     drp.destroy();
@@ -132,11 +132,11 @@ describe('DateRangePicker - date selection', function () {
     input1.value = '';
 
     ({drp, picker0, picker1} = createDRP(elem));
-    [viewSwitch0, nextBtn0] = getParts(picker0, partsClasses);
-    [viewSwitch1, nextBtn1] = getParts(picker1, partsClasses);
+    [viewSwitch0, nextButton0] = getParts(picker0, partsClasses);
+    [viewSwitch1, nextButton1] = getParts(picker1, partsClasses);
 
     drp.datepickers[1].show();
-    nextBtn1.click();
+    nextButton1.click();
     getCells(picker1)[9].click();
 
     cells0 = getCells(picker0);
@@ -160,7 +160,7 @@ describe('DateRangePicker - date selection', function () {
     expect(getCellIndices(cells1, '.focused'), 'to equal', [9]);
 
     drp.datepickers[0].show();
-    nextBtn0.click();
+    nextButton0.click();
     expect(viewSwitch0.textContent, 'to equal', 'April 2020');
 
     drp.destroy();
@@ -309,7 +309,7 @@ describe('DateRangePicker - date selection', function () {
       expect(getCellIndices(cells1, '.range'), 'to equal', mapIndices(cells1).slice(0, 4));
 
       drp.datepickers[1].show();
-      picker1.querySelector('.next-btn').click();
+      picker1.querySelector('.next-button').click();
       cells1 = getCells(picker1);
       cells1[24].click();
 
@@ -391,7 +391,7 @@ describe('DateRangePicker - date selection', function () {
 
     it('dates are swapped if a date later than the 2nd picker\'s selection is seleted on the 1st picker', function () {
       ({drp, picker0, picker1} = createDRP(elem));
-      [viewSwitch0, nextBtn0] = getParts(picker0, ['.view-switch', '.next-btn']);
+      [viewSwitch0, nextButton0] = getParts(picker0, ['.view-switch', '.next-button']);
       viewSwitch1 = picker1.querySelector('.view-switch');
 
       drp.datepickers[1].show();
@@ -400,7 +400,7 @@ describe('DateRangePicker - date selection', function () {
       drp.datepickers[0].show();
       expect(viewSwitch0.textContent, 'to equal', 'February 2020');
 
-      nextBtn0.click();
+      nextButton0.click();
       expect(viewSwitch0.textContent, 'to equal', 'March 2020');
 
       getCells(picker0)[9].click();
@@ -430,20 +430,20 @@ describe('DateRangePicker - date selection', function () {
     });
 
     it('dates are swapped if a date earlier than the 1st picker\'s selection is seleted on the 2nd picker', function () {
-      let prevBtn1;
+      let prevButton1;
 
       ({drp, picker0, picker1} = createDRP(elem));
-      [viewSwitch0, nextBtn0] = getParts(picker0, ['.view-switch', '.next-btn']);
-      [viewSwitch1, prevBtn1] = getParts(picker1, ['.view-switch', '.prev-btn']);
+      [viewSwitch0, nextButton0] = getParts(picker0, ['.view-switch', '.next-button']);
+      [viewSwitch1, prevButton1] = getParts(picker1, ['.view-switch', '.prev-button']);
 
       drp.datepickers[0].show();
-      nextBtn0.click();
+      nextButton0.click();
       getCells(picker0)[9].click();
       drp.datepickers[0].hide();
       drp.datepickers[1].show();
       expect(viewSwitch1.textContent, 'to equal', 'March 2020');
 
-      prevBtn1.click();
+      prevButton1.click();
       expect(viewSwitch1.textContent, 'to equal', 'February 2020');
 
       getCells(picker1)[16].click();

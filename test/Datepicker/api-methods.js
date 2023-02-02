@@ -212,8 +212,8 @@ describe('Datepicker - API methods', function () {
     });
 
     it('refreshes the picker even when given date equals the selection if forceRefresh option = true', function () {
-      const [viewSwitch, prevBtn] = getParts(picker, ['.view-switch', '.prev-btn']);
-      prevBtn.click();
+      const [viewSwitch, prevButton] = getParts(picker, ['.view-switch', '.prev-button']);
+      prevButton.click();
       dp.setDate('04/22/2020');
 
       let cells = getCells(picker);
@@ -246,7 +246,7 @@ describe('Datepicker - API methods', function () {
       expect(getCellIndices(cells, '.selected'), 'to equal', [24]);
 
       // forceRefresh is ignored if used with render: false
-      prevBtn.click();
+      prevButton.click();
       dp.setDate('04/22/2020', {forceRefresh: true, render: false});
 
       cells = getCells(picker);
@@ -374,8 +374,8 @@ describe('Datepicker - API methods', function () {
     });
 
     it('refreshes the picker even when given date equals the selection if forceRefresh option = true', function () {
-      const [viewSwitch, prevBtn] = getParts(picker, ['.view-switch', '.prev-btn']);
-      prevBtn.click();
+      const [viewSwitch, prevButton] = getParts(picker, ['.view-switch', '.prev-button']);
+      prevButton.click();
       dp.update();
 
       let cells = getCells(picker);

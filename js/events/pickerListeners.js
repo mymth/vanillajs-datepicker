@@ -1,4 +1,4 @@
-import {today, addMonths, addYears} from '../lib/date.js';
+import {addMonths, addYears} from '../lib/date.js';
 import {findElementInEventPath} from '../lib/event.js';
 import {goToPrevOrNext, switchView} from './functions.js';
 
@@ -13,32 +13,15 @@ function goToSelectedMonthOrYear(datepicker, selection) {
   picker.changeFocus(newDate).changeView(viewId - 1).render();
 }
 
-export function onClickTodayBtn(datepicker) {
-  const {config, picker} = datepicker;
-  const currentDate = today();
-  if (config.todayBtnMode === 1) {
-    datepicker.setDate(currentDate, {forceRefresh: true, viewDate: currentDate});
-  } else {
-    if (picker.viewDate !== currentDate) {
-      picker.changeFocus(currentDate);
-    }
-    picker.changeView(config.pickLevel).render();
-  }
-}
-
-export function onClickClearBtn(datepicker) {
-  datepicker.setDate({clear: true});
-}
-
 export function onClickViewSwitch(datepicker) {
   switchView(datepicker);
 }
 
-export function onClickPrevBtn(datepicker) {
+export function onClickPrevButton(datepicker) {
   goToPrevOrNext(datepicker, -1);
 }
 
-export function onClickNextBtn(datepicker) {
+export function onClickNextButton(datepicker) {
   goToPrevOrNext(datepicker, 1);
 }
 

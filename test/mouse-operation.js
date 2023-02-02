@@ -187,7 +187,7 @@ describe('mouse operation', function () {
 
   it('move of focus from input by clicking on picker is prevented by canceling mousedown event', function () {
     const {dp, picker} = createDP(input);
-    const [viewSwitch, prevBtn] = getParts(picker, ['.view-switch', '.prev-btn']);
+    const [viewSwitch, prevButton] = getParts(picker, ['.view-switch', '.prev-button']);
     const cells = getCells(picker);
     let event;
 
@@ -205,7 +205,7 @@ describe('mouse operation', function () {
     expect(event.defaultPrevented, 'to be true');
 
     event = undefined;
-    simulant.fire(prevBtn, 'mousedown');
+    simulant.fire(prevButton, 'mousedown');
     expect(event.defaultPrevented, 'to be true');
 
     event = undefined;
@@ -286,15 +286,15 @@ describe('mouse operation', function () {
     });
   });
 
-  describe('prev-btn', function () {
+  describe('prev-button', function () {
     it('changes the month/year/decade/century of the view to the previouse one', function () {
       input.value = '04/22/2020';
 
       const {dp, picker} = createDP(input);
-      const [viewSwitch, prevBtn] = getParts(picker, ['.view-switch', '.prev-btn']);
+      const [viewSwitch, prevButton] = getParts(picker, ['.view-switch', '.prev-button']);
       dp.show();
 
-      prevBtn.click();
+      prevButton.click();
       expect(viewSwitch.textContent, 'to be', 'March 2020');
       expect(input.value, 'to be', '04/22/2020');
 
@@ -324,7 +324,7 @@ describe('mouse operation', function () {
       expect(getCellIndices(cells, '.selected'), 'to equal', [3]);
       expect(getCellIndices(cells, '.focused'), 'to equal', [2]);
 
-      prevBtn.click();
+      prevButton.click();
       expect(viewSwitch.textContent, 'to be', '2019');
       expect(input.value, 'to be', '04/22/2020');
 
@@ -342,7 +342,7 @@ describe('mouse operation', function () {
       expect(getCellIndices(cells, '.focused'), 'to equal', [10]);
       expect(cells[10].textContent, 'to be', '2019');
 
-      prevBtn.click();
+      prevButton.click();
       expect(viewSwitch.textContent, 'to be', '2000-2009');
       expect(input.value, 'to be', '04/22/2020');
 
@@ -364,7 +364,7 @@ describe('mouse operation', function () {
       expect(getCellIndices(cells, '.focused'), 'to equal', [1]);
       expect(cells[1].textContent, 'to be', '2000');
 
-      prevBtn.click();
+      prevButton.click();
       expect(viewSwitch.textContent, 'to be', '1900-1990');
       expect(input.value, 'to be', '04/22/2020');
 
@@ -386,10 +386,10 @@ describe('mouse operation', function () {
       input.value = '03/31/2019';
 
       const {dp, picker} = createDP(input);
-      const [viewSwitch, prevBtn] = getParts(picker, ['.view-switch', '.prev-btn']);
+      const [viewSwitch, prevButton] = getParts(picker, ['.view-switch', '.prev-button']);
       dp.show();
 
-      prevBtn.click();
+      prevButton.click();
       expect(viewSwitch.textContent, 'to be', 'February 2019');
 
       let cells = getCells(picker);
@@ -398,7 +398,7 @@ describe('mouse operation', function () {
 
       input.value = '03/31/2020';
       dp.update();
-      prevBtn.click();
+      prevButton.click();
       expect(viewSwitch.textContent, 'to be', 'February 2020');
 
       cells = getCells(picker);
@@ -407,7 +407,7 @@ describe('mouse operation', function () {
 
       input.value = '10/31/2020';
       dp.update();
-      prevBtn.click();
+      prevButton.click();
       expect(viewSwitch.textContent, 'to be', 'September 2020');
 
       cells = getCells(picker);
@@ -422,29 +422,29 @@ describe('mouse operation', function () {
       input.value = '01/04/0000';
 
       const {dp, picker} = createDP(input);
-      const [viewSwitch, prevBtn] = getParts(picker, ['.view-switch', '.prev-btn']);
+      const [viewSwitch, prevButton] = getParts(picker, ['.view-switch', '.prev-button']);
       dp.show();
 
-      expect(prevBtn.disabled, 'to be true');
-      prevBtn.click();
+      expect(prevButton.disabled, 'to be true');
+      prevButton.click();
       expect(viewSwitch.textContent, 'to be', 'January 0');
 
       viewSwitch.click();
 
-      expect(prevBtn.disabled, 'to be true');
-      prevBtn.click();
+      expect(prevButton.disabled, 'to be true');
+      prevButton.click();
       expect(viewSwitch.textContent, 'to be', '0');
 
       viewSwitch.click();
 
-      expect(prevBtn.disabled, 'to be true');
-      prevBtn.click();
+      expect(prevButton.disabled, 'to be true');
+      prevButton.click();
       expect(viewSwitch.textContent, 'to be', '0-9');
 
       viewSwitch.click();
 
-      expect(prevBtn.disabled, 'to be true');
-      prevBtn.click();
+      expect(prevButton.disabled, 'to be true');
+      prevButton.click();
       expect(viewSwitch.textContent, 'to be', '0-90');
 
       dp.destroy();
@@ -452,15 +452,15 @@ describe('mouse operation', function () {
     });
   });
 
-  describe('next-btn', function () {
+  describe('next-button', function () {
     it('changes the month/year/decade/century of the view to the next one', function () {
       input.value = '04/22/2020';
 
       const {dp, picker} = createDP(input);
-      const [viewSwitch, nextBtn] = getParts(picker, ['.view-switch', '.next-btn']);
+      const [viewSwitch, nextButton] = getParts(picker, ['.view-switch', '.next-button']);
       dp.show();
 
-      nextBtn.click();
+      nextButton.click();
       expect(viewSwitch.textContent, 'to be', 'May 2020');
       expect(input.value, 'to be', '04/22/2020');
 
@@ -496,7 +496,7 @@ describe('mouse operation', function () {
       expect(getCellIndices(cells, '.selected'), 'to equal', [3]);
       expect(getCellIndices(cells, '.focused'), 'to equal', [4]);
 
-      nextBtn.click();
+      nextButton.click();
       expect(viewSwitch.textContent, 'to be', '2021');
       expect(input.value, 'to be', '04/22/2020');
 
@@ -514,7 +514,7 @@ describe('mouse operation', function () {
       expect(cells[1].textContent, 'to be', '2020');
       expect(cells[2].textContent, 'to be', '2021');
 
-      nextBtn.click();
+      nextButton.click();
       expect(viewSwitch.textContent, 'to be', '2030-2039');
       expect(input.value, 'to be', '04/22/2020');
 
@@ -537,7 +537,7 @@ describe('mouse operation', function () {
       expect(cells[3].textContent, 'to be', '2020');
       expect(cells[4].textContent, 'to be', '2030');
 
-      nextBtn.click();
+      nextButton.click();
       expect(viewSwitch.textContent, 'to be', '2100-2190');
       expect(input.value, 'to be', '04/22/2020');
 
@@ -560,10 +560,10 @@ describe('mouse operation', function () {
       input.value = '01/31/2019';
 
       const {dp, picker} = createDP(input);
-      const [viewSwitch, nextBtn] = getParts(picker, ['.view-switch', '.next-btn']);
+      const [viewSwitch, nextButton] = getParts(picker, ['.view-switch', '.next-button']);
       dp.show();
 
-      nextBtn.click();
+      nextButton.click();
       expect(viewSwitch.textContent, 'to be', 'February 2019');
 
       let cells = getCells(picker);
@@ -572,7 +572,7 @@ describe('mouse operation', function () {
 
       input.value = '01/31/2020';
       dp.update();
-      nextBtn.click();
+      nextButton.click();
       expect(viewSwitch.textContent, 'to be', 'February 2020');
 
       cells = getCells(picker);
@@ -581,7 +581,7 @@ describe('mouse operation', function () {
 
       input.value = '08/31/2020';
       dp.update();
-      nextBtn.click();
+      nextButton.click();
       expect(viewSwitch.textContent, 'to be', 'September 2020');
 
       cells = getCells(picker);

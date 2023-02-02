@@ -225,19 +225,19 @@ describe('Datepicker', function () {
 
     it('uses "button" for the main class of button element', function () {
       const {dp, picker} = createDP(input);
-      const [viewSwitch, prevBtn, nextBtn, todayBtn, clearBtn] = getParts(picker, [
+      const [viewSwitch, prevButton, nextButton, todayButton, clearButton] = getParts(picker, [
         '.view-switch',
-        '.prev-btn',
-        '.next-btn',
-        '.today-btn',
-        '.clear-btn',
+        '.prev-button',
+        '.next-button',
+        '.today-button',
+        '.clear-button',
       ]);
 
       expect(viewSwitch.className, 'to be', 'button view-switch');
-      expect(prevBtn.className, 'to be', 'button prev-btn');
-      expect(nextBtn.className, 'to be', 'button next-btn');
-      expect(todayBtn.className, 'to be', 'button today-btn');
-      expect(clearBtn.className, 'to be', 'button clear-btn');
+      expect(prevButton.className, 'to be', 'button prev-button prev-btn');
+      expect(nextButton.className, 'to be', 'button next-button next-btn');
+      expect(todayButton.className, 'to be', 'button today-button today-btn');
+      expect(clearButton.className, 'to be', 'button clear-button clear-btn');
 
       dp.destroy();
     });

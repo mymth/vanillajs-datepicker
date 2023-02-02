@@ -38,7 +38,7 @@ describe('options - pick level & view', function () {
       input.value = '2/14/2020';
 
       const {dp, picker} = createDP(input, {pickLevel: 1});
-      const [viewSwitch, nextBtn] = getParts(picker, ['.view-switch', '.next-btn']);
+      const [viewSwitch, nextButton] = getParts(picker, ['.view-switch', '.next-button']);
       let cells = getCells(picker);
       dp.show();
 
@@ -58,7 +58,7 @@ describe('options - pick level & view', function () {
       expect(getCellIndices(cells, '.selected'), 'to equal', [0]);
       expect(getCellIndices(cells, '.focused'), 'to equal', [0]);
 
-      nextBtn.click();
+      nextButton.click();
       getCells(picker)[7].click();
 
       cells = getCells(picker);
@@ -120,7 +120,7 @@ describe('options - pick level & view', function () {
       input.value = '2/14/2020';
 
       const {dp, picker} = createDP(input, {pickLevel: 2});
-      const [viewSwitch, nextBtn] = getParts(picker, ['.view-switch', '.next-btn']);
+      const [viewSwitch, nextButton] = getParts(picker, ['.view-switch', '.next-button']);
       let cells = getCells(picker);
       dp.show();
 
@@ -140,7 +140,7 @@ describe('options - pick level & view', function () {
       expect(getCellIndices(cells, '.selected'), 'to equal', [2]);
       expect(getCellIndices(cells, '.focused'), 'to equal', [2]);
 
-      nextBtn.click();
+      nextButton.click();
       getCells(picker)[7].click();
 
       cells = getCells(picker);
@@ -286,7 +286,7 @@ describe('options - pick level & view', function () {
     it('makes maxDate be changed to the end of the mont/year if updated to larger span separately from them', function () {
       const getDisabled = cells => cellInfo(cells, '.disabled');
       const {dp, picker} = createDP(input, {maxDate: '9/28/2018', defaultViewDate: '9/15/2018'});
-      const [nextBtn] = getParts(picker, ['.next-btn']);
+      const [nextButton] = getParts(picker, ['.next-button']);
       dp.setOptions({pickLevel: 1});
       dp.show();
 
@@ -296,7 +296,7 @@ describe('options - pick level & view', function () {
         [10, 'Nov'],
         [11, 'Dec'],
       ]);
-      expect(nextBtn.disabled, 'to be true');
+      expect(nextButton.disabled, 'to be true');
 
       cells[8].click();
       expect(input.value, 'to be', '09/01/2018');
@@ -313,7 +313,7 @@ describe('options - pick level & view', function () {
         [40, '5'],
         [41, '6'],
       ]);
-      expect(nextBtn.disabled, 'to be true');
+      expect(nextButton.disabled, 'to be true');
 
       dp.setOptions({pickLevel: 2});
 
@@ -322,7 +322,7 @@ describe('options - pick level & view', function () {
         [10, '2019'],
         [11, '2020'],
       ]);
-      expect(nextBtn.disabled, 'to be true');
+      expect(nextButton.disabled, 'to be true');
 
       cells[9].click();
       expect(input.value, 'to be', '01/01/2018');
@@ -332,17 +332,17 @@ describe('options - pick level & view', function () {
 
       cells = getCells(picker);
       expect(getDisabled(cells), 'to equal', []);
-      expect(nextBtn.disabled, 'to be true');
+      expect(nextButton.disabled, 'to be true');
 
       dp.setOptions({pickLevel: 0});
 
       cells = getCells(picker);
       expect(getDisabled(cells), 'to equal', []);
-      expect(nextBtn.disabled, 'to be false');
+      expect(nextButton.disabled, 'to be false');
 
-      nextBtn.click();
-      nextBtn.click();
-      nextBtn.click();
+      nextButton.click();
+      nextButton.click();
+      nextButton.click();
 
       cells = getCells(picker);
       expect(getDisabled(cells), 'to equal', [
@@ -352,7 +352,7 @@ describe('options - pick level & view', function () {
         [40, '4'],
         [41, '5'],
       ]);
-      expect(nextBtn.disabled, 'to be true');
+      expect(nextButton.disabled, 'to be true');
 
       dp.destroy();
     });
@@ -360,7 +360,7 @@ describe('options - pick level & view', function () {
     it('makes minDate be changed to the start of the mont/year if updated to larger span separately from them', function () {
       const getDisabled = cells => cellInfo(cells, '.disabled');
       const {dp, picker} = createDP(input, {minDate: '4/4/2021', defaultViewDate: '4/15/2021'});
-      const [prevBtn] = getParts(picker, ['.prev-btn']);
+      const [prevButton] = getParts(picker, ['.prev-button']);
       dp.setOptions({pickLevel: 1});
       dp.show();
 
@@ -370,7 +370,7 @@ describe('options - pick level & view', function () {
         [1, 'Feb'],
         [2, 'Mar'],
       ]);
-      expect(prevBtn.disabled, 'to be true');
+      expect(prevButton.disabled, 'to be true');
 
       cells[3].click();
       expect(input.value, 'to be', '04/01/2021');
@@ -385,7 +385,7 @@ describe('options - pick level & view', function () {
         [2, '30'],
         [3, '31'],
       ]);
-      expect(prevBtn.disabled, 'to be true');
+      expect(prevButton.disabled, 'to be true');
 
       dp.setOptions({pickLevel: 2});
 
@@ -394,7 +394,7 @@ describe('options - pick level & view', function () {
         [0, '2019'],
         [1, '2020'],
       ]);
-      expect(prevBtn.disabled, 'to be true');
+      expect(prevButton.disabled, 'to be true');
 
       cells[2].click();
       expect(input.value, 'to be', '01/01/2021');
@@ -404,17 +404,17 @@ describe('options - pick level & view', function () {
 
       cells = getCells(picker);
       expect(getDisabled(cells), 'to equal', []);
-      expect(prevBtn.disabled, 'to be true');
+      expect(prevButton.disabled, 'to be true');
 
       dp.setOptions({pickLevel: 0});
 
       cells = getCells(picker);
       expect(getDisabled(cells), 'to equal', []);
-      expect(prevBtn.disabled, 'to be false');
+      expect(prevButton.disabled, 'to be false');
 
-      prevBtn.click();
-      prevBtn.click();
-      prevBtn.click();
+      prevButton.click();
+      prevButton.click();
+      prevButton.click();
 
       cells = getCells(picker);
       expect(getDisabled(cells), 'to equal', [
@@ -424,7 +424,7 @@ describe('options - pick level & view', function () {
         [3, '30'],
         [4, '31'],
       ]);
-      expect(prevBtn.disabled, 'to be true');
+      expect(prevButton.disabled, 'to be true');
 
       dp.destroy();
     });

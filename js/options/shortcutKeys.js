@@ -5,6 +5,8 @@ const defaultShortcutKeys = {
   prevButton: {key: 'ArrowLeft', ctrlOrMetaKey: true},
   nextButton: {key: 'ArrowRight', ctrlOrMetaKey: true},
   viewSwitch: {key: 'ArrowUp', ctrlOrMetaKey: true},
+  clearButton: {key: 'Backspace', ctrlOrMetaKey: true},
+  todayButton: {key: '.', ctrlOrMetaKey: true},
   exitEditMode: {key: 'ArrowDown', ctrlOrMetaKey: true},
 };
 

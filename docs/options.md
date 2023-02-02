@@ -93,7 +93,10 @@ This option will be removed in favor of the [`weekNumbers`](#weekNumbers) option
 Whether to show the week number ([ISO week](https://en.wikipedia.org/wiki/ISO_week_date)) on week rows.
 </div>
 
-#### clearBtn
+#### <span class="muted">clearBtn (deprecated)</span>
+Synonym of `clearButton` — this option will be removed.
+
+#### clearButton
 - Type: `Boolean`
 - Default: `false`
 
@@ -336,6 +339,8 @@ HTML (or plain text) for the button label of the "Prev" button.
     prevButton: {key: 'ArrowLeft', ctrlOrMetaKey: true},
     nextButton: {key: 'ArrowRight', ctrlOrMetaKey: true},
     viewSwitch: {key: 'ArrowUp', ctrlOrMetaKey: true},
+    clearButton: {key: 'Backspace', ctrlOrMetaKey: true},
+    todayButton: {key: '.', ctrlOrMetaKey: true},
     exitEditMode: {key: 'ArrowDown', ctrlOrMetaKey: true},
   }</code></span>
 
@@ -343,7 +348,7 @@ Object to assign or unset shortcut keys, where the keys of the object are the na
 
 > <kbd>Enter</kbd> and <kbd>Tab</kbd> keys cannot be used as shortcut key.
 >
-> Keys assigned to the actions function as shortcut key only under the condition the action takes effect. (e.g. show → only when the picker is hidden) 
+> Keys assigned to the actions function as shortcut key only under the condition the action takes effect. (e.g. show → only when the picker is hidden, clearButton → only when [`clearButton`](#clearButton) is `true`) 
 >
 > For constructor only. Cannot be used with setOptions().
  
@@ -357,6 +362,8 @@ Object to assign or unset shortcut keys, where the keys of the object are the na
   `prevButton` | <kbd>Ctrl</kbd>/<kbd>Meta</kbd> + <kbd>←</kbd> _(ArrowLeft)_ | Perform the Prev button action 
   `nextButton` | <kbd>Ctrl</kbd>/<kbd>Meta</kbd> + <kbd>→</kbd> _(ArrowRight)_ | Perform the Next button action 
   `viewSwitch` | <kbd>Ctrl</kbd>/<kbd>Meta</kbd> + <kbd>↑</kbd> _(ArrowUp)_ | Perform the View switch action 
+  `clearButton` | <kbd>Ctrl</kbd>/<kbd>Meta</kbd> + <kbd>Backspace</kbd> | Perform the Clear button action 
+  `todayButton` | <kbd>Ctrl</kbd>/<kbd>Meta</kbd> + <kbd>.</kbd> | Perform the Today button action 
   `exitEditMode` | <kbd>Ctrl</kbd>/<kbd>Meta</kbd> + <kbd>↓</kbd> _(ArrowDown)_ | Exit edit mode 
   - Unknown actions and the actions whose value is `undefined` are ignored.
   - Actions not to change the default shortcut key can be omitted.
@@ -377,9 +384,14 @@ Object to assign or unset shortcut keys, where the keys of the object are the na
     e.g.
     - `{key: 'Enter'}` does not match any modifier key + <kbd>Enter</kbd>
     - `{key: 'Enter', altKey: true}` does not match <kbd>Alt</kbd> + <kbd>Shift</kbd> + <kbd>Enter</kbd>, <kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>Enter</kbd>
-  - Since <kbd>Shift</kbd> and <kbd>Alt</kbd> keys' state is reflected in the value of `KeyboardEvent.key` when the value is a printable character, `altKey` and `shiftKey` are not evaluated if a printable character is set to `key` in order to avoid cases like below:
-    - When a `keypress` event with `key: '/'` is triggered, the key(s) the user pressed differ(s) depending on the keyboard layout of the user's computer. For example, <kbd>/</kbd> _(w/o modifier keys)_ if it's US keyboard, <kbd>Shift</kbd> + <kbd>:</kbd> if it's French keyboard, and <kbd>Shift</kbd> + <kbd>7</kbd> if it's German keyboard. If `shiftKey` is evaluated, `{key: '/'}` works with US keyboard, but not with French and German keyboards, and `{key: '/', shiftKey: true}` works with French and German keyboards, but not with US keyboard.
-    - On Mac, when a `keypress` event with `key: '\'` is triggered, the key(s) the user pressed is/are <kbd>\\</kbd> _(w/o modifier keys)_ if the keyboard is US keyboard  and <kbd>Alt</kbd> + <kbd>Shift</kbd> + <kbd>7</kbd> if the keyboard is German. If `altKey` is also evaluated, `{key: '\'}` works with US keyboad, but not with German keyboard.
+  - If a printable character is set to `key`, `altKey` and `shiftKey` are not evaluated because when `KeyboardEvent.key` is a printable character, the key(s) the user pressed can differ depending on keyboard layout and the state of the <kbd>Shift</kbd> and <kbd>Alt</kbd> keys is reflected in `key`'s value.<br>
+    e.g.<br>
+    When a `keydown` event with `key: '#'` is triggered, the event's `altKey` and `shiftKey` properties are...
+    keyboard layout | key(s) pressed | event's properties
+    ---|---|---
+    US keyboard | <kbd>Shift</kbd> + <kbd>3</kbd> | `altKey: false`, `shftKey: true`
+    German keyboard | <kbd>#</kbd> | `altKey: false`, `shftKey: false`
+    UK Apple keyboard (on Mac) | <kbd>Option</kbd> + <kbd>3</kbd> | `altKey: true`, `shftKey: false`
 
 #### showDaysOfWeek
 - Type: `Boolean`
@@ -417,13 +429,19 @@ Title string shown in the date picker's title bar.
 
 > The title bar is not displayed if the title is empty.
 
-#### todayBtn
+#### <span class="muted">todayBtn (deprecated)</span>
+Synonym of `todayButton` – this option will be removed.
+
+#### <span class="muted">todayBtnMode (deprecated)</span>
+Synonym of `todayButtonMode` – this option will be removed.
+
+#### todayButton
 - Type: `Boolean`
 - Default: `false`
 
 Whether to show the today button.
 
-#### todayBtnMode
+#### todayButtonMode
 - Type: `Number`
 - Default: `0`
 

@@ -1,4 +1,4 @@
-import {hasProperty, pushUnique} from '../lib/utils.js';
+import {pushUnique} from '../lib/utils.js';
 import {
   dateValue,
   regularizeDate,
@@ -58,6 +58,15 @@ function validateViewId(value, origValue, max = 3) {
   return viewId >= 0 && viewId <= max ? viewId : origValue;
 }
 
+function replaceOptions(options, from, to, convert = undefined) {
+  if (from in options) {
+    if (!(to in options)) {
+      options[to] = convert ? convert(options[from]) : options[from];
+    }
+    delete options[from];
+  }
+}
+
 // Create Datepicker configuration to set
 export default function processOptions(options, datepicker) {
   const inOpts = Object.assign({}, options);
@@ -78,6 +87,12 @@ export default function processOptions(options, datepicker) {
     weekStart,
   } = datepicker.config || {};
 
+  // for backword compatibility
+  replaceOptions(inOpts, 'calendarWeeks', 'weekNumbers', val => val ? 1 : 0);
+  replaceOptions(inOpts, 'clearBtn', 'clearButton');
+  replaceOptions(inOpts, 'todayBtn', 'todayButton');
+  replaceOptions(inOpts, 'todayBtnMode', 'todayButtonMode');
+
   if (inOpts.language) {
     let lang;
     if (inOpts.language !== language) {
@@ -87,7 +102,7 @@ export default function processOptions(options, datepicker) {
         // Check if langauge + region tag can fallback to the one without
         // region (e.g. fr-CA → fr)
         lang = inOpts.language.split('-')[0];
-        if (locales[lang] === undefined) {
+        if (!locales[lang]) {
           lang = false;
         }
       }
@@ -130,18 +145,18 @@ export default function processOptions(options, datepicker) {
 
   //*** pick level ***//
   let newPickLevel = pickLevel;
-  if (inOpts.pickLevel !== undefined) {
-    newPickLevel = validateViewId(inOpts.pickLevel, 2);
+  if ('pickLevel' in inOpts) {
+    newPickLevel = validateViewId(inOpts.pickLevel, pickLevel, 2);
     delete inOpts.pickLevel;
   }
   if (newPickLevel !== pickLevel) {
     if (newPickLevel > pickLevel) {
       // complement current minDate/madDate so that the existing range will be
       // expanded to fit the new level later
-      if (inOpts.minDate === undefined) {
+      if (!('minDate' in inOpts)) {
         inOpts.minDate = minDate;
       }
-      if (inOpts.maxDate === undefined) {
+      if (!('maxDate' in inOpts)) {
         inOpts.maxDate = maxDate;
       }
     }
@@ -158,7 +173,7 @@ export default function processOptions(options, datepicker) {
   // because null is treated as 0 (= unix epoch) when comparing with time value
   let minDt = minDate;
   let maxDt = maxDate;
-  if (inOpts.minDate !== undefined) {
+  if ('minDate' in inOpts) {
     const defaultMinDt = dateValue(0, 0, 1);
     minDt = inOpts.minDate === null
       ? defaultMinDt  // set 0000-01-01 to prevent negative values for year
@@ -168,7 +183,7 @@ export default function processOptions(options, datepicker) {
     }
     delete inOpts.minDate;
   }
-  if (inOpts.maxDate !== undefined) {
+  if ('maxDate' in inOpts) {
     maxDt = inOpts.maxDate === null
       ? undefined
       : validateDate(inOpts.maxDate, format, locale, maxDt);
@@ -209,7 +224,7 @@ export default function processOptions(options, datepicker) {
     }
     delete inOpts.datesDisabled;
   }
-  if (inOpts.defaultViewDate !== undefined) {
+  if ('defaultViewDate' in inOpts) {
     const viewDate = parseDate(inOpts.defaultViewDate, format, locale);
     if (viewDate !== undefined) {
       config.defaultViewDate = viewDate;
@@ -218,7 +233,7 @@ export default function processOptions(options, datepicker) {
   }
 
   //*** days of week ***//
-  if (inOpts.weekStart !== undefined) {
+  if ('weekStart' in inOpts) {
     const wkStart = Number(inOpts.weekStart) % 7;
     if (!isNaN(wkStart)) {
       weekStart = updateWeekStart(wkStart, config, weekNumbers);
@@ -235,13 +250,7 @@ export default function processOptions(options, datepicker) {
   }
 
   //*** week numbers ***//
-  if (inOpts.calendarWeeks !== undefined) {
-    const calendarWeeks = !!inOpts.calendarWeeks;
-    weekNumbers = config.weekNumbers = calendarWeeks + 0;
-    config.getWeekNumber = calendarWeeks ? getIsoWeek : null;
-    delete inOpts.calendarWeeks;
-  }
-  if (inOpts.weekNumbers !== undefined) {
+  if ('weekNumbers' in inOpts) {
     let method = inOpts.weekNumbers;
     if (method) {
       const getWeekNumber = typeof method === 'function'
@@ -259,7 +268,7 @@ export default function processOptions(options, datepicker) {
   }
 
   //*** multi date ***//
-  if (inOpts.maxNumberOfDates !== undefined) {
+  if ('maxNumberOfDates' in inOpts) {
     const maxNumberOfDates = parseInt(inOpts.maxNumberOfDates, 10);
     if (maxNumberOfDates >= 0) {
       config.maxNumberOfDates = maxNumberOfDates;
@@ -274,7 +283,7 @@ export default function processOptions(options, datepicker) {
 
   //*** view ***//
   let newMaxView = maxView;
-  if (inOpts.maxView !== undefined) {
+  if ('maxView' in inOpts) {
     newMaxView = validateViewId(inOpts.maxView, maxView);
     delete inOpts.maxView;
   }
@@ -285,7 +294,7 @@ export default function processOptions(options, datepicker) {
   }
 
   let newStartView = startView;
-  if (inOpts.startView !== undefined) {
+  if ('startView' in inOpts) {
     newStartView = validateViewId(inOpts.startView, newStartView);
     delete inOpts.startView;
   }
@@ -316,7 +325,7 @@ export default function processOptions(options, datepicker) {
   }
 
   //*** misc ***//
-  if (inOpts.disableTouchKeyboard !== undefined) {
+  if ('disableTouchKeyboard' in inOpts) {
     config.disableTouchKeyboard = 'ontouchstart' in document && !!inOpts.disableTouchKeyboard;
     delete inOpts.disableTouchKeyboard;
   }
@@ -328,19 +337,19 @@ export default function processOptions(options, datepicker) {
     };
     delete inOpts.orientation;
   }
-  if (inOpts.todayBtnMode !== undefined) {
-    switch(inOpts.todayBtnMode) {
+  if ('todayButtonMode' in inOpts) {
+    switch(inOpts.todayButtonMode) {
       case 0:
       case 1:
-        config.todayBtnMode = inOpts.todayBtnMode;
+        config.todayButtonMode = inOpts.todayButtonMode;
     }
-    delete inOpts.todayBtnMode;
+    delete inOpts.todayButtonMode;
   }
 
   //*** copy the rest ***//
-  Object.keys(inOpts).forEach((key) => {
-    if (inOpts[key] !== undefined && hasProperty(defaultOptions, key)) {
-      config[key] = inOpts[key];
+  Object.entries(inOpts).forEach(([key, value]) => {
+    if (value !== undefined && key in defaultOptions) {
+      config[key] = value;
     }
   });
 

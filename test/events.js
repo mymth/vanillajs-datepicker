@@ -176,14 +176,14 @@ describe('events', function () {
       dp.hide();
     });
 
-    it('is triggered when prevBtn or nextBtn is clicked on days view', function () {
-      const [prevBtn, nextBtn] = getParts(picker, ['.prev-btn', '.next-btn']);
+    it('is triggered when prevButton or nextButton is clicked on days view', function () {
+      const [prevButton, nextButton] = getParts(picker, ['.prev-button', '.next-button']);
 
-      prevBtn.click();
+      prevButton.click();
       expect(spyChangeMonth.calledOnce, 'to be true');
       // triggered after the picker element is updated
       expect(pickerSnapshot.viewSwitchLabel, 'to be', 'January 2020');
-      nextBtn.click();
+      nextButton.click();
       expect(spyChangeMonth.calledTwice, 'to be true');
       expect(pickerSnapshot.viewSwitchLabel, 'to be', 'February 2020');
 
@@ -191,23 +191,23 @@ describe('events', function () {
 
       // months view
       viewSwitch.click();
-      prevBtn.click();
+      prevButton.click();
       expect(spyChangeMonth.called, 'to be false');
-      nextBtn.click();
+      nextButton.click();
       expect(spyChangeMonth.called, 'to be false');
 
       // years view
       viewSwitch.click();
-      prevBtn.click();
+      prevButton.click();
       expect(spyChangeMonth.called, 'to be false');
-      nextBtn.click();
+      nextButton.click();
       expect(spyChangeMonth.called, 'to be false');
 
       // decades view
       viewSwitch.click();
-      prevBtn.click();
+      prevButton.click();
       expect(spyChangeMonth.called, 'to be false');
-      nextBtn.click();
+      nextButton.click();
       expect(spyChangeMonth.called, 'to be false');
     });
 
@@ -384,7 +384,7 @@ describe('events', function () {
     });
 
     it('is triggered when view is reset from different month from default view date on hide', function () {
-      picker.querySelector('.next-btn').click();
+      picker.querySelector('.next-button').click();
       spyChangeMonth.resetHistory();
 
       dp.hide();
@@ -435,25 +435,25 @@ describe('events', function () {
       dp.hide();
     });
 
-    it('is triggered when prevBtn on January on days view or nextBtn on December is clicked', function () {
-      const [prevBtn, nextBtn] = getParts(picker, ['.prev-btn', '.next-btn']);
+    it('is triggered when prevButton on January on days view or nextButton on December is clicked', function () {
+      const [prevButton, nextButton] = getParts(picker, ['.prev-button', '.next-button']);
 
       // move to 1/15
-      prevBtn.click();
+      prevButton.click();
       spyChangeYear.resetHistory();
 
-      prevBtn.click();
+      prevButton.click();
       expect(spyChangeYear.calledOnce, 'to be true');
       // triggered after the picker element is updated
       expect(pickerSnapshot.viewSwitchLabel, 'to be', 'December 2019');
-      nextBtn.click();
+      nextButton.click();
       expect(spyChangeYear.calledTwice, 'to be true');
       expect(pickerSnapshot.viewSwitchLabel, 'to be', 'January 2020');
     });
 
     it('is triggered when ctrl + arrow lett is pressed on January on days view or right on December', function () {
       // move to 1/15
-      picker.querySelector('.prev-btn').click();
+      picker.querySelector('.prev-button').click();
       spyChangeYear.resetHistory();
 
       simulant.fire(input, 'keydown', {key: 'ArrowLeft'});
@@ -471,7 +471,7 @@ describe('events', function () {
 
     it('is triggered when a previous month\'s day on January or a next month\'s on December is clicked', function () {
       // move to 1/15
-      picker.querySelector('.prev-btn').click();
+      picker.querySelector('.prev-button').click();
       spyChangeYear.resetHistory();
 
       getCells(picker)[19].click();
@@ -488,14 +488,14 @@ describe('events', function () {
       dp.setDate({clear: true});
     });
 
-    it('is triggered when prevBtn or nextBtn is clicked on months view', function () {
-      const [prevBtn, nextBtn] = getParts(picker, ['.prev-btn', '.next-btn']);
+    it('is triggered when prevButton or nextButton is clicked on months view', function () {
+      const [prevButton, nextButton] = getParts(picker, ['.prev-button', '.next-button']);
       viewSwitch.click();
 
-      prevBtn.click();
+      prevButton.click();
       expect(spyChangeYear.calledOnce, 'to be true');
       expect(pickerSnapshot.viewSwitchLabel, 'to be', '2019');
-      nextBtn.click();
+      nextButton.click();
       expect(spyChangeYear.calledTwice, 'to be true');
       expect(pickerSnapshot.viewSwitchLabel, 'to be', '2020');
     });
@@ -645,8 +645,8 @@ describe('events', function () {
     });
 
     it('is triggered when view is reset from different year from default view date on hide', function () {
-      picker.querySelector('.prev-btn').click();
-      picker.querySelector('.prev-btn').click();
+      picker.querySelector('.prev-button').click();
+      picker.querySelector('.prev-button').click();
       spyChangeYear.resetHistory();
 
       dp.hide();

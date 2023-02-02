@@ -60,7 +60,7 @@ describe('Datepicker', function () {
       expect(dp.config.beforeShowYear, 'to be null');
       expect(dp.config.buttonClass, 'to be', 'button');
       expect(dp.config.checkDisabled, 'to be a function');
-      expect(dp.config.clearBtn, 'to be false');
+      expect(dp.config.clearButton, 'to be false');
       expect(dp.config.container, 'to be null');
       expect(dp.config.dateDelimiter, 'to be', ',');
       expect(dp.config.datesDisabled, 'to equal', []);
@@ -99,13 +99,15 @@ describe('Datepicker', function () {
         prevButton: {key: 'ArrowLeft', ctrlOrMetaKey: true, altKey: false, shiftKey: false},
         nextButton: {key: 'ArrowRight', ctrlOrMetaKey: true, altKey: false, shiftKey: false},
         viewSwitch: {key: 'ArrowUp', ctrlOrMetaKey: true, altKey: false, shiftKey: false},
+        clearButton: {key: 'Backspace', ctrlOrMetaKey: true, altKey: false, shiftKey: false},
+        todayButton: {key: '.', ctrlOrMetaKey: true},
         exitEditMode: {key: 'ArrowDown', ctrlOrMetaKey: true, altKey: false, shiftKey: false},
       });
       expect(dp.config.showDaysOfWeek, 'to be true');
       expect(dp.config.showOnFocus, 'to be true');
       expect(dp.config.startView, 'to be', 0);
       expect(dp.config.title, 'to be', '');
-      expect(dp.config.todayBtn, 'to be false');
+      expect(dp.config.todayButton, 'to be false');
       expect(dp.config.todayHighlight, 'to be false');
       expect(dp.config.updateOnBlur, 'to be true');
       expect(dp.config.weekNumbers, 'to be', 0);

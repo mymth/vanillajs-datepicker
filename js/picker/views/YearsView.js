@@ -1,4 +1,4 @@
-import {hasProperty, pushUnique, createTagRepeat} from '../../lib/utils.js';
+import {pushUnique, createTagRepeat} from '../../lib/utils.js';
 import {dateValue, regularizeDate, startOfYearPeriod} from '../../lib/date.js';
 import {parseHTML} from '../../lib/dom.js';
 import View from './View.js';
@@ -25,7 +25,7 @@ export default class YearsView extends View {
   }
 
   setOptions(options) {
-    if (hasProperty(options, 'minDate')) {
+    if ('minDate' in options) {
       if (options.minDate === undefined) {
         this.minYear = this.minDate = undefined;
       } else {
@@ -33,7 +33,7 @@ export default class YearsView extends View {
         this.minDate = dateValue(this.minYear, 0, 1);
       }
     }
-    if (hasProperty(options, 'maxDate')) {
+    if ('maxDate' in options) {
       if (options.maxDate === undefined) {
         this.maxYear = this.maxDate = undefined;
       } else {
@@ -46,7 +46,7 @@ export default class YearsView extends View {
         ? options.checkDisabled
         : () => false;
     }
-    if (options[this.beforeShowOption] !== undefined) {
+    if (this.beforeShowOption in options) {
       const beforeShow = options[this.beforeShowOption];
       this.beforeShow = typeof beforeShow === 'function' ? beforeShow : undefined;
     }
@@ -86,8 +86,8 @@ export default class YearsView extends View {
     this.disabled = [];
 
     this.picker.setViewSwitchLabel(`${this.first}-${this.last}`);
-    this.picker.setPrevBtnDisabled(this.first <= this.minYear);
-    this.picker.setNextBtnDisabled(this.last >= this.maxYear);
+    this.picker.setPrevButtonDisabled(this.first <= this.minYear);
+    this.picker.setNextButtonDisabled(this.last >= this.maxYear);
 
     Array.from(this.grid.children).forEach((el, index) => {
       const classList = el.classList;

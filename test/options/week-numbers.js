@@ -23,25 +23,25 @@ describe('options - week numbers', function () {
 
     it('enables ISO week numbers to be displayed in days view when true', function () {
       const {dp, picker} = createDP(input, {calendarWeeks: true, weekStart: 1});
-      const [viewSwitch, prevBtn] = getParts(picker, ['.view-switch', '.prev-btn']);
+      const [viewSwitch, prevButton] = getParts(picker, ['.view-switch', '.prev-button']);
       dp.show();
 
       expect(isVisible(picker.querySelector('.calendar-weeks')), 'to be true');
       expect(getDisplayedWeeks(picker), 'to equal', ['5', '6', '7', '8', '9', '10']);
 
-      prevBtn.click();  // Jan, 2020
+      prevButton.click();  // Jan, 2020
       expect(getDisplayedWeeks(picker), 'to equal', ['1', '2', '3', '4', '5', '6']);
 
-      prevBtn.click();  // Dec, 2019
+      prevButton.click();  // Dec, 2019
       expect(getDisplayedWeeks(picker), 'to equal', ['48', '49', '50', '51', '52', '1']);
 
-      prevBtn.click();  // Nov, 2019
+      prevButton.click();  // Nov, 2019
       expect(getDisplayedWeeks(picker), 'to equal', ['44', '45', '46', '47', '48', '49']);
 
       dp.setDate('01/01/2021'); // Jan, 2021
       expect(getDisplayedWeeks(picker), 'to equal', ['53', '1', '2', '3', '4', '5']);
 
-      prevBtn.click();  // Dec, 2020
+      prevButton.click();  // Dec, 2020
       expect(getDisplayedWeeks(picker), 'to equal', ['49', '50', '51', '52', '53', '1']);
 
       // months view
@@ -64,19 +64,19 @@ describe('options - week numbers', function () {
       // ISO week numbers of the days of weekStart are showm
       expect(getDisplayedWeeks(picker), 'to equal', ['4', '5', '6', '7', '8', '9']);
 
-      prevBtn.click();  // Jan, 2020
+      prevButton.click();  // Jan, 2020
       expect(getDisplayedWeeks(picker), 'to equal', ['52', '1', '2', '3', '4', '5']);
 
-      prevBtn.click();  // Dec, 2019
+      prevButton.click();  // Dec, 2019
       expect(getDisplayedWeeks(picker), 'to equal', ['48', '49', '50', '51', '52', '1']);
 
-      prevBtn.click();  // Nov, 2019
+      prevButton.click();  // Nov, 2019
       expect(getDisplayedWeeks(picker), 'to equal', ['43', '44', '45', '46', '47', '48',]);
 
       dp.setDate('01/01/2021'); // Jan, 2021
       expect(getDisplayedWeeks(picker), 'to equal', ['52', '53', '1', '2', '3', '4']);
 
-      prevBtn.click();  // Dec, 2020
+      prevButton.click();  // Dec, 2020
       expect(getDisplayedWeeks(picker), 'to equal', ['48', '49', '50', '51', '52', '53']);
 
       dp.destroy();
@@ -103,25 +103,25 @@ describe('options - week numbers', function () {
 
     it('enables ISO week numbers to be displayed in days view when 1', function () {
       const {dp, picker} = createDP(input, {weekNumbers: 1, weekStart: 1});
-      const [viewSwitch, prevBtn] = getParts(picker, ['.view-switch', '.prev-btn']);
+      const [viewSwitch, prevButton] = getParts(picker, ['.view-switch', '.prev-button']);
       dp.show();
 
       expect(isVisible(picker.querySelector('.week-numbers')), 'to be true');
       expect(getDisplayedWeeks(picker), 'to equal', ['5', '6', '7', '8', '9', '10']);
 
-      prevBtn.click();  // Jan, 2020
+      prevButton.click();  // Jan, 2020
       expect(getDisplayedWeeks(picker), 'to equal', ['1', '2', '3', '4', '5', '6']);
 
-      prevBtn.click();  // Dec, 2019
+      prevButton.click();  // Dec, 2019
       expect(getDisplayedWeeks(picker), 'to equal', ['48', '49', '50', '51', '52', '1']);
 
-      prevBtn.click();  // Nob, 2019
+      prevButton.click();  // Nob, 2019
       expect(getDisplayedWeeks(picker), 'to equal', ['44', '45', '46', '47', '48', '49']);
 
       dp.setDate('01/01/2021'); // Jan 2021
       expect(getDisplayedWeeks(picker), 'to equal', ['53', '1', '2', '3', '4', '5']);
 
-      prevBtn.click();  // Dec, 2020
+      prevButton.click();  // Dec, 2020
       expect(getDisplayedWeeks(picker), 'to equal', ['49', '50', '51', '52', '53', '1']);
 
       dp.setDate('12/01/2021'); // Dec 2021
@@ -130,7 +130,7 @@ describe('options - week numbers', function () {
       dp.setDate('01/01/2017'); // Jan 2017
       expect(getDisplayedWeeks(picker), 'to equal', ['52', '1', '2', '3', '4', '5']);
 
-      prevBtn.click();  // Dec, 2016
+      prevButton.click();  // Dec, 2016
       expect(getDisplayedWeeks(picker), 'to equal', ['48', '49', '50', '51', '52', '1']);
 
       // months view
@@ -153,19 +153,19 @@ describe('options - week numbers', function () {
       // ISO week numbers of the days of weekStart are showm
       expect(getDisplayedWeeks(picker), 'to equal', ['4', '5', '6', '7', '8', '9']);
 
-      prevBtn.click();  // Jan, 2020
+      prevButton.click();  // Jan, 2020
       expect(getDisplayedWeeks(picker), 'to equal', ['52', '1', '2', '3', '4', '5']);
 
-      prevBtn.click();  // Dec, 2019
+      prevButton.click();  // Dec, 2019
       expect(getDisplayedWeeks(picker), 'to equal', ['48', '49', '50', '51', '52', '1']);
 
-      prevBtn.click();  // Nov, 2019
+      prevButton.click();  // Nov, 2019
       expect(getDisplayedWeeks(picker), 'to equal', ['43', '44', '45', '46', '47', '48',]);
 
       dp.setDate('01/01/2021'); // Jan, 2021
       expect(getDisplayedWeeks(picker), 'to equal', ['52', '53', '1', '2', '3', '4']);
 
-      prevBtn.click();  // Dec, 2020
+      prevButton.click();  // Dec, 2020
       expect(getDisplayedWeeks(picker), 'to equal', ['48', '49', '50', '51', '52', '53']);
 
       dp.destroy();
@@ -173,25 +173,25 @@ describe('options - week numbers', function () {
 
     it('enables Western traditional week numbers to be displayed in days view when 2', function () {
       const {dp, picker} = createDP(input, {weekNumbers: 2, weekStart: 0});
-      const [viewSwitch, prevBtn] = getParts(picker, ['.view-switch', '.prev-btn']);
+      const [viewSwitch, prevButton] = getParts(picker, ['.view-switch', '.prev-button']);
       dp.show();
 
       expect(isVisible(picker.querySelector('.week-numbers')), 'to be true');
       expect(getDisplayedWeeks(picker), 'to equal', ['5', '6', '7', '8', '9', '10']);
 
-      prevBtn.click();  // Jan, 2020
+      prevButton.click();  // Jan, 2020
       expect(getDisplayedWeeks(picker), 'to equal', ['1', '2', '3', '4', '5', '6']);
 
-      prevBtn.click();  // Dec, 2019
+      prevButton.click();  // Dec, 2019
       expect(getDisplayedWeeks(picker), 'to equal', ['49', '50', '51', '52', '1', '2']);
 
-      prevBtn.click();  // Nob, 2019
+      prevButton.click();  // Nob, 2019
       expect(getDisplayedWeeks(picker), 'to equal', ['44', '45', '46', '47', '48', '49']);
 
       dp.setDate('01/01/2021'); // Jan 2021
       expect(getDisplayedWeeks(picker), 'to equal', ['1', '2', '3', '4', '5', '6']);
 
-      prevBtn.click();  // Dec, 2020
+      prevButton.click();  // Dec, 2020
       expect(getDisplayedWeeks(picker), 'to equal', ['49', '50', '51', '52', '1', '2']);
 
       dp.setDate('12/01/2021'); // Dec 2021
@@ -200,7 +200,7 @@ describe('options - week numbers', function () {
       dp.setDate('01/01/2017'); // Jan 2017
       expect(getDisplayedWeeks(picker), 'to equal', ['1', '2', '3', '4', '5', '6']);
 
-      prevBtn.click();  // Dec, 2016
+      prevButton.click();  // Dec, 2016
       expect(getDisplayedWeeks(picker), 'to equal', ['49', '50', '51', '52', '53', '1']);
 
       // months view
@@ -223,19 +223,19 @@ describe('options - week numbers', function () {
       // ISO week numbers of the days of weekStart are showm
       expect(getDisplayedWeeks(picker), 'to equal', ['5', '6', '7', '8', '9', '10']);
 
-      prevBtn.click();  // Jam, 2020
+      prevButton.click();  // Jam, 2020
       expect(getDisplayedWeeks(picker), 'to equal', ['1', '2', '3', '4', '5', '6']);
 
-      prevBtn.click();  // Dec, 2019
+      prevButton.click();  // Dec, 2019
       expect(getDisplayedWeeks(picker), 'to equal', ['48', '49', '50', '51', '52', '1']);
 
-      prevBtn.click();  // Nov, 2019
+      prevButton.click();  // Nov, 2019
       expect(getDisplayedWeeks(picker), 'to equal', ['44', '45', '46', '47', '48', '49']);
 
       dp.setDate('01/01/2021'); // Jan, 2021
       expect(getDisplayedWeeks(picker), 'to equal', ['1', '2', '3', '4', '5', '6']);
 
-      prevBtn.click();  // Dec, 2020
+      prevButton.click();  // Dec, 2020
       expect(getDisplayedWeeks(picker), 'to equal', ['49', '50', '51', '52', '1', '2']);
 
       dp.destroy();
@@ -243,25 +243,25 @@ describe('options - week numbers', function () {
 
     it('enables Middle Eastern week numbers to be displayed in days view when 3', function () {
       const {dp, picker} = createDP(input, {weekNumbers: 3, weekStart: 6});
-      const [viewSwitch, prevBtn] = getParts(picker, ['.view-switch', '.prev-btn']);
+      const [viewSwitch, prevButton] = getParts(picker, ['.view-switch', '.prev-button']);
       dp.show();
 
       expect(isVisible(picker.querySelector('.week-numbers')), 'to be true');
       expect(getDisplayedWeeks(picker), 'to equal', ['6', '7', '8', '9', '10', '11']);
 
-      prevBtn.click();  // Jan, 2020
+      prevButton.click();  // Jan, 2020
       expect(getDisplayedWeeks(picker), 'to equal', ['1', '2', '3', '4', '5', '6']);
 
-      prevBtn.click();  // Dec, 2019
+      prevButton.click();  // Dec, 2019
       expect(getDisplayedWeeks(picker), 'to equal', ['49', '50', '51', '52', '1', '2']);
 
-      prevBtn.click();  // Nob, 2019
+      prevButton.click();  // Nob, 2019
       expect(getDisplayedWeeks(picker), 'to equal', ['44', '45', '46', '47', '48', '49']);
 
       dp.setDate('01/01/2021'); // Jan 2021
       expect(getDisplayedWeeks(picker), 'to equal', ['1', '2', '3', '4', '5', '6']);
 
-      prevBtn.click();  // Dec, 2020
+      prevButton.click();  // Dec, 2020
       expect(getDisplayedWeeks(picker), 'to equal', ['49', '50', '51', '52', '1', '2']);
 
       dp.setDate('12/01/2021'); // Dec 2021
@@ -270,7 +270,7 @@ describe('options - week numbers', function () {
       dp.setDate('01/01/2017'); // Jan 2017
       expect(getDisplayedWeeks(picker), 'to equal', ['1', '2', '3', '4', '5', '6']);
 
-      prevBtn.click();  // Dec, 2016
+      prevButton.click();  // Dec, 2016
       expect(getDisplayedWeeks(picker), 'to equal', ['49', '50', '51', '52', '53', '1']);
 
       // months view
@@ -293,19 +293,19 @@ describe('options - week numbers', function () {
       // ISO week numbers of the days of weekStart are showm
       expect(getDisplayedWeeks(picker), 'to equal', ['5', '6', '7', '8', '9', '10']);
 
-      prevBtn.click();  // Jam, 2020
+      prevButton.click();  // Jam, 2020
       expect(getDisplayedWeeks(picker), 'to equal', ['1', '2', '3', '4', '5', '6']);
 
-      prevBtn.click();  // Dec, 2019
+      prevButton.click();  // Dec, 2019
       expect(getDisplayedWeeks(picker), 'to equal', ['48', '49', '50', '51', '52', '1']);
 
-      prevBtn.click();  // Nov, 2019
+      prevButton.click();  // Nov, 2019
       expect(getDisplayedWeeks(picker), 'to equal', ['44', '45', '46', '47', '48', '49']);
 
       dp.setDate('01/01/2021'); // Jan, 2021
       expect(getDisplayedWeeks(picker), 'to equal', ['1', '2', '3', '4', '5', '6']);
 
-      prevBtn.click();  // Dec, 2020
+      prevButton.click();  // Dec, 2020
       expect(getDisplayedWeeks(picker), 'to equal', ['49', '50', '51', '52', '1', '2']);
 
       dp.destroy();
@@ -313,26 +313,26 @@ describe('options - week numbers', function () {
 
     it('makes week numbers to display change depending on weekStart when 4', function () {
       const {dp, picker} = createDP(input, {weekNumbers: 4});
-      const prevBtn = picker.querySelector('.prev-btn');
+      const prevButton = picker.querySelector('.prev-button');
       dp.show();
 
       // weekStart: 0 --> Western Traditional week numbers
       expect(isVisible(picker.querySelector('.week-numbers')), 'to be true');
       expect(getDisplayedWeeks(picker), 'to equal', ['5', '6', '7', '8', '9', '10']);
 
-      prevBtn.click();  // Jan, 2020
+      prevButton.click();  // Jan, 2020
       expect(getDisplayedWeeks(picker), 'to equal', ['1', '2', '3', '4', '5', '6']);
 
-      prevBtn.click();  // Dec, 2019
+      prevButton.click();  // Dec, 2019
       expect(getDisplayedWeeks(picker), 'to equal', ['49', '50', '51', '52', '1', '2']);
 
-      prevBtn.click();  // Nob, 2019
+      prevButton.click();  // Nob, 2019
       expect(getDisplayedWeeks(picker), 'to equal', ['44', '45', '46', '47', '48', '49']);
 
       dp.setDate('01/01/2021'); // Jan 2021
       expect(getDisplayedWeeks(picker), 'to equal', ['1', '2', '3', '4', '5', '6']);
 
-      prevBtn.click();  // Dec, 2020
+      prevButton.click();  // Dec, 2020
       expect(getDisplayedWeeks(picker), 'to equal', ['49', '50', '51', '52', '1', '2']);
 
       dp.setDate('12/01/2021'); // Dec 2021
@@ -341,7 +341,7 @@ describe('options - week numbers', function () {
       dp.setDate('01/01/2017'); // Jan 2017
       expect(getDisplayedWeeks(picker), 'to equal', ['1', '2', '3', '4', '5', '6']);
 
-      prevBtn.click();  // Dec, 2016
+      prevButton.click();  // Dec, 2016
       expect(getDisplayedWeeks(picker), 'to equal', ['49', '50', '51', '52', '53', '1']);
 
       dp.hide();
@@ -352,19 +352,19 @@ describe('options - week numbers', function () {
       // weekStart: 6 --> Middle Eastern week numbers
       expect(getDisplayedWeeks(picker), 'to equal', ['6', '7', '8', '9', '10', '11']);
 
-      prevBtn.click();  // Jan, 2020
+      prevButton.click();  // Jan, 2020
       expect(getDisplayedWeeks(picker), 'to equal', ['1', '2', '3', '4', '5', '6']);
 
-      prevBtn.click();  // Dec, 2019
+      prevButton.click();  // Dec, 2019
       expect(getDisplayedWeeks(picker), 'to equal', ['49', '50', '51', '52', '1', '2']);
 
-      prevBtn.click();  // Nob, 2019
+      prevButton.click();  // Nob, 2019
       expect(getDisplayedWeeks(picker), 'to equal', ['44', '45', '46', '47', '48', '49']);
 
       dp.setDate('01/01/2021'); // Jan 2021
       expect(getDisplayedWeeks(picker), 'to equal', ['1', '2', '3', '4', '5', '6']);
 
-      prevBtn.click();  // Dec, 2020
+      prevButton.click();  // Dec, 2020
       expect(getDisplayedWeeks(picker), 'to equal', ['49', '50', '51', '52', '1', '2']);
 
       dp.setDate('12/01/2021'); // Dec 2021
@@ -373,7 +373,7 @@ describe('options - week numbers', function () {
       dp.setDate('01/01/2017'); // Jan 2017
       expect(getDisplayedWeeks(picker), 'to equal', ['1', '2', '3', '4', '5', '6']);
 
-      prevBtn.click();  // Dec, 2016
+      prevButton.click();  // Dec, 2016
       expect(getDisplayedWeeks(picker), 'to equal', ['49', '50', '51', '52', '53', '1']);
 
       dp.hide();
@@ -384,19 +384,19 @@ describe('options - week numbers', function () {
       // weekStart: 6 --> ISO week numbers
       expect(getDisplayedWeeks(picker), 'to equal', ['5', '6', '7', '8', '9', '10']);
 
-      prevBtn.click();  // Jan, 2020
+      prevButton.click();  // Jan, 2020
       expect(getDisplayedWeeks(picker), 'to equal', ['1', '2', '3', '4', '5', '6']);
 
-      prevBtn.click();  // Dec, 2019
+      prevButton.click();  // Dec, 2019
       expect(getDisplayedWeeks(picker), 'to equal', ['48', '49', '50', '51', '52', '1']);
 
-      prevBtn.click();  // Nob, 2019
+      prevButton.click();  // Nob, 2019
       expect(getDisplayedWeeks(picker), 'to equal', ['44', '45', '46', '47', '48', '49']);
 
       dp.setDate('01/01/2021'); // Jan 2021
       expect(getDisplayedWeeks(picker), 'to equal', ['53', '1', '2', '3', '4', '5']);
 
-      prevBtn.click();  // Dec, 2020
+      prevButton.click();  // Dec, 2020
       expect(getDisplayedWeeks(picker), 'to equal', ['49', '50', '51', '52', '53', '1']);
 
       dp.setDate('12/01/2021'); // Dec 2021
@@ -405,7 +405,7 @@ describe('options - week numbers', function () {
       dp.setDate('01/01/2017'); // Jan 2017
       expect(getDisplayedWeeks(picker), 'to equal', ['52', '1', '2', '3', '4', '5']);
 
-      prevBtn.click();  // Dec, 2016
+      prevButton.click();  // Dec, 2016
       expect(getDisplayedWeeks(picker), 'to equal', ['48', '49', '50', '51', '52', '1']);
 
       dp.hide();
@@ -416,19 +416,19 @@ describe('options - week numbers', function () {
       // other than 0, 1, 6 --> ISO week numbers
       expect(getDisplayedWeeks(picker), 'to equal', ['5', '6', '7', '8', '9', '10']);
 
-      prevBtn.click();  // Jan, 2020
+      prevButton.click();  // Jan, 2020
       expect(getDisplayedWeeks(picker), 'to equal', ['52', '1', '2', '3', '4', '5']);
 
-      prevBtn.click();  // Dec, 2019
+      prevButton.click();  // Dec, 2019
       expect(getDisplayedWeeks(picker), 'to equal', ['48', '49', '50', '51', '52', '1']);
 
-      prevBtn.click();  // Nob, 2019
+      prevButton.click();  // Nob, 2019
       expect(getDisplayedWeeks(picker), 'to equal', ['44', '45', '46', '47', '48', '49']);
 
       dp.setDate('01/01/2021'); // Jan 2021
       expect(getDisplayedWeeks(picker), 'to equal', ['53', '1', '2', '3', '4', '5']);
 
-      prevBtn.click();  // Dec, 2020
+      prevButton.click();  // Dec, 2020
       expect(getDisplayedWeeks(picker), 'to equal', ['48', '49', '50', '51', '52', '53']);
 
       dp.setDate('12/01/2021'); // Dec 2021
@@ -437,7 +437,7 @@ describe('options - week numbers', function () {
       dp.setDate('01/01/2017'); // Jan 2017
       expect(getDisplayedWeeks(picker), 'to equal', ['52', '1', '2', '3', '4', '5']);
 
-      prevBtn.click();  // Dec, 2016
+      prevButton.click();  // Dec, 2016
       expect(getDisplayedWeeks(picker), 'to equal', ['48', '49', '50', '51', '52', '1']);
 
       dp.destroy();
@@ -455,25 +455,25 @@ describe('options - week numbers', function () {
         return startOfTheWeek === weekOneOfNextYear ? 1 : weekNum;
       };
       const {dp, picker} = createDP(input, {weekNumbers: callback, weekStart: 1});
-      const prevBtn = picker.querySelector('.prev-btn');
+      const prevButton = picker.querySelector('.prev-button');
       dp.show();
 
       expect(isVisible(picker.querySelector('.week-numbers')), 'to be true');
       expect(getDisplayedWeeks(picker), 'to equal', ['5', '6', '7', '8', '9', '10']);
 
-      prevBtn.click();  // Jan, 2020
+      prevButton.click();  // Jan, 2020
       expect(getDisplayedWeeks(picker), 'to equal', ['1', '2', '3', '4', '5', '6']);
 
-      prevBtn.click();  // Dec, 2019
+      prevButton.click();  // Dec, 2019
       expect(getDisplayedWeeks(picker), 'to equal', ['48', '49', '50', '51', '52', '1']);
 
-      prevBtn.click();  // Nob, 2019
+      prevButton.click();  // Nob, 2019
       expect(getDisplayedWeeks(picker), 'to equal', ['44', '45', '46', '47', '48', '49']);
 
       dp.setDate('01/01/2021'); // Jan 2021
       expect(getDisplayedWeeks(picker), 'to equal', ['1', '2', '3', '4', '5', '6']);
 
-      prevBtn.click();  // Dec, 2020
+      prevButton.click();  // Dec, 2020
       expect(getDisplayedWeeks(picker), 'to equal', ['49', '50', '51', '52', '1', '2']);
 
       dp.setDate('12/01/2021'); // Dec 2021
@@ -482,7 +482,7 @@ describe('options - week numbers', function () {
       dp.setDate('01/01/2017'); // Jan 2017
       expect(getDisplayedWeeks(picker), 'to equal', ['1', '2', '3', '4', '5', '6']);
 
-      prevBtn.click();  // Dec, 2016
+      prevButton.click();  // Dec, 2016
       expect(getDisplayedWeeks(picker), 'to equal', ['49', '50', '51', '52', '1', '2']);
 
       dp.hide();
@@ -492,19 +492,19 @@ describe('options - week numbers', function () {
 
       expect(getDisplayedWeeks(picker), 'to equal', ['6', '7', '8', '9', '10', '11']);
 
-      prevBtn.click();  // Jan, 2020
+      prevButton.click();  // Jan, 2020
       expect(getDisplayedWeeks(picker), 'to equal', ['1', '2', '3', '4', '5', '6']);
 
-      prevBtn.click();  // Dec, 2019
+      prevButton.click();  // Dec, 2019
       expect(getDisplayedWeeks(picker), 'to equal', ['49', '50', '51', '52', '1', '2']);
 
-      prevBtn.click();  // Nob, 2019
+      prevButton.click();  // Nob, 2019
       expect(getDisplayedWeeks(picker), 'to equal', ['45', '46', '47', '48', '49', '50']);
 
       dp.setDate('01/01/2021'); // Jan 2021
       expect(getDisplayedWeeks(picker), 'to equal', ['1', '2', '3', '4', '5', '6']);
 
-      prevBtn.click();  // Dec, 2020
+      prevButton.click();  // Dec, 2020
       expect(getDisplayedWeeks(picker), 'to equal', ['49', '50', '51', '52', '53', '1']);
 
       dp.setDate('12/01/2021'); // Dec 2021
@@ -513,7 +513,7 @@ describe('options - week numbers', function () {
       dp.setDate('01/01/2017'); // Jan 2017
       expect(getDisplayedWeeks(picker), 'to equal', ['1', '2', '3', '4', '5', '6']);
 
-      prevBtn.click();  // Dec, 2016
+      prevButton.click();  // Dec, 2016
       expect(getDisplayedWeeks(picker), 'to equal', ['49', '50', '51', '52', '1', '2']);
 
       dp.destroy();

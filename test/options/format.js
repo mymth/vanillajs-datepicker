@@ -100,15 +100,15 @@ describe('options - format & language', function () {
 
     it('specifies the language used for the month/day names, today/clear buttons and the default format/weekStart', function () {
       const locale = Datepicker.locales['zh-CN'];
-      const {dp, picker} = createDP(input, {language: 'zh-CN', todayBtn: true, clearBtn: true});
+      const {dp, picker} = createDP(input, {language: 'zh-CN', todayButton: true, clearButton: true});
       const viewSwitch = getViewSwitch(picker);
       dp.setDate(new Date(2020, 1, 14));
       dp.show();
 
       expect(viewSwitch.textContent, 'to be', '2020年02月');
       expect(input.value, 'to be', '2020-02-14');
-      expect(picker.querySelector('.today-btn').textContent, 'to be', locale.today);
-      expect(picker.querySelector('.clear-btn').textContent, 'to be', locale.clear);
+      expect(picker.querySelector('.today-button').textContent, 'to be', locale.today);
+      expect(picker.querySelector('.clear-button').textContent, 'to be', locale.clear);
 
       const dayNames = locale.daysMin.slice(1);
       dayNames.push(locale.daysMin[0]);
@@ -167,15 +167,15 @@ describe('options - format & language', function () {
 
     it('language code + tag not installed falls back to the language code without tag', function () {
       const locale = Datepicker.locales.fr;
-      const {dp, picker} = createDP(input, {language: 'fr-CA', todayBtn: true, clearBtn: true});
+      const {dp, picker} = createDP(input, {language: 'fr-CA', todayButton: true, clearButton: true});
       const viewSwitch = getViewSwitch(picker);
       dp.setDate(new Date(2020, 1, 14));
       dp.show();
 
       expect(viewSwitch.textContent, 'to be', 'février 2020');
       expect(input.value, 'to be', '14/02/2020');
-      expect(picker.querySelector('.today-btn').textContent, 'to be', locale.today);
-      expect(picker.querySelector('.clear-btn').textContent, 'to be', locale.clear);
+      expect(picker.querySelector('.today-button').textContent, 'to be', locale.today);
+      expect(picker.querySelector('.clear-button').textContent, 'to be', locale.clear);
 
       const dayNames = locale.daysMin.slice(1);
       dayNames.push(locale.daysMin[0]);
@@ -187,15 +187,15 @@ describe('options - format & language', function () {
 
     it('language code not installed falls back to "en"', function () {
       const locale = Datepicker.locales.en;
-      const {dp, picker} = createDP(input, {language: 'it', todayBtn: true, clearBtn: true});
+      const {dp, picker} = createDP(input, {language: 'it', todayButton: true, clearButton: true});
       const viewSwitch = getViewSwitch(picker);
       dp.setDate(new Date(2020, 1, 14));
       dp.show();
 
       expect(viewSwitch.textContent, 'to be', 'February 2020');
       expect(input.value, 'to be', '02/14/2020');
-      expect(picker.querySelector('.today-btn').textContent, 'to be', locale.today);
-      expect(picker.querySelector('.clear-btn').textContent, 'to be', locale.clear);
+      expect(picker.querySelector('.today-button').textContent, 'to be', locale.today);
+      expect(picker.querySelector('.clear-button').textContent, 'to be', locale.clear);
 
       expect(getDayNames(picker), 'to equal', locale.daysMin);
 
@@ -204,7 +204,7 @@ describe('options - format & language', function () {
     });
 
     it('can be updated with setOptions()', function () {
-      const {dp, picker} = createDP(input, {todayBtn: true, clearBtn: true});
+      const {dp, picker} = createDP(input, {todayButton: true, clearButton: true});
       const viewSwitch = getViewSwitch(picker);
       let locale = Datepicker.locales['zh-CN'];
       dp.setDate(new Date(2020, 1, 14));
@@ -213,8 +213,8 @@ describe('options - format & language', function () {
 
       expect(viewSwitch.textContent, 'to be', '2020年02月');
       expect(input.value, 'to be', '2020-02-14');
-      expect(picker.querySelector('.today-btn').textContent, 'to be', locale.today);
-      expect(picker.querySelector('.clear-btn').textContent, 'to be', locale.clear);
+      expect(picker.querySelector('.today-button').textContent, 'to be', locale.today);
+      expect(picker.querySelector('.clear-button').textContent, 'to be', locale.clear);
 
       let dayNames = locale.daysMin.slice(1);
       dayNames.push(locale.daysMin[0]);
@@ -230,8 +230,8 @@ describe('options - format & language', function () {
 
       expect(viewSwitch.textContent, 'to be', 'février 2020');
       expect(input.value, 'to be', '14/02/2020');
-      expect(picker.querySelector('.today-btn').textContent, 'to be', locale.today);
-      expect(picker.querySelector('.clear-btn').textContent, 'to be', locale.clear);
+      expect(picker.querySelector('.today-button').textContent, 'to be', locale.today);
+      expect(picker.querySelector('.clear-button').textContent, 'to be', locale.clear);
 
       dayNames = locale.daysMin.slice(1);
       dayNames.push(locale.daysMin[0]);
@@ -257,8 +257,8 @@ describe('options - format & language', function () {
 
       expect(viewSwitch.textContent, 'to be', 'February 2020');
       expect(input.value, 'to be', '02/14/2020');
-      expect(picker.querySelector('.today-btn').textContent, 'to be', locale.today);
-      expect(picker.querySelector('.clear-btn').textContent, 'to be', locale.clear);
+      expect(picker.querySelector('.today-button').textContent, 'to be', locale.today);
+      expect(picker.querySelector('.clear-button').textContent, 'to be', locale.clear);
 
       expect(getDayNames(picker), 'to equal', locale.daysMin);
 

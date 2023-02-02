@@ -122,15 +122,15 @@
   flex: auto;
 }
 
-.datepicker-controls .prev-btn,
-.datepicker-controls .next-btn {
+.datepicker-controls .prev-button,
+.datepicker-controls .next-button {
   padding-right: 0.375rem;
   padding-left: 0.375rem;
   width: 2.25rem;
 }
 
-.datepicker-controls .prev-btn.disabled,
-.datepicker-controls .next-btn.disabled {
+.datepicker-controls .prev-button.disabled,
+.datepicker-controls .next-button.disabled {
   visibility: hidden;
 }
 

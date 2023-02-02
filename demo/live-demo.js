@@ -111,7 +111,7 @@ const defaultOptions = {
   beforeShowDecade: null,
   beforeShowMonth: null,
   beforeShowYear: null,
-  clearBtn: false,
+  clearButton: false,
   dateDelimiter: ',',
   datesDisabled: [],
   daysOfWeekDisabled: [],
@@ -133,8 +133,8 @@ const defaultOptions = {
   showOnFocus: true,
   startView: 0,
   title: '',
-  todayBtn: false,
-  todayBtnMode: 0,
+  todayButton: false,
+  todayButtonMode: 0,
   todayHighlight: false,
   updateOnBlur: true,
   weekNumbers: 0,
@@ -531,7 +531,7 @@ function initialize() {
     selectElem.appendChild(parseHTML(`<option value="${lang}">${lang} – ${languages[lang]}</option>`));
   });
 
-  document.querySelector('.toggle-btn').addEventListener('click', () => {
+  document.querySelector('.toggle-button').addEventListener('click', () => {
     document.body.classList.toggle('open');
   });
 

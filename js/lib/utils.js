@@ -1,7 +1,3 @@
-export function hasProperty(obj, prop) {
-  return Object.prototype.hasOwnProperty.call(obj, prop);
-}
-
 export function lastItemOf(arr) {
   return arr[arr.length - 1];
 }

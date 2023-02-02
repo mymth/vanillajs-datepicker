@@ -14,7 +14,7 @@ export default class View {
   }
 
   init(options) {
-    if (options.pickLevel !== undefined) {
+    if ('pickLevel' in options) {
       this.isMinView = this.id === options.pickLevel;
     }
     this.setOptions(options);

@@ -246,7 +246,7 @@ describe('options - shortcutKeys', function () {
       const {dp, picker} = createDP(input, {
         shortcutKeys: {hide: {key: 'F2'}}
       });
-      const [nextBtn, viewSwitch] = getParts(picker, ['.next-btn', '.view-switch']);
+      const [nextButton, viewSwitch] = getParts(picker, ['.next-button', '.view-switch']);
       input.focus();
 
       simulant.fire(input, 'keydown', {key: 'F2'});
@@ -255,7 +255,7 @@ describe('options - shortcutKeys', function () {
       // the picker is reset to start view state, but no update to the selection
       dp.show();
       input.value = '2/8/2020';
-      nextBtn.click();
+      nextButton.click();
       viewSwitch.click();
 
       simulant.fire(input, 'keydown', {key: 'F2'});
@@ -447,7 +447,7 @@ describe('options - shortcutKeys', function () {
       const {dp, picker} = createDP(input, {
         shortcutKeys: {toggle: {key: 'F2'}}
       });
-      const [nextBtn, viewSwitch] = getParts(picker, ['.next-btn', '.view-switch']);
+      const [nextButton, viewSwitch] = getParts(picker, ['.next-button', '.view-switch']);
       input.focus();
 
       simulant.fire(input, 'keydown', {key: 'Escape'});
@@ -465,7 +465,7 @@ describe('options - shortcutKeys', function () {
       // when hiding, the picker is not reset to start view state,
       // and no update to the selection as well
       input.value = '2/8/2020';
-      nextBtn.click();
+      nextButton.click();
       viewSwitch.click();
 
       simulant.fire(input, 'keydown', {key: 'F2'});
@@ -714,7 +714,7 @@ describe('options - shortcutKeys', function () {
       const {dp, picker} = createDP(input, {
         shortcutKeys: {prevButton: {key: 'F2'}}
       });
-      const [nextBtn, viewSwitch] = getParts(picker, ['.next-btn', '.view-switch']);
+      const [nextButton, viewSwitch] = getParts(picker, ['.next-button', '.view-switch']);
       input.focus();
 
       simulant.fire(input, 'keydown', {key: 'ArrowLeft', ctrlKey: true});
@@ -732,7 +732,7 @@ describe('options - shortcutKeys', function () {
       expect(getCellIndices(cells, '.focused'), 'to equal', [16]);
       expect(cells[16].textContent, 'to be', '14');
 
-      nextBtn.click();
+      nextButton.click();
       viewSwitch.click();
 
       simulant.fire(input, 'keydown', {key: 'F2'});
@@ -741,7 +741,7 @@ describe('options - shortcutKeys', function () {
       expect(getCellIndices(cells, '.focused'), 'to equal', [1]);
       expect(cells[1].textContent, 'to be', 'Feb');
 
-      nextBtn.click();
+      nextButton.click();
       viewSwitch.click();
 
       simulant.fire(input, 'keydown', {key: 'F2'});
@@ -750,7 +750,7 @@ describe('options - shortcutKeys', function () {
       expect(getCellIndices(cells, '.focused'), 'to equal', [1]);
       expect(cells[1].textContent, 'to be', '2010');
 
-      nextBtn.click();
+      nextButton.click();
       viewSwitch.click();
 
       simulant.fire(input, 'keydown', {key: 'F2'});
@@ -788,7 +788,7 @@ describe('options - shortcutKeys', function () {
       const {dp, picker} = createDP(input, {
         shortcutKeys: {prevButton: {key: 'F2', ctrlOrMetaKey: true}},
       });
-      const [nextBtn, viewSwitch] = getParts(picker, ['.next-btn', '.view-switch']);
+      const [nextButton, viewSwitch] = getParts(picker, ['.next-button', '.view-switch']);
       input.focus();
 
       simulant.fire(input, 'keydown', {key: 'F2'});
@@ -797,12 +797,12 @@ describe('options - shortcutKeys', function () {
       simulant.fire(input, 'keydown', {key: 'F2', ctrlKey: true});
       expect(viewSwitch.textContent, 'to be', 'January 2020');
 
-      nextBtn.click();
+      nextButton.click();
 
       simulant.fire(input, 'keydown', {key: 'F2', metaKey: true});
       expect(viewSwitch.textContent, 'to be', 'January 2020');
 
-      nextBtn.click();
+      nextButton.click();
 
       simulant.fire(input, 'keydown', {key: 'F2', ctrlKey: true, altKey: true});
       expect(viewSwitch.textContent, 'to be', 'February 2020');
@@ -815,15 +815,15 @@ describe('options - shortcutKeys', function () {
 
     it('treats ctrlKey, metaKey as synonyms of ctrlOrMetaKey', function () {
       const shortcutKeys = {prevButton: {key: 'F2', ctrlKey: true}};
-      const partsClasses = ['.next-btn', '.view-switch'];
+      const partsClasses = ['.next-button', '.view-switch'];
       let {dp, picker} = createDP(input, {shortcutKeys});
-      let [nextBtn, viewSwitch] = getParts(picker, partsClasses);
+      let [nextButton, viewSwitch] = getParts(picker, partsClasses);
       input.focus();
 
       simulant.fire(input, 'keydown', {key: 'F2', ctrlKey: true});
       expect(viewSwitch.textContent, 'to be', 'January 2020');
 
-      nextBtn.click();
+      nextButton.click();
 
       simulant.fire(input, 'keydown', {key: 'F2', metaKey: true});
       expect(viewSwitch.textContent, 'to be', 'January 2020');
@@ -832,13 +832,13 @@ describe('options - shortcutKeys', function () {
 
       shortcutKeys.prevButton = {key: 'F2', metaKey: true};
       ({dp, picker} = createDP(input, {shortcutKeys}));
-      ([nextBtn, viewSwitch] = getParts(picker, partsClasses));
+      ([nextButton, viewSwitch] = getParts(picker, partsClasses));
       dp.show();
 
       simulant.fire(input, 'keydown', {key: 'F2', ctrlKey: true});
       expect(viewSwitch.textContent, 'to be', 'January 2020');
 
-      nextBtn.click();
+      nextButton.click();
 
       simulant.fire(input, 'keydown', {key: 'F2', metaKey: true});
       expect(viewSwitch.textContent, 'to be', 'January 2020');
@@ -850,23 +850,23 @@ describe('options - shortcutKeys', function () {
       const {dp, picker} = createDP(input, {
         shortcutKeys: {prevButton: {key: '/'}},
       });
-      const [nextBtn, viewSwitch] = getParts(picker, ['.next-btn', '.view-switch']);
+      const [nextButton, viewSwitch] = getParts(picker, ['.next-button', '.view-switch']);
       input.focus();
 
       simulant.fire(input, 'keydown', {key: '/'});
       expect(viewSwitch.textContent, 'to be', 'January 2020');
 
-      nextBtn.click();
+      nextButton.click();
 
       simulant.fire(input, 'keydown', {key: '/', shiftKey: true});
       expect(viewSwitch.textContent, 'to be', 'January 2020');
 
-      nextBtn.click();
+      nextButton.click();
 
       simulant.fire(input, 'keydown', {key: '/', altKey: true});
       expect(viewSwitch.textContent, 'to be', 'January 2020');
 
-      nextBtn.click();
+      nextButton.click();
 
       simulant.fire(input, 'keydown', {key: '/', ctrlKey: true});
       expect(viewSwitch.textContent, 'to be', 'February 2020');
@@ -987,7 +987,7 @@ describe('options - shortcutKeys', function () {
       const {dp, picker} = createDP(input, {
         shortcutKeys: {nextButton: {key: 'F2'}}
       });
-      const [prevBtn, viewSwitch] = getParts(picker, ['.prev-btn', '.view-switch']);
+      const [prevButton, viewSwitch] = getParts(picker, ['.prev-button', '.view-switch']);
       input.focus();
 
       simulant.fire(input, 'keydown', {key: 'ArrowRight', ctrlKey: true});
@@ -1005,7 +1005,7 @@ describe('options - shortcutKeys', function () {
       expect(getCellIndices(cells, '.focused'), 'to equal', [13]);
       expect(cells[13].textContent, 'to be', '14');
 
-      prevBtn.click();
+      prevButton.click();
       viewSwitch.click();
 
       simulant.fire(input, 'keydown', {key: 'F2'});
@@ -1014,7 +1014,7 @@ describe('options - shortcutKeys', function () {
       expect(getCellIndices(cells, '.focused'), 'to equal', [1]);
       expect(cells[1].textContent, 'to be', 'Feb');
 
-      prevBtn.click();
+      prevButton.click();
       viewSwitch.click();
 
       simulant.fire(input, 'keydown', {key: 'F2'});
@@ -1023,7 +1023,7 @@ describe('options - shortcutKeys', function () {
       expect(getCellIndices(cells, '.focused'), 'to equal', [1]);
       expect(cells[1].textContent, 'to be', '2030');
 
-      prevBtn.click();
+      prevButton.click();
       viewSwitch.click();
 
       simulant.fire(input, 'keydown', {key: 'F2'});
@@ -1061,7 +1061,7 @@ describe('options - shortcutKeys', function () {
       const {dp, picker} = createDP(input, {
         shortcutKeys: {nextButton: {key: 'F2', ctrlOrMetaKey: true}},
       });
-      const [prevBtn, viewSwitch] = getParts(picker, ['.prev-btn', '.view-switch']);
+      const [prevButton, viewSwitch] = getParts(picker, ['.prev-button', '.view-switch']);
       input.focus();
 
       simulant.fire(input, 'keydown', {key: 'F2'});
@@ -1070,12 +1070,12 @@ describe('options - shortcutKeys', function () {
       simulant.fire(input, 'keydown', {key: 'F2', ctrlKey: true});
       expect(viewSwitch.textContent, 'to be', 'March 2020');
 
-      prevBtn.click();
+      prevButton.click();
 
       simulant.fire(input, 'keydown', {key: 'F2', metaKey: true});
       expect(viewSwitch.textContent, 'to be', 'March 2020');
 
-      prevBtn.click();
+      prevButton.click();
 
       simulant.fire(input, 'keydown', {key: 'F2', ctrlKey: true, altKey: true});
       expect(viewSwitch.textContent, 'to be', 'February 2020');
@@ -1088,15 +1088,15 @@ describe('options - shortcutKeys', function () {
 
     it('treats ctrlKey, metaKey as synonyms of ctrlOrMetaKey', function () {
       const shortcutKeys = {nextButton: {key: 'F2', ctrlKey: true}};
-      const partsClasses = ['.prev-btn', '.view-switch'];
+      const partsClasses = ['.prev-button', '.view-switch'];
       let {dp, picker} = createDP(input, {shortcutKeys});
-      let [prevBtn, viewSwitch] = getParts(picker, partsClasses);
+      let [prevButton, viewSwitch] = getParts(picker, partsClasses);
       input.focus();
 
       simulant.fire(input, 'keydown', {key: 'F2', ctrlKey: true});
       expect(viewSwitch.textContent, 'to be', 'March 2020');
 
-      prevBtn.click();
+      prevButton.click();
 
       simulant.fire(input, 'keydown', {key: 'F2', metaKey: true});
       expect(viewSwitch.textContent, 'to be', 'March 2020');
@@ -1105,13 +1105,13 @@ describe('options - shortcutKeys', function () {
 
       shortcutKeys.nextButton = {key: 'F2', metaKey: true};
       ({dp, picker} = createDP(input, {shortcutKeys}));
-      ([prevBtn, viewSwitch] = getParts(picker, partsClasses));
+      ([prevButton, viewSwitch] = getParts(picker, partsClasses));
       dp.show();
 
       simulant.fire(input, 'keydown', {key: 'F2', ctrlKey: true});
       expect(viewSwitch.textContent, 'to be', 'March 2020');
 
-      prevBtn.click();
+      prevButton.click();
 
       simulant.fire(input, 'keydown', {key: 'F2', metaKey: true});
       expect(viewSwitch.textContent, 'to be', 'March 2020');
@@ -1123,23 +1123,23 @@ describe('options - shortcutKeys', function () {
       const {dp, picker} = createDP(input, {
         shortcutKeys: {nextButton: {key: '/'}},
       });
-      const [prevBtn, viewSwitch] = getParts(picker, ['.prev-btn', '.view-switch']);
+      const [prevButton, viewSwitch] = getParts(picker, ['.prev-button', '.view-switch']);
       input.focus();
 
       simulant.fire(input, 'keydown', {key: '/'});
       expect(viewSwitch.textContent, 'to be', 'March 2020');
 
-      prevBtn.click();
+      prevButton.click();
 
       simulant.fire(input, 'keydown', {key: '/', shiftKey: true});
       expect(viewSwitch.textContent, 'to be', 'March 2020');
 
-      prevBtn.click();
+      prevButton.click();
 
       simulant.fire(input, 'keydown', {key: '/', altKey: true});
       expect(viewSwitch.textContent, 'to be', 'March 2020');
 
-      prevBtn.click();
+      prevButton.click();
 
       simulant.fire(input, 'keydown', {key: '/', ctrlKey: true});
       expect(viewSwitch.textContent, 'to be', 'February 2020');
@@ -1514,6 +1514,669 @@ describe('options - shortcutKeys', function () {
 
       simulant.fire(input, 'keydown', {key: 'ArrowUp', ctrlKey: true});
       expect(viewSwitch.textContent, 'to be', '2020');
+
+      dp.destroy();
+    });
+  });
+
+  describe('clearButton option', function () {
+    it('changes shortcut key for clear button click', function () {
+      const {dp, picker} = createDP(input, {
+        clearButton: true,
+        shortcutKeys: {clearButton: {key: 'F2'}}
+      });
+      const [prevButton, viewSwitch] = getParts(picker, ['.prev-button', '.view-switch']);
+      const apr22 = dateValue(2020, 3, 22);
+      dp.setDate(apr22);
+      input.focus();
+
+      simulant.fire(input, 'keydown', {key: 'Backspace', ctrlKey: true});
+      expect(dp.dates, 'to equal', [apr22]);
+      expect(viewSwitch.textContent, 'to be', 'April 2020');
+      let cells = getCells(picker);
+      expect(getCellIndices(cells, '.selected'), 'to equal', [24]);
+      expect(cells[24].textContent, 'to be', '22');
+      // original behaivor before the shortcut assignment is restored
+      expect(dp.editMode, 'to be true');
+      dp.exitEditMode();
+
+      simulant.fire(input, 'keydown', {key: 'F2'});
+      expect(dp.dates, 'to equal', []);
+      expect(viewSwitch.textContent, 'to be', 'February 2020');
+      cells = getCells(picker);
+      expect(getCellIndices(cells, '.selected'), 'to equal', []);
+      expect(getCellIndices(cells, '.focused'), 'to equal', [19]);
+      expect(cells[19].textContent, 'to be', '14');
+
+      dp.setDate(apr22);
+      viewSwitch.click();
+      prevButton.click();
+
+      simulant.fire(input, 'keydown', {key: 'F2'});
+      expect(dp.dates, 'to equal', []);
+      expect(viewSwitch.textContent, 'to be', 'February 2020');
+
+      dp.setDate(apr22);
+      viewSwitch.click();
+      viewSwitch.click();
+      prevButton.click();
+
+      simulant.fire(input, 'keydown', {key: 'F2'});
+      expect(dp.dates, 'to equal', []);
+      expect(viewSwitch.textContent, 'to be', 'February 2020');
+
+      dp.setDate(apr22);
+      viewSwitch.click();
+      viewSwitch.click();
+      viewSwitch.click();
+      prevButton.click();
+
+      simulant.fire(input, 'keydown', {key: 'F2'});
+      expect(dp.dates, 'to equal', []);
+      expect(viewSwitch.textContent, 'to be', 'February 2020');
+
+      // shortcut is only available when clearButton: true
+      dp.setOptions({clearButton: false});
+      dp.setDate(apr22);
+
+      simulant.fire(input, 'keydown', {key: 'F2'});
+      expect(dp.dates, 'to equal', [apr22]);
+      expect(viewSwitch.textContent, 'to be', 'April 2020');
+
+      dp.destroy();
+    });
+
+    it('considers unspecified modifier key state as false', function () {
+      const dp = new Datepicker(input, {
+        clearButton: true,
+        shortcutKeys: {clearButton: {key: 'F2'}}
+      });
+      const apr22 = dateValue(2020, 3, 22);
+      dp.setDate(apr22);
+      input.focus();
+
+      simulant.fire(input, 'keydown', {key: 'F2', ctrlKey: true});
+      expect(dp.dates, 'to equal', [apr22]);
+
+      simulant.fire(input, 'keydown', {key: 'F2', metaKey: true});
+      expect(dp.dates, 'to equal', [apr22]);
+
+      simulant.fire(input, 'keydown', {key: 'F2', altKey: true});
+      expect(dp.dates, 'to equal', [apr22]);
+
+      simulant.fire(input, 'keydown', {key: 'F2', shiftKey: true});
+      expect(dp.dates, 'to equal', [apr22]);
+
+      dp.destroy();
+    });
+
+    it('takes ctrlOrMetaKey for the condtion for ctrl and metaKey', function () {
+      const dp = new Datepicker(input, {
+        clearButton: true,
+        shortcutKeys: {clearButton: {key: 'F2', ctrlOrMetaKey: true}},
+      });
+      const apr22 = dateValue(2020, 3, 22);
+      dp.setDate(apr22);
+      input.focus();
+
+      simulant.fire(input, 'keydown', {key: 'F2'});
+      expect(dp.dates, 'to equal', [apr22]);
+
+      simulant.fire(input, 'keydown', {key: 'F2', ctrlKey: true});
+      expect(dp.dates, 'to equal', []);
+
+      dp.setDate(apr22);
+
+      simulant.fire(input, 'keydown', {key: 'F2', metaKey: true});
+      expect(dp.dates, 'to equal', []);
+
+      dp.setDate(apr22);
+
+      simulant.fire(input, 'keydown', {key: 'F2', ctrlKey: true, altKey: true});
+      expect(dp.dates, 'to equal', [apr22]);
+
+      simulant.fire(input, 'keydown', {key: 'F2', metaKey: true, shiftKey: true});
+      expect(dp.dates, 'to equal', [apr22]);
+
+      dp.destroy();
+    });
+
+    it('treats ctrlKey, metaKey as synonyms of ctrlOrMetaKey', function () {
+      const shortcutKeys = {clearButton: {key: 'F2', ctrlKey: true}};
+      const apr22 = dateValue(2020, 3, 22);
+      let dp = new Datepicker(input, {clearButton: true, shortcutKeys});
+      dp.setDate(apr22);
+      input.focus();
+
+      simulant.fire(input, 'keydown', {key: 'F2', ctrlKey: true});
+      expect(dp.dates, 'to equal', []);
+
+      dp.setDate(apr22);
+
+      simulant.fire(input, 'keydown', {key: 'F2', metaKey: true});
+      expect(dp.dates, 'to equal', []);
+
+      dp.destroy();
+
+      shortcutKeys.clearButton = {key: 'F2', metaKey: true};
+      dp = new Datepicker(input, {clearButton: true, shortcutKeys});
+      dp.setDate(apr22);
+      dp.show();
+
+      simulant.fire(input, 'keydown', {key: 'F2', ctrlKey: true});
+      expect(dp.dates, 'to equal', []);
+
+      dp.setDate(apr22);
+
+      simulant.fire(input, 'keydown', {key: 'F2', metaKey: true});
+      expect(dp.dates, 'to equal', []);
+
+      dp.destroy();
+    });
+
+    it('ignores shiftKey, altKey conditions when key is printable characler', function () {
+      const dp = new Datepicker(input, {
+        clearButton: true,
+        shortcutKeys: {clearButton: {key: '/'}},
+      });
+      const apr22 = dateValue(2020, 3, 22);
+      dp.setDate(apr22);
+      input.focus();
+
+      simulant.fire(input, 'keydown', {key: '/'});
+      expect(dp.dates, 'to equal', []);
+
+      dp.setDate(apr22);
+
+      simulant.fire(input, 'keydown', {key: '/', shiftKey: true});
+      expect(dp.dates, 'to equal', []);
+
+      dp.setDate(apr22);
+
+      simulant.fire(input, 'keydown', {key: '/', altKey: true});
+      expect(dp.dates, 'to equal', []);
+
+      dp.setDate(apr22);
+
+      simulant.fire(input, 'keydown', {key: '/', ctrlKey: true});
+      expect(dp.dates, 'to equal', [apr22]);
+
+      simulant.fire(input, 'keydown', {key: '/', metaKey: true});
+      expect(dp.dates, 'to equal', [apr22]);
+
+      simulant.fire(input, 'keydown', {key: '/', ctrlKey: true, shiftKey: true});
+      expect(dp.dates, 'to equal', [apr22]);
+
+      simulant.fire(input, 'keydown', {key: '/', metaKey: true, altKey: true});
+      expect(dp.dates, 'to equal', [apr22]);
+
+      dp.destroy();
+    });
+
+    it('disables shortcut key for next button when falsy value other than undefined', function () {
+      let dp = new Datepicker(input, {
+        clearButton: true,
+        shortcutKeys: {clearButton: null},
+      });
+      const apr22 = dateValue(2020, 3, 22);
+      dp.setDate(apr22);
+      input.focus();
+
+      simulant.fire(input, 'keydown', {key: 'Backspace', ctrlKey: true});
+      expect(dp.dates, 'to equal', [apr22]);
+
+      simulant.fire(input, 'keydown', {key: 'F2'});
+      expect(dp.dates, 'to equal', [apr22]);
+
+      dp.destroy();
+
+      dp = new Datepicker(input, {
+        clearButton: true,
+        shortcutKeys: {clearButton: false},
+      });
+      dp.setDate(apr22);
+      dp.show();
+
+      simulant.fire(input, 'keydown', {key: 'Backspace', ctrlKey: true});
+      expect(dp.dates, 'to equal', [apr22]);
+
+      simulant.fire(input, 'keydown', {key: 'F2'});
+      expect(dp.dates, 'to equal', [apr22]);
+
+      dp.destroy();
+
+      // does nothing when undefined
+      dp = new Datepicker(input, {
+        clearButton: true,
+        shortcutKeys: {clearButton: undefined},
+      });
+      dp.setDate(apr22);
+      dp.show();
+
+      simulant.fire(input, 'keydown', {key: 'Backspace', ctrlKey: true});
+      expect(dp.dates, 'to equal', []);
+
+      dp.destroy();
+    });
+
+    it('changes the target of keypress event cancelation (incl. bubbling) to new shortcut', function () {
+      const spyInputKeydown = sinon.spy();
+      const spyOuterKeydown = sinon.spy();
+      input.addEventListener('keydown', spyInputKeydown);
+      outer.addEventListener('keydown', spyOuterKeydown);
+
+      const dp = new Datepicker(input, {
+        clearButton: true,
+        shortcutKeys: {clearButton: {key: 'F2'}},
+      });
+      const apr22 = dateValue(2020, 3, 22);
+      dp.setDate(apr22);
+      input.focus();
+
+      simulant.fire(input, 'keydown', {key: 'Backspace', ctrlKey: true});
+      expect(spyInputKeydown.called, 'to be true');
+      expect(spyInputKeydown.args[0][0].defaultPrevented, 'to be false');
+      expect(spyOuterKeydown.called, 'to be true');
+
+      dp.exitEditMode();
+      spyInputKeydown.resetHistory();
+      spyOuterKeydown.resetHistory();
+
+      simulant.fire(input, 'keydown', {key: 'F2'});
+      expect(spyInputKeydown.called, 'to be true');
+      expect(spyInputKeydown.args[0][0].defaultPrevented, 'to be true');
+      expect(spyOuterKeydown.called, 'to be false');
+
+      spyInputKeydown.resetHistory();
+
+      // the same key press while picker is shown is always treated as shortcut
+      simulant.fire(input, 'keydown', {key: 'F2'});
+      expect(spyInputKeydown.called, 'to be true');
+      expect(spyInputKeydown.args[0][0].defaultPrevented, 'to be true');
+      expect(spyOuterKeydown.called, 'to be false');
+
+      spyInputKeydown.resetHistory();
+      dp.hide();
+
+      // the same key press while picker is hidden is not treated as shortcut
+      simulant.fire(input, 'keydown', {key: 'F2'});
+      expect(spyInputKeydown.called, 'to be true');
+      expect(spyInputKeydown.args[0][0].defaultPrevented, 'to be false');
+      expect(spyOuterKeydown.called, 'to be true');
+
+      dp.destroy();
+      input.removeEventListener('keydown', spyInputKeydown);
+      outer.removeEventListener('keydown', spyOuterKeydown);
+    });
+
+    it('cannot be update with setOptions()', function () {
+      const dp = new Datepicker(input, {clearButton: true});
+      const apr22 = dateValue(2020, 3, 22);
+      dp.setDate(apr22);
+      input.focus();
+
+      dp.setOptions({shortcutKeys: {clearButton: {key: 'F2'}}});
+      simulant.fire(input, 'keydown', {key: 'F2'});
+      expect(dp.dates, 'to equal', [apr22]);
+
+      simulant.fire(input, 'keydown', {key: 'Backspace', ctrlKey: true});
+      expect(dp.dates, 'to equal', []);
+
+      dp.destroy();
+    });
+  });
+
+  describe('todayButton option', function () {
+    it('changes shortcut key for today button click', function () {
+      const {dp, picker} = createDP(input, {
+        todayButton: true,
+        shortcutKeys: {todayButton: {key: 'F2'}}
+      });
+      const [prevButton, viewSwitch] = getParts(picker, ['.prev-button', '.view-switch']);
+      const apr22 = dateValue(2020, 3, 22);
+      const today = dateValue(2020, 1, 14);
+      dp.setDate(apr22);
+      input.focus();
+
+      simulant.fire(input, 'keydown', {key: '.', ctrlKey: true});
+      expect(dp.dates, 'to equal', [apr22]);
+      expect(viewSwitch.textContent, 'to be', 'April 2020');
+      let cells = getCells(picker);
+      expect(getCellIndices(cells, '.focused'), 'to equal', [24]);
+      expect(getCellIndices(cells, '.selected'), 'to equal', [24]);
+      expect(cells[24].textContent, 'to be', '22');
+
+      simulant.fire(input, 'keydown', {key: 'F2'});
+      expect(dp.dates, 'to equal', [apr22]);
+      expect(viewSwitch.textContent, 'to be', 'February 2020');
+      cells = getCells(picker);
+      expect(getCellIndices(cells, '.selected'), 'to equal', []);
+      expect(getCellIndices(cells, '.focused'), 'to equal', [19]);
+      expect(cells[19].textContent, 'to be', '14');
+
+      dp.setOptions({todayButtonMode: 1});
+
+      simulant.fire(input, 'keydown', {key: 'F2'});
+      expect(dp.dates, 'to equal', [today]);
+      expect(viewSwitch.textContent, 'to be', 'February 2020');
+      cells = getCells(picker);
+      expect(getCellIndices(cells, '.selected'), 'to equal', [19]);
+      expect(getCellIndices(cells, '.focused'), 'to equal', [19]);
+      expect(cells[19].textContent, 'to be', '14');
+
+      dp.setDate(apr22);
+      viewSwitch.click();
+      prevButton.click();
+
+      simulant.fire(input, 'keydown', {key: 'F2'});
+      expect(dp.dates, 'to equal', [today]);
+      expect(viewSwitch.textContent, 'to be', 'February 2020');
+
+      dp.setDate(apr22);
+      viewSwitch.click();
+      viewSwitch.click();
+      prevButton.click();
+
+      simulant.fire(input, 'keydown', {key: 'F2'});
+      expect(dp.dates, 'to equal', [today]);
+      expect(viewSwitch.textContent, 'to be', 'February 2020');
+
+      dp.setDate(apr22);
+      viewSwitch.click();
+      viewSwitch.click();
+      viewSwitch.click();
+      prevButton.click();
+
+      simulant.fire(input, 'keydown', {key: 'F2'});
+      expect(dp.dates, 'to equal', [today]);
+      expect(viewSwitch.textContent, 'to be', 'February 2020');
+
+      // shortcut is only available when todayButton: true
+      dp.setOptions({todayButton: false});
+      dp.setDate(apr22);
+
+      simulant.fire(input, 'keydown', {key: 'F2'});
+      expect(dp.dates, 'to equal', [apr22]);
+      expect(viewSwitch.textContent, 'to be', 'April 2020');
+
+      dp.destroy();
+    });
+
+    it('considers unspecified modifier key state as false', function () {
+      const {dp, picker} = createDP(input, {
+        todayButton: true,
+        todayButtonMode: 1,
+        shortcutKeys: {todayButton: {key: 'F2'}}
+      });
+      const viewSwitch = getViewSwitch(picker);
+      const apr22 = dateValue(2020, 3, 22);
+      dp.setDate(apr22);
+      input.focus();
+
+      simulant.fire(input, 'keydown', {key: 'F2', ctrlKey: true});
+      expect(dp.dates, 'to equal', [apr22]);
+      expect(viewSwitch.textContent, 'to be', 'April 2020');
+
+      simulant.fire(input, 'keydown', {key: 'F2', metaKey: true});
+      expect(dp.dates, 'to equal', [apr22]);
+      expect(viewSwitch.textContent, 'to be', 'April 2020');
+
+      simulant.fire(input, 'keydown', {key: 'F2', altKey: true});
+      expect(dp.dates, 'to equal', [apr22]);
+      expect(viewSwitch.textContent, 'to be', 'April 2020');
+
+      simulant.fire(input, 'keydown', {key: 'F2', shiftKey: true});
+      expect(dp.dates, 'to equal', [apr22]);
+      expect(viewSwitch.textContent, 'to be', 'April 2020');
+
+      dp.destroy();
+    });
+
+    it('takes ctrlOrMetaKey for the condtion for ctrl and metaKey', function () {
+      const {dp, picker} = createDP(input, {
+        todayButton: true,
+        todayButtonMode: 1,
+        shortcutKeys: {todayButton: {key: 'F2', ctrlOrMetaKey: true}},
+      });
+      const viewSwitch = getViewSwitch(picker);
+      const apr22 = dateValue(2020, 3, 22);
+      const today = dateValue(2020, 1, 14);
+      dp.setDate(apr22);
+      input.focus();
+
+      simulant.fire(input, 'keydown', {key: 'F2'});
+      expect(dp.dates, 'to equal', [apr22]);
+      expect(viewSwitch.textContent, 'to be', 'April 2020');
+
+      simulant.fire(input, 'keydown', {key: 'F2', ctrlKey: true});
+      expect(dp.dates, 'to equal', [today]);
+      expect(viewSwitch.textContent, 'to be', 'February 2020');
+
+      dp.setDate(apr22);
+
+      simulant.fire(input, 'keydown', {key: 'F2', metaKey: true});
+      expect(dp.dates, 'to equal', [today]);
+      expect(viewSwitch.textContent, 'to be', 'February 2020');
+
+      dp.setDate(apr22);
+
+      simulant.fire(input, 'keydown', {key: 'F2', ctrlKey: true, altKey: true});
+      expect(dp.dates, 'to equal', [apr22]);
+      expect(viewSwitch.textContent, 'to be', 'April 2020');
+
+      simulant.fire(input, 'keydown', {key: 'F2', metaKey: true, shiftKey: true});
+      expect(dp.dates, 'to equal', [apr22]);
+      expect(viewSwitch.textContent, 'to be', 'April 2020');
+
+      dp.destroy();
+    });
+
+    it('treats ctrlKey, metaKey as synonyms of ctrlOrMetaKey', function () {
+      const shortcutKeys = {todayButton: {key: 'F2', ctrlKey: true}};
+      const apr22 = dateValue(2020, 3, 22);
+      const today = dateValue(2020, 1, 14);
+      let dp = new Datepicker(input, {todayButton: true, todayButtonMode: 1, shortcutKeys});
+      dp.setDate(apr22);
+      input.focus();
+
+      simulant.fire(input, 'keydown', {key: 'F2', ctrlKey: true});
+      expect(dp.dates, 'to equal', [today]);
+
+      dp.setDate(apr22);
+
+      simulant.fire(input, 'keydown', {key: 'F2', metaKey: true});
+      expect(dp.dates, 'to equal', [today]);
+
+      dp.destroy();
+
+      shortcutKeys.todayButton = {key: 'F2', metaKey: true};
+      dp = new Datepicker(input, {todayButton: true, todayButtonMode: 1, shortcutKeys});
+      dp.setDate(apr22);
+      dp.show();
+
+      simulant.fire(input, 'keydown', {key: 'F2', ctrlKey: true});
+      expect(dp.dates, 'to equal', [today]);
+
+      dp.setDate(apr22);
+
+      simulant.fire(input, 'keydown', {key: 'F2', metaKey: true});
+      expect(dp.dates, 'to equal', [today]);
+
+      dp.destroy();
+    });
+
+    it('ignores shiftKey, altKey conditions when key is printable characler', function () {
+      const {dp, picker} = createDP(input, {
+        todayButton: true,
+        todayButtonMode: 1,
+        shortcutKeys: {todayButton: {key: '/'}},
+      });
+      const viewSwitch = getViewSwitch(picker);
+      const apr22 = dateValue(2020, 3, 22);
+      const today = dateValue(2020, 1, 14);
+      dp.setDate(apr22);
+      input.focus();
+
+      simulant.fire(input, 'keydown', {key: '/'});
+      expect(dp.dates, 'to equal', [today]);
+      expect(viewSwitch.textContent, 'to be', 'February 2020');
+
+      dp.setDate(apr22);
+
+      simulant.fire(input, 'keydown', {key: '/', shiftKey: true});
+      expect(dp.dates, 'to equal', [today]);
+      expect(viewSwitch.textContent, 'to be', 'February 2020');
+
+      dp.setDate(apr22);
+
+      simulant.fire(input, 'keydown', {key: '/', altKey: true});
+      expect(dp.dates, 'to equal', [today]);
+      expect(viewSwitch.textContent, 'to be', 'February 2020');
+
+      dp.setDate(apr22);
+
+      simulant.fire(input, 'keydown', {key: '/', ctrlKey: true});
+      expect(dp.dates, 'to equal', [apr22]);
+      expect(viewSwitch.textContent, 'to be', 'April 2020');
+
+      simulant.fire(input, 'keydown', {key: '/', metaKey: true});
+      expect(dp.dates, 'to equal', [apr22]);
+      expect(viewSwitch.textContent, 'to be', 'April 2020');
+
+      simulant.fire(input, 'keydown', {key: '/', ctrlKey: true, shiftKey: true});
+      expect(dp.dates, 'to equal', [apr22]);
+      expect(viewSwitch.textContent, 'to be', 'April 2020');
+
+      simulant.fire(input, 'keydown', {key: '/', metaKey: true, altKey: true});
+      expect(dp.dates, 'to equal', [apr22]);
+      expect(viewSwitch.textContent, 'to be', 'April 2020');
+
+      dp.destroy();
+    });
+
+    it('disables shortcut key for next button when falsy value other than undefined', function () {
+      let {dp, picker} = createDP(input, {
+        todayButton: true,
+        todayButtonMode: 1,
+        shortcutKeys: {todayButton: null},
+      });
+      let viewSwitch = getViewSwitch(picker);
+      const apr22 = dateValue(2020, 3, 22);
+      const today = dateValue(2020, 1, 14);
+      dp.setDate(apr22);
+      input.focus();
+
+      simulant.fire(input, 'keydown', {key: '.', ctrlKey: true});
+      expect(dp.dates, 'to equal', [apr22]);
+      expect(viewSwitch.textContent, 'to be', 'April 2020');
+
+      simulant.fire(input, 'keydown', {key: 'F2'});
+      expect(dp.dates, 'to equal', [apr22]);
+      expect(viewSwitch.textContent, 'to be', 'April 2020');
+
+      dp.destroy();
+
+      dp = new Datepicker(input, {
+        todayButton: true,
+        todayButtonMode: 1,
+        shortcutKeys: {todayButton: false},
+      });
+      viewSwitch = getViewSwitch(picker);
+      dp.setDate(apr22);
+      dp.show();
+
+      simulant.fire(input, 'keydown', {key: '.', ctrlKey: true});
+      expect(dp.dates, 'to equal', [apr22]);
+      expect(viewSwitch.textContent, 'to be', 'April 2020');
+
+      simulant.fire(input, 'keydown', {key: 'F2'});
+      expect(dp.dates, 'to equal', [apr22]);
+      expect(viewSwitch.textContent, 'to be', 'April 2020');
+
+      dp.destroy();
+
+      // does nothing when undefined
+      dp = new Datepicker(input, {
+        todayButton: true,
+        todayButtonMode: 1,
+        shortcutKeys: {todayButton: undefined},
+      });
+      dp.setDate(apr22);
+      dp.show();
+
+      simulant.fire(input, 'keydown', {key: '.', ctrlKey: true});
+      expect(dp.dates, 'to equal', [today]);
+
+      dp.destroy();
+    });
+
+    it('changes the target of keypress event cancelation (incl. bubbling) to new shortcut', function () {
+      const spyInputKeydown = sinon.spy();
+      const spyOuterKeydown = sinon.spy();
+      input.addEventListener('keydown', spyInputKeydown);
+      outer.addEventListener('keydown', spyOuterKeydown);
+
+      const dp = new Datepicker(input, {
+        todayButton: true,
+        todayButtonMode: 1,
+        shortcutKeys: {todayButton: {key: 'F2'}},
+      });
+      const apr22 = dateValue(2020, 3, 22);
+      dp.setDate(apr22);
+      input.focus();
+
+      simulant.fire(input, 'keydown', {key: '.', ctrlKey: true});
+      expect(spyInputKeydown.called, 'to be true');
+      expect(spyInputKeydown.args[0][0].defaultPrevented, 'to be false');
+      expect(spyOuterKeydown.called, 'to be true');
+
+      dp.exitEditMode();
+      spyInputKeydown.resetHistory();
+      spyOuterKeydown.resetHistory();
+
+      simulant.fire(input, 'keydown', {key: 'F2'});
+      expect(spyInputKeydown.called, 'to be true');
+      expect(spyInputKeydown.args[0][0].defaultPrevented, 'to be true');
+      expect(spyOuterKeydown.called, 'to be false');
+
+      spyInputKeydown.resetHistory();
+
+      // the same key press while picker is shown is always treated as shortcut
+      simulant.fire(input, 'keydown', {key: 'F2'});
+      expect(spyInputKeydown.called, 'to be true');
+      expect(spyInputKeydown.args[0][0].defaultPrevented, 'to be true');
+      expect(spyOuterKeydown.called, 'to be false');
+
+      spyInputKeydown.resetHistory();
+      dp.hide();
+
+      // the same key press while picker is hidden is not treated as shortcut
+      simulant.fire(input, 'keydown', {key: 'F2'});
+      expect(spyInputKeydown.called, 'to be true');
+      expect(spyInputKeydown.args[0][0].defaultPrevented, 'to be false');
+      expect(spyOuterKeydown.called, 'to be true');
+
+      dp.destroy();
+      input.removeEventListener('keydown', spyInputKeydown);
+      outer.removeEventListener('keydown', spyOuterKeydown);
+    });
+
+    it('cannot be update with setOptions()', function () {
+      const {dp, picker} = createDP(input, {todayButton: true, todayButtonMode: 1});
+      const viewSwitch = getViewSwitch(picker);
+      const apr22 = dateValue(2020, 3, 22);
+      const today = dateValue(2020, 1, 14);
+      dp.setDate(apr22);
+      input.focus();
+
+      dp.setOptions({shortcutKeys: {todayButton: {key: 'F2'}}});
+      simulant.fire(input, 'keydown', {key: 'F2'});
+      expect(dp.dates, 'to equal', [apr22]);
+      expect(viewSwitch.textContent, 'to be', 'April 2020');
+
+      simulant.fire(input, 'keydown', {key: '.', ctrlKey: true});
+      expect(dp.dates, 'to equal', [today]);
+      expect(viewSwitch.textContent, 'to be', 'February 2020');
 
       dp.destroy();
     });

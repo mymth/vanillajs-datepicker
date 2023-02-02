@@ -26,7 +26,7 @@ describe('options - beforeShow hooks', function () {
       expect(disabledCellIndices, 'to equal', [4, 15, 25]);
       expect(disabledCellIndices.map(idx => cells[idx].textContent), 'to equal', ['30', '10', '20']);
 
-      picker.querySelector('.next-btn').click();
+      picker.querySelector('.next-button').click();
 
       cells = getCells(picker);
       disabledCellIndices = getCellIndices(cells, '.disabled');
@@ -48,7 +48,7 @@ describe('options - beforeShow hooks', function () {
       expect(barCellIndices, 'to equal', fooCellIndices);
       expect(fooCellIndices.map(idx => cells[idx].textContent), 'to equal', ['30', '10', '20']);
 
-      picker.querySelector('.next-btn').click();
+      picker.querySelector('.next-button').click();
 
       cells = getCells(picker);
       fooCellIndices = getCellIndices(cells, '.foo');
@@ -69,7 +69,7 @@ describe('options - beforeShow hooks', function () {
 
       expect(disabledCellIndices, 'to equal', [4, 15, 25]);
 
-      picker.querySelector('.next-btn').click();
+      picker.querySelector('.next-button').click();
 
       cells = getCells(picker);
       disabledCellIndices = getCellIndices(cells, '.disabled');
@@ -89,7 +89,7 @@ describe('options - beforeShow hooks', function () {
       expect(fooCellIndices, 'to equal', [4, 15, 25]);
       expect(barCellIndices, 'to equal', fooCellIndices);
 
-      picker.querySelector('.next-btn').click();
+      picker.querySelector('.next-button').click();
 
       cells = getCells(picker);
       fooCellIndices = getCellIndices(cells, '.foo');
@@ -112,7 +112,7 @@ describe('options - beforeShow hooks', function () {
         expect(cells[idx].innerHTML, 'to be', '<em>❤️</em>');
       });
 
-      picker.querySelector('.next-btn').click();
+      picker.querySelector('.next-button').click();
 
       cells = getCells(picker);
       ccCellIndices = getCellIndices(cells, el => el.children.length > 0);
@@ -161,7 +161,7 @@ describe('options - beforeShow hooks', function () {
       expect(disabledCellIndices, 'to equal', [0, 5, 10]);
       expect(disabledCellIndices.map(idx => cells[idx].textContent), 'to equal', ['Jan', 'Jun', 'Nov']);
 
-      picker.querySelector('.next-btn').click();
+      picker.querySelector('.next-button').click();
 
       cells = getCells(picker);
       disabledCellIndices = getCellIndices(cells, '.disabled');
@@ -187,7 +187,7 @@ describe('options - beforeShow hooks', function () {
       expect(barCellIndices, 'to equal', fooCellIndices);
       expect(fooCellIndices.map(idx => cells[idx].textContent), 'to equal', ['Jan', 'Jun', 'Nov']);
 
-      picker.querySelector('.next-btn').click();
+      picker.querySelector('.next-button').click();
 
       cells = getCells(picker);
       fooCellIndices = getCellIndices(cells, '.foo');
@@ -212,7 +212,7 @@ describe('options - beforeShow hooks', function () {
 
       expect(disabledCellIndices, 'to equal', [0, 5, 10]);
 
-      picker.querySelector('.next-btn').click();
+      picker.querySelector('.next-button').click();
 
       cells = getCells(picker);
       disabledCellIndices = getCellIndices(cells, '.disabled');
@@ -236,7 +236,7 @@ describe('options - beforeShow hooks', function () {
       expect(fooCellIndices, 'to equal', [0, 5, 10]);
       expect(barCellIndices, 'to equal', fooCellIndices);
 
-      picker.querySelector('.next-btn').click();
+      picker.querySelector('.next-button').click();
 
       cells = getCells(picker);
       fooCellIndices = getCellIndices(cells, '.foo');
@@ -263,7 +263,7 @@ describe('options - beforeShow hooks', function () {
         expect(cells[idx].textContent, 'to be', '🍀');
       });
 
-      picker.querySelector('.next-btn').click();
+      picker.querySelector('.next-button').click();
 
       cells = getCells(picker);
       ccCellIndices = getCellIndices(cells, el => el.textContent.length  < 3);
@@ -316,7 +316,7 @@ describe('options - beforeShow hooks', function () {
       expect(disabledCellIndices, 'to equal', [1, 5, 9]);
       expect(disabledCellIndices.map(idx => cells[idx].textContent), 'to equal', ['2020', '2024', '2028',]);
 
-      picker.querySelector('.next-btn').click();
+      picker.querySelector('.next-button').click();
 
       cells = getCells(picker);
       disabledCellIndices = getCellIndices(cells, '.disabled');
@@ -343,7 +343,7 @@ describe('options - beforeShow hooks', function () {
       expect(barCellIndices, 'to equal', fooCellIndices);
       expect(fooCellIndices.map(idx => cells[idx].textContent), 'to equal', ['2020', '2024', '2028']);
 
-      picker.querySelector('.next-btn').click();
+      picker.querySelector('.next-button').click();
 
       cells = getCells(picker);
       fooCellIndices = getCellIndices(cells, '.foo');
@@ -369,7 +369,7 @@ describe('options - beforeShow hooks', function () {
 
       expect(disabledCellIndices, 'to equal', [1, 5, 9]);
 
-      picker.querySelector('.next-btn').click();
+      picker.querySelector('.next-button').click();
 
       cells = getCells(picker);
       disabledCellIndices = getCellIndices(cells, '.disabled');
@@ -394,7 +394,7 @@ describe('options - beforeShow hooks', function () {
       expect(fooCellIndices, 'to equal', [1, 5, 9]);
       expect(barCellIndices, 'to equal', fooCellIndices);
 
-      picker.querySelector('.next-btn').click();
+      picker.querySelector('.next-button').click();
 
       cells = getCells(picker);
       fooCellIndices = getCellIndices(cells, '.foo');
@@ -425,7 +425,7 @@ describe('options - beforeShow hooks', function () {
         expect(cells[idx].innerHTML, 'to be', '<i class="icn-x"></i>');
       });
 
-      picker.querySelector('.next-btn').click();
+      picker.querySelector('.next-button').click();
 
       cells = getCells(picker);
       ccCellIndices = getCellIndices(cells, el => el.children.length > 0);
@@ -481,7 +481,7 @@ describe('options - beforeShow hooks', function () {
       expect(disabledCellIndices, 'to equal', [1, 5, 9]);
       expect(disabledCellIndices.map(idx => cells[idx].textContent), 'to equal', ['2000', '2040', '2080',]);
 
-      picker.querySelector('.next-btn').click();
+      picker.querySelector('.next-button').click();
 
       cells = getCells(picker);
       disabledCellIndices = getCellIndices(cells, '.disabled');
@@ -509,7 +509,7 @@ describe('options - beforeShow hooks', function () {
       expect(barCellIndices, 'to equal', fooCellIndices);
       expect(fooCellIndices.map(idx => cells[idx].textContent), 'to equal', ['2000', '2040', '2080']);
 
-      picker.querySelector('.next-btn').click();
+      picker.querySelector('.next-button').click();
 
       cells = getCells(picker);
       fooCellIndices = getCellIndices(cells, '.foo');
@@ -536,7 +536,7 @@ describe('options - beforeShow hooks', function () {
 
       expect(disabledCellIndices, 'to equal', [1, 5, 9]);
 
-      picker.querySelector('.next-btn').click();
+      picker.querySelector('.next-button').click();
 
       cells = getCells(picker);
       disabledCellIndices = getCellIndices(cells, '.disabled');
@@ -562,7 +562,7 @@ describe('options - beforeShow hooks', function () {
       expect(fooCellIndices, 'to equal', [1, 5, 9]);
       expect(barCellIndices, 'to equal', fooCellIndices);
 
-      picker.querySelector('.next-btn').click();
+      picker.querySelector('.next-button').click();
 
       cells = getCells(picker);
       fooCellIndices = getCellIndices(cells, '.foo');
@@ -594,7 +594,7 @@ describe('options - beforeShow hooks', function () {
         expect(cells[idx].innerHTML, 'to be', '<strong>X</strong>');
       });
 
-      picker.querySelector('.next-btn').click();
+      picker.querySelector('.next-button').click();
 
       cells = getCells(picker);
       ccCellIndices = getCellIndices(cells, el => el.children.length > 0);

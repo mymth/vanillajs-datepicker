@@ -1,10 +1,6 @@
 (function () {
   'use strict';
 
-  function hasProperty(obj, prop) {
-    return Object.prototype.hasOwnProperty.call(obj, prop);
-  }
-
   function lastItemOf(arr) {
     return arr[arr.length - 1];
   }
@@ -537,7 +533,7 @@
     beforeShowDecade: null,
     beforeShowMonth: null,
     beforeShowYear: null,
-    clearBtn: false,
+    clearButton: false,
     dateDelimiter: ',',
     datesDisabled: [],
     daysOfWeekDisabled: [],
@@ -560,8 +556,8 @@
     showOnFocus: true,
     startView: 0,
     title: '',
-    todayBtn: false,
-    todayBtnMode: 0,
+    todayButton: false,
+    todayButtonMode: 0,
     todayHighlight: false,
     updateOnBlur: true,
     weekNumbers: 0,
@@ -616,6 +612,15 @@
     return viewId >= 0 && viewId <= max ? viewId : origValue;
   }
 
+  function replaceOptions(options, from, to, convert = undefined) {
+    if (from in options) {
+      if (!(to in options)) {
+        options[to] = convert ? convert(options[from]) : options[from];
+      }
+      delete options[from];
+    }
+  }
+
   // Create Datepicker configuration to set
   function processOptions(options, datepicker) {
     const inOpts = Object.assign({}, options);
@@ -636,6 +641,12 @@
       weekStart,
     } = datepicker.config || {};
 
+    // for backword compatibility
+    replaceOptions(inOpts, 'calendarWeeks', 'weekNumbers', val => val ? 1 : 0);
+    replaceOptions(inOpts, 'clearBtn', 'clearButton');
+    replaceOptions(inOpts, 'todayBtn', 'todayButton');
+    replaceOptions(inOpts, 'todayBtnMode', 'todayButtonMode');
+
     if (inOpts.language) {
       let lang;
       if (inOpts.language !== language) {
@@ -645,7 +656,7 @@
           // Check if langauge + region tag can fallback to the one without
           // region (e.g. fr-CA → fr)
           lang = inOpts.language.split('-')[0];
-          if (locales[lang] === undefined) {
+          if (!locales[lang]) {
             lang = false;
           }
         }
@@ -688,18 +699,18 @@
 
     //*** pick level ***//
     let newPickLevel = pickLevel;
-    if (inOpts.pickLevel !== undefined) {
-      newPickLevel = validateViewId(inOpts.pickLevel, 2);
+    if ('pickLevel' in inOpts) {
+      newPickLevel = validateViewId(inOpts.pickLevel, pickLevel, 2);
       delete inOpts.pickLevel;
     }
     if (newPickLevel !== pickLevel) {
       if (newPickLevel > pickLevel) {
         // complement current minDate/madDate so that the existing range will be
         // expanded to fit the new level later
-        if (inOpts.minDate === undefined) {
+        if (!('minDate' in inOpts)) {
           inOpts.minDate = minDate;
         }
-        if (inOpts.maxDate === undefined) {
+        if (!('maxDate' in inOpts)) {
           inOpts.maxDate = maxDate;
         }
       }
@@ -716,7 +727,7 @@
     // because null is treated as 0 (= unix epoch) when comparing with time value
     let minDt = minDate;
     let maxDt = maxDate;
-    if (inOpts.minDate !== undefined) {
+    if ('minDate' in inOpts) {
       const defaultMinDt = dateValue(0, 0, 1);
       minDt = inOpts.minDate === null
         ? defaultMinDt  // set 0000-01-01 to prevent negative values for year
@@ -726,7 +737,7 @@
       }
       delete inOpts.minDate;
     }
-    if (inOpts.maxDate !== undefined) {
+    if ('maxDate' in inOpts) {
       maxDt = inOpts.maxDate === null
         ? undefined
         : validateDate(inOpts.maxDate, format, locale, maxDt);
@@ -767,7 +778,7 @@
       }
       delete inOpts.datesDisabled;
     }
-    if (inOpts.defaultViewDate !== undefined) {
+    if ('defaultViewDate' in inOpts) {
       const viewDate = parseDate(inOpts.defaultViewDate, format, locale);
       if (viewDate !== undefined) {
         config.defaultViewDate = viewDate;
@@ -776,7 +787,7 @@
     }
 
     //*** days of week ***//
-    if (inOpts.weekStart !== undefined) {
+    if ('weekStart' in inOpts) {
       const wkStart = Number(inOpts.weekStart) % 7;
       if (!isNaN(wkStart)) {
         weekStart = updateWeekStart(wkStart, config, weekNumbers);
@@ -793,13 +804,7 @@
     }
 
     //*** week numbers ***//
-    if (inOpts.calendarWeeks !== undefined) {
-      const calendarWeeks = !!inOpts.calendarWeeks;
-      weekNumbers = config.weekNumbers = calendarWeeks + 0;
-      config.getWeekNumber = calendarWeeks ? getIsoWeek : null;
-      delete inOpts.calendarWeeks;
-    }
-    if (inOpts.weekNumbers !== undefined) {
+    if ('weekNumbers' in inOpts) {
       let method = inOpts.weekNumbers;
       if (method) {
         const getWeekNumber = typeof method === 'function'
@@ -817,7 +822,7 @@
     }
 
     //*** multi date ***//
-    if (inOpts.maxNumberOfDates !== undefined) {
+    if ('maxNumberOfDates' in inOpts) {
       const maxNumberOfDates = parseInt(inOpts.maxNumberOfDates, 10);
       if (maxNumberOfDates >= 0) {
         config.maxNumberOfDates = maxNumberOfDates;
@@ -832,7 +837,7 @@
 
     //*** view ***//
     let newMaxView = maxView;
-    if (inOpts.maxView !== undefined) {
+    if ('maxView' in inOpts) {
       newMaxView = validateViewId(inOpts.maxView, maxView);
       delete inOpts.maxView;
     }
@@ -843,7 +848,7 @@
     }
 
     let newStartView = startView;
-    if (inOpts.startView !== undefined) {
+    if ('startView' in inOpts) {
       newStartView = validateViewId(inOpts.startView, newStartView);
       delete inOpts.startView;
     }
@@ -874,7 +879,7 @@
     }
 
     //*** misc ***//
-    if (inOpts.disableTouchKeyboard !== undefined) {
+    if ('disableTouchKeyboard' in inOpts) {
       config.disableTouchKeyboard = 'ontouchstart' in document && !!inOpts.disableTouchKeyboard;
       delete inOpts.disableTouchKeyboard;
     }
@@ -886,19 +891,19 @@
       };
       delete inOpts.orientation;
     }
-    if (inOpts.todayBtnMode !== undefined) {
-      switch(inOpts.todayBtnMode) {
+    if ('todayButtonMode' in inOpts) {
+      switch(inOpts.todayButtonMode) {
         case 0:
         case 1:
-          config.todayBtnMode = inOpts.todayBtnMode;
+          config.todayButtonMode = inOpts.todayButtonMode;
       }
-      delete inOpts.todayBtnMode;
+      delete inOpts.todayButtonMode;
     }
 
     //*** copy the rest ***//
-    Object.keys(inOpts).forEach((key) => {
-      if (inOpts[key] !== undefined && hasProperty(defaultOptions, key)) {
-        config[key] = inOpts[key];
+    Object.entries(inOpts).forEach(([key, value]) => {
+      if (value !== undefined && key in defaultOptions) {
+        config[key] = value;
       }
     });
 
@@ -912,6 +917,8 @@
     prevButton: {key: 'ArrowLeft', ctrlOrMetaKey: true},
     nextButton: {key: 'ArrowRight', ctrlOrMetaKey: true},
     viewSwitch: {key: 'ArrowUp', ctrlOrMetaKey: true},
+    clearButton: {key: 'Backspace', ctrlOrMetaKey: true},
+    todayButton: {key: '.', ctrlOrMetaKey: true},
     exitEditMode: {key: 'ArrowDown', ctrlOrMetaKey: true},
   };
 
@@ -943,16 +950,16 @@
     <div class="datepicker-header">
       <div class="datepicker-title"></div>
       <div class="datepicker-controls">
-        <button type="button" class="%buttonClass% prev-btn"></button>
+        <button type="button" class="%buttonClass% prev-button prev-btn"></button>
         <button type="button" class="%buttonClass% view-switch"></button>
-        <button type="button" class="%buttonClass% next-btn"></button>
+        <button type="button" class="%buttonClass% next-button next-btn"></button>
       </div>
     </div>
     <div class="datepicker-main"></div>
     <div class="datepicker-footer">
       <div class="datepicker-controls">
-        <button type="button" class="%buttonClass% today-btn"></button>
-        <button type="button" class="%buttonClass% clear-btn"></button>
+        <button type="button" class="%buttonClass% today-button today-btn"></button>
+        <button type="button" class="%buttonClass% clear-button clear-btn"></button>
       </div>
     </div>
   </div>
@@ -981,7 +988,7 @@
     }
 
     init(options) {
-      if (options.pickLevel !== undefined) {
+      if ('pickLevel' in options) {
         this.isMinView = this.id === options.pickLevel;
       }
       this.setOptions(options);
@@ -1044,10 +1051,10 @@
     setOptions(options) {
       let updateDOW;
 
-      if (hasProperty(options, 'minDate')) {
+      if ('minDate' in options) {
         this.minDate = options.minDate;
       }
-      if (hasProperty(options, 'maxDate')) {
+      if ('maxDate' in options) {
         this.maxDate = options.maxDate;
       }
       if (options.checkDisabled) {
@@ -1063,7 +1070,7 @@
       if (options.todayHighlight !== undefined) {
         this.todayHighlight = options.todayHighlight;
       }
-      if (options.weekStart !== undefined) {
+      if ('weekStart' in options) {
         this.weekStart = options.weekStart;
         this.weekEnd = options.weekEnd;
         updateDOW = true;
@@ -1080,7 +1087,7 @@
           : undefined;
       }
 
-      if (options.weekNumbers !== undefined) {
+      if ('weekNumbers' in options) {
         if (options.weekNumbers && !this.weekNumbers) {
           const weeksElem = parseHTML(weekNumbersTemplate).firstChild;
           this.weekNumbers = {
@@ -1095,11 +1102,11 @@
         }
       }
 
-      if (options.getWeekNumber !== undefined) {
+      if ('getWeekNumber' in options) {
         this.getWeekNumber = options.getWeekNumber;
       }
 
-      if (options.showDaysOfWeek !== undefined) {
+      if ('showDaysOfWeek' in options) {
         if (options.showDaysOfWeek) {
           showElement(this.dow);
           if (this.weekNumbers) {
@@ -1156,8 +1163,8 @@
 
       const switchLabel = formatDate(this.focused, this.switchLabelFormat, this.locale);
       this.picker.setViewSwitchLabel(switchLabel);
-      this.picker.setPrevBtnDisabled(this.first <= this.minDate);
-      this.picker.setNextBtnDisabled(this.last >= this.maxDate);
+      this.picker.setPrevButtonDisabled(this.first <= this.minDate);
+      this.picker.setNextButtonDisabled(this.last >= this.maxDate);
 
       if (this.weekNumbers) {
         const startOfWeek = dayOfTheWeekOf(this.first, this.weekStart, this.weekStart);
@@ -1299,7 +1306,7 @@
       if (options.locale) {
         this.monthNames = options.locale.monthsShort;
       }
-      if (hasProperty(options, 'minDate')) {
+      if ('minDate' in options) {
         if (options.minDate === undefined) {
           this.minYear = this.minMonth = this.minDate = undefined;
         } else {
@@ -1309,7 +1316,7 @@
           this.minDate = minDateObj.setDate(1);
         }
       }
-      if (hasProperty(options, 'maxDate')) {
+      if ('maxDate' in options) {
         if (options.maxDate === undefined) {
           this.maxYear = this.maxMonth = this.maxDate = undefined;
         } else {
@@ -1324,7 +1331,7 @@
           ? options.checkDisabled
           : () => false;
       }
-      if (options.beforeShowMonth !== undefined) {
+      if ('beforeShowMonth' in options) {
         this.beforeShow = typeof options.beforeShowMonth === 'function'
           ? options.beforeShowMonth
           : undefined;
@@ -1367,8 +1374,8 @@
       this.disabled = [];
 
       this.picker.setViewSwitchLabel(this.year);
-      this.picker.setPrevBtnDisabled(this.year <= this.minYear);
-      this.picker.setNextBtnDisabled(this.year >= this.maxYear);
+      this.picker.setPrevButtonDisabled(this.year <= this.minYear);
+      this.picker.setNextButtonDisabled(this.year >= this.maxYear);
 
       const selected = this.selected[this.year] || [];
       const yrOutOfRange = this.year < this.minYear || this.year > this.maxYear;
@@ -1482,7 +1489,7 @@
     }
 
     setOptions(options) {
-      if (hasProperty(options, 'minDate')) {
+      if ('minDate' in options) {
         if (options.minDate === undefined) {
           this.minYear = this.minDate = undefined;
         } else {
@@ -1490,7 +1497,7 @@
           this.minDate = dateValue(this.minYear, 0, 1);
         }
       }
-      if (hasProperty(options, 'maxDate')) {
+      if ('maxDate' in options) {
         if (options.maxDate === undefined) {
           this.maxYear = this.maxDate = undefined;
         } else {
@@ -1503,7 +1510,7 @@
           ? options.checkDisabled
           : () => false;
       }
-      if (options[this.beforeShowOption] !== undefined) {
+      if (this.beforeShowOption in options) {
         const beforeShow = options[this.beforeShowOption];
         this.beforeShow = typeof beforeShow === 'function' ? beforeShow : undefined;
       }
@@ -1543,8 +1550,8 @@
       this.disabled = [];
 
       this.picker.setViewSwitchLabel(`${this.first}-${this.last}`);
-      this.picker.setPrevBtnDisabled(this.first <= this.minYear);
-      this.picker.setNextBtnDisabled(this.last >= this.maxYear);
+      this.picker.setPrevButtonDisabled(this.first <= this.minYear);
+      this.picker.setNextButtonDisabled(this.last >= this.maxYear);
 
       Array.from(this.grid.children).forEach((el, index) => {
         const classList = el.classList;
@@ -1671,6 +1678,23 @@
     datepicker.picker.changeView(viewId + 1).render();
   }
 
+  function clearSelection(datepicker) {
+    datepicker.setDate({clear: true});
+  }
+
+  function goToOrSelectToday(datepicker) {
+    const {config, picker} = datepicker;
+    const currentDate = today();
+    if (config.todayButtonMode === 1) {
+      datepicker.setDate(currentDate, {forceRefresh: true, viewDate: currentDate});
+    } else {
+      if (picker.viewDate !== currentDate) {
+        picker.changeFocus(currentDate);
+      }
+      picker.changeView(config.pickLevel).render();
+    }
+  }
+
   function unfocus(datepicker) {
     const onBlur = () => {
       if (datepicker.config.updateOnBlur) {
@@ -1700,32 +1724,15 @@
     picker.changeFocus(newDate).changeView(viewId - 1).render();
   }
 
-  function onClickTodayBtn(datepicker) {
-    const {config, picker} = datepicker;
-    const currentDate = today();
-    if (config.todayBtnMode === 1) {
-      datepicker.setDate(currentDate, {forceRefresh: true, viewDate: currentDate});
-    } else {
-      if (picker.viewDate !== currentDate) {
-        picker.changeFocus(currentDate);
-      }
-      picker.changeView(config.pickLevel).render();
-    }
-  }
-
-  function onClickClearBtn(datepicker) {
-    datepicker.setDate({clear: true});
-  }
-
   function onClickViewSwitch(datepicker) {
     switchView(datepicker);
   }
 
-  function onClickPrevBtn(datepicker) {
+  function onClickPrevButton(datepicker) {
     goToPrevOrNext(datepicker, -1);
   }
 
-  function onClickNextBtn(datepicker) {
+  function onClickNextButton(datepicker) {
     goToPrevOrNext(datepicker, 1);
   }
 
@@ -1758,7 +1765,7 @@
   const toPx = num => num ? `${num}px` : num;
 
   function processPickerOptions(picker, options) {
-    if (options.title !== undefined) {
+    if ('title' in options) {
       if (options.title) {
         picker.controls.title.textContent = options.title;
         showElement(picker.controls.title);
@@ -1768,39 +1775,39 @@
       }
     }
     if (options.prevArrow) {
-      const prevBtn = picker.controls.prevBtn;
-      emptyChildNodes(prevBtn);
+      const prevButton = picker.controls.prevButton;
+      emptyChildNodes(prevButton);
       options.prevArrow.forEach((node) => {
-        prevBtn.appendChild(node.cloneNode(true));
+        prevButton.appendChild(node.cloneNode(true));
       });
     }
     if (options.nextArrow) {
-      const nextBtn = picker.controls.nextBtn;
-      emptyChildNodes(nextBtn);
+      const nextButton = picker.controls.nextButton;
+      emptyChildNodes(nextButton);
       options.nextArrow.forEach((node) => {
-        nextBtn.appendChild(node.cloneNode(true));
+        nextButton.appendChild(node.cloneNode(true));
       });
     }
     if (options.locale) {
-      picker.controls.todayBtn.textContent = options.locale.today;
-      picker.controls.clearBtn.textContent = options.locale.clear;
+      picker.controls.todayButton.textContent = options.locale.today;
+      picker.controls.clearButton.textContent = options.locale.clear;
     }
-    if (options.todayBtn !== undefined) {
-      if (options.todayBtn) {
-        showElement(picker.controls.todayBtn);
+    if ('todayButton' in options) {
+      if (options.todayButton) {
+        showElement(picker.controls.todayButton);
       } else {
-        hideElement(picker.controls.todayBtn);
+        hideElement(picker.controls.todayButton);
       }
     }
-    if (hasProperty(options, 'minDate') || hasProperty(options, 'maxDate')) {
+    if ('minDate' in options || 'maxDate' in options) {
       const {minDate, maxDate} = picker.datepicker.config;
-      picker.controls.todayBtn.disabled = !isInRange(today(), minDate, maxDate);
+      picker.controls.todayButton.disabled = !isInRange(today(), minDate, maxDate);
     }
-    if (options.clearBtn !== undefined) {
-      if (options.clearBtn) {
-        showElement(picker.controls.clearBtn);
+    if ('clearButton' in options) {
+      if (options.clearButton) {
+        showElement(picker.controls.clearButton);
       } else {
-        hideElement(picker.controls.clearBtn);
+        hideElement(picker.controls.clearButton);
       }
     }
   }
@@ -1868,15 +1875,15 @@
       const element = this.element = parseHTML(template).firstChild;
       const [header, main, footer] = element.firstChild.children;
       const title = header.firstElementChild;
-      const [prevBtn, viewSwitch, nextBtn] = header.lastElementChild.children;
-      const [todayBtn, clearBtn] = footer.firstChild.children;
+      const [prevButton, viewSwitch, nextButton] = header.lastElementChild.children;
+      const [todayButton, clearButton] = footer.firstChild.children;
       const controls = {
         title,
-        prevBtn,
+        prevButton,
         viewSwitch,
-        nextBtn,
-        todayBtn,
-        clearBtn,
+        nextButton,
+        todayButton,
+        clearButton,
       };
       this.main = main;
       this.controls = controls;
@@ -1892,10 +1899,10 @@
         [element, 'mousedown', onMousedownPicker],
         [main, 'click', onClickView.bind(null, datepicker)],
         [controls.viewSwitch, 'click', onClickViewSwitch.bind(null, datepicker)],
-        [controls.prevBtn, 'click', onClickPrevBtn.bind(null, datepicker)],
-        [controls.nextBtn, 'click', onClickNextBtn.bind(null, datepicker)],
-        [controls.todayBtn, 'click', onClickTodayBtn.bind(null, datepicker)],
-        [controls.clearBtn, 'click', onClickClearBtn.bind(null, datepicker)],
+        [controls.prevButton, 'click', onClickPrevButton.bind(null, datepicker)],
+        [controls.nextButton, 'click', onClickNextButton.bind(null, datepicker)],
+        [controls.todayButton, 'click', goToOrSelectToday.bind(null, datepicker)],
+        [controls.clearButton, 'click', clearSelection.bind(null, datepicker)],
       ]);
 
       // set up views
@@ -2070,12 +2077,12 @@
       this.controls.viewSwitch.textContent = labelText;
     }
 
-    setPrevBtnDisabled(disabled) {
-      this.controls.prevBtn.disabled = disabled;
+    setPrevButtonDisabled(disabled) {
+      this.controls.prevButton.disabled = disabled;
     }
 
-    setNextBtnDisabled(disabled) {
-      this.controls.nextBtn.disabled = disabled;
+    setNextButtonDisabled(disabled) {
+      this.controls.nextButton.disabled = disabled;
     }
 
     changeView(viewId) {
@@ -2245,6 +2252,10 @@
           action = [goToPrevOrNext, [datepicker, 1]];
         } else if (shortcut === 'viewSwitch') {
           action = [switchView, [datepicker]];
+        } else if (config.clearButton && shortcut === 'clearButton') {
+          action = [clearSelection, [datepicker]];
+        } else if (config.todayButton && shortcut === 'todayButton') {
+          action = [goToOrSelectToday, [datepicker]];
         }
       } else if (shortcut === 'show') {
         action = shortcut;

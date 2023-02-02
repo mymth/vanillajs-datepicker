@@ -1,4 +1,4 @@
-import {hasProperty, pushUnique, createTagRepeat} from '../../lib/utils.js';
+import {pushUnique, createTagRepeat} from '../../lib/utils.js';
 import {dateValue, regularizeDate} from '../../lib/date.js';
 import {parseHTML} from '../../lib/dom.js';
 import View from './View.js';
@@ -40,7 +40,7 @@ export default class MonthsView extends View {
     if (options.locale) {
       this.monthNames = options.locale.monthsShort;
     }
-    if (hasProperty(options, 'minDate')) {
+    if ('minDate' in options) {
       if (options.minDate === undefined) {
         this.minYear = this.minMonth = this.minDate = undefined;
       } else {
@@ -50,7 +50,7 @@ export default class MonthsView extends View {
         this.minDate = minDateObj.setDate(1);
       }
     }
-    if (hasProperty(options, 'maxDate')) {
+    if ('maxDate' in options) {
       if (options.maxDate === undefined) {
         this.maxYear = this.maxMonth = this.maxDate = undefined;
       } else {
@@ -65,7 +65,7 @@ export default class MonthsView extends View {
         ? options.checkDisabled
         : () => false;
     }
-    if (options.beforeShowMonth !== undefined) {
+    if ('beforeShowMonth' in options) {
       this.beforeShow = typeof options.beforeShowMonth === 'function'
         ? options.beforeShowMonth
         : undefined;
@@ -108,8 +108,8 @@ export default class MonthsView extends View {
     this.disabled = [];
 
     this.picker.setViewSwitchLabel(this.year);
-    this.picker.setPrevBtnDisabled(this.year <= this.minYear);
-    this.picker.setNextBtnDisabled(this.year >= this.maxYear);
+    this.picker.setPrevButtonDisabled(this.year <= this.minYear);
+    this.picker.setNextButtonDisabled(this.year >= this.maxYear);
 
     const selected = this.selected[this.year] || [];
     const yrOutOfRange = this.year < this.minYear || this.year > this.maxYear;
