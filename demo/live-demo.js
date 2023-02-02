@@ -45,7 +45,7 @@ beforeShowYear(date) {
     case 2020:
       return 'is-italic is-underlined';
     case 2025:
-      return {content: '<span class="tooltip is-tooltip-bottom" data-tooltip="Tooltip text">2020</span>'};
+      return {content: '<span class="tooltip is-tooltip-bottom" data-tooltip="Tooltip text">2025</span>'};
   }
 },
 beforeShowDecade(date) {
@@ -55,7 +55,7 @@ beforeShowDecade(date) {
     case 2100:
       return {
         content: '2💯',
-        classes: 'is-background-success',
+        classes: 'has-background-success',
       };
   }
 },

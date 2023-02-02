@@ -4,10 +4,9 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Vanilla JS Datepicker Demo</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/foundation-sites@6.7.5/dist/css/foundation.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/foundation-sites@6.7.5/dist/css/foundation-prototype.min.css" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.7.0/build/styles/github.min.css">
     <link rel="stylesheet" type="text/css" href="../dist/css/datepicker-foundation.css">
-    <script defer src="https://use.fontawesome.com/releases/v5.15.4/js/all.js"></script>
     <style type="text/css">
       main .section {
         padding: 3rem 1.5rem;
@@ -59,6 +58,10 @@
       }
       .code-wrap pre:not(.is-active) + .collapse-button {
         background-color: transparent;
+      }
+      .code-wrap pre code {
+        border: initial;
+        background-color: initial;
       }
       .code-wrap pre code.hljs {
         display: initial;
@@ -594,7 +597,7 @@ beforeShowDay(date) {
           classes: 'background-warning'
         };
       case 8:
-        return false;
+        return {content: '🎱'};
       case 12:
         return "text-success";
     }
@@ -608,24 +611,24 @@ beforeShowMonth(date) {
       }
       break;
     case 8:
-      return false;
+      return 'highlighted';
   }
 },
 beforeShowYear(date) {
   switch (date.getFullYear()) {
-    case 2017:
-      return false;
     case 2020:
-      return {content: '<span data-tooltip data-placement="bottom" title="Tooltip text">2020</span>'};
+      return 'font-italic text-underline';
+    case 2025:
+      return {content: '<span data-tooltip data-placement="bottom" title="Tooltip text">2025</span>'};
   }
 },
 beforeShowDecade(date) {
   switch (date.getFullYear()) {
     case 2000:
-      return false;
+      return 'font-bold';
     case 2100:
       return {
-        content: '💯',
+        content: '2💯',
         classes: 'background-success',
       };
   }
