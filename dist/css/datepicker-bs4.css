@@ -9,8 +9,6 @@
 
 .datepicker-dropdown {
   position: absolute;
-  top: 0;
-  left: 0;
   z-index: 1000;
   padding-top: 4px;
 }
@@ -21,6 +19,8 @@
 }
 
 .datepicker-picker {
+  display: flex;
+  flex-direction: column;
   border-radius: 0.25rem;
   background-color: #fff;
 }
@@ -29,21 +29,8 @@
   box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.175);
 }
 
-.datepicker-picker span {
-  display: block;
-  flex: 1;
-  border: 0;
-  border-radius: 0.25rem;
-  cursor: default;
-  text-align: center;
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
-     -moz-user-select: none;
-      -ms-user-select: none;
-          user-select: none;
-}
-
 .datepicker-main {
+  flex: auto;
   padding: 2px;
 }
 
@@ -52,38 +39,16 @@
   background-color: #f8f9fa;
 }
 
-.datepicker-grid,
-.datepicker-view .days-of-week,
-.datepicker-view,
-.datepicker-controls {
-  display: flex;
-}
-
-.datepicker-grid {
-  flex-wrap: wrap;
-}
-
-.datepicker-view .days .datepicker-cell,
-.datepicker-view .dow {
-  flex-basis: 14.2857142857%;
-}
-
-.datepicker-view.datepicker-grid .datepicker-cell {
-  flex-basis: 25%;
-}
-
-.datepicker-cell,
-.datepicker-view .week {
-  height: 2.25rem;
-  line-height: 2.25rem;
-}
-
 .datepicker-title {
   box-shadow: inset 0 -1px 1px rgba(0, 0, 0, 0.1);
   background-color: #f8f9fa;
   padding: 0.375rem 0.75rem;
   text-align: center;
   font-weight: 700;
+}
+
+.datepicker-controls {
+  display: flex;
 }
 
 .datepicker-header .datepicker-controls {
@@ -96,13 +61,13 @@
 }
 
 .datepicker-controls .btn:hover {
-  border-color: #dae0e5;
+  border-color: #dbe0e5;
   background-color: #e2e6ea;
   color: #212529;
 }
 
 .datepicker-controls .btn:focus {
-  border-color: #dae0e5;
+  border-color: #dbe0e5;
   box-shadow: 0 0 0 0.2rem rgba(216, 217, 219, 0.5);
   background-color: #e2e6ea;
   color: #212529;
@@ -115,8 +80,8 @@
 }
 
 .datepicker-controls .btn:not(:disabled):active {
-  border-color: #d3d9df;
-  background-color: #dae0e5;
+  border-color: #d4dae0;
+  background-color: #dbe0e5;
   color: #212529;
 }
 
@@ -130,9 +95,9 @@
 }
 
 .datepicker-footer .datepicker-controls .btn {
+  flex: auto;
   margin: calc(0.375rem - 1px) 0.375rem;
   border-radius: 0.2rem;
-  width: 100%;
   font-size: 0.875rem;
 }
 
@@ -144,7 +109,7 @@
 .datepicker-controls .next-button {
   padding-right: 0.375rem;
   padding-left: 0.375rem;
-  width: 2.25rem;
+  flex: 0 0 14.2857142857%;
 }
 
 .datepicker-controls .prev-button.disabled,
@@ -152,33 +117,81 @@
   visibility: hidden;
 }
 
-.datepicker-view .dow {
+.datepicker-view,
+.datepicker-grid {
+  display: flex;
+}
+
+.datepicker-view {
+  align-items: stretch;
+  width: 15.75rem;
+}
+
+.datepicker-grid {
+  flex-wrap: wrap;
+  flex: auto;
+}
+
+.datepicker .days {
+  display: flex;
+  flex-direction: column;
+  flex: auto;
+}
+
+.datepicker .days-of-week {
+  display: flex;
+}
+
+.datepicker .week-numbers {
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 9.6774193548%;
+}
+
+.datepicker .weeks {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  flex: auto;
+}
+
+.datepicker span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.25rem;
+  cursor: default;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+}
+
+.datepicker .dow {
   height: 1.5rem;
-  line-height: 1.5rem;
   font-size: 0.9375rem;
   font-weight: 700;
 }
 
-.datepicker-view .week {
-  width: 2.25rem;
+.datepicker .week {
+  flex: auto;
   color: #dee2e6;
   font-size: 0.875rem;
 }
 
-@media (max-width: 22.5rem) {
-  .datepicker-view .week {
-    width: 1.96875rem;
-  }
+.datepicker-cell,
+.datepicker .days .dow {
+  flex-basis: 14.2857142857%;
 }
 
-.datepicker-grid {
-  width: 15.75rem;
+.datepicker-cell {
+  height: 2.25rem;
 }
 
-@media (max-width: 22.5rem) {
-  .calendar-weeks + .days .datepicker-grid {
-    width: 13.78125rem;
-  }
+.datepicker-cell:not(.day) {
+  flex-basis: 25%;
+  height: 4.5rem;
 }
 
 .datepicker-cell:not(.disabled):hover {
@@ -233,7 +246,7 @@
 }
 
 .datepicker-cell.today.focused:not(.selected) {
-  background-color: #1ebe8f;
+  background-color: #1fc493;
 }
 
 .datepicker-cell.range-end:not(.selected),
@@ -244,14 +257,14 @@
 
 .datepicker-cell.range-end.focused:not(.selected),
 .datepicker-cell.range-start.focused:not(.selected) {
-  background-color: #666f76;
+  background-color: #69727a;
 }
 
-.datepicker-cell.range-start {
+.datepicker-cell.range-start:not(.range-end) {
   border-radius: 0.25rem 0 0 0.25rem;
 }
 
-.datepicker-cell.range-end {
+.datepicker-cell.range-end:not(.range-start) {
   border-radius: 0 0.25rem 0.25rem 0;
 }
 
@@ -265,23 +278,18 @@
 }
 
 .datepicker-cell.range.disabled {
-  color: #cbd3da;
+  color: #ced4db;
 }
 
 .datepicker-cell.range.focused {
-  background-color: #dadfe4;
-}
-
-.datepicker-view.datepicker-grid .datepicker-cell {
-  height: 4.5rem;
-  line-height: 4.5rem;
+  background-color: #dbe0e5;
 }
 
 .datepicker-input.in-edit {
-  border-color: #66b0ff;
+  border-color: #6cb3ff;
 }
 
 .datepicker-input.in-edit:focus,
 .datepicker-input.in-edit:active {
-  box-shadow: 0 0 0.25em 0.25em rgba(102, 176, 255, 0.2);
+  box-shadow: 0 0 0.25em 0.25em rgba(108, 179, 255, 0.2);
 }

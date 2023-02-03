@@ -5,8 +5,8 @@
 }
 
 @mixin dp-footer-button-common {
+  flex: auto;
   margin: calc(0.375rem - 1px) 0.375rem;
   border-radius: $dp-border-radius-small;
-  width: 100%;
   font-size: $dp-font-size-small;
 }
