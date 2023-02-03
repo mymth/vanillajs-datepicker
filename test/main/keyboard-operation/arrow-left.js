@@ -231,7 +231,7 @@ describe('keyboard operation - arrow-left', function () {
       expect(cells[1].textContent, 'to be', '1900');
 
       dp.destroy();
-      clock.reset();
+      clock.restore();
     });
 
     it('keydown event is canceled and does not bubble', function () {

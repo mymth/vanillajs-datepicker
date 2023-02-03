@@ -446,7 +446,7 @@ describe('keyboard operation - arrow-up', function () {
       expect(viewSwitch.textContent, 'to be', '2000-2090');
 
       dp.destroy();
-      clock.reset();
+      clock.restore();
     });
 
     it('keydown event is canceled and does not bubble', function () {
@@ -506,7 +506,7 @@ describe('keyboard operation - arrow-up', function () {
       expect(viewSwitch.textContent, 'to be', '2000-2090');
 
       dp.destroy();
-      clock.reset();
+      clock.restore();
     });
 
     it('keydown event is canceled and does not bubble', function () {

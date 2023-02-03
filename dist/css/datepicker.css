@@ -22,7 +22,7 @@
   display: flex;
   flex-direction: column;
   border-radius: 4px;
-  background-color: white;
+  background-color: hsl(0deg, 0%, 100%);
 }
 
 .datepicker-dropdown .datepicker-picker {
@@ -36,12 +36,12 @@
 
 .datepicker-footer {
   box-shadow: inset 0 1px 1px rgba(10, 10, 10, 0.1);
-  background-color: whitesmoke;
+  background-color: hsl(0deg, 0%, 96%);
 }
 
 .datepicker-title {
   box-shadow: inset 0 -1px 1px rgba(10, 10, 10, 0.1);
-  background-color: whitesmoke;
+  background-color: hsl(0deg, 0%, 96%);
   padding: 0.375rem 0.75rem;
   text-align: center;
   font-weight: 700;
@@ -64,7 +64,7 @@
   border: 1px solid gainsboro;
   border-radius: 4px;
   box-shadow: none;
-  background-color: white;
+  background-color: hsl(0deg, 0%, 100%);
   cursor: pointer;
   padding: calc(0.375em - 1px) 0.75em;
   height: 2.25em;
@@ -72,7 +72,7 @@
   text-align: center;
   line-height: 1.5;
   white-space: nowrap;
-  color: #363636;
+  color: hsl(0deg, 0%, 21%);
   font-size: 1rem;
 }
 
@@ -83,12 +83,12 @@
 
 .datepicker-controls .button:hover {
   border-color: #b8b8b8;
-  color: #363636;
+  color: hsl(0deg, 0%, 21%);
 }
 
 .datepicker-controls .button:focus {
-  border-color: #3273dc;
-  color: #363636;
+  border-color: hsl(217deg, 71%, 53%);
+  color: hsl(0deg, 0%, 21%);
 }
 
 .datepicker-controls .button:focus:not(:active) {
@@ -97,7 +97,7 @@
 
 .datepicker-controls .button:active {
   border-color: #474747;
-  color: #363636;
+  color: hsl(0deg, 0%, 21%);
 }
 
 .datepicker-controls .button[disabled] {
@@ -187,7 +187,6 @@
   -webkit-touch-callout: none;
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
 }
 
@@ -228,7 +227,7 @@
 
 .datepicker-cell.selected,
 .datepicker-cell.selected:hover {
-  background-color: #3273dc;
+  background-color: hsl(217deg, 71%, 53%);
   color: #fff;
   font-weight: 600;
 }
@@ -239,7 +238,7 @@
 
 .datepicker-cell.prev:not(.disabled),
 .datepicker-cell.next:not(.disabled) {
-  color: #7a7a7a;
+  color: hsl(0deg, 0%, 48%);
 }
 
 .datepicker-cell.prev.selected,
@@ -249,7 +248,7 @@
 
 .datepicker-cell.highlighted:not(.selected):not(.range):not(.today) {
   border-radius: 0;
-  background-color: whitesmoke;
+  background-color: hsl(0deg, 0%, 96%);
 }
 
 .datepicker-cell.highlighted:not(.selected):not(.range):not(.today):not(.disabled):hover {
@@ -261,7 +260,7 @@
 }
 
 .datepicker-cell.today:not(.selected) {
-  background-color: #00d1b2;
+  background-color: hsl(171deg, 100%, 41%);
 }
 
 .datepicker-cell.today:not(.selected):not(.disabled) {

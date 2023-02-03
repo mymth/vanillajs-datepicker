@@ -46,7 +46,7 @@
   },
   "homepage": "https://github.com/mymth/vanillajs-datepicker#readme",
   "devDependencies": {
-    "@rollup/plugin-node-resolve": "^13.1.1",
+    "@rollup/plugin-node-resolve": "^15.0.1",
     "autoprefixer": "^10.4.0",
     "bootstrap": "^5.1.3",
     "bootstrap4": "npm:bootstrap@^4.6.1",
@@ -55,15 +55,15 @@
     "cssnano": "^5.0.14",
     "docsify-cli": "^4.4.3",
     "foundation-sites": "^6.7.4",
-    "jsdom": "^19.0.0",
-    "mocha": "^9.1.3",
+    "jsdom": "^21.1.0",
+    "mocha": "^10.2.0",
     "postcss": "^8.4.5",
     "postcss-prettify": "^0.3.4",
-    "rollup": "^2.61.1",
+    "rollup": "^3.12.1",
     "sass": "^1.45.1",
     "simulant": "^0.2.2",
-    "sinon": "^12.0.1",
+    "sinon": "^15.0.1",
     "terser": "^5.10.0",
-    "unexpected": "^12.0.3"
+    "unexpected": "^13.1.0"
   }
 }

@@ -154,8 +154,6 @@ var dateUtils = (function (exports) {
   exports.stripTime = stripTime;
   exports.today = today;
 
-  Object.defineProperty(exports, '__esModule', { value: true });
-
   return exports;
 
 })({});

@@ -74,8 +74,6 @@ var domUtils = (function (exports) {
   exports.replaceChildNodes = replaceChildNodes;
   exports.showElement = showElement;
 
-  Object.defineProperty(exports, '__esModule', { value: true });
-
   return exports;
 
 })({});

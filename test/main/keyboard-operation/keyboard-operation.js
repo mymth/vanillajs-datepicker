@@ -129,7 +129,7 @@ describe('keyboard operation', function () {
       expect(cells[19].textContent, 'to be', '14');
 
       dp.destroy();
-      clock.reset();
+      clock.restore();
     });
 
     it('changes the view to the next minor one if the current view is not days', function () {
@@ -166,7 +166,7 @@ describe('keyboard operation', function () {
       expect(viewSwitch.textContent, 'to be', 'April 2020');
 
       dp.destroy();
-      clock.reset();
+      clock.restore();
     });
 
     it('updates the selection with the input text if the picker is hidden', function () {
