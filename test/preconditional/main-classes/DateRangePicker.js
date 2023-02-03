@@ -1,9 +1,9 @@
-import './_setup.js';
-import DateRangePicker from '../../js/DateRangePicker.js';
-import {parseHTML} from '../../js/lib/dom.js';
+import '../_setup.js';
+import DateRangePicker from '../../../js/DateRangePicker.js';
+import {parseHTML} from '../../../js/lib/dom.js';
 // to spy constructor with sinon, import entire module
 // @see: https://github.com/sinonjs/sinon/issues/1358#issuecomment-391643741
-import * as DP from '../../js/Datepicker.js';
+import * as DP from '../../../js/Datepicker.js';
 const Datepicker = DP.default;
 
 describe('DateRangePicker', function () {

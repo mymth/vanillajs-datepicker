@@ -4,23 +4,23 @@
     <meta charset="utf-8" />
     <title>Mocha Tests</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="../node_modules/mocha/mocha.css" />
+    <link rel="stylesheet" href="../../node_modules/mocha/mocha.css" />
     <style type="text/css">
       html * {
         box-sizing: border-box;
       }
     </style>
-    <link rel="stylesheet" href="../dist/css/datepicker.css" />
+    <link rel="stylesheet" href="../../dist/css/datepicker.css" />
   </head>
   <body>
     <div id="mocha"></div>
 
     <div id="test-container"></div>
 
-    <script src="../node_modules/mocha/mocha.js"></script>
-    <script src="../node_modules/unexpected/unexpected.js"></script>
-    <script src="../node_modules/sinon/pkg/sinon.js"></script>
-    <script src="../node_modules/simulant/dist/simulant.umd.js"></script>
+    <script src="../../node_modules/mocha/mocha.js"></script>
+    <script src="../../node_modules/unexpected/unexpected.js"></script>
+    <script src="../../node_modules/sinon/pkg/sinon.js"></script>
+    <script src="../../node_modules/simulant/dist/simulant.umd.js"></script>
 
     <script class="mocha-init">
       mocha.setup('bdd');
@@ -92,7 +92,7 @@
 
           const styleLink = document.createElement('link');
           styleLink.setAttribute('rel', 'stylesheet');
-          styleLink.setAttribute('href', '../dist/css/datepicker.css');
+          styleLink.setAttribute('href', '../../dist/css/datepicker.css');
           const styleElem = document.createElement('style');
           styleElem.textContent = ':host { display: block }';
 
@@ -101,9 +101,9 @@
       }
       customElements.define('test-wrapper', TestWrapper);
     </script>
-    <script src="../dist/js/datepicker-full.js"></script>
-    <script src="../dist/js/locales/fr.js"></script>
-    <script src="../dist/js/locales/zh-CN.js"></script>
+    <script src="../../dist/js/datepicker-full.js"></script>
+    <script src="../../dist/js/locales/fr.js"></script>
+    <script src="../../dist/js/locales/zh-CN.js"></script>
     <script src="./Datepicker/Datepicker-object.js"></script>
     <script src="./Datepicker/api-methods.js"></script>
     <script src="./mouse-operation.js"></script>

@@ -22,9 +22,9 @@
     "make:js": "npm run build:js && npm run minify:js",
     "make:css": "npm run build:css && npm run minify:css",
     "make": "npm run build && npm run minify",
-    "test:lib": "mocha test/unit/lib",
-    "test:unit": "mocha test/unit",
-    "test": "npm run test:lib && npm run test:unit",
+    "test:lib": "mocha test/preconditional/lib",
+    "test:classes": "mocha test/preconditional/main-classes",
+    "test": "npm run test:lib && npm run test:classes",
     "docsify": "docsify serve docs"
   },
   "repository": {
