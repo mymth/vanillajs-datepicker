@@ -3,13 +3,19 @@ import {today, regularizeDate} from './lib/date.js';
 import {parseDate, formatDate} from './lib/date-format.js';
 import {isActiveElement} from './lib/dom.js';
 import {registerListeners, unregisterListeners} from './lib/event.js';
-import {locales} from './i18n/base-locales.js';
+import locales from './i18n/base-locales.js';
 import defaultOptions from './options/defaultOptions.js';
 import processOptions from './options/processOptions.js';
 import createShortcutKeyConfig from './options/shortcutKeys.js';
 import Picker from './picker/Picker.js';
 import {triggerDatepickerEvent} from './events/functions.js';
-import {onKeydown, onFocus, onMousedown, onClickInput, onPaste} from './events/elementListeners.js';
+import {
+  onKeydown,
+  onFocus,
+  onMousedown,
+  onClickInput,
+  onPaste,
+} from './events/elementListeners.js';
 import {onClickOutside} from './events/otherListeners.js';
 
 function stringifyDates(dates, config) {

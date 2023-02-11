@@ -33,13 +33,13 @@ export function onClickView(datepicker, ev) {
   }
 
   const {id, isMinView} = datepicker.picker.currentView;
-  const {date, month, year} = target.dataset;
+  const data = target.dataset;
   if (isMinView) {
-    datepicker.setDate(Number(date));
+    datepicker.setDate(Number(data.date));
   } else if (id === 1) {
-    goToSelectedMonthOrYear(datepicker, Number(month));
+    goToSelectedMonthOrYear(datepicker, Number(data.month));
   } else {
-    goToSelectedMonthOrYear(datepicker, Number(year));
+    goToSelectedMonthOrYear(datepicker, Number(data.year));
   }
 }
 

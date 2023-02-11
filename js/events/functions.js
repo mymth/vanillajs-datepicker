@@ -14,8 +14,8 @@ export function triggerDatepickerEvent(datepicker, type) {
 
 // direction: -1 (to previous), 1 (to next)
 export function goToPrevOrNext(datepicker, direction) {
-  const {minDate, maxDate} = datepicker.config;
-  const {currentView, viewDate} = datepicker.picker;
+  const {config, picker} = datepicker;
+  const {currentView, viewDate} = picker;
   let newViewDate;
   switch (currentView.id) {
     case 0:
@@ -27,8 +27,8 @@ export function goToPrevOrNext(datepicker, direction) {
     default:
       newViewDate = addYears(viewDate, direction * currentView.navStep);
   }
-  newViewDate = limitToRange(newViewDate, minDate, maxDate);
-  datepicker.picker.changeFocus(newViewDate).render();
+  newViewDate = limitToRange(newViewDate, config.minDate, config.maxDate);
+  picker.changeFocus(newViewDate).render();
 }
 
 export function switchView(datepicker) {

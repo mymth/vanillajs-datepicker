@@ -11,6 +11,9 @@ export default [
       file: 'dist/js/datepicker.js',
       format: 'iife',
       name: 'Datepicker',
+      generatedCode: {
+        constBindings: true,
+      },
     },
     plugins,
   },
@@ -19,6 +22,9 @@ export default [
     output: {
       file: 'dist/js/datepicker-full.js',
       format: 'iife',
+      generatedCode: {
+        constBindings: true,
+      },
     },
     plugins,
   },

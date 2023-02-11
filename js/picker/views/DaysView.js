@@ -1,4 +1,3 @@
-import {pushUnique} from '../../lib/utils.js';
 import {today, dateValue, addDays, addWeeks, dayOfTheWeekOf} from '../../lib/date.js';
 import {formatDate} from '../../lib/date-format.js';
 import {parseHTML, showElement, hideElement} from '../../lib/dom.js';
@@ -44,7 +43,7 @@ export default class DaysView extends View {
     if (options.daysOfWeekHighlighted) {
       this.daysOfWeekHighlighted = options.daysOfWeekHighlighted;
     }
-    if (options.todayHighlight !== undefined) {
+    if ('todayHighlight' in options) {
       this.todayHighlight = options.todayHighlight;
     }
     if ('weekStart' in options) {
@@ -58,7 +57,7 @@ export default class DaysView extends View {
       this.switchLabelFormat = locale.titleFormat;
       updateDOW = true;
     }
-    if (options.beforeShowDay !== undefined) {
+    if ('beforeShowDay' in options) {
       this.beforeShow = typeof options.beforeShowDay === 'function'
         ? options.beforeShowDay
         : undefined;
@@ -134,119 +133,61 @@ export default class DaysView extends View {
   render() {
     // update today marker on ever render
     this.today = this.todayHighlight ? today() : undefined;
-    // refresh disabled dates on every render in order to clear the ones added
-    // by beforeShow hook at previous render
-    this.disabled = [];
 
-    const {first, last, weekStart} = this;
-    const switchLabel = formatDate(this.focused, this.switchLabelFormat, this.locale);
-    this.picker.setViewSwitchLabel(switchLabel);
-    this.picker.setPrevButtonDisabled(first <= this.minDate);
-    this.picker.setNextButtonDisabled(last >= this.maxDate);
+    this.prepareForRender(
+      formatDate(this.focused, this.switchLabelFormat, this.locale),
+      this.first <= this.minDate,
+      this.last >= this.maxDate
+    );
 
     if (this.weekNumbers) {
-      const startOfWeek = dayOfTheWeekOf(first, weekStart, weekStart);
+      const weekStart = this.weekStart;
+      const startOfWeek = dayOfTheWeekOf(this.first, weekStart, weekStart);
       Array.from(this.weekNumbers.weeks.children).forEach((el, index) => {
         const dateOfWeekStart = addWeeks(startOfWeek, index);
         el.textContent = this.getWeekNumber(dateOfWeekStart, weekStart);
         if (index > 3) {
-          el.classList[dateOfWeekStart > last ? 'add' : 'remove']('next');
+          el.classList[dateOfWeekStart > this.last ? 'add' : 'remove']('next');
         }
       });
     }
     Array.from(this.grid.children).forEach((el, index) => {
-      const classList = el.classList;
       const current = addDays(this.start, index);
-      const date = new Date(current);
-      const day = date.getDay();
+      const dateObj = new Date(current);
+      const day = dateObj.getDay();
+      const extraClasses = [];
 
-      el.className = `datepicker-cell ${this.cellClass}`;
-      el.dataset.date = current;
-      el.textContent = date.getDate();
-
-      if (current < first) {
-        classList.add('prev');
-      } else if (current > last) {
-        classList.add('next');
-      }
       if (this.today === current) {
-        classList.add('today');
-      }
-      if (
-        current < this.minDate
-        || current > this.maxDate
-        || this.checkDisabled(current, this.id)
-      ) {
-        classList.add('disabled');
-        pushUnique(this.disabled, current);
-      }
-      if (this.daysOfWeekDisabled.includes(day)) {
-        classList.add('disabled');
-        pushUnique(this.disabled, current);
+        extraClasses.push('today');
       }
       if (this.daysOfWeekHighlighted.includes(day)) {
-        classList.add('highlighted');
-      }
-      if (this.range) {
-        const [rangeStart, rangeEnd] = this.range;
-        if (current > rangeStart && current < rangeEnd) {
-          classList.add('range');
-        }
-        if (current === rangeStart) {
-          classList.add('range-start');
-        }
-        if (current === rangeEnd) {
-          classList.add('range-end');
-        }
-      }
-      if (this.selected.includes(current)) {
-        classList.add('selected');
-      }
-      if (current === this.focused) {
-        classList.add('focused');
+        extraClasses.push('highlighted');
       }
 
-      if (this.beforeShow) {
-        this.performBeforeHook(el, current, current);
-      }
+      this.renderCell(
+        el,
+        dateObj.getDate(),
+        current,
+        current,
+        this,
+        current < this.minDate
+          || current > this.maxDate
+          || this.daysOfWeekDisabled.includes(day),
+        extraClasses
+      );
     });
   }
 
   // Update the view UI by applying the changes of selected and focused items
   refresh() {
-    const [rangeStart, rangeEnd] = this.range || [];
-    this.grid
-      .querySelectorAll('.range, .range-start, .range-end, .selected, .focused')
-      .forEach((el) => {
-        el.classList.remove('range', 'range-start', 'range-end', 'selected', 'focused');
-      });
+    const range = this.range || [];
     Array.from(this.grid.children).forEach((el) => {
-      const current = Number(el.dataset.date);
-      const classList = el.classList;
-      if (current > rangeStart && current < rangeEnd) {
-        classList.add('range');
-      }
-      if (current === rangeStart) {
-        classList.add('range-start');
-      }
-      if (current === rangeEnd) {
-        classList.add('range-end');
-      }
-      if (this.selected.includes(current)) {
-        classList.add('selected');
-      }
-      if (current === this.focused) {
-        classList.add('focused');
-      }
+      this.refreshCell(el, Number(el.dataset.date), this.selected, range);
     });
   }
 
   // Update the view UI by applying the change of focused item
   refreshFocus() {
-    const index = Math.round((this.focused - this.start) / 86400000);
-    this.grid.querySelectorAll('.focused').forEach((el) => {
-      el.classList.remove('focused');
-    });
-    this.grid.children[index].classList.add('focused');
+    this.changeFocusedCell(Math.round((this.focused - this.start) / 86400000));
   }
 }

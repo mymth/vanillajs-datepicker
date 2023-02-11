@@ -81,98 +81,38 @@ export default class YearsView extends View {
 
   // Update the entire view UI
   render() {
-    // refresh disabled years on every render in order to clear the ones added
-    // by beforeShow hook at previous render
-    this.disabled = [];
-
-    this.picker.setViewSwitchLabel(`${this.first}-${this.last}`);
-    this.picker.setPrevButtonDisabled(this.first <= this.minYear);
-    this.picker.setNextButtonDisabled(this.last >= this.maxYear);
+    this.prepareForRender(
+      `${this.first}-${this.last}`,
+      this.first <= this.minYear,
+      this.last >= this.maxYear
+    );
 
     Array.from(this.grid.children).forEach((el, index) => {
-      const classList = el.classList;
       const current = this.start + (index * this.step);
       const date = regularizeDate(new Date(current, 0, 1), 2, this.isRangeEnd);
 
-      el.className = `datepicker-cell ${this.cellClass}`;
-      if (this.isMinView) {
-        el.dataset.date = date;
-      }
-      el.textContent = el.dataset.year = current;
-
-      if (index === 0) {
-        classList.add('prev');
-      } else if (index === 11) {
-        classList.add('next');
-      }
-      if (
-        current < this.minYear
-        || current > this.maxYear
-        || this.checkDisabled(date, this.id)
-      ) {
-        classList.add('disabled');
-        pushUnique(this.disabled, date);
-      }
-      if (this.range) {
-        const [rangeStart, rangeEnd] = this.range;
-        if (current > rangeStart && current < rangeEnd) {
-          classList.add('range');
-        }
-        if (current === rangeStart) {
-          classList.add('range-start');
-        }
-        if (current === rangeEnd) {
-          classList.add('range-end');
-        }
-      }
-      if (this.selected.includes(current)) {
-        classList.add('selected');
-      }
-      if (current === this.focused) {
-        classList.add('focused');
-      }
-
-      if (this.beforeShow) {
-        this.performBeforeHook(el, date, date);
-      }
+      el.dataset.year = current;
+      this.renderCell(
+        el,
+        current,
+        current,
+        date,
+        this,
+        current < this.minYear || current > this.maxYear
+      );
     });
   }
 
   // Update the view UI by applying the changes of selected and focused items
   refresh() {
-    const [rangeStart, rangeEnd] = this.range || [];
-    this.grid
-      .querySelectorAll('.range, .range-start, .range-end, .selected, .focused')
-      .forEach((el) => {
-        el.classList.remove('range', 'range-start', 'range-end', 'selected', 'focused');
-      });
+    const range = this.range || [];
     Array.from(this.grid.children).forEach((el) => {
-      const current = Number(el.textContent);
-      const classList = el.classList;
-      if (current > rangeStart && current < rangeEnd) {
-        classList.add('range');
-      }
-      if (current === rangeStart) {
-        classList.add('range-start');
-      }
-      if (current === rangeEnd) {
-        classList.add('range-end');
-      }
-      if (this.selected.includes(current)) {
-        classList.add('selected');
-      }
-      if (current === this.focused) {
-        classList.add('focused');
-      }
+      this.refreshCell(el, Number(el.textContent), this.selected, range);
     });
   }
 
   // Update the view UI by applying the change of focused item
   refreshFocus() {
-    const index = Math.round((this.focused - this.start) / this.step);
-    this.grid.querySelectorAll('.focused').forEach((el) => {
-      el.classList.remove('focused');
-    });
-    this.grid.children[index].classList.add('focused');
+    this.changeFocusedCell(Math.round((this.focused - this.start) / this.step));
   }
 }

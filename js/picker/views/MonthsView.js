@@ -32,6 +32,8 @@ export default class MonthsView extends View {
       this.grid = this.element;
       this.element.classList.add('months', 'datepicker-grid');
       this.grid.appendChild(parseHTML(createTagRepeat('span', 12, {'data-month': ix => ix})));
+      this.first = 0;
+      this.last = 11;
     }
     super.init(options);
   }
@@ -103,13 +105,11 @@ export default class MonthsView extends View {
 
   // Update the entire view UI
   render() {
-    // refresh disabled months on every render in order to clear the ones added
-    // by beforeShow hook at previous render
-    this.disabled = [];
-
-    this.picker.setViewSwitchLabel(this.year);
-    this.picker.setPrevButtonDisabled(this.year <= this.minYear);
-    this.picker.setNextButtonDisabled(this.year >= this.maxYear);
+    this.prepareForRender(
+      this.year,
+      this.year <= this.minYear,
+      this.year >= this.maxYear
+    );
 
     const selected = this.selected[this.year] || [];
     const yrOutOfRange = this.year < this.minYear || this.year > this.maxYear;
@@ -118,85 +118,32 @@ export default class MonthsView extends View {
     const range = computeMonthRange(this.range, this.year);
 
     Array.from(this.grid.children).forEach((el, index) => {
-      const classList = el.classList;
       const date = regularizeDate(new Date(this.year, index, 1), 1, this.isRangeEnd);
 
-      el.className = `datepicker-cell ${this.cellClass}`;
-      if (this.isMinView) {
-        el.dataset.date = date;
-      }
-      // reset text on every render to clear the custom content set
-      // by beforeShow hook at previous render
-      el.textContent = this.monthNames[index];
-
-      if (
+      this.renderCell(
+        el,
+        this.monthNames[index],
+        index,
+        date,
+        {selected, range},
         yrOutOfRange
-        || isMinYear && index < this.minMonth
-        || isMaxYear && index > this.maxMonth
-        || this.checkDisabled(date, this.id)
-      ) {
-        classList.add('disabled');
-        pushUnique(this.disabled, date);
-      }
-      if (range) {
-        const [rangeStart, rangeEnd] = range;
-        if (index > rangeStart && index < rangeEnd) {
-          classList.add('range');
-        }
-        if (index === rangeStart) {
-          classList.add('range-start');
-        }
-        if (index === rangeEnd) {
-          classList.add('range-end');
-        }
-      }
-      if (selected.includes(index)) {
-        classList.add('selected');
-      }
-      if (index === this.focused) {
-        classList.add('focused');
-      }
-
-      if (this.beforeShow) {
-        this.performBeforeHook(el, date, date);
-      }
+          || isMinYear && index < this.minMonth
+          || isMaxYear && index > this.maxMonth
+      );
     });
   }
 
   // Update the view UI by applying the changes of selected and focused items
   refresh() {
     const selected = this.selected[this.year] || [];
-    const [rangeStart, rangeEnd] = computeMonthRange(this.range, this.year) || [];
-    this.grid
-      .querySelectorAll('.range, .range-start, .range-end, .selected, .focused')
-      .forEach((el) => {
-        el.classList.remove('range', 'range-start', 'range-end', 'selected', 'focused');
-      });
+    const range = computeMonthRange(this.range, this.year) || [];
     Array.from(this.grid.children).forEach((el, index) => {
-      const classList = el.classList;
-      if (index > rangeStart && index < rangeEnd) {
-        classList.add('range');
-      }
-      if (index === rangeStart) {
-        classList.add('range-start');
-      }
-      if (index === rangeEnd) {
-        classList.add('range-end');
-      }
-      if (selected.includes(index)) {
-        classList.add('selected');
-      }
-      if (index === this.focused) {
-        classList.add('focused');
-      }
+      this.refreshCell(el, index, selected, range);
     });
   }
 
   // Update the view UI by applying the change of focused item
   refreshFocus() {
-    this.grid.querySelectorAll('.focused').forEach((el) => {
-      el.classList.remove('focused');
-    });
-    this.grid.children[this.focused].classList.add('focused');
+    this.changeFocusedCell(this.focused);
   }
 }

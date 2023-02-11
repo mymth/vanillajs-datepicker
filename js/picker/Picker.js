@@ -1,6 +1,12 @@
 import {lastItemOf, isInRange, limitToRange} from '../lib/utils.js';
 import {today, regularizeDate} from '../lib/date.js';
-import {parseHTML, getParent, showElement, hideElement, emptyChildNodes} from '../lib/dom.js';
+import {
+  parseHTML,
+  getParent,
+  showElement,
+  hideElement,
+  emptyChildNodes,
+} from '../lib/dom.js';
 import {registerListeners} from '../lib/event.js';
 import pickerTemplate from './templates/pickerTemplate.js';
 import DaysView from './views/DaysView.js';
@@ -8,7 +14,8 @@ import MonthsView from './views/MonthsView.js';
 import YearsView from './views/YearsView.js';
 import {
   triggerDatepickerEvent,
-  clearSelection, goToOrSelectToday,
+  clearSelection,
+  goToOrSelectToday,
 } from '../events/functions.js';
 import {
   onClickViewSwitch,

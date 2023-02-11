@@ -527,7 +527,7 @@
   };
 
   // config options updatable by setOptions() and their default values
-  var defaultOptions = {
+  const defaultOptions = {
     autohide: false,
     beforeShowDay: null,
     beforeShowDecade: null,
@@ -996,11 +996,25 @@
       this.updateSelection();
     }
 
+    prepareForRender(switchLabel, prevButtonDisabled, nextButtonDisabled) {
+      // refresh disabled years on every render in order to clear the ones added
+      // by beforeShow hook at previous render
+      this.disabled = [];
+
+      const picker = this.picker;
+      picker.setViewSwitchLabel(switchLabel);
+      picker.setPrevButtonDisabled(prevButtonDisabled);
+      picker.setNextButtonDisabled(nextButtonDisabled);
+    }
+
+    setDisabled(date, classList) {
+      classList.add('disabled');
+      pushUnique(this.disabled, date);
+    }
+
     // Execute beforeShow() callback and apply the result to the element
     // args:
-    // - current - current value on the iteration on view rendering
-    // - timeValue - time value of the date to pass to beforeShow()
-    performBeforeHook(el, current, timeValue) {
+    performBeforeHook(el, timeValue) {
       let result = this.beforeShow(new Date(timeValue));
       switch (typeof result) {
         case 'boolean':
@@ -1011,21 +1025,89 @@
       }
 
       if (result) {
+        const classList = el.classList;
         if (result.enabled === false) {
-          el.classList.add('disabled');
-          pushUnique(this.disabled, current);
+          this.setDisabled(timeValue, classList);
         }
         if (result.classes) {
           const extraClasses = result.classes.split(/\s+/);
-          el.classList.add(...extraClasses);
+          classList.add(...extraClasses);
           if (extraClasses.includes('disabled')) {
-            pushUnique(this.disabled, current);
+            this.setDisabled(timeValue, classList);
           }
         }
         if (result.content) {
           replaceChildNodes(el, result.content);
         }
       }
+    }
+
+    renderCell(el, content, cellVal, date, {selected, range}, outOfScope, extraClasses = []) {
+      el.textContent = content;
+      if (this.isMinView) {
+        el.dataset.date = date;
+      }
+
+      const classList = el.classList;
+      el.className = `datepicker-cell ${this.cellClass}`;
+      if (cellVal < this.first) {
+        classList.add('prev');
+      } else if (cellVal > this.last) {
+        classList.add('next');
+      }
+      classList.add(...extraClasses);
+      if (outOfScope || this.checkDisabled(date, this.id)) {
+        this.setDisabled(date, classList);
+      }
+      if (range) {
+        const [rangeStart, rangeEnd] = range;
+        if (cellVal > rangeStart && cellVal < rangeEnd) {
+          classList.add('range');
+        }
+        if (cellVal === rangeStart) {
+          classList.add('range-start');
+        }
+        if (cellVal === rangeEnd) {
+          classList.add('range-end');
+        }
+      }
+      if (selected.includes(cellVal)) {
+        classList.add('selected');
+      }
+      if (cellVal === this.focused) {
+        classList.add('focused');
+      }
+
+      if (this.beforeShow) {
+        this.performBeforeHook(el, date);
+      }
+    }
+
+    refreshCell(el, cellVal, selected, [rangeStart, rangeEnd]) {
+      const classList = el.classList;
+      classList.remove('range', 'range-start', 'range-end', 'selected', 'focused');
+      if (cellVal > rangeStart && cellVal < rangeEnd) {
+        classList.add('range');
+      }
+      if (cellVal === rangeStart) {
+        classList.add('range-start');
+      }
+      if (cellVal === rangeEnd) {
+        classList.add('range-end');
+      }
+      if (selected.includes(cellVal)) {
+        classList.add('selected');
+      }
+      if (cellVal === this.focused) {
+        classList.add('focused');
+      }
+    }
+
+    changeFocusedCell(cellIndex) {
+      this.grid.querySelectorAll('.focused').forEach((el) => {
+        el.classList.remove('focused');
+      });
+      this.grid.children[cellIndex].classList.add('focused');
     }
   }
 
@@ -1067,7 +1149,7 @@
       if (options.daysOfWeekHighlighted) {
         this.daysOfWeekHighlighted = options.daysOfWeekHighlighted;
       }
-      if (options.todayHighlight !== undefined) {
+      if ('todayHighlight' in options) {
         this.todayHighlight = options.todayHighlight;
       }
       if ('weekStart' in options) {
@@ -1081,7 +1163,7 @@
         this.switchLabelFormat = locale.titleFormat;
         updateDOW = true;
       }
-      if (options.beforeShowDay !== undefined) {
+      if ('beforeShowDay' in options) {
         this.beforeShow = typeof options.beforeShowDay === 'function'
           ? options.beforeShowDay
           : undefined;
@@ -1157,120 +1239,62 @@
     render() {
       // update today marker on ever render
       this.today = this.todayHighlight ? today() : undefined;
-      // refresh disabled dates on every render in order to clear the ones added
-      // by beforeShow hook at previous render
-      this.disabled = [];
 
-      const {first, last, weekStart} = this;
-      const switchLabel = formatDate(this.focused, this.switchLabelFormat, this.locale);
-      this.picker.setViewSwitchLabel(switchLabel);
-      this.picker.setPrevButtonDisabled(first <= this.minDate);
-      this.picker.setNextButtonDisabled(last >= this.maxDate);
+      this.prepareForRender(
+        formatDate(this.focused, this.switchLabelFormat, this.locale),
+        this.first <= this.minDate,
+        this.last >= this.maxDate
+      );
 
       if (this.weekNumbers) {
-        const startOfWeek = dayOfTheWeekOf(first, weekStart, weekStart);
+        const weekStart = this.weekStart;
+        const startOfWeek = dayOfTheWeekOf(this.first, weekStart, weekStart);
         Array.from(this.weekNumbers.weeks.children).forEach((el, index) => {
           const dateOfWeekStart = addWeeks(startOfWeek, index);
           el.textContent = this.getWeekNumber(dateOfWeekStart, weekStart);
           if (index > 3) {
-            el.classList[dateOfWeekStart > last ? 'add' : 'remove']('next');
+            el.classList[dateOfWeekStart > this.last ? 'add' : 'remove']('next');
           }
         });
       }
       Array.from(this.grid.children).forEach((el, index) => {
-        const classList = el.classList;
         const current = addDays(this.start, index);
-        const date = new Date(current);
-        const day = date.getDay();
+        const dateObj = new Date(current);
+        const day = dateObj.getDay();
+        const extraClasses = [];
 
-        el.className = `datepicker-cell ${this.cellClass}`;
-        el.dataset.date = current;
-        el.textContent = date.getDate();
-
-        if (current < first) {
-          classList.add('prev');
-        } else if (current > last) {
-          classList.add('next');
-        }
         if (this.today === current) {
-          classList.add('today');
-        }
-        if (
-          current < this.minDate
-          || current > this.maxDate
-          || this.checkDisabled(current, this.id)
-        ) {
-          classList.add('disabled');
-          pushUnique(this.disabled, current);
-        }
-        if (this.daysOfWeekDisabled.includes(day)) {
-          classList.add('disabled');
-          pushUnique(this.disabled, current);
+          extraClasses.push('today');
         }
         if (this.daysOfWeekHighlighted.includes(day)) {
-          classList.add('highlighted');
-        }
-        if (this.range) {
-          const [rangeStart, rangeEnd] = this.range;
-          if (current > rangeStart && current < rangeEnd) {
-            classList.add('range');
-          }
-          if (current === rangeStart) {
-            classList.add('range-start');
-          }
-          if (current === rangeEnd) {
-            classList.add('range-end');
-          }
-        }
-        if (this.selected.includes(current)) {
-          classList.add('selected');
-        }
-        if (current === this.focused) {
-          classList.add('focused');
+          extraClasses.push('highlighted');
         }
 
-        if (this.beforeShow) {
-          this.performBeforeHook(el, current, current);
-        }
+        this.renderCell(
+          el,
+          dateObj.getDate(),
+          current,
+          current,
+          this,
+          current < this.minDate
+            || current > this.maxDate
+            || this.daysOfWeekDisabled.includes(day),
+          extraClasses
+        );
       });
     }
 
     // Update the view UI by applying the changes of selected and focused items
     refresh() {
-      const [rangeStart, rangeEnd] = this.range || [];
-      this.grid
-        .querySelectorAll('.range, .range-start, .range-end, .selected, .focused')
-        .forEach((el) => {
-          el.classList.remove('range', 'range-start', 'range-end', 'selected', 'focused');
-        });
+      const range = this.range || [];
       Array.from(this.grid.children).forEach((el) => {
-        const current = Number(el.dataset.date);
-        const classList = el.classList;
-        if (current > rangeStart && current < rangeEnd) {
-          classList.add('range');
-        }
-        if (current === rangeStart) {
-          classList.add('range-start');
-        }
-        if (current === rangeEnd) {
-          classList.add('range-end');
-        }
-        if (this.selected.includes(current)) {
-          classList.add('selected');
-        }
-        if (current === this.focused) {
-          classList.add('focused');
-        }
+        this.refreshCell(el, Number(el.dataset.date), this.selected, range);
       });
     }
 
     // Update the view UI by applying the change of focused item
     refreshFocus() {
-      const index = Math.round((this.focused - this.start) / 86400000);
-      this.grid.querySelectorAll('.focused').forEach((el) => {
-        el.classList.remove('focused');
-      });
-      this.grid.children[index].classList.add('focused');
+      this.changeFocusedCell(Math.round((this.focused - this.start) / 86400000));
     }
   }
 
@@ -1303,6 +1327,8 @@
         this.grid = this.element;
         this.element.classList.add('months', 'datepicker-grid');
         this.grid.appendChild(parseHTML(createTagRepeat('span', 12, {'data-month': ix => ix})));
+        this.first = 0;
+        this.last = 11;
       }
       super.init(options);
     }
@@ -1374,13 +1400,11 @@
 
     // Update the entire view UI
     render() {
-      // refresh disabled months on every render in order to clear the ones added
-      // by beforeShow hook at previous render
-      this.disabled = [];
-
-      this.picker.setViewSwitchLabel(this.year);
-      this.picker.setPrevButtonDisabled(this.year <= this.minYear);
-      this.picker.setNextButtonDisabled(this.year >= this.maxYear);
+      this.prepareForRender(
+        this.year,
+        this.year <= this.minYear,
+        this.year >= this.maxYear
+      );
 
       const selected = this.selected[this.year] || [];
       const yrOutOfRange = this.year < this.minYear || this.year > this.maxYear;
@@ -1389,86 +1413,33 @@
       const range = computeMonthRange(this.range, this.year);
 
       Array.from(this.grid.children).forEach((el, index) => {
-        const classList = el.classList;
         const date = regularizeDate(new Date(this.year, index, 1), 1, this.isRangeEnd);
 
-        el.className = `datepicker-cell ${this.cellClass}`;
-        if (this.isMinView) {
-          el.dataset.date = date;
-        }
-        // reset text on every render to clear the custom content set
-        // by beforeShow hook at previous render
-        el.textContent = this.monthNames[index];
-
-        if (
+        this.renderCell(
+          el,
+          this.monthNames[index],
+          index,
+          date,
+          {selected, range},
           yrOutOfRange
-          || isMinYear && index < this.minMonth
-          || isMaxYear && index > this.maxMonth
-          || this.checkDisabled(date, this.id)
-        ) {
-          classList.add('disabled');
-          pushUnique(this.disabled, date);
-        }
-        if (range) {
-          const [rangeStart, rangeEnd] = range;
-          if (index > rangeStart && index < rangeEnd) {
-            classList.add('range');
-          }
-          if (index === rangeStart) {
-            classList.add('range-start');
-          }
-          if (index === rangeEnd) {
-            classList.add('range-end');
-          }
-        }
-        if (selected.includes(index)) {
-          classList.add('selected');
-        }
-        if (index === this.focused) {
-          classList.add('focused');
-        }
-
-        if (this.beforeShow) {
-          this.performBeforeHook(el, date, date);
-        }
+            || isMinYear && index < this.minMonth
+            || isMaxYear && index > this.maxMonth
+        );
       });
     }
 
     // Update the view UI by applying the changes of selected and focused items
     refresh() {
       const selected = this.selected[this.year] || [];
-      const [rangeStart, rangeEnd] = computeMonthRange(this.range, this.year) || [];
-      this.grid
-        .querySelectorAll('.range, .range-start, .range-end, .selected, .focused')
-        .forEach((el) => {
-          el.classList.remove('range', 'range-start', 'range-end', 'selected', 'focused');
-        });
+      const range = computeMonthRange(this.range, this.year) || [];
       Array.from(this.grid.children).forEach((el, index) => {
-        const classList = el.classList;
-        if (index > rangeStart && index < rangeEnd) {
-          classList.add('range');
-        }
-        if (index === rangeStart) {
-          classList.add('range-start');
-        }
-        if (index === rangeEnd) {
-          classList.add('range-end');
-        }
-        if (selected.includes(index)) {
-          classList.add('selected');
-        }
-        if (index === this.focused) {
-          classList.add('focused');
-        }
+        this.refreshCell(el, index, selected, range);
       });
     }
 
     // Update the view UI by applying the change of focused item
     refreshFocus() {
-      this.grid.querySelectorAll('.focused').forEach((el) => {
-        el.classList.remove('focused');
-      });
-      this.grid.children[this.focused].classList.add('focused');
+      this.changeFocusedCell(this.focused);
     }
   }
 
@@ -1550,99 +1521,39 @@
 
     // Update the entire view UI
     render() {
-      // refresh disabled years on every render in order to clear the ones added
-      // by beforeShow hook at previous render
-      this.disabled = [];
-
-      this.picker.setViewSwitchLabel(`${this.first}-${this.last}`);
-      this.picker.setPrevButtonDisabled(this.first <= this.minYear);
-      this.picker.setNextButtonDisabled(this.last >= this.maxYear);
+      this.prepareForRender(
+        `${this.first}-${this.last}`,
+        this.first <= this.minYear,
+        this.last >= this.maxYear
+      );
 
       Array.from(this.grid.children).forEach((el, index) => {
-        const classList = el.classList;
         const current = this.start + (index * this.step);
         const date = regularizeDate(new Date(current, 0, 1), 2, this.isRangeEnd);
 
-        el.className = `datepicker-cell ${this.cellClass}`;
-        if (this.isMinView) {
-          el.dataset.date = date;
-        }
-        el.textContent = el.dataset.year = current;
-
-        if (index === 0) {
-          classList.add('prev');
-        } else if (index === 11) {
-          classList.add('next');
-        }
-        if (
-          current < this.minYear
-          || current > this.maxYear
-          || this.checkDisabled(date, this.id)
-        ) {
-          classList.add('disabled');
-          pushUnique(this.disabled, date);
-        }
-        if (this.range) {
-          const [rangeStart, rangeEnd] = this.range;
-          if (current > rangeStart && current < rangeEnd) {
-            classList.add('range');
-          }
-          if (current === rangeStart) {
-            classList.add('range-start');
-          }
-          if (current === rangeEnd) {
-            classList.add('range-end');
-          }
-        }
-        if (this.selected.includes(current)) {
-          classList.add('selected');
-        }
-        if (current === this.focused) {
-          classList.add('focused');
-        }
-
-        if (this.beforeShow) {
-          this.performBeforeHook(el, date, date);
-        }
+        el.dataset.year = current;
+        this.renderCell(
+          el,
+          current,
+          current,
+          date,
+          this,
+          current < this.minYear || current > this.maxYear
+        );
       });
     }
 
     // Update the view UI by applying the changes of selected and focused items
     refresh() {
-      const [rangeStart, rangeEnd] = this.range || [];
-      this.grid
-        .querySelectorAll('.range, .range-start, .range-end, .selected, .focused')
-        .forEach((el) => {
-          el.classList.remove('range', 'range-start', 'range-end', 'selected', 'focused');
-        });
+      const range = this.range || [];
       Array.from(this.grid.children).forEach((el) => {
-        const current = Number(el.textContent);
-        const classList = el.classList;
-        if (current > rangeStart && current < rangeEnd) {
-          classList.add('range');
-        }
-        if (current === rangeStart) {
-          classList.add('range-start');
-        }
-        if (current === rangeEnd) {
-          classList.add('range-end');
-        }
-        if (this.selected.includes(current)) {
-          classList.add('selected');
-        }
-        if (current === this.focused) {
-          classList.add('focused');
-        }
+        this.refreshCell(el, Number(el.textContent), this.selected, range);
       });
     }
 
     // Update the view UI by applying the change of focused item
     refreshFocus() {
-      const index = Math.round((this.focused - this.start) / this.step);
-      this.grid.querySelectorAll('.focused').forEach((el) => {
-        el.classList.remove('focused');
-      });
-      this.grid.children[index].classList.add('focused');
+      this.changeFocusedCell(Math.round((this.focused - this.start) / this.step));
     }
   }
 
@@ -1658,8 +1569,8 @@
 
   // direction: -1 (to previous), 1 (to next)
   function goToPrevOrNext(datepicker, direction) {
-    const {minDate, maxDate} = datepicker.config;
-    const {currentView, viewDate} = datepicker.picker;
+    const {config, picker} = datepicker;
+    const {currentView, viewDate} = picker;
     let newViewDate;
     switch (currentView.id) {
       case 0:
@@ -1671,8 +1582,8 @@
       default:
         newViewDate = addYears(viewDate, direction * currentView.navStep);
     }
-    newViewDate = limitToRange(newViewDate, minDate, maxDate);
-    datepicker.picker.changeFocus(newViewDate).render();
+    newViewDate = limitToRange(newViewDate, config.minDate, config.maxDate);
+    picker.changeFocus(newViewDate).render();
   }
 
   function switchView(datepicker) {
@@ -1749,13 +1660,13 @@
     }
 
     const {id, isMinView} = datepicker.picker.currentView;
-    const {date, month, year} = target.dataset;
+    const data = target.dataset;
     if (isMinView) {
-      datepicker.setDate(Number(date));
+      datepicker.setDate(Number(data.date));
     } else if (id === 1) {
-      goToSelectedMonthOrYear(datepicker, Number(month));
+      goToSelectedMonthOrYear(datepicker, Number(data.month));
     } else {
-      goToSelectedMonthOrYear(datepicker, Number(year));
+      goToSelectedMonthOrYear(datepicker, Number(data.year));
     }
   }
 
@@ -2925,6 +2836,7 @@
     }
 
     const datepickers = rangepicker.datepickers;
+    const [datepicker0, datepicker1] = datepickers;
     const setDateOptions = {render: false};
     const changedSide = rangepicker.inputs.indexOf(target);
     const otherSide = changedSide === 0 ? 1 : 0;
@@ -2934,11 +2846,11 @@
     if (changedDate !== undefined && otherDate !== undefined) {
       // if the start of the range > the end, swap them
       if (changedSide === 0 && changedDate > otherDate) {
-        datepickers[0].setDate(otherDate, setDateOptions);
-        datepickers[1].setDate(changedDate, setDateOptions);
+        datepicker0.setDate(otherDate, setDateOptions);
+        datepicker1.setDate(changedDate, setDateOptions);
       } else if (changedSide === 1 && changedDate < otherDate) {
-        datepickers[0].setDate(changedDate, setDateOptions);
-        datepickers[1].setDate(otherDate, setDateOptions);
+        datepicker0.setDate(changedDate, setDateOptions);
+        datepicker1.setDate(otherDate, setDateOptions);
       }
     } else if (!rangepicker.allowOneSidedRange) {
       // to prevent the range from becoming one-sided, copy changed side's
@@ -2948,8 +2860,9 @@
         datepickers[otherSide].setDate(datepickers[changedSide].dates, setDateOptions);
       }
     }
-    datepickers[0].picker.update().render();
-    datepickers[1].picker.update().render();
+    datepickers.forEach((datepicker) => {
+      datepicker.picker.update().render();
+    });
     delete rangepicker._updating;
   }
 
@@ -2963,7 +2876,7 @@
      * @param  {Object} [options] - config options
      */
     constructor(element, options = {}) {
-      const inputs = Array.isArray(options.inputs)
+      let inputs = Array.isArray(options.inputs)
         ? options.inputs
         : Array.from(element.querySelectorAll('input'));
       if (inputs.length < 2) {
@@ -2985,14 +2898,15 @@
           return datepickers;
         },
       });
-      setupDatepicker(this, changeDateListener, this.inputs[0], cleanOptions);
-      setupDatepicker(this, changeDateListener, this.inputs[1], cleanOptions);
+      inputs.forEach((input) => {
+        setupDatepicker(this, changeDateListener, input, cleanOptions);
+      });
       Object.freeze(datepickers);
       // normalize the range if inital dates are given
       if (datepickers[0].dates.length > 0) {
-        onChangeDate(this, {target: this.inputs[0]});
+        onChangeDate(this, {target: inputs[0]});
       } else if (datepickers[1].dates.length > 0) {
-        onChangeDate(this, {target: this.inputs[1]});
+        onChangeDate(this, {target: inputs[1]});
       }
     }
 
@@ -3000,11 +2914,9 @@
      * @type {Array} - selected date of the linked date pickers
      */
     get dates() {
-      return this.datepickers.length === 2
-        ? [
-            this.datepickers[0].dates[0],
-            this.datepickers[1].dates[0],
-          ]
+      const datepickers = this.datepickers;
+      return datepickers.length === 2
+        ? datepickers.map(datepicker => datepicker.dates[0])
         : undefined;
     }
 
@@ -3016,8 +2928,9 @@
       this.allowOneSidedRange = !!options.allowOneSidedRange;
 
       const cleanOptions = filterOptions(options);
-      this.datepickers[0].setOptions(cleanOptions);
-      this.datepickers[1].setOptions(cleanOptions);
+      this.datepickers.forEach((datepicker) => {
+        datepicker.setOptions(cleanOptions);
+      });
     }
 
     /**
@@ -3025,8 +2938,9 @@
      * @return {DateRangePicker} - the instance destroyed
      */
     destroy() {
-      this.datepickers[0].destroy();
-      this.datepickers[1].destroy();
+      this.datepickers.forEach((datepicker) => {
+        datepicker.destroy();
+      });
       unregisterListeners(this);
       delete this.element.rangepicker;
     }
@@ -3080,8 +2994,11 @@
      * or {clear: true} to clear the date
      */
     setDates(rangeStart, rangeEnd) {
-      const [datepicker0, datepicker1] = this.datepickers;
-      const origDates = this.dates;
+      const {
+        datepickers: [datepicker0, datepicker1],
+        inputs: [input0, input1],
+        dates: [origDate0, origDate1],
+      } = this;
 
       // If range normalization runs on every change, we can't set a new range
       // that starts after the end of the current range correctly because the
@@ -3093,10 +3010,10 @@
       datepicker1.setDate(rangeEnd);
       delete this._updating;
 
-      if (datepicker1.dates[0] !== origDates[1]) {
-        onChangeDate(this, {target: this.inputs[1]});
-      } else if (datepicker0.dates[0] !== origDates[0]) {
-        onChangeDate(this, {target: this.inputs[0]});
+      if (datepicker1.dates[0] !== origDate1) {
+        onChangeDate(this, {target: input1});
+      } else if (datepicker0.dates[0] !== origDate0) {
+        onChangeDate(this, {target: input0});
       }
     }
   }

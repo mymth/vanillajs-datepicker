@@ -1,6 +1,6 @@
 import {optimizeTemplateHTML} from '../../lib/utils.js';
 
-const pickerTemplate = optimizeTemplateHTML(`<div class="datepicker">
+export default optimizeTemplateHTML(`<div class="datepicker">
   <div class="datepicker-picker">
     <div class="datepicker-header">
       <div class="datepicker-title"></div>
@@ -19,5 +19,3 @@ const pickerTemplate = optimizeTemplateHTML(`<div class="datepicker">
     </div>
   </div>
 </div>`);
-
-export default pickerTemplate;

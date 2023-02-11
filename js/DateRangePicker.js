@@ -33,6 +33,7 @@ function onChangeDate(rangepicker, ev) {
   }
 
   const datepickers = rangepicker.datepickers;
+  const [datepicker0, datepicker1] = datepickers;
   const setDateOptions = {render: false};
   const changedSide = rangepicker.inputs.indexOf(target);
   const otherSide = changedSide === 0 ? 1 : 0;
@@ -42,11 +43,11 @@ function onChangeDate(rangepicker, ev) {
   if (changedDate !== undefined && otherDate !== undefined) {
     // if the start of the range > the end, swap them
     if (changedSide === 0 && changedDate > otherDate) {
-      datepickers[0].setDate(otherDate, setDateOptions);
-      datepickers[1].setDate(changedDate, setDateOptions);
+      datepicker0.setDate(otherDate, setDateOptions);
+      datepicker1.setDate(changedDate, setDateOptions);
     } else if (changedSide === 1 && changedDate < otherDate) {
-      datepickers[0].setDate(changedDate, setDateOptions);
-      datepickers[1].setDate(otherDate, setDateOptions);
+      datepicker0.setDate(changedDate, setDateOptions);
+      datepicker1.setDate(otherDate, setDateOptions);
     }
   } else if (!rangepicker.allowOneSidedRange) {
     // to prevent the range from becoming one-sided, copy changed side's
@@ -56,8 +57,9 @@ function onChangeDate(rangepicker, ev) {
       datepickers[otherSide].setDate(datepickers[changedSide].dates, setDateOptions);
     }
   }
-  datepickers[0].picker.update().render();
-  datepickers[1].picker.update().render();
+  datepickers.forEach((datepicker) => {
+    datepicker.picker.update().render();
+  });
   delete rangepicker._updating;
 }
 
@@ -71,7 +73,7 @@ export default class DateRangePicker  {
    * @param  {Object} [options] - config options
    */
   constructor(element, options = {}) {
-    const inputs = Array.isArray(options.inputs)
+    let inputs = Array.isArray(options.inputs)
       ? options.inputs
       : Array.from(element.querySelectorAll('input'));
     if (inputs.length < 2) {
@@ -93,14 +95,15 @@ export default class DateRangePicker  {
         return datepickers;
       },
     });
-    setupDatepicker(this, changeDateListener, this.inputs[0], cleanOptions);
-    setupDatepicker(this, changeDateListener, this.inputs[1], cleanOptions);
+    inputs.forEach((input) => {
+      setupDatepicker(this, changeDateListener, input, cleanOptions);
+    });
     Object.freeze(datepickers);
     // normalize the range if inital dates are given
     if (datepickers[0].dates.length > 0) {
-      onChangeDate(this, {target: this.inputs[0]});
+      onChangeDate(this, {target: inputs[0]});
     } else if (datepickers[1].dates.length > 0) {
-      onChangeDate(this, {target: this.inputs[1]});
+      onChangeDate(this, {target: inputs[1]});
     }
   }
 
@@ -108,11 +111,9 @@ export default class DateRangePicker  {
    * @type {Array} - selected date of the linked date pickers
    */
   get dates() {
-    return this.datepickers.length === 2
-      ? [
-          this.datepickers[0].dates[0],
-          this.datepickers[1].dates[0],
-        ]
+    const datepickers = this.datepickers;
+    return datepickers.length === 2
+      ? datepickers.map(datepicker => datepicker.dates[0])
       : undefined;
   }
 
@@ -124,8 +125,9 @@ export default class DateRangePicker  {
     this.allowOneSidedRange = !!options.allowOneSidedRange;
 
     const cleanOptions = filterOptions(options);
-    this.datepickers[0].setOptions(cleanOptions);
-    this.datepickers[1].setOptions(cleanOptions);
+    this.datepickers.forEach((datepicker) => {
+      datepicker.setOptions(cleanOptions);
+    });
   }
 
   /**
@@ -133,8 +135,9 @@ export default class DateRangePicker  {
    * @return {DateRangePicker} - the instance destroyed
    */
   destroy() {
-    this.datepickers[0].destroy();
-    this.datepickers[1].destroy();
+    this.datepickers.forEach((datepicker) => {
+      datepicker.destroy();
+    });
     unregisterListeners(this);
     delete this.element.rangepicker;
   }
@@ -188,8 +191,11 @@ export default class DateRangePicker  {
    * or {clear: true} to clear the date
    */
   setDates(rangeStart, rangeEnd) {
-    const [datepicker0, datepicker1] = this.datepickers;
-    const origDates = this.dates;
+    const {
+      datepickers: [datepicker0, datepicker1],
+      inputs: [input0, input1],
+      dates: [origDate0, origDate1],
+    } = this;
 
     // If range normalization runs on every change, we can't set a new range
     // that starts after the end of the current range correctly because the
@@ -201,10 +207,10 @@ export default class DateRangePicker  {
     datepicker1.setDate(rangeEnd);
     delete this._updating;
 
-    if (datepicker1.dates[0] !== origDates[1]) {
-      onChangeDate(this, {target: this.inputs[1]});
-    } else if (datepicker0.dates[0] !== origDates[0]) {
-      onChangeDate(this, {target: this.inputs[0]});
+    if (datepicker1.dates[0] !== origDate1) {
+      onChangeDate(this, {target: input1});
+    } else if (datepicker0.dates[0] !== origDate0) {
+      onChangeDate(this, {target: input0});
     }
   }
 }

@@ -5,7 +5,7 @@ import DaysView from '../../../js/picker/views/DaysView.js';
 import MonthsView from '../../../js/picker/views/MonthsView.js';
 import YearsView from '../../../js/picker/views/YearsView.js';
 import defaultOptions from '../../../js/options/defaultOptions.js';
-import {locales} from '../../../js/i18n/base-locales.js';
+import locales from '../../../js/i18n/base-locales.js';
 import {dateValue, today, startOfYearPeriod} from '../../../js/lib/date.js';
 import expect from 'unexpected';
 
