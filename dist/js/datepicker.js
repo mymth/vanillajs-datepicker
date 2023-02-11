@@ -1599,15 +1599,11 @@ var Datepicker = (function () {
   }
 
   function goToOrSelectToday(datepicker) {
-    const {config, picker} = datepicker;
     const currentDate = today();
-    if (config.todayButtonMode === 1) {
+    if (datepicker.config.todayButtonMode === 1) {
       datepicker.setDate(currentDate, {forceRefresh: true, viewDate: currentDate});
     } else {
-      if (picker.viewDate !== currentDate) {
-        picker.changeFocus(currentDate);
-      }
-      picker.changeView(config.pickLevel).render();
+      datepicker.setFocusedDate(currentDate, true);
     }
   }
 
@@ -2375,6 +2371,12 @@ var Datepicker = (function () {
     }
   }
 
+  function getOutputConverter(datepicker, format) {
+    return format
+      ? date => formatDate(date, format, datepicker.config.locale)
+      : date => new Date(date);
+  }
+
   /**
    * Class representing a date picker
    */
@@ -2622,14 +2624,12 @@ var Datepicker = (function () {
      * an array of selected dates in multidate mode. If format string is passed,
      * it returns date string(s) formatted in given format.
      *
-     * @param  {String} [format] - Format string to stringify the date(s)
+     * @param  {String} [format] - format string to stringify the date(s)
      * @return {Date|String|Date[]|String[]} - selected date(s), or if none is
      * selected, empty array in multidate mode and undefined in sigledate mode
      */
     getDate(format = undefined) {
-      const callback = format
-        ? date => formatDate(date, format, this.config.locale)
-        : date => new Date(date);
+      const callback = getOutputConverter(this, format);
 
       if (this.config.multidate) {
         return this.dates.map(callback);
@@ -2745,6 +2745,47 @@ var Datepicker = (function () {
       const opts = Object.assign(options || {}, {clear: true, render: true, viewDate: undefined});
       const inputDates = stringToArray(this.inputField.value, this.config.dateDelimiter);
       setDate(this, inputDates, opts);
+    }
+
+    /**
+     * Get the focused date
+     *
+     * The method returns a Date object of selected date by default. If format
+     * string is passed, it returns date string formatted in given format.
+     *
+     * @param  {String} [format] - format string to stringify the date
+     * @return {Date|String} - focused date (viewDate)
+     */
+    getFocusedDate(format = undefined) {
+      return getOutputConverter(this, format)(this.picker.viewDate);
+    }
+
+    /**
+     * Set focused date
+     *
+     * By default, the method updates the focus on the view shown at the time,
+     * or the one set to the startView config option if the picker is hidden.
+     * When resetView: true is passed, the view displayed is changed to the
+     * pickLevel config option's if the picker is shown.
+     *
+     * @param {Date|Number|String} viewDate - date string, Date object, time
+     * values of the date to focus
+     * @param {Boolean} [resetView] - whether to change the view to pickLevel's
+     * when the picker is shown. Ignored when the picker is hidden
+     */
+    setFocusedDate(viewDate, resetView = false) {
+      const {config, picker, active, rangeSideIndex} = this;
+      const pickLevel = config.pickLevel;
+      const newViewDate = parseDate(viewDate, config.format, config.locale);
+      if (newViewDate === undefined) {
+        return;
+      }
+
+      picker.changeFocus(regularizeDate(newViewDate, pickLevel, rangeSideIndex));
+      if (active && resetView) {
+        picker.changeView(pickLevel);
+      }
+      picker.render();
     }
 
     /**

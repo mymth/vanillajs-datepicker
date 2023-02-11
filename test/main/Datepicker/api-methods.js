@@ -409,6 +409,133 @@ describe('Datepicker - API methods', function () {
     });
   });
 
+  describe('getFocusedDate', function () {
+    it('returns the Date object of the date currently focused on the picker', function () {
+      let date = dp.getFocusedDate();
+      expect(date, 'to be a', Date);
+      expect(date.getTime(), 'to be', dateValue(2020, 3, 22));
+
+      dp.setDate('6/4/2021');
+      expect(dp.getFocusedDate().getTime(), 'to be', dateValue(2021, 5, 4));
+    });
+
+    it('returns date stirng of the focused date if a format string is passed', function () {
+      expect(dp.getFocusedDate('m/d/yy'), 'to be', '4/22/20');
+
+      dp.setDate('6/4/2021');
+      expect(dp.getFocusedDate('yyyy-mm-dd'), 'to be', '2021-06-04');
+    });
+  });
+
+  describe('setFocusedDate', function () {
+    it('moves the focused date shown in the picker', function () {
+      const viewSwitch = getViewSwitch(picker);
+      let cells = getCells(picker);
+
+      dp.setFocusedDate('4/7/2020');
+      expect(viewSwitch.textContent, 'to be', 'April 2020');
+      expect(getCellIndices(cells, '.focused'), 'to equal', [9]);
+      expect(cells[9].textContent, 'to be', '7');
+
+      dp.setFocusedDate(new Date(2020, 3, 18));
+      expect(viewSwitch.textContent, 'to be', 'April 2020');
+      expect(getCellIndices(cells, '.focused'), 'to equal', [20]);
+      expect(cells[20].textContent, 'to be', '18');
+
+      dp.setFocusedDate(dateValue(2020, 3, 24));
+      expect(viewSwitch.textContent, 'to be', 'April 2020');
+      expect(getCellIndices(cells, '.focused'), 'to equal', [26]);
+      expect(cells[26].textContent, 'to be', '24');
+
+      dp.setFocusedDate('6/4/2021');
+      expect(viewSwitch.textContent, 'to be', 'June 2021');
+      cells = getCells(picker);
+      expect(getCellIndices(cells, '.focused'), 'to equal', [5]);
+      expect(cells[5].textContent, 'to be', '4');
+
+      dp.setFocusedDate(dateValue(2020, 1, 14));
+      expect(viewSwitch.textContent, 'to be', 'February 2020');
+      cells = getCells(picker);
+      expect(getCellIndices(cells, '.focused'), 'to equal', [19]);
+      expect(cells[19].textContent, 'to be', '14');
+
+      // months view
+      viewSwitch.click();
+
+      dp.setFocusedDate('4/22/2020');
+      expect(viewSwitch.textContent, 'to be', '2020');
+      cells = getCells(picker);
+      expect(getCellIndices(cells, '.focused'), 'to equal', [3]);
+      expect(cells[3].textContent, 'to be', 'Apr');
+
+      dp.setFocusedDate('10/15/2022');
+      expect(viewSwitch.textContent, 'to be', '2022');
+      cells = getCells(picker);
+      expect(getCellIndices(cells, '.focused'), 'to equal', [9]);
+      expect(cells[9].textContent, 'to be', 'Oct');
+
+      // years view
+      viewSwitch.click();
+
+      dp.setFocusedDate('4/22/2020');
+      expect(viewSwitch.textContent, 'to be', '2020-2029');
+      cells = getCells(picker);
+      expect(getCellIndices(cells, '.focused'), 'to equal', [1]);
+      expect(cells[1].textContent, 'to be', '2020');
+
+      dp.setFocusedDate('6/4/2034');
+      expect(viewSwitch.textContent, 'to be', '2030-2039');
+      cells = getCells(picker);
+      expect(getCellIndices(cells, '.focused'), 'to equal', [5]);
+      expect(cells[5].textContent, 'to be', '2034');
+
+      // decades view
+      viewSwitch.click();
+
+      dp.setFocusedDate('4/22/2020');
+      expect(viewSwitch.textContent, 'to be', '2000-2090');
+      cells = getCells(picker);
+      expect(getCellIndices(cells, '.focused'), 'to equal', [3]);
+      expect(cells[3].textContent, 'to be', '2020');
+
+      dp.setFocusedDate('7/14/1986');
+      expect(viewSwitch.textContent, 'to be', '1900-1990');
+      cells = getCells(picker);
+      expect(getCellIndices(cells, '.focused'), 'to equal', [9]);
+      expect(cells[9].textContent, 'to be', '1980');
+    });
+
+    it('changes the view back to the days view if resetView = true is passed', function () {
+      const viewSwitch = getViewSwitch(picker);
+      viewSwitch.click();
+
+      dp.setFocusedDate('2/14/2020', true);
+      expect(viewSwitch.textContent, 'to be', 'February 2020');
+      let cells = getCells(picker);
+      expect(getCellIndices(cells, '.focused'), 'to equal', [19]);
+      expect(cells[19].textContent, 'to be', '14');
+
+      viewSwitch.click();
+      viewSwitch.click();
+
+      dp.setFocusedDate('7/14/2032', true);
+      expect(viewSwitch.textContent, 'to be', 'July 2032');
+      cells = getCells(picker);
+      expect(getCellIndices(cells, '.focused'), 'to equal', [17]);
+      expect(cells[17].textContent, 'to be', '14');
+
+      viewSwitch.click();
+      viewSwitch.click();
+      viewSwitch.click();
+
+      dp.setFocusedDate('10/24/1995', true);
+      expect(viewSwitch.textContent, 'to be', 'October 1995');
+      cells = getCells(picker);
+      expect(getCellIndices(cells, '.focused'), 'to equal', [23]);
+      expect(cells[23].textContent, 'to be', '24');
+    });
+  });
+
   describe('refresh()', function () {
     it('refreshes the input element and picker UI to refrect the internal data', function () {
       const spyChnageEvent = sinon.spy();

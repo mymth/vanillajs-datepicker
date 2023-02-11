@@ -198,6 +198,48 @@ describe('options - pick level & view', function () {
       dp.destroy();
     });
 
+    it('changes the level of focused date set by setFocusedDate()', function () {
+      let dp = new Datepicker(input, {pickLevel: 1});
+      dp.show();
+
+      dp.setFocusedDate('4/22/2024', true);
+      expect(dp.getFocusedDate().getTime(), 'to be', dateValue(2024, 3, 1));
+
+      dp.destroy();
+
+      dp = new Datepicker(input, {pickLevel: 2});
+      dp.show();
+
+      dp.setFocusedDate('4/22/2024', true);
+      expect(dp.getFocusedDate().getTime(), 'to be', dateValue(2024, 0, 1));
+
+      dp.destroy();
+    });
+
+    it('changes the view to change when setFocusedDate() is called with resetView = true', function () {
+      let {dp, picker} = createDP(input, {pickLevel: 1});
+      let viewSwitch = getViewSwitch(picker);
+      dp.show();
+      viewSwitch.click();
+
+      dp.setFocusedDate('4/22/2024', true);
+      expect(viewSwitch.textContent, 'to be', '2024');
+      expect(getCellIndices(getCells(picker), '.focused'), 'to equal', [3]);
+
+      dp.destroy();
+
+      ({dp, picker} = createDP(input, {pickLevel: 2}));
+      viewSwitch = getViewSwitch(picker);
+      dp.show();
+      viewSwitch.click();
+
+      dp.setFocusedDate('4/22/2024', true);
+      expect(viewSwitch.textContent, 'to be', '2020-2029');
+      expect(getCellIndices(getCells(picker), '.focused'), 'to equal', [5]);
+
+      dp.destroy();
+    });
+
     it('can be updated with setOptions()', function () {
       const {dp, picker} = createDP(input);
       const viewSwitch = getViewSwitch(picker);
@@ -523,6 +565,37 @@ describe('options - pick level & view', function () {
       let cells = getCells(picker);
       expect(getCellIndices(cells, '.focused'), 'to equal', [1]);
       expect(cells[1].textContent, 'to be', '2020');
+
+      dp.destroy();
+    });
+
+    it('is not affected by calling setFocusedDate() with resetView = true when picker is hidden', function () {
+      let {dp, picker} = createDP(input, {startView: 3});
+      let viewSwitch = getViewSwitch(picker);
+
+      dp.setFocusedDate('4/22/2020', true);
+      dp.show();
+
+      expect(viewSwitch.textContent, 'to be', '2000-2090');
+      let cells = getCells(picker);
+      expect(getCellIndices(cells, '.focused'), 'to equal', [3]);
+      expect(cells[3].textContent, 'to be', '2020');
+
+      dp.destroy();
+
+      ({dp, picker} = createDP(input, {startView: 1}));
+      viewSwitch = getViewSwitch(picker);
+      dp.show();
+      viewSwitch.click();
+      dp.hide();
+
+      dp.setFocusedDate('7/14/2021', true);
+
+      dp.show();
+      expect(viewSwitch.textContent, 'to be', '2021');
+      cells = getCells(picker);
+      expect(getCellIndices(cells, '.focused'), 'to equal', [6]);
+      expect(cells[6].textContent, 'to be', 'Jul');
 
       dp.destroy();
     });

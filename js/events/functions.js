@@ -44,15 +44,11 @@ export function clearSelection(datepicker) {
 }
 
 export function goToOrSelectToday(datepicker) {
-  const {config, picker} = datepicker;
   const currentDate = today();
-  if (config.todayButtonMode === 1) {
+  if (datepicker.config.todayButtonMode === 1) {
     datepicker.setDate(currentDate, {forceRefresh: true, viewDate: currentDate});
   } else {
-    if (picker.viewDate !== currentDate) {
-      picker.changeFocus(currentDate);
-    }
-    picker.changeView(config.pickLevel).render();
+    datepicker.setFocusedDate(currentDate, true);
   }
 }
 

@@ -95,6 +95,20 @@ datepicker.getDate( [ format ] )
   - {`Date`|`String`} - Selected date (or `undefined` if none is selected)
   - {`Date[]`|`String[]`} - Array of selected dates (or empty array if none is selected)
 
+#### datepicker.getFocusedDate()
+
+Get the focused date
+
+The method returns a Date object of focused date by default. If format string is passed, it returns date string formatted in given format.
+
+```javascript
+datepicker.getFocusedDate( [ format ] )
+```
+- **Arguments:**
+  - [`format`] : {`String`} - Format string to stringify the date
+- **Return:**
+  - {`Date`|`String`} - Focused date (viewDate)
+
 #### datepicker.hide()
 
 Hide the picker element  
@@ -153,6 +167,21 @@ datepicker.setDate( [ options ] )
       – Default: `false`
     - `viewDate`: {`Date`|`Number`|`String`} - Date to be focused after setiing date(s)  
       – Default: The last item of the resulting selection, or `defaultViewDate` config option if none is selected
+
+#### datepicker.setFocusedDate()
+
+Set focused date
+
+By default, the method updates the focus on the view shown at the time, or the one set to the [`startView`](options?id=startview) config option if the picker is hidden.  
+When resetView: `true` is passed, the view displayed is changed to the [`pickLevel`](options?id=pickLevel) config option's if the picker is shown.
+
+```javascript
+datepicker.setDate( viewDate [, resetView ] )
+```
+- **Arguments:**
+  - `viewDate` : {`Date`|`Number`|`String`} - Date string, Date object, time values of the date to focus
+  - [`resetView`] : {`Boolean`} - Whether to change the view to `pickLevel` config option's when the picker is shown. Ignored when the picker is hidden  
+    – Default: `'false'`
 
 #### datepicker.setOptions()
 
