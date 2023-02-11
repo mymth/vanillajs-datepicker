@@ -46,13 +46,13 @@ npm install --save-dev vanillajs-datepicker
 import Datepicker from 'path/to/node_modules/vanillajs-datepicker/js/Datepicker.js';
 ```
 
-_Or if you use a bundler that supports [pkg.module](https://github.com/rollup/rollup/wiki/pkg.module) (e.g. [Rollup](https://rollupjs.org/) with [node-resolve](https://github.com/rollup/plugins/tree/master/packages/node-resolve) plugin, [webpack](https://webpack.js.org/))_
+_Or if you use a bundler that supports [pkg.module](https://github.com/rollup/rollup/wiki/pkg.module)_
 
 ```javascript
 import { Datepicker } from 'vanillajs-datepicker';
 ```
 
-_Or if your bundler supports [package entry points](https://nodejs.org/api/packages.html#packages_package_entry_points) (e.g. Rollup with node-resolve plugin v8.4+, webpack v5+), you can also do this._
+_Or if your bundler supports [package.json "exports" field](https://nodejs.org/api/packages.html#packages_package_entry_points), you can also do this._
 
 ```javascript
 import Datepicker from 'vanillajs-datepicker/Datepicker';
@@ -111,13 +111,13 @@ const datepicker = new Datepicker(elem, {
 import DateRangePicker from 'path/to/node_modules/vanillajs-datepicker/js/DateRangePicker.js';
 ```
 
-_Or if you use a bundler that supports [pkg.module](https://github.com/rollup/rollup/wiki/pkg.module) (e.g. [Rollup](https://rollupjs.org/) with [node-resolve](https://github.com/rollup/plugins/tree/master/packages/node-resolve) plugin, [webpack](https://webpack.js.org/))_
+_Or if you use a bundler that supports [pkg.module](https://github.com/rollup/rollup/wiki/pkg.module)_
 
 ```javascript
 import { DateRangePicker } from 'vanillajs-datepicker';
 ```
 
-_Or if your bundler supports [package entry points](https://nodejs.org/api/packages.html#packages_package_entry_points) (e.g. Rollup with node-resolve plugin v8.4+, webpack v5+), you can also do this._
+_Or if your bundler supports [package.json "exports" field](https://nodejs.org/api/packages.html#packages_package_entry_points), you can also do this._
 
 ```javascript
 import DateRangePicker from 'vanillajs-datepicker/DateRangePicker';
@@ -142,6 +142,14 @@ const rangepicker = new DateRangePicker(elem, {
 @import 'path/to/node_modules/vanillajs-datepicker/sass/datepicker';
 ```
 
+_The path to node_modules can be omitted if your bundler can resolve node_modules path or you configure Sass with the "[loadPaths](https://sass-lang.com/documentation/js-api/interfaces/Options#loadPaths)" option (for legacy options, "[includePaths](https://sass-lang.com/documentation/js-api/interfaces/LegacySharedOptions#includePaths)")_
+
+_Alternatively, if your bundler can load stylesheet exported with [package.json "exports" field](https://nodejs.org/api/packages.html#packages_package_entry_points), you can import precompiled css file to your js file._
+
+```javascript
+import 'vanillajs-datepicker/css/datepicker.css';
+```
+
 ### Using with CSS framework
 
 #### Bulma
@@ -150,6 +158,12 @@ const rangepicker = new DateRangePicker(elem, {
 
 ```scss
 @import 'path/to/node_modules/vanillajs-datepicker/sass/datepicker-bulma';
+```
+
+_To import precompiled css file to your js file_
+
+```javascript
+import 'vanillajs-datepicker/css/datepicker-bulma.css';
 ```
 
 #### Bootstrap
@@ -174,12 +188,26 @@ _Or if your Bootstrap's version is v4.x_
 @import 'path/to/node_modules/vanillajs-datepicker/sass/datepicker-bs4';
 ```
 
+_To import precompiled css file to your js file_
+
+```javascript
+import 'vanillajs-datepicker/css/datepicker-bs5.css';
+// ...or, for v4.x
+import 'vanillajs-datepicker/css/datepicker-bs4.css';
+```
+
 #### Foundation
 
 1. import scss file for Foundation instead.
 
 ```scss
 @import 'path/to/node_modules/vanillajs-datepicker/sass/datepicker-foundation';
+```
+
+_To import precompiled css file to your js file_
+
+```javascript
+import 'vanillajs-datepicker/css/datepicker-foundation.css';
 ```
 
 #### Other frameworks

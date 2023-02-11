@@ -22,7 +22,9 @@ if (!fs.existsSync(distDir)) {
 Promise.all(files.map((entry) => {
   return new Promise((resolve) => {
     const from = `${srcDir}/${entry.in}`;
-    const css = sass.renderSync({file: from}).css.toString();
+    const css = sass.compile(from, {
+      loadPaths: [`${rootDir}/node_modules`],
+    }).css.toString();
 
     postcss([autoprefixer, prettify])
       .process(css, {from, map: false})
