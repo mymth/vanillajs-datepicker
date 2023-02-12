@@ -52,20 +52,28 @@ Datepicker.parseDate( dateStr , format [, lang ] )
 - Type: `Boolean`
 
 Whether the picker element is shown  
-(Read-only)
+
+#### datepicker.element
+- Type: `HTMLElement`
+
+DOM object of the element the datepicker is bound to
 
 #### datepicker.pickerElement
 - Type: `HTMLDivElement`
 
 DOM object of picker element  
-(Read-only)
 
 #### datepicker.rangepicker
 - Type: `DateRangePicker`
 
 DateRangePicker instance that the datepicker belongs to  
 Only avalable when the datepicker is a part of date range picker  
-(Read-only)
+
+#### datepicker.rangeSideIndex
+- Type: `Number`
+
+Index number that represents which side of DateRangePicker the datepicker is for. Either `0`:_start side_ or `1`:_end side_  
+Only avalable when the datepicker is a part of date range picker  
 
 
 ### Instance Methods
@@ -84,7 +92,7 @@ datepicker.destroy()
 
 Get selected date(s)
 
-The method returns a Date object of selected date by default, and returns an array of selected dates in multidate mode. If format string is passed, it returns date string(s) formatted in given format.
+The method returns a Date object of selected date by default, and returns an array of selected dates in multidate mode. If a format string is passed, it returns a date string(s) formatted in the given format.
 
 ```javascript
 datepicker.getDate( [ format ] )
@@ -278,7 +286,17 @@ Fired when the date picker becomes visible.
 - Type: `Array`
 
 Array of associated Datepicker instances  
-(Read-only)
+
+#### rangepicker.element
+- Type: `HTMLElement`
+
+DOM object of the element the date-range picker is bound to
+
+#### rangepicker.inputs
+- Type: `Array`
+
+Array of the DOM objects of the 2 `<input>` elements used by the date-range picker  
+The first item is the start side, the second is the end side
 
 
 ### Instance Methods
