@@ -43,11 +43,13 @@ describe('DateRangePicker', function () {
 
       expect(input0.datepicker, 'to be a', Datepicker);
       expect(input1.datepicker, 'to be a', Datepicker);
-      expect([input0.datepicker, input1.datepicker], 'to equal', drp.datepickers);
       expect(input0.datepicker._options, 'to equal', {});
       expect(input1.datepicker._options, 'to equal', {});
       expect(input0.datepicker.rangepicker, 'to be', drp);
       expect(input1.datepicker.rangepicker, 'to be', drp);
+
+      expect(drp.inputs, 'to equal', [input0, input1]);
+      expect(drp.datepickers, 'to equal', [input0.datepicker, input1.datepicker]);
 
       delete input0.datepicker;
       delete input1.datepicker;
@@ -60,10 +62,12 @@ describe('DateRangePicker', function () {
       expect(input1.datepicker._options, 'to equal', fakeOptions);
     });
 
-    it('makes datepickers property read-only/immutable', function () {
+    it('makes inputs, datepickers properties immutable', function () {
       const drp = new DateRangePicker(elem);
 
-      expect(() => { drp.datepickers = []; }, 'to throw a', TypeError);
+      expect(() => { drp.inputs[0] = null; }, 'to throw a', TypeError);
+      expect(() => { drp.inputs[2] = {}; }, 'to throw a', TypeError);
+
       expect(() => { drp.datepickers[0] = null; }, 'to throw a', TypeError);
       expect(() => { drp.datepickers[2] = {}; }, 'to throw a', TypeError);
     });

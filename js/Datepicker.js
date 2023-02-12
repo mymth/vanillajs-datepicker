@@ -174,17 +174,8 @@ export default class Datepicker {
       // determine if this is the range-end picker of the rangepicker while
       // setting inital values when pickLevel > 0
       datepickers[index] = this;
-      // add getter for rangepicker
-      Object.defineProperty(this, 'rangepicker', {
-        get() {
-          return rangepicker;
-        },
-      });
-      Object.defineProperty(this, 'rangeSideIndex', {
-        get() {
-          return index;
-        },
-      });
+      this.rangepicker = rangepicker;
+      this.rangeSideIndex = index;
     }
 
     // set up config

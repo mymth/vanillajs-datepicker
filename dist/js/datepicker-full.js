@@ -2429,17 +2429,8 @@
         // determine if this is the range-end picker of the rangepicker while
         // setting inital values when pickLevel > 0
         datepickers[index] = this;
-        // add getter for rangepicker
-        Object.defineProperty(this, 'rangepicker', {
-          get() {
-            return rangepicker;
-          },
-        });
-        Object.defineProperty(this, 'rangeSideIndex', {
-          get() {
-            return index;
-          },
-        });
+        this.rangepicker = rangepicker;
+        this.rangeSideIndex = index;
       }
 
       // set up config
@@ -2750,7 +2741,7 @@
     /**
      * Get the focused date
      *
-     * The method returns a Date object of selected date by default. If format
+     * The method returns a Date object of focused date by default. If format
      * string is passed, it returns date string formatted in given format.
      *
      * @param  {String} [format] - format string to stringify the date
@@ -2770,8 +2761,9 @@
      *
      * @param {Date|Number|String} viewDate - date string, Date object, time
      * values of the date to focus
-     * @param {Boolean} [resetView] - whether to change the view to pickLevel's
-     * when the picker is shown. Ignored when the picker is hidden
+     * @param {Boolean} [resetView] - whether to change the view to pickLevel
+     * config option's when the picker is shown. Ignored when the picker is
+     * hidden
      */
     setFocusedDate(viewDate, resetView = false) {
       const {config, picker, active, rangeSideIndex} = this;
@@ -2926,39 +2918,30 @@
 
       element.rangepicker = this;
       this.element = element;
-      this.inputs = inputs.slice(0, 2);
+      this.inputs = inputs = inputs.slice(0, 2);
+      Object.freeze(inputs);
       this.allowOneSidedRange = !!options.allowOneSidedRange;
 
       const changeDateListener = onChangeDate.bind(null, this);
       const cleanOptions = filterOptions(options);
       // in order for initial date setup to work right when pcicLvel > 0,
       // let Datepicker constructor add the instance to the rangepicker
-      const datepickers = [];
-      Object.defineProperty(this, 'datepickers', {
-        get() {
-          return datepickers;
-        },
-      });
+      const datepickers = this.datepickers = [];
       inputs.forEach((input) => {
         setupDatepicker(this, changeDateListener, input, cleanOptions);
       });
       Object.freeze(datepickers);
+      Object.defineProperty(this, 'dates', {
+        get() {
+          return datepickers.map(datepicker => datepicker.dates[0]);
+        },
+      });
       // normalize the range if inital dates are given
       if (datepickers[0].dates.length > 0) {
         onChangeDate(this, {target: inputs[0]});
       } else if (datepickers[1].dates.length > 0) {
         onChangeDate(this, {target: inputs[1]});
       }
-    }
-
-    /**
-     * @type {Array} - selected date of the linked date pickers
-     */
-    get dates() {
-      const datepickers = this.datepickers;
-      return datepickers.length === 2
-        ? datepickers.map(datepicker => datepicker.dates[0])
-        : undefined;
     }
 
     /**

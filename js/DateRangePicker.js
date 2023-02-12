@@ -82,39 +82,30 @@ export default class DateRangePicker  {
 
     element.rangepicker = this;
     this.element = element;
-    this.inputs = inputs.slice(0, 2);
+    this.inputs = inputs = inputs.slice(0, 2);
+    Object.freeze(inputs);
     this.allowOneSidedRange = !!options.allowOneSidedRange;
 
     const changeDateListener = onChangeDate.bind(null, this);
     const cleanOptions = filterOptions(options);
     // in order for initial date setup to work right when pcicLvel > 0,
     // let Datepicker constructor add the instance to the rangepicker
-    const datepickers = [];
-    Object.defineProperty(this, 'datepickers', {
-      get() {
-        return datepickers;
-      },
-    });
+    const datepickers = this.datepickers = [];
     inputs.forEach((input) => {
       setupDatepicker(this, changeDateListener, input, cleanOptions);
     });
     Object.freeze(datepickers);
+    Object.defineProperty(this, 'dates', {
+      get() {
+        return datepickers.map(datepicker => datepicker.dates[0]);
+      },
+    });
     // normalize the range if inital dates are given
     if (datepickers[0].dates.length > 0) {
       onChangeDate(this, {target: inputs[0]});
     } else if (datepickers[1].dates.length > 0) {
       onChangeDate(this, {target: inputs[1]});
     }
-  }
-
-  /**
-   * @type {Array} - selected date of the linked date pickers
-   */
-  get dates() {
-    const datepickers = this.datepickers;
-    return datepickers.length === 2
-      ? datepickers.map(datepicker => datepicker.dates[0])
-      : undefined;
   }
 
   /**

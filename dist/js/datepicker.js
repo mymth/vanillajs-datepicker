@@ -2429,17 +2429,8 @@ var Datepicker = (function () {
         // determine if this is the range-end picker of the rangepicker while
         // setting inital values when pickLevel > 0
         datepickers[index] = this;
-        // add getter for rangepicker
-        Object.defineProperty(this, 'rangepicker', {
-          get() {
-            return rangepicker;
-          },
-        });
-        Object.defineProperty(this, 'rangeSideIndex', {
-          get() {
-            return index;
-          },
-        });
+        this.rangepicker = rangepicker;
+        this.rangeSideIndex = index;
       }
 
       // set up config
@@ -2750,7 +2741,7 @@ var Datepicker = (function () {
     /**
      * Get the focused date
      *
-     * The method returns a Date object of selected date by default. If format
+     * The method returns a Date object of focused date by default. If format
      * string is passed, it returns date string formatted in given format.
      *
      * @param  {String} [format] - format string to stringify the date
@@ -2770,8 +2761,9 @@ var Datepicker = (function () {
      *
      * @param {Date|Number|String} viewDate - date string, Date object, time
      * values of the date to focus
-     * @param {Boolean} [resetView] - whether to change the view to pickLevel's
-     * when the picker is shown. Ignored when the picker is hidden
+     * @param {Boolean} [resetView] - whether to change the view to pickLevel
+     * config option's when the picker is shown. Ignored when the picker is
+     * hidden
      */
     setFocusedDate(viewDate, resetView = false) {
       const {config, picker, active, rangeSideIndex} = this;
