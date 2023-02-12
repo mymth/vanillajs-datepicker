@@ -1,5 +1,38 @@
 # changelog
 
+## 1.3.0
+
+### New features
+
+- Add `weekNumbers` option to add support for week numbering systems other than ISO 8601 (#90)
+  - `calendarWeek` option is now deprecated in favor of `weekNumbers` 
+- Add `enableOnReadonly` option (#98, #113)
+- Add `shortcutKeys` option to change/disable some keyboard operations (#103, #119)
+- Add `toggle()` API method
+- Add `forceRefresh` to the method options of `setDate()` and `update()` API (#98)
+- Add `viewDate` to the method options of `setDate()` API
+- Add callback function support to `datesDisabled` option for rule-based disabling (#114, #127)
+  - `enabled` property in the object returned by `beforeShowDay`/-`Month`/-`Year`/-`Decade` options and their returning a boolean are now deprecated, as they don't really prevent the date from being entered
+- Add `getFocusedDate()` and `setFocusedDate()` API methods (#122)
+
+### Bug fix
+- Fix - today button doesn't respect `pickLevel`
+- Fix - Esc keydown event bubbles up
+- Fix - unable to scroll the screen by keeping the picker open on mobile screen (#95)
+- Fix - native `change` event is not fired when input field loses focus (#39)
+
+### Changes
+- Change the timing to trigger the `changeMonth`/-`Year`/-`View` events to after updating the picker element (#42)
+- Change keyboard operations to support inline picker when the bound element has the `tabindex` attribute
+- Rename `clearBtn` and `todayBtn` options to `clearButton`, `todayButton` for naming consistency
+  - `clearBtn` and `todayBtn` are now treated as a synonym of the corresponding one
+  - The `...-bth` classes of the `<button>` elements in the picker are also renamed to `...-button`
+    - The old `...-bth` classes remain on the elements for backward compatibility
+- Revise stylesheets for better customizability in sizing
+- Improve `View` classes (and some others)
+- Include stylesheet paths in `package.json`'s `exports` field (#87)
+
+
 ## 1.2.0
 
 ### Breaking changes

@@ -16,11 +16,11 @@ The package also includes pre-built js/css files for those who like to use it di
 - Dependency free
 - Made for modern browsers — no support for IE and Edge Legacy (aka non-Chromium Edge)  
   _** If you need to support Edge Legacy, [Web Components polyfill](https://www.npmjs.com/package/@webcomponents/webcomponentsjs) will allow this library to run on it._
-- Lightweight (well, relatively…) — 34kB (minified, uncompressed)
+- Lightweight (well, relatively…) — 35kB (minified, uncompressed, 11kB when gzipped)
 
 ### Demo
 
-[Live Online Demo](https://raw.githack.com/mymth/vanillajs-datepicker/v1.2.0/demo/)
+[Live Online Demo](https://raw.githack.com/mymth/vanillajs-datepicker/v1.3.0/demo/)
 
 ### Documentation
 
