@@ -6,6 +6,7 @@ import MonthsView from '../../../js/picker/views/MonthsView.js';
 import YearsView from '../../../js/picker/views/YearsView.js';
 import defaultOptions from '../../../js/options/defaultOptions.js';
 import locales from '../../../js/i18n/base-locales.js';
+import {onKeydown} from '../../../js/events/elementListeners.js';
 import {dateValue, today, startOfYearPeriod} from '../../../js/lib/date.js';
 import expect from 'unexpected';
 
@@ -617,6 +618,31 @@ describe('Datepicker', function () {
       expect(Datepicker.parseDate('Enero 4, 2020', 'MM d, y', 'es'), 'to be', fallbackDate);
       expect(Datepicker.parseDate('04 Jan 2020', 'dd M yy', 'es'), 'to be', timeValue);
       expect(Datepicker.parseDate('2020-1-4', 'y-m-d', 'es'), 'to be', timeValue);
+    });
+  });
+
+  describe('keydown event listere', function () {
+    it('ignores fake keydown event triggered by Chrome when autofill is performed', function () {
+      const input = document.createElement('input');
+      testContainer.appendChild(input);
+      const dp = new Datepicker(input);
+      dp.show();
+
+      // for issue #144
+      const spyPickerRender = sinon.spy(dp.picker, 'render');
+      const ev = new Event('keydown', {bubbles: true, cancelable: true});
+      expect(() => {
+        onKeydown(dp, ev);
+      }, 'not to throw');
+      expect(ev.bubbles, 'to be true');
+      expect(ev.defaultPrevented, 'to be false');
+      expect(dp.active, 'to be true');
+      expect(dp._editMode, 'to be undefined');
+      expect(spyPickerRender.called, 'to be false');
+
+      spyPickerRender.restore();
+      dp.destroy();
+      testContainer.removeChild(input);
     });
   });
 });

@@ -160,7 +160,12 @@ export function onKeydown(datepicker, ev) {
   } else if (
     key === 'Backspace'
     || key === 'Delete'
-    || (key.length === 1 && !ctrlOrMetaKey)
+      // When autofill is performed, Chromium-based browsers trigger fake
+      // keydown/keyup events that don't have the `key` property (on Edge,
+      // keyup only) in addition to the input event. Therefore, we need to
+      // check the existence of `key`'s value before checking the length.
+      // (issue #144)
+    || (key && key.length === 1 && !ctrlOrMetaKey)
   ) {
     datepicker.enterEditMode();
   }
