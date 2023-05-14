@@ -1,5 +1,10 @@
 # changelog
 
+## 1.3.2
+
+### Changes
+- Add protection against fake `keydown` event with no `key` property triggered when autofill is performed on Chromium-based browsers (except Edge) (#144)
+
 ## 1.3.1
 
 ### Bug fix
