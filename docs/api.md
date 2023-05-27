@@ -184,7 +184,7 @@ By default, the method updates the focus on the view shown at the time, or the o
 When resetView: `true` is passed, the view displayed is changed to the [`pickLevel`](options?id=pickLevel) config option's if the picker is shown.
 
 ```javascript
-datepicker.setDate( viewDate [, resetView ] )
+datepicker.setFocusedDate( viewDate [, resetView ] )
 ```
 - **Arguments:**
   - `viewDate` : {`Date`|`Number`|`String`} - Date string, Date object, time values of the date to focus
