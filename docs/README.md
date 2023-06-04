@@ -69,6 +69,11 @@ const datepicker = new Datepicker(elem, {
 
 ![](./images/datepicker.jpg)
 
+> The created Datepicker instance can be accessed through the associated input element as well.
+> 
+> ```javascript
+> const datepicker = document.querySelector('input[name="foo"]').datepicker;
+> ```
 
 – **Inline picker**
 
@@ -92,6 +97,11 @@ const datepicker = new Datepicker(elem, {
 
 ![](./images/datepicker-inline.jpg)
 
+> The created Datepicker instance can be accessed through the associated block element as well.
+>
+> ```javascript
+> const datepicker = document.getElementById('foo').datepicker;
+> ```
 
 ##### Date range picker
 
@@ -133,6 +143,12 @@ const rangepicker = new DateRangePicker(elem, {
 ```
 
 ![](./images/rangepicker.jpg)
+
+> The created DateRangePicker instance can be accessed through the associated block element as well.
+>
+> ```javascript
+> const rangepicker = document.getElementById('foo').rangepicker;
+> ```
 
 ##### Stylesheet
 
@@ -286,7 +302,7 @@ _If you use Bulma, Bootstrap (v5, v4) or Foundation, you can use the css for you
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vanillajs-datepicker@1.3.2/dist/css/datepicker-foundation.min.css">
 ```
 
-_And if don't need date range, you can use the datepicker-only version of js file._
+_And if you don't need date range, you can use the datepicker-only version of js file._
 
 ```html
 <script src="https://cdn.jsdelivr.net/npm/vanillajs-datepicker@1.3.2/dist/js/datepicker.min.js"></script>
