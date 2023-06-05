@@ -1,8 +1,15 @@
 # changelog
 
+## 1.3.3
+
+### Changes
+
+- Change bs5 scss to prevent compile error with bootstrap 5.3 (#146)
+
 ## 1.3.2
 
 ### Changes
+
 - Add protection against fake `keydown` event with no `key` property triggered when autofill is performed on Chromium-based browsers (except Edge) (#144)
 
 ## 1.3.1
@@ -27,12 +34,14 @@
 - Add `getFocusedDate()` and `setFocusedDate()` API methods (#122)
 
 ### Bug fix
+
 - Fix - today button doesn't respect `pickLevel`
 - Fix - Esc keydown event bubbles up
 - Fix - unable to scroll the screen by keeping the picker open on mobile screen (#95)
 - Fix - native `change` event is not fired when input field loses focus (#39)
 
 ### Changes
+
 - Change the timing to trigger the `changeMonth`/-`Year`/-`View` events to after updating the picker element (#42)
 - Change keyboard operations to support inline picker when the bound element has the `tabindex` attribute
 - Rename `clearBtn` and `todayBtn` options to `clearButton`, `todayButton` for naming consistency
