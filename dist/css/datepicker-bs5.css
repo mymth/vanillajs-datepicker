@@ -210,7 +210,7 @@
 }
 
 .datepicker-cell.disabled {
-  color: #adb5bd;
+  color: rgba(33, 37, 41, 0.5);
 }
 
 .datepicker-cell.prev:not(.disabled),
