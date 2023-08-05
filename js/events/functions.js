@@ -9,7 +9,7 @@ export function triggerDatepickerEvent(datepicker, type) {
     viewId: datepicker.picker.currentView.id,
     datepicker,
   };
-  datepicker.element.dispatchEvent(new CustomEvent(type, {detail}));
+  datepicker.element.dispatchEvent(new CustomEvent(type, {bubbles: true, cancelable: true, detail: detail}));
 }
 
 // direction: -1 (to previous), 1 (to next)
