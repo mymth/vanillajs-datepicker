@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Test for issue 156 (focus move by tab key)</title>
+  <link rel="icon" href="data: ,">
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.css">
+  <link rel="stylesheet" href="../../dist/css/datepicker-bulma.css">
+  <style>
+    .pre-wrap {
+      white-space: pre-wrap;
+    }
+  </style>
+</head>
+<body>
+  <section class="section">
+    <div class="container">
+      <form action="." method="post">
+        <div class="field">
+          <label for="test-date" class="label">Date</label>
+          <div class="control">
+            <input type="text" name="test-date" class="input date">
+          </div>
+        </div>
+        <div class="field">
+          <label for="test-date" class="label">Text</label>
+          <div class="control">
+            <input type="text" name="text" class="input">
+          </div>
+        </div>
+      </form>
+    </div>
+  </section>
+  <section class="secction">
+    <div class="container">
+<pre class="pre-wrap">
+1. Open this test file with a browser other than Safari (See the note below)
+2, Click the "Date" input field
+3. Press the tab key
+4. See if the focus moves to the "Text" field
+
+Note:
+When the user pressed the tab key, Safari moves the focus to the next text input element, ignoring buttons, checkboxes/radio buttons. For that reason, the issue does not occur on Safari.
+</pre>
+    </div>
+  </section>
+  <script src="../../dist/js/datepicker.js"></script>
+  <script>
+    var el = document.querySelector('.date');
+    var datepicker = new Datepicker(el);
+  </script>
+</body>
+</html>
