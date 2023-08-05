@@ -3,13 +3,17 @@ import {today, addMonths, addYears} from '../lib/date.js';
 import {isActiveElement} from '../lib/dom.js';
 
 export function triggerDatepickerEvent(datepicker, type) {
-  const detail = {
-    date: datepicker.getDate(),
-    viewDate: new Date(datepicker.picker.viewDate),
-    viewId: datepicker.picker.currentView.id,
-    datepicker,
+  const options = {
+    bubbles: true,
+    cancelable: true,
+    detail: {
+      date: datepicker.getDate(),
+      viewDate: new Date(datepicker.picker.viewDate),
+      viewId: datepicker.picker.currentView.id,
+      datepicker,
+    },
   };
-  datepicker.element.dispatchEvent(new CustomEvent(type, {bubbles: true, cancelable: true, detail: detail}));
+  datepicker.element.dispatchEvent(new CustomEvent(type, options));
 }
 
 // direction: -1 (to previous), 1 (to next)

@@ -941,11 +941,19 @@ describe('events', function () {
 
     before(function () {
       input.addEventListener('changeDate', stubChangeDate);
-      dp.setDate('2/14/2020');
     });
 
     after(function () {
       input.removeEventListener('changeDate', stubChangeDate);
+    });
+
+    beforeEach(function () {
+      dp.setDate('2/14/2020');
+    });
+
+    afterEach(function () {
+      dp.setDate({clear: true});
+      eventObj = undefined;
     });
 
     it('is a custom event object', function () {
@@ -967,6 +975,28 @@ describe('events', function () {
 
     it('has the Datepicker instance in detail.datepicker', function () {
       expect(eventObj.detail.datepicker, 'to be', dp);
+    });
+
+    it('bubbles', function () {
+      expect(eventObj.bubbles, 'to be true');
+
+      const listener = sinon.spy();
+      document.body.addEventListener('changeDate', listener);
+      dp.setDate('4/22/2020');
+
+      expect(listener.called, 'to be true');
+      const event = listener.args[0][0];
+      expect(event.detail.date.getTime(), 'to be', dateValue(2020, 3, 22));
+
+      document.body.removeEventListener('changeDate', listener);
+    });
+
+    it('is cancellable', function () {
+      expect(eventObj.cancelable, 'to be true');
+      expect(eventObj.defaultPrevented, 'to be false');
+
+      eventObj.preventDefault();
+      expect(eventObj.defaultPrevented, 'to be true');
     });
   });
 });
