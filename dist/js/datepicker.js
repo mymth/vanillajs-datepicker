@@ -1875,10 +1875,12 @@ var Datepicker = (function () {
           element.removeAttribute('dir');
         }
 
-        element.style.visibility = 'hidden';
-        element.classList.add('active');
+        // Determine the picker's position first to prevent `orientation: 'auto'`
+        // from being miscalculated to 'bottom' after the picker temporarily
+        // shown below the input field expands the document height if the field
+        // is at the bottom edge of the document
         this.place();
-        element.style.visibility = '';
+        element.classList.add('active');
 
         if (datepicker.config.disableTouchKeyboard) {
           inputField.blur();
@@ -1901,12 +1903,20 @@ var Datepicker = (function () {
     }
 
     place() {
-      const {classList, offsetParent, style} = this.element;
-      const {config, inputField} = this.datepicker;
+      const {classList, style} = this.element;
+      // temporarily display the picker to get its size and offset parent
+      style.display = 'block';
+
       const {
         width: calendarWidth,
         height: calendarHeight,
       } = this.element.getBoundingClientRect();
+      const offsetParent = this.element.offsetParent;
+      // turn the picker back to hidden so that the position is determined with
+      // the state before it is shown.
+      style.display = '';
+
+      const {config, inputField} = this.datepicker;
       const {
         left: inputLeft,
         top: inputTop,
