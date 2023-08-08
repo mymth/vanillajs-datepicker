@@ -1,5 +1,13 @@
 # changelog
 
+## 1.3.4
+
+### Bug fix
+
+- Fix - Datepicker custom events don't bubble (#157 - Thank you, @gucki)
+- Fix - Focus doesn't move to the next field by pressing the tab key on the associated input field (#156)
+- Fix - Picker is shown below the input field when the field is at the bottom edge of the document on recent version of Chromium-based browsers
+
 ## 1.3.3
 
 ### Changes

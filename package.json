@@ -1,6 +1,6 @@
 {
   "name": "vanillajs-datepicker",
-  "version": "1.3.3",
+  "version": "1.3.4",
   "description": "A vanilla JavaScript remake of bootstrap-datepicker for Bulma and other CSS frameworks",
   "type": "module",
   "module": "js/main.js",

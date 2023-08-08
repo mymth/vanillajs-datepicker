@@ -7,4 +7,4 @@
 
 <hr class="divider">
 
-* [Live Online Demo](https://raw.githack.com/mymth/vanillajs-datepicker/v1.3.3/demo/)
+* [Live Online Demo](https://raw.githack.com/mymth/vanillajs-datepicker/v1.3.4/demo/)
