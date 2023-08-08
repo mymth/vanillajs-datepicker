@@ -6,7 +6,7 @@ Datepicker options can be used with date range picker. And when doing so, you ca
 
 > Datepicker options passed to date range picker are applied to its start- and end-date pickers.
 
-Aside from a couple of exceptions, config options can be updated dynamically using the `setOptions()` method.
+Aside from a few exceptions, config options can be updated dynamically using the [`setOptions()`](api?id=datepickersetoptions) method.
 
 ### Datepicker Options
 
@@ -217,11 +217,11 @@ Alternatively, object that contains custom parser and formatter functions can be
 - **Parser**
   - Property \(function\) name: `toValue`
   - Arguments:
-    - `date`: {`String`|`Date`|`Number`} - date string, Date object or time value to parse
+    - `date`: {`String`} - date string to parse
     - `format`: {`Object`} - format object itself
     - `locale`: {`Object`} - locale of the current language
   - Return:
-    - {`Date`} - parsed date object
+    - {`Date`|`Number`} - Date object or time value of parsed date
 - **Formatter**
   - Property \(function\) name: `toDisplay`
   - Arguments::

@@ -17,7 +17,7 @@ Token | Description | Example
 `M` | shortened month name | Jan, Feb, ..., Dec
 `MM` | full month name | January, February, ..., December
 `y` | year without leading zero | 1, 645, 1900, 2020
-`yy` | 2-digit year with leading zero | 01, 45, 00, 20
+`yy` | 2-digit year with leading zero<br> *(format only, see the notes)* | 01, 45, 00, 20
 `yyyy` | 4-digit year with leading zero | 0001, 0645, 1900, 2020
 
 **– Separators:**
@@ -27,9 +27,10 @@ All printable ASCII characters other than numbers and alphabets, `年`, `月` an
 **Notes**
 
 - Since the built-in parser extracts the parts of the date by splitting the string with the separators, formats without separators (e.g. `yyyymmdd`) are not supported.
-- 2-digit year (`yy`) is only supported by the built-in formatter; the built-in parser doesn't.
-
-> You can write your custom parser/formatter to handle arbitrary format including the above. See [`format` config option](options?id=format) for the details.
+- 2-digit year (`yy`) is only supported by the built-in formatter, not by the built-in parser. Because of this, it cannot be used in the format string for the [`format`](options?id=format) config option.
+> You can write your custom parser/formatter to handle arbitrary format including the above. See [`format`](options?id=format) config option for the details.
+> 
+> The built-in parser/formatter can be used inside your custom parser/formatter by calling [`Datepicker.parsedate()`](api?id=datepickerparsedate)/[`Datepicker.formatdate()`](api?id=datepickerformatdate).
 
 - Date format must not include the string set in the [`dateDelimiter`](options?id=datedelimiter) config option.
 
