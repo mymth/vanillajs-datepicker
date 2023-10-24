@@ -229,7 +229,7 @@ Alternatively, object that contains custom parser and formatter functions can be
     - `format`: {`Object`} - format object itself
     - `locale`: {`Object`} - locale of the current language
   - Return:
-    - {`String`} - formated date
+    - {`String`} - formatted date
 
 ```javascript
 {
@@ -372,7 +372,7 @@ Object to assign or unset shortcut keys, where the keys of the object are the na
   The object's keys and values are basically the properties/values to match against the [`KeyboardEvent`](https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent) object of `keydown` event.
   Key (property) | Type | Description
   ---|---|---
-  `key` | `String` | What the [`key`](https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key) propery's value is<br>&bull; Required
+  `key` | `String` | What the [`key`](https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key) property's value is<br>&bull; Required
   `ctrlOrMetaKey`  | `Boolean` | Whether the `ctrlKey` or `metaKey` property is `true`<br>&bull; Default: `false`
   `ctrlKey` | | Alias of `ctrlOrMetaKey`
   `metaKey` | | Alias of `ctrlOrMetaKey`
@@ -523,7 +523,7 @@ Week numbers to display
           <ul>
             <li>Arguments
               <ul>
-                <li><code>date</code> : [<code>Date</code>] - Date to calcurate the week number</li>
+                <li><code>date</code> : [<code>Date</code>] - Date to calculate the week number</li>
                 <li><code>weekStart</code> ; [<code>Number</code>] - The first day of the week<br>
                   <em>(see <a href="#/options?id=weekStart"><code>weekStart</code></a>)</em></li>
               </ul>

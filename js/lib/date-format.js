@@ -7,7 +7,7 @@ export const reFormatTokens = /dd?|DD?|mm?|MM?|yy?(?:yy)?/;
 export const reNonDateParts = /[\s!-/:-@[-`{-~年月日]+/;
 // cache for persed formats
 let knownFormats = {};
-// parse funtions for date parts
+// parse functions for date parts
 const parseFns = {
   y(date, year) {
     return new Date(date).setFullYear(parseInt(year, 10));
@@ -97,7 +97,7 @@ function parseFormatString(format) {
     return knownFormats[format];
   }
 
-  // sprit the format string into parts and seprators
+  // sprit the format string into parts and separators
   const separators = format.split(reFormatTokens);
   const parts = format.match(new RegExp(reFormatTokens, 'g'));
   if (separators.length === 0 || !parts) {
@@ -131,12 +131,12 @@ function parseFormatString(format) {
         return dtParts;
       }, {});
 
-      // iterate over partParserkeys so that the parsing is made in the oder
+      // iterate over partParserkeys so that the parsing is made in the order
       // of year, month and day to prevent the day parser from correcting last
       // day of month wrongly
       return partParserKeys.reduce((origDate, key) => {
         const newDate = parseFns[key](origDate, dateParts[key], locale);
-        // ingnore the part failed to parse
+        // ignore the part failed to parse
         return isNaN(newDate) ? origDate : newDate;
       }, today());
     },

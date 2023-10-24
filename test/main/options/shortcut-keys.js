@@ -59,7 +59,7 @@ describe('options - shortcutKeys', function () {
       dp.destroy();
     });
 
-    it('takes ctrlOrMetaKey for the condtion for ctrl and metaKey', function () {
+    it('takes ctrlOrMetaKey for the condition for ctrl and metaKey', function () {
       const {dp, picker} = createDP(input, {
         shortcutKeys: {show: {key: 'F2', ctrlOrMetaKey: true}},
       });
@@ -289,7 +289,7 @@ describe('options - shortcutKeys', function () {
       dp.destroy();
     });
 
-    it('takes ctrlOrMetaKey for the condtion for ctrl and metaKey', function () {
+    it('takes ctrlOrMetaKey for the condition for ctrl and metaKey', function () {
       const {dp, picker} = createDP(input, {
         shortcutKeys: {hide: {key: 'F2', ctrlOrMetaKey: true}},
       });
@@ -513,7 +513,7 @@ describe('options - shortcutKeys', function () {
       dp.destroy();
     });
 
-    it('takes ctrlOrMetaKey for the condtion for ctrl and metaKey', function () {
+    it('takes ctrlOrMetaKey for the condition for ctrl and metaKey', function () {
       const {dp, picker} = createDP(input, {
         shortcutKeys: {toggle: {key: 'F2', ctrlOrMetaKey: true}},
       });
@@ -722,7 +722,7 @@ describe('options - shortcutKeys', function () {
       let cells = getCells(picker);
       expect(getCellIndices(cells, '.focused'), 'to equal', [19]);
       expect(cells[19].textContent, 'to be', '14');
-      // original behaivor before the shortcut assignment is restored
+      // original behavior before the shortcut assignment is restored
       expect(dp.editMode, 'to be true');
       dp.exitEditMode();
 
@@ -784,7 +784,7 @@ describe('options - shortcutKeys', function () {
       dp.destroy();
     });
 
-    it('takes ctrlOrMetaKey for the condtion for ctrl and metaKey', function () {
+    it('takes ctrlOrMetaKey for the condition for ctrl and metaKey', function () {
       const {dp, picker} = createDP(input, {
         shortcutKeys: {prevButton: {key: 'F2', ctrlOrMetaKey: true}},
       });
@@ -995,7 +995,7 @@ describe('options - shortcutKeys', function () {
       let cells = getCells(picker);
       expect(getCellIndices(cells, '.focused'), 'to equal', [19]);
       expect(cells[19].textContent, 'to be', '14');
-      // original behaivor before the shortcut assignment is restored
+      // original behavior before the shortcut assignment is restored
       expect(dp.editMode, 'to be true');
       dp.exitEditMode();
 
@@ -1057,7 +1057,7 @@ describe('options - shortcutKeys', function () {
       dp.destroy();
     });
 
-    it('takes ctrlOrMetaKey for the condtion for ctrl and metaKey', function () {
+    it('takes ctrlOrMetaKey for the condition for ctrl and metaKey', function () {
       const {dp, picker} = createDP(input, {
         shortcutKeys: {nextButton: {key: 'F2', ctrlOrMetaKey: true}},
       });
@@ -1268,7 +1268,7 @@ describe('options - shortcutKeys', function () {
       let cells = getCells(picker);
       expect(getCellIndices(cells, '.focused'), 'to equal', [19]);
       expect(cells[19].textContent, 'to be', '14');
-      // original behaivor before the shortcut assignment is restored
+      // original behavior before the shortcut assignment is restored
       expect(dp.editMode, 'to be true');
       dp.exitEditMode();
 
@@ -1315,7 +1315,7 @@ describe('options - shortcutKeys', function () {
       dp.destroy();
     });
 
-    it('takes ctrlOrMetaKey for the condtion for ctrl and metaKey', function () {
+    it('takes ctrlOrMetaKey for the condition for ctrl and metaKey', function () {
       const {dp, picker} = createDP(input, {
         shortcutKeys: {viewSwitch: {key: 'F2', ctrlOrMetaKey: true}},
       });
@@ -1536,7 +1536,7 @@ describe('options - shortcutKeys', function () {
       let cells = getCells(picker);
       expect(getCellIndices(cells, '.selected'), 'to equal', [24]);
       expect(cells[24].textContent, 'to be', '22');
-      // original behaivor before the shortcut assignment is restored
+      // original behavior before the shortcut assignment is restored
       expect(dp.editMode, 'to be true');
       dp.exitEditMode();
 
@@ -1610,7 +1610,7 @@ describe('options - shortcutKeys', function () {
       dp.destroy();
     });
 
-    it('takes ctrlOrMetaKey for the condtion for ctrl and metaKey', function () {
+    it('takes ctrlOrMetaKey for the condition for ctrl and metaKey', function () {
       const dp = new Datepicker(input, {
         clearButton: true,
         shortcutKeys: {clearButton: {key: 'F2', ctrlOrMetaKey: true}},
@@ -1932,7 +1932,7 @@ describe('options - shortcutKeys', function () {
       dp.destroy();
     });
 
-    it('takes ctrlOrMetaKey for the condtion for ctrl and metaKey', function () {
+    it('takes ctrlOrMetaKey for the condition for ctrl and metaKey', function () {
       const {dp, picker} = createDP(input, {
         todayButton: true,
         todayButtonMode: 1,
@@ -2227,7 +2227,7 @@ describe('options - shortcutKeys', function () {
       dp.destroy();
     });
 
-    it('takes ctrlOrMetaKey for the condtion for ctrl and metaKey', function () {
+    it('takes ctrlOrMetaKey for the condition for ctrl and metaKey', function () {
       const dp = new Datepicker(input, {
         shortcutKeys: {exitEditMode: {key: 'F2', ctrlOrMetaKey: true}},
       });

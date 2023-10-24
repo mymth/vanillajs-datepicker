@@ -37,7 +37,7 @@ describe('Datepicker', function () {
       testContainer.removeChild(input);
     });
 
-    it('attachs the created instance to the bound element', function () {
+    it('attaches the created instance to the bound element', function () {
       const dp = new Datepicker(input);
       expect(input.datepicker, 'to be', dp);
     });
@@ -419,7 +419,7 @@ describe('Datepicker', function () {
       expect(views[3].focused, 'to be', startOfYearPeriod(dateDefault, 10));
     });
 
-    it('sets given date to viewDate insteead of the last item of the selection if it is passed', function () {
+    it('sets given date to viewDate instead of the last item of the selection if it is passed', function () {
       const date1 = dateValue(2020, 1, 4);
       const date2 = dateValue(2020, 2, 14);
       const date3 = dateValue(2016, 10, 8);
@@ -598,7 +598,7 @@ describe('Datepicker', function () {
   });
 
   describe('static parseDate()', function () {
-    it('parses a date string and returnes the time value of the date', function () {
+    it('parses a date string and returns the time value of the date', function () {
       Datepicker.locales.es = esLocale;
 
       let timeValue = new Date(2020, 0, 4).getTime();

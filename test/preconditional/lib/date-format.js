@@ -16,7 +16,7 @@ describe('lib/date', function () {
     de: {
       days: ["Sonntag", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag"],
       daysShort: ["Son", "Mon", "Die", "Mit", "Don", "Fre", "Sam"],
-      months: ["Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember"],
+      months: ["January", "February", "März", "April", "Mai", "June", "July", "August", "September", "October", "November", "December"],
       monthsShort: ["Jan", "Feb", "Mär", "Apr", "Mai", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dez"],
     },
     es: {
@@ -52,7 +52,7 @@ describe('lib/date', function () {
       expect(parseDate(Date.now()), 'to be', origDate);
     });
 
-    it('invokes custom parse fucntion and returns the result if it\'s given to format.toValue', function () {
+    it('invokes custom parse function and returns the result if it\'s given to format.toValue', function () {
       const date = new Date();
       const format = {toValue: sinon.stub()};
       format.toValue.returns(date);
@@ -118,7 +118,7 @@ describe('lib/date', function () {
       expect(parseDate('December 15, 2012', 'MM d, yyyy', locales.en), 'to be', new Date(2012, 11, 15).getTime());
 
       expect(parseDate('März 5, 2012', 'MM d, yyyy', locales.de), 'to be', new Date(2012, 2, 5).getTime());
-      expect(parseDate('Dezember 15, 2012', 'MM d, yyyy', locales.de), 'to be', new Date(2012, 11, 15).getTime());
+      expect(parseDate('December 15, 2012', 'MM d, yyyy', locales.de), 'to be', new Date(2012, 11, 15).getTime());
 
       expect(parseDate('mars 5, 2012', 'MM d, yyyy', locales.fr), 'to be', new Date(2012, 2, 5).getTime());
       expect(parseDate('décembre 15, 2012', 'MM d, yyyy', locales.fr), 'to be', new Date(2012, 11, 15).getTime());
@@ -226,7 +226,7 @@ describe('lib/date', function () {
       expect(formatDate(0, 'yyyy', locales.en), 'not to be', '');
     });
 
-    it('invokes custom format fucntion and returns the result if it\'s given to format.toDisplay', function () {
+    it('invokes custom format function and returns the result if it\'s given to format.toDisplay', function () {
       const date = new Date(2012, 2, 5);
       const format = {toDisplay: sinon.stub()};
       format.toDisplay.returns('foo-bar');

@@ -289,7 +289,7 @@ describe('options - orientation', function () {
   };
   it('"auto" makes the picker show on bottom if the visible space both above and below the input < picker height', testAutoAlsoNoTopSpace);
 
-  const testAutoNoRighSpace = async function () {
+  const testAutoNoRightSpace = async function () {
     const {dp, picker} = createDP(input, options);
     outer.style.marginLeft = 'calc(100vw - 220px)';
     scrollToElem(outer, true);
@@ -333,7 +333,7 @@ describe('options - orientation', function () {
 
     return Promise.resolve();
   };
-  it('"auto" makes the picker show on right if the visible space on the right of the input < picker width', testAutoNoRighSpace);
+  it('"auto" makes the picker show on right if the visible space on the right of the input < picker width', testAutoNoRightSpace);
 
   const testAutoNoLeftSpaneWhenRtl = async function () {
     const {dp, picker} = createDP(input, options);
@@ -887,7 +887,7 @@ describe('options - orientation', function () {
     resetPositioning();
 
     // bottom-left when auto
-    // left space of window < picker's left - input's left (direcion = rtl)
+    // left space of window < picker's left - input's left (direction = rtl)
     ({dp, picker} = createDP(input, {orientation: 'right'}));
     outer.style.width = '200px';
     wrapper.style.direction = 'rtl';
@@ -899,7 +899,7 @@ describe('options - orientation', function () {
     expect(picker.classList.contains('datepicker-orient-right'), 'to be true');
 
     dp.hide();
-    // left space of window < picker's left - input's left (direcion = rtl)
+    // left space of window < picker's left - input's left (direction = rtl)
     outer.style.position = 'relative';
     dp.show();
 
@@ -908,7 +908,7 @@ describe('options - orientation', function () {
     expect(picker.classList.contains('datepicker-orient-right'), 'to be true');
 
     dp.hide();
-    // left space of window < picker's left - input's left (direcion = rtl)
+    // left space of window < picker's left - input's left (direction = rtl)
     outer.style.marginLeft = '';
     Object.assign(outer.style, {
       position: 'fixed',
@@ -923,7 +923,7 @@ describe('options - orientation', function () {
     expect(picker.classList.contains('datepicker-orient-right'), 'to be true');
 
     dp.hide();
-    // input's left < left side of window (direcion = rtl)
+    // input's left < left side of window (direction = rtl)
     outer.removeAttribute('style');
     outer.style.marginLeft = '-40px';
     scrollToElem(outer);
@@ -934,7 +934,7 @@ describe('options - orientation', function () {
     expect(picker.classList.contains('datepicker-orient-right'), 'to be true');
 
     dp.hide();
-    // input's left < left side of window (direcion = rtl)
+    // input's left < left side of window (direction = rtl)
     outer.style.position = 'relative';
     dp.show();
 
@@ -943,7 +943,7 @@ describe('options - orientation', function () {
     expect(picker.classList.contains('datepicker-orient-right'), 'to be true');
 
     dp.hide();
-    // left space of scroll parent (relative) < picker's left - input's left (direcion = rtl)
+    // left space of scroll parent (relative) < picker's left - input's left (direction = rtl)
     Object.assign(outer.style, {
       marginLeft: '40px',
       width: '300px',
@@ -958,7 +958,7 @@ describe('options - orientation', function () {
     expect(picker.classList.contains('datepicker-orient-right'), 'to be true');
 
     dp.hide();
-    // left space of scroll parent (fixed) < picker's left - input's left (direcion = rtl)
+    // left space of scroll parent (fixed) < picker's left - input's left (direction = rtl)
     Object.assign(outer.style, {
       position: 'fixed',
       top: '0',
@@ -974,7 +974,7 @@ describe('options - orientation', function () {
     expect(picker.classList.contains('datepicker-orient-right'), 'to be true');
 
     dp.hide();
-    // input's left < left side of window (direcion = rtl)
+    // input's left < left side of window (direction = rtl)
     Object.assign(outer.style, {
       left: '-40px',
       width: '200px',
@@ -1237,7 +1237,7 @@ describe('options - orientation', function () {
       await testAutoRtl();
       await testAutoNoBottomSpace();
       await testAutoAlsoNoTopSpace();
-      await testAutoNoRighSpace();
+      await testAutoNoRightSpace();
       await testAutoNoLeftSpaneWhenRtl();
       await testAutoInputExceedsLeftEdge();
       await testAutoInputExceedsRightEdge();

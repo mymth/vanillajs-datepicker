@@ -434,7 +434,7 @@ function onChangeType(ev) {
   refreshOptionForm();
 }
 
-function onChnageDirection(ev) {
+function onChangeDirection(ev) {
   const defaultDir = window.getComputedStyle(document.body).direction;
   const dir = ev.target.value;
   const mainElem = document.querySelector('main');

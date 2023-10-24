@@ -66,7 +66,7 @@ describe('DateRangePicker', function () {
     drp.destroy();
   });
 
-  it('indicates the range with hilighting the start/end in the pickers', function () {
+  it('indicates the range with highlighting the start/end in the pickers', function () {
     input0.value = '04/20/2020';
     input1.value = '04/22/2020';
 

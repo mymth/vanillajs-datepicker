@@ -145,7 +145,7 @@ describe('options - format & language', function () {
       input.value = '';
     });
 
-    it('default format/weekStart in the locale are overriden by user-specified ones', function () {
+    it('default format/weekStart in the locale are overridden by user-specified ones', function () {
       const locale = Datepicker.locales['zh-CN'];
       const {dp, picker} = createDP(input, {language: 'zh-CN', format: 'yyyy年mm月dd日', weekStart: 0});
       const viewSwitch = getViewSwitch(picker);

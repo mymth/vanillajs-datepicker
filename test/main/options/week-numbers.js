@@ -529,7 +529,7 @@ describe('options - week numbers', function () {
       dp.destroy();
     });
 
-    it('enables week numbers calulated by given callback to be displayed when a function is set', function () {
+    it('enables week numbers calculated by given callback to be displayed when a function is set', function () {
       const callback = function (date, weekStart) {
         const startOfFirstWeek = dateUtils.dayOfTheWeekOf(new Date(date).setMonth(0, 1), weekStart, weekStart);
         const startOfTheWeek = dateUtils.dayOfTheWeekOf(date, weekStart, weekStart);

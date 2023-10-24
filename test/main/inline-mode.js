@@ -44,7 +44,7 @@ describe('inline mode', function () {
   });
 
   it('keyboard operation works when the bound element has tabindex attribute', function () {
-    // test without tabindex becuase programatically generated events can go off
+    // test without tabindex because programmatically generated events can go off
     const viewSwitch = getViewSwitch(picker);
     let cells = getCells(picker);
 

@@ -527,7 +527,7 @@ describe('options - pick level & view', function () {
   });
 
   describe('startView', function () {
-    it('specifies the view desplayed on open', function () {
+    it('specifies the view displayed on open', function () {
       const {dp, picker} = createDP(input, {startView: 3});
       const viewSwitch = getViewSwitch(picker);
       dp.show();

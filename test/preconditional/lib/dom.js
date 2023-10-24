@@ -78,7 +78,7 @@ describe('lib/dom', function () {
   });
 
   describe('isActiveElement', function () {
-    it('returns true if the element is the focued element', function () {
+    it('returns true if the element is the focused element', function () {
       const customElem = document.createElement('custom-element');
       const input1 = document.createElement('input');
       const input2 = document.createElement('input');

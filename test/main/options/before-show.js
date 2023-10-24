@@ -37,7 +37,7 @@ describe('options - beforeShow hooks', function () {
       dp.destroy();
     });
 
-    it('adds classes to the date when it returns spece separated classes', function () {
+    it('adds classes to the date when it returns space separated classes', function () {
       const beforeShowDay = date => date.getDate() % 10 ? undefined : 'foo bar';
       const {dp, picker} = createDP(input, {beforeShowDay});
       let cells = getCells(picker);
@@ -172,7 +172,7 @@ describe('options - beforeShow hooks', function () {
       dp.destroy();
     });
 
-    it('adds classes to the month on months view when it returns spece separated classes', function () {
+    it('adds classes to the month on months view when it returns space separated classes', function () {
       const beforeShowMonth = date => date.getMonth() % 5 ? undefined : 'foo bar';
       const {dp, picker} = createDP(input, {beforeShowMonth});
       const viewSwitch = getViewSwitch(picker);
@@ -327,7 +327,7 @@ describe('options - beforeShow hooks', function () {
       dp.destroy();
     });
 
-    it('adds classes to the year on years view when it returns spece separated classes', function () {
+    it('adds classes to the year on years view when it returns space separated classes', function () {
       const beforeShowYear = date => date.getFullYear() % 4 ? undefined : 'foo bar';
       const {dp, picker} = createDP(input, {beforeShowYear});
       const viewSwitch = getViewSwitch(picker);
@@ -492,7 +492,7 @@ describe('options - beforeShow hooks', function () {
       dp.destroy();
     });
 
-    it('adds classes to the decade on decades view when it returns spece separated classes', function () {
+    it('adds classes to the decade on decades view when it returns space separated classes', function () {
       const beforeShowDecade = date => (date.getFullYear() / 10) % 4 ? undefined : 'foo bar';
       const {dp, picker} = createDP(input, {beforeShowDecade});
       const viewSwitch = getViewSwitch(picker);

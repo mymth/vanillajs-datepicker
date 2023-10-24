@@ -354,10 +354,10 @@ describe('options - buttons', function () {
       dp.destroy();
     });
 
-    it('specifies the behavior of the today buton', function () {
+    it('specifies the behavior of the today button', function () {
       const date = dateValue(2020, 1, 11);
 
-      // defualt to 0: focus-on (change view date)
+      // default to 0: focus-on (change view date)
       dp.setDate(date);
       todayButton.click();
 
@@ -655,7 +655,7 @@ describe('options - buttons', function () {
         dp.setOptions({pickLevel: 0});
         dp.setDate('today');
 
-        // when current date is deslected by toggling in multi-date mode
+        // when current date is deselected by toggling in multi-date mode
         dp.setOptions({maxNumberOfDates: 3});
         nextButton.click();
         getCells(picker)[20].click();
@@ -920,7 +920,7 @@ describe('options - buttons', function () {
     it('is a synonym of todayButtonMode', function () {
       const date = dateValue(2020, 1, 11);
 
-      // defualt to 0: focus-on (change view date)
+      // default to 0: focus-on (change view date)
       dp.setDate(date);
       todayButton.click();
 

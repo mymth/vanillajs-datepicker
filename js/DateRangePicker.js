@@ -100,7 +100,7 @@ export default class DateRangePicker  {
         return datepickers.map(datepicker => datepicker.dates[0]);
       },
     });
-    // normalize the range if inital dates are given
+    // normalize the range if initial dates are given
     if (datepickers[0].dates.length > 0) {
       onChangeDate(this, {target: inputs[0]});
     } else if (datepickers[1].dates.length > 0) {

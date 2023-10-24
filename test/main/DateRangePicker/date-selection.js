@@ -223,7 +223,7 @@ describe('DateRangePicker - date selection', function () {
     drp.destroy();
   });
 
-  it('dates are swapped if a date later than the 2nd picker\'s selection is seleted on the 1st picker', function () {
+  it('dates are swapped if a date later than the 2nd picker\'s selection is selected on the 1st picker', function () {
     input0.value = '02/11/2020';
     input1.value = '02/11/2020';
 
@@ -254,7 +254,7 @@ describe('DateRangePicker - date selection', function () {
     input1.value = '';
   });
 
-  it('dates are swapped if a date earlier than the 1st picker\'s selection is seleted on the 2nd picker', function () {
+  it('dates are swapped if a date earlier than the 1st picker\'s selection is selected on the 2nd picker', function () {
     input0.value = '02/11/2020';
     input1.value = '02/11/2020';
 
@@ -389,7 +389,7 @@ describe('DateRangePicker - date selection', function () {
       input1.value = '';
     });
 
-    it('dates are swapped if a date later than the 2nd picker\'s selection is seleted on the 1st picker', function () {
+    it('dates are swapped if a date later than the 2nd picker\'s selection is selected on the 1st picker', function () {
       ({drp, picker0, picker1} = createDRP(elem));
       [viewSwitch0, nextButton0] = getParts(picker0, ['.view-switch', '.next-button']);
       viewSwitch1 = picker1.querySelector('.view-switch');
@@ -429,7 +429,7 @@ describe('DateRangePicker - date selection', function () {
       input1.value = '';
     });
 
-    it('dates are swapped if a date earlier than the 1st picker\'s selection is seleted on the 2nd picker', function () {
+    it('dates are swapped if a date earlier than the 1st picker\'s selection is selected on the 2nd picker', function () {
       let prevButton1;
 
       ({drp, picker0, picker1} = createDRP(elem));

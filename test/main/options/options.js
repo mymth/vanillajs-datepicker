@@ -170,7 +170,7 @@ describe('options', function () {
         expect(picker.dir, 'to be', 'rtl');
 
         dp.hide();
-        // container's direction becomes the same as the input's but differnet from the document's
+        // container's direction becomes the same as the input's but different from the document's
         foo.dir = 'rtl';
 
         dp.show();

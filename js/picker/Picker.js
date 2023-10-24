@@ -81,7 +81,7 @@ function processPickerOptions(picker, options) {
 
 // Compute view date to reset, which will be...
 // - the last item of the selected dates or defaultViewDate if no selection
-// - limitted to minDate or maxDate if it exceeds the range
+// - limited to minDate or maxDate if it exceeds the range
 function computeResetViewDate(datepicker) {
   const {dates, config, rangeSideIndex} = datepicker;
   const viewDate = dates.length > 0
@@ -116,7 +116,7 @@ function getTextDirection(el) {
   return window.getComputedStyle(el).direction;
 }
 
-// find the closet scrollable ancestor elemnt under the body
+// find the closet scrollable ancestor element under the body
 function findScrollParents(el) {
   const parent = getParent(el);
   if (parent === document.body || !parent) {
