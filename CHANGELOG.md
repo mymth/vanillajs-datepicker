@@ -24,7 +24,7 @@
 
 ### Bug fix
 
-- Fix - Rename WeekNumbersTemplate.js to weekNumbersTemplate.js to fix an error caused by the case mismatch between the path in `import` statement and actual file name (#136 - Thank you, @marc-maybe)
+- Fix - Rename WeekNumbersTemplate.js to weekNumbersTemplate.js to fix an error caused by the case mismatch between the path in `import` statement and actual file name (#136 - Thank you, @marc-mabe)
 
 ## 1.3.0
 

@@ -16,7 +16,7 @@ describe('lib/date', function () {
     de: {
       days: ["Sonntag", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag"],
       daysShort: ["Son", "Mon", "Die", "Mit", "Don", "Fre", "Sam"],
-      months: ["January", "February", "März", "April", "Mai", "June", "July", "August", "September", "October", "November", "December"],
+      months: ["Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember"],
       monthsShort: ["Jan", "Feb", "Mär", "Apr", "Mai", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dez"],
     },
     es: {
@@ -118,7 +118,7 @@ describe('lib/date', function () {
       expect(parseDate('December 15, 2012', 'MM d, yyyy', locales.en), 'to be', new Date(2012, 11, 15).getTime());
 
       expect(parseDate('März 5, 2012', 'MM d, yyyy', locales.de), 'to be', new Date(2012, 2, 5).getTime());
-      expect(parseDate('December 15, 2012', 'MM d, yyyy', locales.de), 'to be', new Date(2012, 11, 15).getTime());
+      expect(parseDate('Dezember 15, 2012', 'MM d, yyyy', locales.de), 'to be', new Date(2012, 11, 15).getTime());
 
       expect(parseDate('mars 5, 2012', 'MM d, yyyy', locales.fr), 'to be', new Date(2012, 2, 5).getTime());
       expect(parseDate('décembre 15, 2012', 'MM d, yyyy', locales.fr), 'to be', new Date(2012, 11, 15).getTime());
