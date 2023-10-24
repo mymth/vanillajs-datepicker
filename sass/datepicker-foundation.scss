@@ -1,6 +1,7 @@
 @use 'sass:color';
 
 $dp-background-color: $body-background !default;
+$dp-font-color: $body-font-color !default;
 $dp-border-color: $light-gray !default;
 $dp-border-radius: $global-radius !default;
 $dp-border-radius-small: $global-radius !default;
@@ -42,7 +43,7 @@ $dp-input-in-edit-focus-box-shadow-size: 0 0 0.25em 0.25em !default;
   .button {
     margin: 0;
     background-color: $dp-background-color;
-    color: $body-font-color;
+    color: $dp-font-color;
 
     &:hover,
     &:focus {
@@ -51,7 +52,7 @@ $dp-input-in-edit-focus-box-shadow-size: 0 0 0.25em 0.25em !default;
       &[disabled] {
         opacity: 0.25;  // $button-opacity-disabled
         background-color: $dp-background-color;
-        color: $body-font-color;
+        color: $dp-font-color;
       }
     }
 
