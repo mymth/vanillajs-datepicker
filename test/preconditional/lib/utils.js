@@ -39,7 +39,7 @@ describe('lib/utils', function () {
   });
 
   describe('stringToArray()', function () {
-    it('converts a string to array by spliting it with given separator', function () {
+    it('converts a string to array by splitting it with given separator', function () {
       expect(stringToArray('foo,bar,baz', ','), 'to equal', ['foo', 'bar', 'baz']);
       expect(stringToArray('abc-def', '-'), 'to equal', ['abc', 'def']);
     });

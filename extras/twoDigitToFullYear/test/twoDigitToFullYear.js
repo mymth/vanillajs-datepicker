@@ -23,7 +23,7 @@ describe('twoDigitToFullYear()', function () {
     clock.restore();
   });
 
-  it('uses sepecified future year range if it is given', function () {
+  it('uses specified future year range if it is given', function () {
     let clock = sinon.useFakeTimers({now: new Date().setFullYear(2020)});
 
     expect(twoDigitToFullYear(40, 20), 'to be', 2040);

@@ -501,7 +501,7 @@
     <script src="../dist/js/datepicker-full.js"></script>
     <script src="./live-demo.js"></script>
     <script>
-      /*global $ initialize onChangeType onChnageDirection onChangeInputOption onChangeInputOption onChangeTextareaOption onClickCheckboxOptions switchPicker */
+      /*global $ initialize onChangeType onChangeDirection onChangeInputOption onChangeInputOption onChangeTextareaOption onClickCheckboxOptions switchPicker */
       window.templates = {
         inline: `<div class="date mb-3"></div>`,
         range: `<div class="input-group mb-3 date input-daterange">
@@ -575,7 +575,7 @@ beforeShowDecade(date) {
       });
 
       document.getElementById('direction').querySelectorAll('input').forEach((el) => {
-        el.addEventListener('change', onChnageDirection);
+        el.addEventListener('change', onChangeDirection);
       });
 
       const optsForm = document.getElementById('options');

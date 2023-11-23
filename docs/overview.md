@@ -161,8 +161,8 @@ If the Clear button is enabled
   — Exit edit mode without hiding or updating the picker
 
 > &ensp;&ensp;<sup>\*</sup> These keys are defined as shourcut key, and can be changed/disabled with the [shortcutKeys](options?id=shortcutKeys) option.<br>
-> &ensp;<sup>\*\*</sup> By default, <kbd>Ctrl</kbd>/<kbd>Meta</kbd> + <kbd>←</kbd>, <kbd>Ctrl</kbd>/<kbd>Meta</kbd> + <kbd>→</kbd>, and <kbd>Ctrl</kbd>/<kbd>Meta</kbd> + <kbd>↑</kbd> are not included in this because they are assigned as deault shortcut keys for Prev/Next buttons and view switch, and start functioning as this if unassigned from shortcut key with [shortcutKeys](options?id=shortcutKeys).<br>
-> <sup>\*\*\*</sup> To be accurate, the key or key conbination for <kbd>.</kbd> (e.g. <kbd>.</kbd> key on QWERTY keyboard, <kbd>Shift</kbd> + <kbd>;</kbd> on AZERTY keyboard)
+> &ensp;<sup>\*\*</sup> By default, <kbd>Ctrl</kbd>/<kbd>Meta</kbd> + <kbd>←</kbd>, <kbd>Ctrl</kbd>/<kbd>Meta</kbd> + <kbd>→</kbd>, and <kbd>Ctrl</kbd>/<kbd>Meta</kbd> + <kbd>↑</kbd> are not included in this because they are assigned as default shortcut keys for Prev/Next buttons and view switch, and start functioning as this if unassigned from shortcut key with [shortcutKeys](options?id=shortcutKeys).<br>
+> <sup>\*\*\*</sup> To be accurate, the key or key combination for <kbd>.</kbd> (e.g. <kbd>.</kbd> key on QWERTY keyboard, <kbd>Shift</kbd> + <kbd>;</kbd> on AZERTY keyboard)
 >
 > Note: On inline picker...
 > - keyboard operation works when the associated block element has `tabindex` attribute.

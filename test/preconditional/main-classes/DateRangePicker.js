@@ -28,7 +28,7 @@ describe('DateRangePicker', function () {
   });
 
   describe('constructor', function () {
-    it('attachs the created instance to the bound element', function () {
+    it('attaches the created instance to the bound element', function () {
       const drp = new DateRangePicker(elem);
       expect(elem.rangepicker, 'to be', drp);
     });

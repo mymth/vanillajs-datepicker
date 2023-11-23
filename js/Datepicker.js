@@ -155,7 +155,7 @@ export default class Datepicker {
       inputField.classList.add('datepicker-input');
       if (options.container) {
         // omit string type check because it doesn't guarantee to avoid errors
-        // (invalid selector string causes abend with sytax error)
+        // (invalid selector string causes abend with syntax error)
         config.container = options.container instanceof HTMLElement
           ? options.container
           : document.querySelector(options.container);
@@ -172,7 +172,7 @@ export default class Datepicker {
       }
       // attach itaelf to the rangepicker here so that processInputDates() can
       // determine if this is the range-end picker of the rangepicker while
-      // setting inital values when pickLevel > 0
+      // setting initial values when pickLevel > 0
       datepickers[index] = this;
       this.rangepicker = rangepicker;
       this.rangeSideIndex = index;
@@ -269,7 +269,7 @@ export default class Datepicker {
   }
 
   /**
-   * @type {Boolean} - Whether the picker element is shown. `true` whne shown
+   * @type {Boolean} - Whether the picker element is shown. `true` when shown
    */
   get active() {
     return !!(this.picker && this.picker.active);
@@ -414,7 +414,7 @@ export default class Datepicker {
    * objects, time values or mix of those for new selection
    * @param {Object} [options] - function options
    * - clear: {boolean} - Whether to clear the existing selection
-   *     defualt: false
+   *     default: false
    * - render: {boolean} - Whether to re-render the picker element
    *     default: true
    * - autohide: {boolean} - Whether to hide the picker element after re-render

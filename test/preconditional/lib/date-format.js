@@ -52,7 +52,7 @@ describe('lib/date', function () {
       expect(parseDate(Date.now()), 'to be', origDate);
     });
 
-    it('invokes custom parse fucntion and returns the result if it\'s given to format.toValue', function () {
+    it('invokes custom parse function and returns the result if it\'s given to format.toValue', function () {
       const date = new Date();
       const format = {toValue: sinon.stub()};
       format.toValue.returns(date);
@@ -226,7 +226,7 @@ describe('lib/date', function () {
       expect(formatDate(0, 'yyyy', locales.en), 'not to be', '');
     });
 
-    it('invokes custom format fucntion and returns the result if it\'s given to format.toDisplay', function () {
+    it('invokes custom format function and returns the result if it\'s given to format.toDisplay', function () {
       const date = new Date(2012, 2, 5);
       const format = {toDisplay: sinon.stub()};
       format.toDisplay.returns('foo-bar');

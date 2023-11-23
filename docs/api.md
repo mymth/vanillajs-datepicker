@@ -67,13 +67,13 @@ DOM object of picker element
 - Type: `DateRangePicker`
 
 DateRangePicker instance that the datepicker belongs to  
-Only avalable when the datepicker is a part of date range picker  
+Only available when the datepicker is a part of date range picker  
 
 #### datepicker.rangeSideIndex
 - Type: `Number`
 
 Index number that represents which side of DateRangePicker the datepicker is for. Either `0`:_start side_ or `1`:_end side_  
-Only avalable when the datepicker is a part of date range picker  
+Only available when the datepicker is a part of date range picker  
 
 
 ### Instance Methods

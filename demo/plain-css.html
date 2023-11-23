@@ -651,7 +651,7 @@
     <script src="../dist/js/datepicker-full.js"></script>
     <script src="./live-demo.js"></script>
     <script>
-      /*global initialize onChangeType onChnageDirection onChangeInputOption onChangeInputOption onChangeTextareaOption onClickCheckboxOptions switchPicker */
+      /*global initialize onChangeType onChangeDirection onChangeInputOption onChangeInputOption onChangeTextareaOption onClickCheckboxOptions switchPicker */
       initialize();
       hljs.highlightAll();
 
@@ -660,7 +660,7 @@
       });
 
       document.getElementById('direction').querySelectorAll('input').forEach((el) => {
-        el.addEventListener('change', onChnageDirection);
+        el.addEventListener('change', onChangeDirection);
       });
 
       const optsForm = document.getElementById('options');

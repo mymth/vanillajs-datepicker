@@ -13,7 +13,7 @@ export function isActiveElement(el) {
   return el.getRootNode().activeElement === el;
 }
 
-// equivalent to jQuery's :visble
+// equivalent to jQuery's :visible
 export function isVisible(el) {
   return !!(el.offsetWidth || el.offsetHeight || el.getClientRects().length);
 }
@@ -34,7 +34,7 @@ export function showElement(el) {
     return;
   }
   if (el.dataset.styleDisplay) {
-    // restore backed-up dispay property
+    // restore backed-up display property
     el.style.display = el.dataset.styleDisplay;
     delete el.dataset.styleDisplay;
   } else {

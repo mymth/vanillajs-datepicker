@@ -41,7 +41,7 @@ describe('DateRangePicker - API methods', function () {
       input1.value = '';
     });
 
-    it('returns a formatted date stirngs of selected dates if the format is specified', function () {
+    it('returns a formatted date strings of selected dates if the format is specified', function () {
       input0.value = '04/20/2020';
       input1.value = '04/22/2020';
 

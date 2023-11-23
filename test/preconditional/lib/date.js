@@ -170,7 +170,7 @@ describe('lib/date', function () {
       expect(dayOfTheWeekOf(new Date(2018, 10, 20), 6), 'to be', new Date(2018, 10, 24).getTime());
     });
 
-    it('uses sepecified start day of week if it is given', function () {
+    it('uses specified start day of week if it is given', function () {
       expect(dayOfTheWeekOf(new Date(2017, 0, 1), 0, 1), 'to be', new Date(2017, 0, 1).getTime());
       expect(dayOfTheWeekOf(new Date(2017, 3, 5), 1, 3), 'to be', new Date(2017, 3, 10).getTime());
       expect(dayOfTheWeekOf(new Date(2017, 5, 8), 2, 4), 'to be', new Date(2017, 5, 13).getTime());
