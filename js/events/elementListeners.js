@@ -82,6 +82,10 @@ export function onKeydown(datepicker, ev) {
     } else if (editMode) {
       datepicker.exitEditMode({update: true, autohide: config.autohide});
     } else {
+      if (config.alwaysCaptureEnter) {
+        cancelEvent()
+      }
+      
       const currentView = picker.currentView;
       if (currentView.isMinView) {
         datepicker.setDate(picker.viewDate);

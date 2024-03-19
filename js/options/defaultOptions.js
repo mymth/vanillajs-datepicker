@@ -34,4 +34,5 @@ export default {
   updateOnBlur: true,
   weekNumbers: 0,
   weekStart: 0,
+  alwaysCaptureEnter: false,
 };
