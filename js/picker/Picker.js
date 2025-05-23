@@ -77,6 +77,11 @@ function processPickerOptions(picker, options) {
       hideElement(picker.controls.clearButton);
     }
   }
+  if ('elementId' in options) {
+    if (options.elementId) {
+      picker.element.id = options.elementId;
+    }
+  }
 }
 
 // Compute view date to reset, which will be...
