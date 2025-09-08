@@ -1,9 +1,12 @@
 var domUtils = (function (exports) {
   'use strict';
 
-  const range = document.createRange();
+  let range = null;
 
   function parseHTML(html) {
+    if (range === null) {
+      range = document.createRange();
+    }
     return range.createContextualFragment(html);
   }
 

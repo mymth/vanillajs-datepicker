@@ -381,9 +381,12 @@ var Datepicker = (function () {
     return parseFormatString(format).formatter(dateObj, locale);
   }
 
-  const range = document.createRange();
+  let range = null;
 
   function parseHTML(html) {
+    if (range === null) {
+      range = document.createRange();
+    }
     return range.createContextualFragment(html);
   }
 
