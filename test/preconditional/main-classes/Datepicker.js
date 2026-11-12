@@ -467,6 +467,37 @@ describe('Datepicker', function () {
     });
   });
 
+  it('preserves the date when the open picker input becomes disabled', function () {
+    const input = document.createElement('input');
+    input.value = '05/05/2025';
+    testContainer.appendChild(input);
+    const dp = new Datepicker(input, {clearButton: true, todayButton: true, todayButtonMode: 1});
+    let changes = 0;
+    input.addEventListener('changeDate', () => changes++);
+
+    try {
+      dp.show();
+      const nextDay = dp.picker.element.querySelector(`[data-date="${dateValue(2025, 4, 12)}"]`);
+
+      input.disabled = true;
+      nextDay.click();
+      expect(input.value, 'to be', '05/05/2025');
+      dp.picker.controls.todayButton.click();
+      expect(input.value, 'to be', '05/05/2025');
+      dp.picker.controls.clearButton.click();
+      expect(input.value, 'to be', '05/05/2025');
+      expect(changes, 'to be', 0);
+
+      input.disabled = false;
+      nextDay.click();
+      expect(input.value, 'to be', '05/12/2025');
+      expect(changes, 'to be', 1);
+    } finally {
+      dp.destroy();
+      input.remove();
+    }
+  });
+
   describe('hide()', function () {
     let input;
     let dp;

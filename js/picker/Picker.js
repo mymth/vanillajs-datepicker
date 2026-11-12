@@ -161,15 +161,21 @@ export default class Picker {
     processPickerOptions(this, config);
     this.viewDate = computeResetViewDate(datepicker);
 
+    const onEnabledClick = handler => (event) => {
+      if (!inputField?.matches(':disabled')) {
+        handler(datepicker, event);
+      }
+    };
+
     // set up event listeners
     registerListeners(datepicker, [
       [element, 'mousedown', onMousedownPicker],
-      [main, 'click', onClickView.bind(null, datepicker)],
-      [controls.viewSwitch, 'click', onClickViewSwitch.bind(null, datepicker)],
-      [controls.prevButton, 'click', onClickPrevButton.bind(null, datepicker)],
-      [controls.nextButton, 'click', onClickNextButton.bind(null, datepicker)],
-      [controls.todayButton, 'click', goToOrSelectToday.bind(null, datepicker)],
-      [controls.clearButton, 'click', clearSelection.bind(null, datepicker)],
+      [main, 'click', onEnabledClick(onClickView)],
+      [controls.viewSwitch, 'click', onEnabledClick(onClickViewSwitch)],
+      [controls.prevButton, 'click', onEnabledClick(onClickPrevButton)],
+      [controls.nextButton, 'click', onEnabledClick(onClickNextButton)],
+      [controls.todayButton, 'click', onEnabledClick(goToOrSelectToday)],
+      [controls.clearButton, 'click', onEnabledClick(clearSelection)],
     ]);
 
     // set up views
